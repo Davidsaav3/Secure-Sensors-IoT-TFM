@@ -31,10 +31,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   bottomRightCoordinates: string= '';
 
   geojson: any;
-  x1= '0';
-  x2= '0';
-  y1= '0';
-  y2= '0';
+  pos_x_1= '0';
+  pos_x_2= '0';
+  pos_y_1= '0';
+  pos_y_2= '0';
 
   /**/
   
@@ -58,8 +58,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   timeout: any = null;
   dup_ok=false;
   dup_not=false;
-  search_0='Buscar';
-  search_1= 'id';
+  search_text='Buscar';
+  order_by= 'id';
   search_2= 'id';
   open_map_list= true;
   view_dup= 10000;
@@ -82,7 +82,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   select_sensors_1 = {
     sensors : [{
       id: 1, 
-      name: 'Todos los esnores',    
+      name: 'Todos los sensores',    
       metric: '', 
       description: '',
       errorvalue: 1,
@@ -97,7 +97,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   select_sensors_2 = {
     sensors : [{
       id: -1, 
-      name: 'Todos los Sensores',    
+      name: '',    
       metric: '', 
       description: '',
       errorvalue: 1,
@@ -113,11 +113,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     id: '',
   }
 
-  busqueda = {
+  search = {
     value: '', 
     sel_type: 0,
-    sensors_2: 2,
-    sel_enable: 2
+    sensors_act: 2,
+    devices_act: 2
   }
 
   ngOnInit(): void { // Inicialización
@@ -130,34 +130,34 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  orderDevices(id: any, ord: any){ 
+  orderDevices(id: any, ord_asc: any){ 
     this.mark= id;
     setTimeout(() =>{
       if(id!='id'){
-        this.search_1= id;
+        this.order_by= id;
       }
-      if(this.busqueda.value==''){
-        this.search_0= 'Buscar';
+      if(this.search.value==''){
+        this.search_text= 'Buscar';
       }
       else{
-        this.search_0= this.busqueda.value;
+        this.search_text= this.search.value;
       }
-      let x1= '0';
-      let x2= '0';
-      let y1= '0';
-      let y2= '0';
+      let pos_x_1= '0';
+      let pos_x_2= '0';
+      let pos_y_1= '0';
+      let pos_y_2= '0';
 
       let array= [];
       for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
         array.push(this.select_sensors_2.sensors[index].id);
       }
-      var arrayString = array.join(',');
-      //console.log(arrayString)
-      let m1= 1;
-      let m2= 100000;
+      var array_sensors = array.join(',');
+      //console.log(array_sensors)
+      let pag_tam= 1;
+      let pag_pag= 100000;
       //console.log(this.select_sensors_2.sensors[0].id)
       this.charging= true;
-      fetch(`${this.get_device}/${this.search_0}/${this.search_1}/${arrayString}/${this.busqueda.sel_enable}/${m1}/${m2}/${ord}/${x1}/${x2}/${y1}/${y2}/${this.busqueda.sensors_2}`)
+      fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
       .then((response) => response.json())
       .then(data => {
         this.charging= false;
@@ -166,7 +166,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         //console.log(this.totalPages)
       })
       this.charging= true;
-      fetch(`${this.get_device}/${this.search_0}/${this.search_1}/${arrayString}/${this.busqueda.sel_enable}/${this.currentPage}/${this.quantPage}/${ord}/${x1}/${x2}/${y1}/${y2}/${this.busqueda.sensors_2}`)
+      fetch(`${this.get_device}/0/${this.search_text}/${this.order_by}/${ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
       .then((response) => response.json())
       .then(data => {
         this.charging= false;
@@ -204,16 +204,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
   
   deleteSearch(){ // Eliminar filtros
-    this.busqueda.value= '';
+    this.search.value= '';
     this.totalPages = 5;
     this.currentPage = 1;
     this.quantPage = 15;
     this.page= 1;
-    this.busqueda.value= '';
+    this.search.value= '';
     this.select_sensors_2.sensors= [];
     this.select_sensors_2.sensors.push({
       id: -1, 
-      name: 'Todos los Sensores',    
+      name: '',    
       metric: '', 
       description: '',
       errorvalue: 1,
@@ -223,8 +223,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       correction_general: null,
       correction_time_general: null,
     });
-    this.busqueda.sel_enable= 2;
-    this.busqueda.sensors_2= 2;
+    this.search.devices_act= 2;
+    this.search.sensors_act= 2;
     this.Page(1);
   }
 
@@ -237,9 +237,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.id= parseInt(data[0].id)+1;
     })
 
-    let search_0= 'Buscar';
-    let ord= 'ASC';
-    fetch(`${this.get_sensors}/${search_0}/${this.search_2}/${ord}`)
+    let search_text= 'Buscar';
+    let ord_asc= 'ASC';
+    fetch(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     .then((response) => response.json())
     .then(data => {
       data.unshift({
@@ -296,7 +296,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   deleteText(){ // Limpiar cuadro de texto
-    this.busqueda.value= '';
+    this.search.value= '';
   }
 
   /**/
@@ -400,10 +400,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       bounds = this.map.getBounds();
     }
     if(bounds!=null){
-      this.x1= bounds.getSouthWest().lng.toFixed(6);
-      this.x2= bounds.getNorthEast().lng.toFixed(6);
-      this.y1= bounds.getSouthWest().lat.toFixed(6);
-      this.y2= bounds.getNorthEast().lat.toFixed(6);
+      this.pos_x_1= bounds.getSouthWest().lng.toFixed(6);
+      this.pos_x_2= bounds.getNorthEast().lng.toFixed(6);
+      this.pos_y_1= bounds.getSouthWest().lat.toFixed(6);
+      this.pos_y_2= bounds.getNorthEast().lat.toFixed(6);
     }
     setTimeout(() => {
       this.getDevices();
@@ -432,7 +432,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.map.on('zoom', () => {
           this.getCornerCoordinates();
       });*/
-      if(this.busqueda.value=='' && this.select_sensors_2.sensors[0].id==-1 && this.busqueda.sel_enable==2){
+      if(this.search.value=='' && this.select_sensors_2.sensors[0].id==-1 && this.search.devices_act==2){
         this.map.on('zoomend', () => {
           //this.getCornerCoordinates();
         });
@@ -691,10 +691,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   getDevices(){ // Obtener dispositivos
-    let m1= 1;
-    let m2= 100000;
-    let m3= 'asc';
-    fetch(`${this.get_device}/${this.search_0}/${this.search_1}/${this.select_sensors_2.sensors[0].id}/${this.busqueda.sel_enable}/${m1}/${m2}/${m3}/${this.x1}/${this.x2}/${this.y1}/${this.y2}/${this.busqueda.sensors_2}`)   
+    let pag_tam= 1;
+    let pag_pag= 100000;
+    let ord_asc= 'ASC';
+    fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${this.select_sensors_2.sensors[0].id}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
     .then((response) => response.json())
     .then(data => {
       this.data= data;

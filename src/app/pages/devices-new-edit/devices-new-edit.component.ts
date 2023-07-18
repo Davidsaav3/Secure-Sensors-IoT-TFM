@@ -143,7 +143,7 @@ export class DevicesNewEditComponent implements OnInit{
             }); 
             this.changed= true;
             //
-            fetch(`${this.get_device}/Buscar/uid/-1/2/1/100000/ASC/0/0/0/0/2`)
+            fetch(`${this.get_device}/1/Buscar/uid/ASC/-1/2/2/1/100000/0/0/0/0`)
             .then((response) => response.json())
             .then(data => {
               let contador = 1;
