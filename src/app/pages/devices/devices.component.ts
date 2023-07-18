@@ -81,8 +81,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   select_sensors_1 = {
     sensors : [{
-      id: 1, 
-      name: 'Todos los sensores',    
+      id: -1, 
+      name: 'Cualquier sensor',    
       metric: '', 
       description: '',
       errorvalue: 1,
@@ -95,6 +95,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   select_sensors_2 = {
+    sensors : [{
+      id: -1, 
+      name: 'Cualquier sensor',    
+      metric: '', 
+      description: '',
+      errorvalue: 1,
+      valuemax: 1,
+      valuemin: 1,
+      position: '',
+      correction_general: null,
+      correction_time_general: null,
+    }]
+  }
+
+  select_sensors_3 = {
     sensors : [{
       id: -1, 
       name: '',    
@@ -128,6 +143,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     else{
       this.getCornerCoordinates();
     }
+    this.select_sensors_2.sensors= [];
   }
 
   orderDevices(id: any, ord_asc: any){ 
@@ -148,8 +164,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       let pos_y_2= '0';
 
       let array= [];
-      for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
-        array.push(this.select_sensors_2.sensors[index].id);
+      for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
+        array.push(this.select_sensors_3.sensors[index].id);
       }
       var array_sensors = array.join(',');
       //console.log(array_sensors)
@@ -211,7 +227,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.page= 1;
     this.search.value= '';
     this.select_sensors_2.sensors= [];
-    this.select_sensors_2.sensors.push({
+    this.select_sensors_3.sensors= [];
+    this.select_sensors_3.sensors.push({
       id: -1, 
       name: '',    
       metric: '', 
@@ -226,6 +243,65 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.search.devices_act= 2;
     this.search.sensors_act= 2;
     this.Page(1);
+  }
+
+  deleteSensors(){
+    this.select_sensors_2.sensors= [];
+    this.select_sensors_3.sensors= [];
+    this.select_sensors_3.sensors.push({
+      id: -1, 
+      name: '',    
+      metric: '', 
+      description: '',
+      errorvalue: 1,
+      valuemax: 1,
+      valuemin: 1,
+      position: '',
+      correction_general: null,
+      correction_time_general: null,
+    });
+    this.Page(1);
+  }
+
+  orderSelect(){
+    this.timeout = setTimeout( () => {
+      this.select_sensors_3.sensors= [];
+      if(this.select_sensors_2.sensors.length==0){
+        this.select_sensors_3.sensors.push({
+          id: -1, 
+          name: '',    
+          metric: '', 
+          description: '',
+          errorvalue: 1,
+          valuemax: 1,
+          valuemin: 1,
+          position: '',
+          correction_general: null,
+          correction_time_general: null,
+        });
+      }
+      else{
+        this.select_sensors_3.sensors= [];
+        for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
+          if(this.select_sensors_2.sensors[index].id>=0){
+            this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
+          }
+          if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
+            this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
+            this.select_sensors_2.sensors= [];
+            this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
+          }
+          if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
+            this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[0]);
+            this.select_sensors_2.sensors= [];
+            this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
+          }
+        }
+      }
+      
+      console.log(this.select_sensors_3.sensors)
+      this.orderDevices('id','ASC');
+    }, 100);
   }
 
   getorderDevices(){ 
@@ -243,7 +319,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     .then((response) => response.json())
     .then(data => {
       data.unshift({
-        id: -1, 
+        id: -3, 
         type: 'Todos los sensores',    
         metric: '', 
         description: '',
@@ -432,7 +508,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.map.on('zoom', () => {
           this.getCornerCoordinates();
       });*/
-      if(this.search.value=='' && this.select_sensors_2.sensors[0].id==-1 && this.search.devices_act==2){
+      if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
         this.map.on('zoomend', () => {
           //this.getCornerCoordinates();
         });
@@ -694,7 +770,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     let pag_tam= 1;
     let pag_pag= 100000;
     let ord_asc= 'ASC';
-    fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${this.select_sensors_2.sensors[0].id}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+    fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${this.select_sensors_3.sensors[0].id}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
     .then((response) => response.json())
     .then(data => {
       this.data= data;
