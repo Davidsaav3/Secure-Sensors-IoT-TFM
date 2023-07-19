@@ -566,6 +566,17 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then((response) => response.json())
         .then(data => {
           this.data= data;
+
+          for (let quote of this.data) {
+            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+            .then(response => response.json())
+            .then(data => {
+              quote.sensor= data;
+            })
+            .catch(error => {
+              console.error(error); 
+            });  
+        }
           //console.log(data)
           this.deleteMarker()
 
@@ -592,25 +603,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
           let contenido;
           let cont= [];
-          let mark= ["1","2"]
-          console.log(this.markers)
+          let cont2='';
 
           for (let index = 0; index < this.markers.length; index++) {
-            contenido= `
-            <strong>${this.markers[index].name}</strong>
-            <p class="p-0 m-0">Uid: ${this.markers[index].data.uid}</p>
-            <p class="p-0 m-0">Alias: ${this.markers[index].data.alias}</p>
-            <div style="display: inline-block; height: min-content;">
-              <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                <p class="mb-0 d-none d-md-none d-lg-block">CO2</p>
-              </span>
-              <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                <p class="mb-0 d-none d-md-none d-lg-block">Tmperatura</p>
-              </span>
-              <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                <p class="mb-0 d-none d-md-none d-lg-block"></p>
-              </span>
-            </div>`
+            //console.log(this.markers[index].data)
+              cont2= `<span class="badge rounded-pill text-bg-success d-inline-block me-2">
+                        <h6 class="mb-0 d-none d-md-none d-lg-block">${this.markers[index].name}</h6>
+                      </span>`
+          
+            contenido= `<h4><strong>${this.markers[index].name}</strong></h4>
+                        <h5 class="p-0 m-0" >Uid: ${this.markers[index].data.uid}</h5>
+                        <h5 class="">Alias: ${this.markers[index].data.alias}</h5>
+                        <h5 class="">${this.markers[index].marker.getLngLat().lng} / ${this.markers[index].marker.getLngLat().lat}</h5>
+                        <div style="display: inline-block; height: min-content;">
+                          ${cont2}
+                        </div>`
   
             cont.push({
               'type': 'Feature',
@@ -622,14 +629,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                   'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
               }
             })
-            
-          }
+          }            
+          
 
           this.geojson2 = { 
-          'features': 
+            'features': 
             cont
-          
           };
+          console.log(this.geojson2)
 
           this.map.addSource('places', {'type': 'geojson',
           'data': {
@@ -638,6 +645,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           }
           });
           
+
+          console.log({'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [ this.geojson2.features[0],this.geojson2.features[1] ]
+          }
+          })
         } 
 
         if(this.map!=null){
@@ -650,45 +664,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             'circle-color': '#FFFFFF'
             }
           });
-          /*if(this.map!=null){
-          this.map.addLayer(
-          {
-          'id': 'add-3d-buildings',
-          'source': 'composite',
-          'source-layer': 'building',
-          'filter': ['==', 'extrude', 'true'],
-          'type': 'fill-extrusion',
-          'minzoom': 15,
-          'paint': {
-          'fill-extrusion-color': '#aaa',
-          
-          // Use an 'interpolate' expression to
-          // add a smooth transition effect to
-          // the buildings as the user zooms in.
-          'fill-extrusion-height': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          15,
-          0,
-          15.05,
-          ['get', 'height']
-          ],
-          'fill-extrusion-base': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          15,
-          0,
-          15.05,
-          ['get', 'min_height']
-          ],
-          'fill-extrusion-opacity': 0.6
-          }
-          },
-          labelLayerId
-          );
-        }*/
+
         }
         let layers;
         if (this.map != null) {
