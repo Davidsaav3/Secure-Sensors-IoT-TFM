@@ -614,7 +614,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             contenido= `<h4><strong>${this.markers[index].name}</strong></h4>
                         <h5 class="p-0 m-0" >Uid: ${this.markers[index].data.uid}</h5>
                         <h5 class="">Alias: ${this.markers[index].data.alias}</h5>
-                        <h5 class="">${this.markers[index].marker.getLngLat().lng} / ${this.markers[index].marker.getLngLat().lat}</h5>
+                        <h5 class="">[${this.markers[index].marker.getLngLat().lng} / ${this.markers[index].marker.getLngLat().lat}]</h5>
                         <div style="display: inline-block; height: min-content;">
                           ${cont2}
                         </div>`
@@ -661,7 +661,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             'source': 'places',
             'paint': {
             'circle-radius': 50,
-            'circle-color': '#FFFFFF'
+            'circle-color': '#FFFFFF',
+            'circle-opacity': 0.5
             }
           });
 
