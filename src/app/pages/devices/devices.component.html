@@ -210,7 +210,7 @@
           </div>
           <div>
             <select (ngModelChange)="orderDevices('id','ASC')"  class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
-              <option selected [ngValue]="1">1 {{ 'res' | translate }}</option>
+              <option [ngValue]="1">1 {{ 'res' | translate }}</option>
               <option selected [ngValue]="10">10 {{ 'res' | translate }}</option>
               <option [ngValue]="50">50 {{ 'res' | translate }}</option>
               <option [ngValue]="100">100 {{ 'res' | translate }}</option>

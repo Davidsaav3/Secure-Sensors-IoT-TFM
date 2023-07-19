@@ -223,7 +223,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.search.value= '';
     this.totalPages = 5;
     this.currentPage = 1;
-    this.quantPage = 15;
+    this.quantPage = 10;
     this.page= 1;
     this.search.value= '';
     this.select_sensors_2.sensors= [];
@@ -285,23 +285,28 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
           if(this.select_sensors_2.sensors[index].id>=0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
+            console.log("1")
+            this.orderDevices('id','ASC');
           }
           if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
+            console.log("2")
+            this.orderDevices('id','ASC');
           }
           if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[0]);
+            this.select_sensors_3.sensors.pop();
             this.select_sensors_2.sensors= [];
-            this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
+            this.select_sensors_2.sensors= this.select_sensors_3.sensors;
+            console.log("3")
           }
         }
       }
       
       console.log(this.select_sensors_3.sensors)
-      this.orderDevices('id','ASC');
-    }, 100);
+    }, 1);
   }
 
   getorderDevices(){ 
@@ -510,7 +515,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       });*/
       if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
         this.map.on('zoomend', () => {
-          //this.getCornerCoordinates();
+          this.getCornerCoordinates();
         });
       }
       /*this.map.on('move', () => {
@@ -770,10 +775,19 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     let pag_tam= 1;
     let pag_pag= 100000;
     let ord_asc= 'ASC';
-    fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${this.select_sensors_3.sensors[0].id}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+    let array= [];
+    for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
+      array.push(this.select_sensors_3.sensors[index].id);
+    }
+    var array_sensors = array.join(',');
+    fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
     .then((response) => response.json())
     .then(data => {
       this.data= data;
+
+      this.markers= [];
+      console.log(this.markers)
+
       for(let quote of this.data) {
         let color= '#198754';
         if(quote.enable==0){
