@@ -7,6 +7,7 @@ interface MarkerAndColor {
   marker: mapboxgl.Marker;
   name: string;
   enable: number; 
+  data: any;
 }
 
 (mapboxgl as any).accessToken= 'pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ';
@@ -21,7 +22,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   @ViewChild('map') divMap?: ElementRef;
   constructor(private router: Router) { }
 
-  zoom: number = 10;
+  zoom: number = 7;
   map?: mapboxgl.Map;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
   markers: MarkerAndColor[] = [];
@@ -31,6 +32,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   bottomRightCoordinates: string= '';
 
   geojson: any;
+  geojson2: any;
+
   pos_x_1= '0';
   pos_x_2= '0';
   pos_y_1= '0';
@@ -59,7 +62,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   dup_ok=false;
   dup_not=false;
   search_text='Buscar';
-  order_by= 'id';
+  order_by= 'uid';
+  ord_asc= 'ASC';
   search_2= 'id';
   open_map_list= true;
   view_dup= 10000;
@@ -137,21 +141,20 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   ngOnInit(): void { // Inicialización
     this.getorderDevices();
-    if(this.open_map_list==true){
-      this.orderDevices('uid','ASC');
-    }
-    else{
-      this.getCornerCoordinates();
-    }
     this.select_sensors_2.sensors= [];
   }
 
-  orderDevices(id: any, ord_asc: any){ 
-    this.mark= id;
+  orderDevices(id: any, ord_asc: any){
+    this.order_by= id;
+    this.ord_asc= ord_asc;
+    this.devices();
+  }
+
+  devices(){     
+    this.deleteMarker()
     setTimeout(() =>{
-      if(id!='id'){
-        this.order_by= id;
-      }
+      this.deleteMarker()
+
       if(this.search.value==''){
         this.search_text= 'Buscar';
       }
@@ -162,41 +165,27 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       let pos_x_2= '0';
       let pos_y_1= '0';
       let pos_y_2= '0';
-
       let array= [];
       for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
         array.push(this.select_sensors_3.sensors[index].id);
       }
       var array_sensors = array.join(',');
-      //console.log(array_sensors)
       let pag_tam= 1;
       let pag_pag= 100000;
-      //console.log(this.select_sensors_2.sensors[0].id)
-      this.charging= true;
-      fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
-      .then((response) => response.json())
-      .then(data => {
-        this.charging= false;
-        this.totalPages= Math.ceil(data.length/this.quantPage);
-        this.total= data.length;
-        //console.log(this.totalPages)
-      })
-      this.charging= true;
-      fetch(`${this.get_device}/0/${this.search_text}/${this.order_by}/${ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
-      .then((response) => response.json())
-      .then(data => {
-        this.charging= false;
-        this.data= data;
-        for (let quote of this.data) {
-            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-            .then(response => response.json())
-            .then(data => {
-              quote.sensor= data;
-            })
-            .catch(error => {
-              console.error(error); 
-            });  
-            //
+
+
+      if(this.open_map_list==false){ // MAP //
+        this.getCornerCoordinates();
+        console.log("MAP");
+
+        fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+        .then((response) => response.json())
+        .then(data => {
+          this.data= data;
+          //console.log(data)
+          this.deleteMarker()
+
+          for(let quote of this.data) {
             let color= '#198754';
             if(quote.enable==0){
               color= '#dc3545';
@@ -207,16 +196,53 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             let coords = new mapboxgl.LngLat( quote.lon, quote.lat );
             let name=quote.uid;
             let enable=parseInt(quote.id);
-            this.addMarker( coords, color , name, enable);
-        }
-        if(this.data.length<this.total){
-          this.cosa= this.quantPage*this.currentPage;
-        }
-        else{
-          this.cosa= this.total;
-        }
-      })
+            this.addMarker( coords, color , name, enable, quote);
+          }
+        })
+      }
+      
+
+
+      if(this.open_map_list==true){ // LIST //
+        this.charging= true;
+        fetch(`${this.get_device}/0/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        .then((response) => response.json())
+        .then(data => {
+          this.charging= false;
+          this.totalPages= Math.ceil(data.length/this.quantPage);
+          this.total= data.length;
+          //console.log(this.totalPages)
+        })
+        this.charging= true;
+
+        //
+
+        console.log("LIST")
+        fetch(`${this.get_device}/0/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        .then((response) => response.json())
+        .then(data => {
+          this.charging= false;
+          this.data= data;
+          for (let quote of this.data) {
+              fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+              .then(response => response.json())
+              .then(data => {
+                quote.sensor= data;
+              })
+              .catch(error => {
+                console.error(error); 
+              });  
+          }
+          if(this.data.length<this.total){
+            this.cosa= this.quantPage*this.currentPage;
+          }
+          else{
+            this.cosa= this.total;
+          }
+        })
+      }
     }, 10);
+    console.log(this.markers)
   }
   
   deleteSearch(){ // Eliminar filtros
@@ -286,15 +312,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           if(this.select_sensors_2.sensors[index].id>=0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             console.log("1")
-            this.orderDevices('id','ASC');
-          }
+            this.devices();          }
           if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
             console.log("2")
-            this.orderDevices('id','ASC');
-          }
+            this.devices();          }
           if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[0]);
             this.select_sensors_3.sensors.pop();
@@ -311,7 +335,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   getorderDevices(){ 
     this.rute= this.router.routerState.snapshot.url;
-    this.orderDevices('uid','ASC');
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
@@ -354,26 +377,24 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         this.select_sensors_1.sensors[index].name= data[index].type;
       }
     })
+    this.orderDevices('uid','ASC');
   }
 
   openMap(){ // Abrir mapa
-    this.getCornerCoordinates();
     this.open_map_list= false;
-  }
+    this.devices();  }
   openList(){ // Abrir lista
-    this.getorderDevices();
-    this.orderDevices('uid','ASC');
     this.open_map_list= true;
-  }
+    this.devices();  }
 
   onKeySearch(event: any) { // Busqueda por texto
     clearTimeout(this.timeout);
     var $this = this;
     this.timeout = setTimeout(function () {
       if (event.keyCode != 13) {
-        $this.orderDevices('id','ASC');
+        $this.devices();
       }
-    }, 500);
+    }, 10);
   }
 
   deleteText(){ // Limpiar cuadro de texto
@@ -385,55 +406,55 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   firstPage(): void { // Primera pagina
     if(this.currentPage!=1){
       this.currentPage= 1;
-      this.getorderDevices();
+      this.devices();
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage-10 > 1) {
       this.currentPage= this.currentPage-10;
-      this.getorderDevices();
+      this.devices();
     }
     else{
       this.currentPage= 1;
-      this.getorderDevices();
+      this.devices();
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getorderDevices();
+      this.devices();
     }
   }
 
   Page(num: any): void {
     this.currentPage= num;
-    this.getorderDevices();
+    this.devices();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getorderDevices();
+      this.devices();
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage+10 < this.totalPages) {
       this.currentPage= this.currentPage+10;
-      this.getorderDevices();
+      this.devices();
     }
     else{
       this.currentPage= this.totalPages;
-      this.getorderDevices();
+      this.devices();
     }
   }
 
   lastPage(): void { // Ultima pagina
     if(this.currentPage!=this.totalPages){
       this.currentPage= this.totalPages;
-      this.getorderDevices();
+      this.devices();
     }
   }
 
@@ -486,9 +507,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.pos_y_1= bounds.getSouthWest().lat.toFixed(6);
       this.pos_y_2= bounds.getNorthEast().lat.toFixed(6);
     }
-    setTimeout(() => {
-      this.getDevices();
-    }, 1000);
   }
 
   auxInit(){ // Auxiliar de Init
@@ -515,52 +533,112 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       });*/
       if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
         this.map.on('zoomend', () => {
-          this.getCornerCoordinates();
+          //this.getCornerCoordinates();
+          this.devices();
         });
       }
       /*this.map.on('move', () => {
         this.getCornerCoordinates();
       });*/
 
-      this.map.on('style.load', () => {
+      if(this.search.value==''){
+        this.search_text= 'Buscar';
+      }
+      else{
+        this.search_text= this.search.value;
+      }
+      let pos_x_1= '0';
+      let pos_x_2= '0';
+      let pos_y_1= '0';
+      let pos_y_2= '0';
+      let array= [];
+      for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
+        array.push(this.select_sensors_3.sensors[index].id);
+      }
+      var array_sensors = array.join(',');
+      let pag_tam= 1;
+      let pag_pag= 100000;
 
+        this.getCornerCoordinates();
+        console.log("MAP 1");
+
+        fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+        .then((response) => response.json())
+        .then(data => {
+          this.data= data;
+          //console.log(data)
+          this.deleteMarker()
+
+          for(let quote of this.data) {
+            let color= '#198754';
+            if(quote.enable==0){
+              color= '#dc3545';
+            }
+            if(quote.enable==1){
+              color= '#198754';
+            }
+            let coords = new mapboxgl.LngLat( quote.lon, quote.lat );
+            let name=quote.uid;
+            let enable=parseInt(quote.id);
+            this.addMarker( coords, color , name, enable, quote);
+          }
+        })
+
+      this.map.on('style.load', () => {
+        setTimeout(() =>{
         if(this.map!=null){
-        this.map.addSource('places', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'properties': {
-                  'description': 
-                  `
-                    <strong>Dispositivo 1</strong>
-                    <p>Uid: </p>
-                    <p>Alias: </p>
-                    <div style="display: inline-block; height: min-content;">
-                      <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                        <p class="mb-0 d-none d-md-none d-lg-block">CO2</p>
-                      </span>
-                      <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                        <p class="mb-0 d-none d-md-none d-lg-block">Tmperatura</p>
-                      </span>
-                      <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                        <p class="mb-0 d-none d-md-none d-lg-block"></p>
-                      </span>
-                    </div>
-                  `
-                },
+        //
+
+
+          let contenido;
+          let cont= [];
+          let mark= ["1","2"]
+          console.log(this.markers)
+
+          for (let index = 0; index < this.markers.length; index++) {
+            contenido= `
+            <strong>${this.markers[index].name}</strong>
+            <p class="p-0 m-0">Uid: ${this.markers[index].data.uid}</p>
+            <p class="p-0 m-0">Alias: ${this.markers[index].data.alias}</p>
+            <div style="display: inline-block; height: min-content;">
+              <span class="badge rounded-pill text-bg-success d-inline-block me-2">
+                <p class="mb-0 d-none d-md-none d-lg-block">CO2</p>
+              </span>
+              <span class="badge rounded-pill text-bg-success d-inline-block me-2">
+                <p class="mb-0 d-none d-md-none d-lg-block">Tmperatura</p>
+              </span>
+              <span class="badge rounded-pill text-bg-success d-inline-block me-2">
+                <p class="mb-0 d-none d-md-none d-lg-block"></p>
+              </span>
+            </div>`
+  
+            cont.push({
+              'type': 'Feature',
+              'properties': {
+                'description': contenido
+              },
                 'geometry': {
                   'type': 'Point',
-                  'coordinates': [-0.509498,38.385271]
-                }
+                  'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
               }
-
-            ]
+            })
+            
           }
-        });
-        }
+
+          this.geojson2 = { 
+          'features': 
+            cont
+          
+          };
+
+          this.map.addSource('places', {'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [ this.geojson2.features[0] ]
+          }
+          });
+          
+        } 
 
         if(this.map!=null){
           this.map.addLayer({
@@ -568,10 +646,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             'type': 'circle',
             'source': 'places',
             'paint': {
-            'circle-color': '#4264fb',
-            'circle-radius': 6,
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#ffffff'
+            'circle-radius': 50,
+            'circle-color': '#FFFFFF'
             }
           });
           /*if(this.map!=null){
@@ -628,7 +704,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           }
         } 
       });
-  
+      });
+
+
       let layerList = document.getElementById('menu');
       if (layerList != null) {
         let inputs = layerList.getElementsByTagName('input');
@@ -700,7 +778,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   /* */
 
-  addMarker( lngLat: mapboxgl.LngLat, color: string , name: string, enable: number) { // Añadir chincheta
+  addMarker( lngLat: mapboxgl.LngLat, color: string , name: string, enable: number, data: any) { // Añadir chincheta
     if ( !this.map ) return;
     const marker = new mapboxgl.Marker({
       color: color,
@@ -722,14 +800,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             'color': color,
             'name': name,
             'description': 
-                  `<strong>Dispositivo 1</strong>
-                    <p>Uid: </p>
+                  `<strong>${data.uid}</strong>
+                    <p>Uid: ${data.uid}</p>
                     <div style="display: inline-block; height: min-content;">
                       <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                        <p class="mb-0 d-none d-md-none d-lg-block">CO2</p>
+                        <p class="mb-0 d-none d-md-none d-lg-block">${data.uid}</p>
                       </span>
                       <span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                        <p class="mb-0 d-none d-md-none d-lg-block">Tmperatura</p>
+                        <p class="mb-0 d-none d-md-none d-lg-block">${data.uid}</p>
                       </span>
                       <span class="badge rounded-pill text-bg-success d-inline-block me-2">
                         <p class="mb-0 d-none d-md-none d-lg-block"></p>
@@ -763,44 +841,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .setLngLat(coords)
         .addTo(this.map);
       }
-    this.markers.push({ color, marker, name, enable});
+    this.markers.push({ color, marker, name, enable, data});
   }
 
-  deleteMarker( index: number ) { // Eliminar chincheta
-    this.markers[index].marker.remove();
-    this.markers.splice( index, 1 );
-  }
-
-  getDevices(){ // Obtener dispositivos
-    let pag_tam= 1;
-    let pag_pag= 100000;
-    let ord_asc= 'ASC';
-    let array= [];
-    for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
-      array.push(this.select_sensors_3.sensors[index].id);
+  deleteMarker() { // Eliminar chincheta
+    for (let index = 0; index < this.markers.length; index++) {
+      this.markers[index].marker.remove();
     }
-    var array_sensors = array.join(',');
-    fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
-    .then((response) => response.json())
-    .then(data => {
-      this.data= data;
-
-      this.markers= [];
-      console.log(this.markers)
-
-      for(let quote of this.data) {
-        let color= '#198754';
-        if(quote.enable==0){
-          color= '#dc3545';
-        }
-        if(quote.enable==1){
-          color= '#198754';
-        }
-        let coords = new mapboxgl.LngLat( quote.lon, quote.lat );
-        let name=quote.uid;
-        let enable=parseInt(quote.id);
-        this.addMarker( coords, color , name, enable);
-      }
-    })
   }
+
 }

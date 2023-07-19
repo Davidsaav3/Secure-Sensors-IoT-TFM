@@ -56,27 +56,28 @@ con.connect(function(err) {
       consulta= array.join(" AND id IN ")
     }
 
-    if(state!='0'){
-      let xx1= parseInt(x1);
-      let xx2= parseInt(x2);
-      let yy1= parseInt(y1);
-      let yy2= parseInt(y2);
+    let xx1= parseInt(x1);
+    let xx2= parseInt(x2);
+    let yy1= parseInt(y1);
+    let yy2= parseInt(y2);
 
-      con.query(`SELECT * FROM device_configurations WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
-        if (err) throw err;
-          res.send(result)
-      });
-    }
-
-    if(state=='0'){
       if(search_text=='Buscar'){
         if(array_sensors!=-1 || devices_act!=2){
           if(array_sensors!=-1 && devices_act!=2 && array_sensors!=-2){
-            console.log("ZONA 1")
-            con.query(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
-              if (err) throw err;
-                res.send(result)
-            }); 
+            if(state=='0'){
+              console.log("ZONA 1 LIST")
+              con.query(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+                if (err) throw err;
+                  res.send(result)
+              }); 
+            }
+            else{
+              console.log("ZONA 1 MAP")
+              con.query(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+                if (err) throw err;
+                  res.send(result)
+              }); 
+            }
           }
           else{
               if(array_sensors!=-1 && array_sensors!=-2){
@@ -104,11 +105,20 @@ con.connect(function(err) {
         
         }
         else{
-          console.log("ZONA 5")
-          con.query(`SELECT * FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
-            if (err) throw err;
-              res.send(result)
-          }); 
+          if(state=='0'){
+            console.log("ZONA 5 LIST")
+            con.query(`SELECT * FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+              if (err) throw err;
+                res.send(result)
+            }); 
+          }
+          else{
+            console.log("ZONA 5 MAP")
+            con.query(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+              if (err) throw err;
+                res.send(result)
+            }); 
+          }
         }
       }
       else{
@@ -118,7 +128,7 @@ con.connect(function(err) {
             res.send(result)
         }); 
       }
-    }
+    
   });
 
   app.get("/api/id/device_configurations/:id", (req,res)=>{ /*/ ID  /*/
