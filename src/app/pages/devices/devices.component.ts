@@ -183,7 +183,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then((response) => response.json())
         .then(data => {
           this.data= data;
-          //console.log(data)
+          //console.log("zona 1")
           this.deleteMarker()
 
           for(let quote of this.data) {
@@ -209,6 +209,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          //console.log("zona 2")
           this.charging= false;
           this.totalPages= Math.ceil(data.length/this.quantPage);
           this.total= data.length;
@@ -222,12 +223,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          //console.log("zona 3")
           this.charging= false;
           this.data= data;
           for (let quote of this.data) {
               fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
               .then(response => response.json())
               .then(data => {
+                //console.log("zona 4")
                 quote.sensor= data;
               })
               .catch(error => {
@@ -339,6 +342,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
+      //console.log("zona 5")
       this.id= parseInt(data[0].id)+1;
     })
 
@@ -347,6 +351,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     .then((response) => response.json())
     .then(data => {
+      //console.log("zona 6")
       data.unshift({
         id: -3, 
         type: 'Todos los sensores',    
@@ -567,11 +572,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then((response) => response.json())
         .then(data => {
           this.data= data;
+          //console.log("zona 7")
 
           for (let quote of this.data) {
             fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
             .then(response => response.json())
             .then(data => {
+              //console.log("zona 8")
               quote.sensor= data;
             })
             .catch(error => {
