@@ -51,6 +51,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   page= 1;
   total= 0;
   cosa= 0;
+  color_map= 'streets-v12';
 
   charging= false;
   mark= 'uid';
@@ -470,7 +471,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         navigator.geolocation.getCurrentPosition(position => { 
           this.map = new mapboxgl.Map({
               container: this.divMap?.nativeElement, 
-              style: 'mapbox://styles/mapbox/streets-v12',
+              style: 'mapbox://styles/mapbox/'+this.color_map,
               center: [position.coords.longitude, position.coords.latitude],
               zoom: this.zoom, 
           });
@@ -479,7 +480,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         (error) => {
           this.map = new mapboxgl.Map({
             container: this.divMap?.nativeElement, 
-            style: 'mapbox://styles/mapbox/streets-v12', 
+            style: 'mapbox://styles/mapbox/'+this.color_map, 
             center: [-3.7034137886912504,40.41697654880073],
             zoom: this.zoom, 
         });
@@ -491,7 +492,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     else {
       this.map = new mapboxgl.Map({
         container: this.divMap?.nativeElement, 
-        style: 'mapbox://styles/mapbox/streets-v12', 
+        style: 'mapbox://styles/mapbox/'+this.color_map, 
         center: [-3.7034137886912504,40.41697654880073],
         zoom: this.zoom, 
     });      
@@ -698,7 +699,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             input.onclick = (layer: any) => {
               const layerId = layer.target.id;
               if (this.map != null) {
-                this.map.setStyle('mapbox://styles/mapbox/' + layerId);
+                console.log(layerId)
+                console.log(this.color_map)
+                this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
               }
             };
             
@@ -810,7 +813,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         el.className = 'marker_text';
         el.style.backgroundSize = '100%';
         el.style.marginTop = '10px';
-        el.innerHTML= `<p class="p-0 m-0">${marker.properties.name}</p>`;
+        el.innerHTML= `<p class="p-0 m-0" style="font-size:large; color:white; -webkit-text-stroke: 0.5px black">${marker.properties.name}</p>`;
          
         el.addEventListener('click', () => {
           const url = `/devices/edit/${marker.properties.id}`; 
@@ -837,9 +840,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   saveStorage() { // Guarda datos
     localStorage.setItem('open_map_list', this.open_map_list.toString());
+    localStorage.setItem('color_map', this.color_map);
+    console.log("pongo")
   }
   readStorage() { // Recupera datos
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
+    this.color_map = localStorage.getItem('color_map') ?? '0';
+    console.log(this.color_map)
   }
 
 }

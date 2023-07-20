@@ -58,11 +58,13 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   map?: mapboxgl.Map;
   markers: MarkerAndColor[] = [];
   start= false;
+  color_map= 'streets-v12';
 
   id_max= 1;
   state= 1;
   
   ngOnInit(): void { // Inicializador
+    this.readStorage();
     this.rute= this.rute1.routerState.snapshot.url;
     this.rute2 = this.rute.split('/');
 
@@ -165,7 +167,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
               input.onclick = (layer: any) => {
                 const layerId = layer.target.id;
                 if (this.map != null) {
-                  this.map.setStyle('mapbox://styles/mapbox/' + layerId);
+                  this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
                 }
               };
               
@@ -205,7 +207,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
             input.onclick = (layer: any) => {
               const layerId = layer.target.id;
               if (this.map != null) {
-                this.map.setStyle('mapbox://styles/mapbox/' + layerId);
+                this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
               }
             };
           }
@@ -221,7 +223,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         this.ngOnDestroy();
         this.map = new mapboxgl.Map({
           container: this.divMap?.nativeElement,
-          style: 'mapbox://styles/mapbox/streets-v12',
+          style: 'mapbox://styles/mapbox/'+this.color_map, 
           center: [lon, lat],
           zoom: this.zoom,
       });
@@ -230,7 +232,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         this.ngOnDestroy();
         this.map = new mapboxgl.Map({
           container: this.divMap.nativeElement, 
-          style: 'mapbox://styles/mapbox/streets-v12', 
+          style: 'mapbox://styles/mapbox/'+this.color_map, 
           center: this.currentLngLat,
           zoom: this.zoom,
         });
@@ -254,7 +256,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.ngOnDestroy();
       this.map = new mapboxgl.Map({
         container: this.divMap.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v12',
+        style: 'mapbox://styles/mapbox/'+this.color_map, 
         center: this.currentLngLat,
         zoom: this.zoom,
       });
@@ -267,7 +269,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.ngOnDestroy();
       this.map = new mapboxgl.Map({
         container: this.divMap.nativeElement,
-        style: 'mapbox://styles/mapbox/streets-v12',
+        style: 'mapbox://styles/mapbox/'+this.color_map, 
         center: this.currentLngLat,
         zoom: this.zoom,
       });
@@ -359,21 +361,24 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   }
 
   saveStorage() { // Guarda datos
-    const plainMarkers: PlainMarker[] = this.markers.map( ({ color, marker }) => {
+    /*const plainMarkers: PlainMarker[] = this.markers.map( ({ color, marker }) => {
       return {
         color,
         lngLat: marker.getLngLat().toArray()
       }
     });
-    localStorage.setItem('plainMarkers', JSON.stringify( plainMarkers ));
+    localStorage.setItem('plainMarkers', JSON.stringify( plainMarkers ));*/
+    localStorage.setItem('color_map', this.color_map);
   }
 
   readStorage() { // Recupera datos
-    const plainMarkersString = localStorage.getItem('plainMarkers') ?? '[]';
+    /*const plainMarkersString = localStorage.getItem('plainMarkers') ?? '[]';
     const plainMarkers: PlainMarker[] = JSON.parse( plainMarkersString );
     plainMarkers.forEach( ({ color, lngLat }) => {
       const [ lng, lat ] = lngLat;
       const coords = new mapboxgl.LngLat( lng, lat );
-    })
+    })*/
+    this.color_map = localStorage.getItem('color_map') ?? '0';
   }
+
 }
