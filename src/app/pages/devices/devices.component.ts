@@ -141,6 +141,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   ngOnInit(): void { // Inicialización
     this.getorderDevices();
     this.select_sensors_2.sensors= [];
+    this.readStorage();
   }
 
   orderDevices(id: any, ord_asc: any){
@@ -311,16 +312,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           if(this.select_sensors_2.sensors[index].id>=0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             console.log("1")
-            this.devices();          }
+            this.devices();      
+          }
           if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
             console.log("2")
-            this.devices();          }
+            this.devices();    
+          }
           if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
-            this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[0]);
-            this.select_sensors_3.sensors.pop();
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors= this.select_sensors_3.sensors;
             console.log("3")
@@ -381,10 +382,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   openMap(){ // Abrir mapa
     this.open_map_list= false;
-    this.devices();  }
+    this.devices();  
+    this.saveStorage();
+  }
   openList(){ // Abrir lista
     this.open_map_list= true;
-    this.devices();  }
+    this.devices(); 
+    this.saveStorage();
+  }
 
   onKeySearch(event: any) { // Busqueda por texto
     clearTimeout(this.timeout);
@@ -802,7 +807,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
          
         for (const marker of this.geojson.features) {
         const el = document.createElement('div');
-        el.className = 'marker';
+        el.className = 'marker_text';
         el.style.backgroundSize = '100%';
         el.style.marginTop = '10px';
         el.innerHTML= `<p class="p-0 m-0">${marker.properties.name}</p>`;
@@ -824,6 +829,17 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     for (let index = 0; index < this.markers.length; index++) {
       this.markers[index].marker.remove();
     }
+    let contenidoSuperpuesto = document.getElementsByClassName('marker_text');
+      for (let i = 0; i < contenidoSuperpuesto.length; i++) {
+        contenidoSuperpuesto[i].remove();
+      }
+  }
+
+  saveStorage() { // Guarda datos
+    localStorage.setItem('open_map_list', this.open_map_list.toString());
+  }
+  readStorage() { // Recupera datos
+    this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
   }
 
 }
