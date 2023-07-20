@@ -140,6 +140,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   ngOnInit(): void { // Inicialización
+    this.orderDevices('uid','ASC');
     this.getorderDevices();
     this.select_sensors_2.sensors= [];
     this.readStorage();
@@ -637,6 +638,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                   'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
               }
             })
+            cont.push({
+              'type': 'Feature',
+              'properties': {
+                'description': contenido
+              },
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': [20,-30]
+              }
+            })
           }            
           
 
@@ -649,7 +660,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.map.addSource('places', {'type': 'geojson',
           'data': {
             'type': 'FeatureCollection',
-            'features': [ this.geojson2.features[0] ]
+            'features': [ this.geojson2.features[0], this.geojson2.features[1]]
           }
           });
           
@@ -742,15 +753,18 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.map.getCanvas().style.cursor = 'pointer';
           
           if(e!=null && e.features!=null && e.features[0]!=null && e.features[0].geometry!=null && e.features[0].properties!=null){
-            const coordinates: mapboxgl.LngLatLike = [-0.509498,38.385271];
-            const description = e.features[0].properties["description"];
-            //console.log(this.geojson.features[0].coordinates1)
-            //const coordinates: mapboxgl.LngLatLike = [this.geojson.features[0].coordinates1,this.geojson.features[0].coordinates2];
-            //const description = this.geojson.features[0].properties.description;
-            while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+            let coordinates;
+            if (e.features[0].geometry.type == 'Point') {
+              coordinates = e.features[0].geometry.coordinates.slice();
             }
-            popup.setLngLat(coordinates).setHTML(description).addTo(this.map);
+            const description = e.features[0].properties["description"];
+            if(coordinates!=undefined){
+              while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+              }
+              const [firstNumber, secondNumber] =coordinates;
+              popup.setLngLat([firstNumber, secondNumber]).setHTML(description).addTo(this.map);
+            }
           }
         }
       });

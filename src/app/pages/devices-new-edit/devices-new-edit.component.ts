@@ -203,7 +203,7 @@ export class DevicesNewEditComponent implements OnInit{
     });
     this.dataSharingService.sharedList$.subscribe(data => {
       this.sensors.sensors= data;
-      console.log(this.sensors.sensors)
+      //console.log(this.sensors.sensors)
     });
     
     this.devices.updatedAt= this.date;
@@ -278,7 +278,7 @@ newDevice(form: any) { // Guardar Dispositivos
   });
   this.dataSharingService.sharedList$.subscribe(data => {
     this.sensors.sensors= data;
-    console.log(this.sensors.sensors)
+    //console.log(this.sensors.sensors)
   });
   
   if (form.valid) {
