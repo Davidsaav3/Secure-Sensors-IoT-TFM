@@ -86,10 +86,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         this.dataSharingService.sharedLon$.subscribe(data => {
           this.sharedLon = data;
         });
-        setInterval(() => {
-          if (this.map) 
-            this.map.resize();
-        }, 50);
     }
     //
     if(this.rute2[2]=='edit'){
@@ -100,11 +96,17 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           this.sharedLon = data;
         });
         this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
-        setInterval(() => {
-          if(this.map!=undefined)
-            this.map.resize();
-        }, 50);
     }
+
+    setInterval(() => {
+      if(this.map!=undefined){
+        //this.map.on('load', () => {
+            if(this.map!=undefined){
+              this.map.resize();
+            }
+        //});
+      }
+    }, 50);
   }
 
   ngAfterViewInit(): void { // Despues de ngOnInit
@@ -345,12 +347,19 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     this.updatesharedLon();
   }
 
-  deleteMarker( index: number ) { // Quita chincheta
-    this.markers[index].marker.remove();
+  deleteMarker() { // Quita chincheta
     this.markers= [];
     this.dataSharingService.updatesharedLat('');
     this.dataSharingService.updatesharedLon('');
     this.updatesharedAct();
+
+    for (let index = 0; index < this.markers.length; index++) {
+      this.markers[index].marker.remove();
+    }
+    let contenidoSuperpuesto = document.getElementsByClassName('marker_text');
+    for (let i = 0; i < contenidoSuperpuesto.length; i++) {
+      contenidoSuperpuesto[i].remove();
+    }
   }
 
   goMarker( marker: mapboxgl.Marker ) { // Va a una localización

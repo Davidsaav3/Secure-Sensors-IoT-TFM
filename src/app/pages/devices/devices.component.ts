@@ -177,7 +177,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       if(this.open_map_list==false){ // MAP //
         this.getCornerCoordinates();
-        console.log("MAP");
+        //console.log("MAP");
 
         fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
         .then((response) => response.json())
@@ -218,7 +218,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
         //
 
-        console.log("LIST")
+        //console.log("LIST")
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
@@ -243,7 +243,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         })
       }
     }, 10);
-    console.log(this.markers)
+    //console.log(this.markers)
   }
   
   deleteSearch(){ // Eliminar filtros
@@ -312,25 +312,25 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
           if(this.select_sensors_2.sensors[index].id>=0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
-            console.log("1")
+            //console.log("1")
             this.devices();      
           }
           if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
-            console.log("2")
+            //console.log("2")
             this.devices();    
           }
           if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors= this.select_sensors_3.sensors;
-            console.log("3")
+            //console.log("3")
           }
         }
       }
       
-      console.log(this.select_sensors_3.sensors)
+      //(this.select_sensors_3.sensors)
     }, 1);
   }
 
@@ -552,10 +552,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       else{
         this.search_text= this.search.value;
       }
-      let pos_x_1= '0';
-      let pos_x_2= '0';
-      let pos_y_1= '0';
-      let pos_y_2= '0';
       let array= [];
       for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
         array.push(this.select_sensors_3.sensors[index].id);
@@ -565,7 +561,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       let pag_pag= 100000;
 
         this.getCornerCoordinates();
-        console.log("MAP 1");
+        //console.log("MAP 1");
 
         fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
         .then((response) => response.json())
@@ -641,7 +637,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             'features': 
             cont
           };
-          console.log(this.geojson2)
+          //console.log(this.geojson2)
 
           this.map.addSource('places', {'type': 'geojson',
           'data': {
@@ -651,12 +647,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           });
           
 
-          console.log({'type': 'geojson',
+          /*console.log({'type': 'geojson',
           'data': {
             'type': 'FeatureCollection',
             'features': [ this.geojson2.features[0],this.geojson2.features[1] ]
           }
-          })
+          })*/
         } 
 
         if(this.map!=null){
@@ -699,8 +695,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             input.onclick = (layer: any) => {
               const layerId = layer.target.id;
               if (this.map != null) {
-                console.log(layerId)
-                console.log(this.color_map)
+                //console.log(layerId)
+                //console.log(this.color_map)
                 this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
               }
             };
@@ -841,12 +837,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   saveStorage() { // Guarda datos
     localStorage.setItem('open_map_list', this.open_map_list.toString());
     localStorage.setItem('color_map', this.color_map);
-    console.log("pongo")
+    //console.log("pongo")
   }
   readStorage() { // Recupera datos
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
     this.color_map = localStorage.getItem('color_map') ?? '0';
-    console.log(this.color_map)
+    //console.log(this.color_map)
   }
 
 }

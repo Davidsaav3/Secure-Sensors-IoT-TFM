@@ -99,6 +99,7 @@ export class DevicesNewEditComponent implements OnInit{
         correction_time_general: null,
       }]
   }
+  
 
 
   ngOnInit(): void { // Inicializador
@@ -194,6 +195,17 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   editDevices(form: any) { // Guardar Dispositivo
+    this.dataSharingService.sharedLat$.subscribe(data => {
+      this.devices.lat = data;
+    });
+    this.dataSharingService.sharedLon$.subscribe(data => {
+      this.devices.lon = data;
+    });
+    this.dataSharingService.sharedList$.subscribe(data => {
+      this.sensors.sensors= data;
+      console.log(this.sensors.sensors)
+    });
+    
     this.devices.updatedAt= this.date;
     this.getShsareSensors();
     if (form.valid) {
@@ -266,6 +278,7 @@ newDevice(form: any) { // Guardar Dispositivos
   });
   this.dataSharingService.sharedList$.subscribe(data => {
     this.sensors.sensors= data;
+    console.log(this.sensors.sensors)
   });
   
   if (form.valid) {
@@ -281,7 +294,7 @@ newDevice(form: any) { // Guardar Dispositivos
     var devices = {
       id: id_actual,    
     }
-    console.log(devices.id)
+    //console.log(devices.id)
     fetch(this.deleteDevice_device, {
       method: "POST",body: JSON.stringify(devices),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
@@ -299,6 +312,7 @@ newDevice(form: any) { // Guardar Dispositivos
   recharge(){ // Recargar
     this.ngOnInit()
     this.changed= false;
+    this.dataSharingService.updatesharedAct(false);
   }
 
   showForm(){ // Expandir formulario
@@ -322,25 +336,6 @@ newDevice(form: any) { // Guardar Dispositivos
     this.show_map=true;
     this.dataSharingService.updatesharedAmp(false);
   }
-  
-  /*
-  showMap(){ // Ampliar mapa
-    this.show_map=true;
-    this.DevicesMapComponent.showMap();
-  }
-  hideMap(){ // Desamplair mapa
-    this.show_map=false;
-    this.DevicesMapComponent.showMap();
-  }
-  showForm(){ // Ampliar formulario
-    this.dataSharingService.updatesharedAmp(true);
-    this.show_form=false;
-  }
-  hideForm(){ // Desamplair formulario
-    this.show_form=true;
-    this.dataSharingService.updatesharedAmp(false);
-  }
-  */
 
   getShsareSensors(){  // Obtener sensores de otro componente
     this.dataSharingService.sharedList$.subscribe(data => {

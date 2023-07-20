@@ -127,7 +127,7 @@
 	</div>
 
 		<div class="cc2 cont" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
-		<form #form="ngForm" class="row needs-validation p-3"> 
+		<form #form="ngForm" (ngSubmit)="editSensor(form)" class="row needs-validation p-3"> 
 			<div class="col-12">
 				<div class="row">
 					
@@ -230,7 +230,7 @@
 						<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.cancel' | translate }}</button>
 					</div>
 					<div class="col-6 mt-3">
-						<button (click)="editSensor(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+						<button type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>	
 					<div class="col-12 mt-3">
 						<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'sensors.erase_sensor' | translate }}</button>
