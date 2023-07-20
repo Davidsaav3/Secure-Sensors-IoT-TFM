@@ -45,7 +45,12 @@
             </div>
 
             <div class="ms-0">
-              <select style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderDevices('id','ASC')" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderDevices('id','ASC')" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+                <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
+                <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
+                <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
+              </select>
+              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderDevices('id','ASC')" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -96,28 +101,28 @@
                   <tr>
 
                     <th style="cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'uid'}" scope="col">
-                      <svg *ngIf="alt_1_a" (click)="alt_1_a=false;orderDevices('uid','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_1_a" (click)="alt_1_a=false;orderDevices('uid','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;orderDevices('uid','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;orderDevices('uid','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'devices.edit.uid' | translate }}
                     </th>
 
                     <th class="d-none d-md-none d-lg-block" [ngClass]="{'mark': mark == 'topic_name'}" style="cursor: pointer;" class="single-line"  scope="col">
-                      <svg *ngIf="alt_2_a" (click)="alt_2_a=false;orderDevices('topic_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_2_a" (click)="alt_2_a=false;orderDevices('topic_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;orderDevices('topic_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;orderDevices('topic_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'devices.edit.topic' | translate }}
                     </th>
 
                     <th style="cursor: pointer; " class="single-line" [ngClass]="{'mark': mark == 'application_id'}" scope="col">
-                      <svg *ngIf="alt_3_a" (click)="alt_3_a=false;orderDevices('application_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_3_a" (click)="alt_3_a=false;orderDevices('application_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;orderDevices('application_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;orderDevices('application_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'devices.edit.aplication' | translate }}
                     </th>
@@ -128,19 +133,19 @@
                     </th>
 
                     <th class="d-none d-md-none d-lg-block" style="text-align: center; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'createdAt'}">
-                      <svg *ngIf="alt_4_a" (click)="alt_4_a=false;orderDevices('createdAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_4_a" (click)="alt_4_a=false;orderDevices('createdAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;orderDevices('createdAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;orderDevices('createdAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'created' | translate }}
                     </th>
 
                     <th class="d-none d-md-none d-lg-block" style="text-align: center; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'updatedAt'}">
-                      <svg *ngIf="alt_5_a" (click)="alt_5_a=false;orderDevices('updatedAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_5_a" (click)="alt_5_a=false;orderDevices('updatedAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_5_a" (click)="alt_5_a=true;orderDevices('updatedAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_5_a" (click)="alt_5_a=true;orderDevices('updatedAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'mod' | translate }}
                     </th>
@@ -209,7 +214,7 @@
             <p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{cosa}} de {{total}}</p>
           </div>
           <div>
-            <select (ngModelChange)="orderDevices('id','ASC')"  class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+            <select (ngModelChange)="orderDevices('id','ASC');this.currentPage=1"  class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
               <option [ngValue]="1">1 {{ 'res' | translate }}</option>
               <option selected [ngValue]="10">10 {{ 'res' | translate }}</option>
               <option [ngValue]="50">50 {{ 'res' | translate }}</option>

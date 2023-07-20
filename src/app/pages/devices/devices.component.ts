@@ -62,7 +62,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   dup_ok=false;
   dup_not=false;
   search_text='Buscar';
-  order_by= 'uid';
   ord_asc= 'ASC';
   search_2= 'id';
   open_map_list= true;
@@ -145,7 +144,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   orderDevices(id: any, ord_asc: any){
-    this.order_by= id;
+    this.mark= id;
     this.ord_asc= ord_asc;
     this.devices();
   }
@@ -178,7 +177,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         this.getCornerCoordinates();
         console.log("MAP");
 
-        fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+        fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
         .then((response) => response.json())
         .then(data => {
           this.data= data;
@@ -205,7 +204,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       if(this.open_map_list==true){ // LIST //
         this.charging= true;
-        fetch(`${this.get_device}/0/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
           this.charging= false;
@@ -218,7 +217,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         //
 
         console.log("LIST")
-        fetch(`${this.get_device}/0/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
           this.charging= false;
@@ -562,7 +561,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         this.getCornerCoordinates();
         console.log("MAP 1");
 
-        fetch(`${this.get_device}/1/${this.search_text}/${this.order_by}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+        fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
         .then((response) => response.json())
         .then(data => {
           this.data= data;
@@ -661,7 +660,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             'source': 'places',
             'paint': {
             'circle-radius': 50,
-            'circle-color': '#FFFFFF',
+            'circle-color': '#FFFFFF', 
             'circle-opacity': 0.5
             }
           });

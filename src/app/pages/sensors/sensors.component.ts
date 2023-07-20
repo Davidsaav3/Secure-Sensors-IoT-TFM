@@ -38,6 +38,7 @@ export class SensorsComponent implements OnInit{
   alt_7_a=true;
   alt_7_b=false;
 
+  act_id= '';
   charging= false;
   data: any;
   width= 0;
@@ -64,6 +65,7 @@ export class SensorsComponent implements OnInit{
   search_1='Buscar';
   search_2='type';
   mark= 'position';
+  ord_asc= 'ASC';
 
   sensors = {
     id: '', 
@@ -87,29 +89,31 @@ export class SensorsComponent implements OnInit{
   }
 
   ngOnInit(): void { // Inicializador
-    this.getSensors('position','ASC');
+    this.getSensors(this.mark,this.ord_asc);
     this.openClouse();
   }
 
   getSensors(id: any,ord: any){ // Obtener todos los sensores
-    this.mark= id;
-    this.rute= this.rutaActiva.routerState.snapshot.url;
-    if(id!='id'){
-      this.search_2= id;
-    }
-    if(this.search.value==''){
-      this.search_1= 'Buscar';
-    }
-    else{
-      this.search_1= this.search.value;
-    }
-    this.charging= true;
-    fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}`)
-    .then((response) => response.json())
-    .then(quotesData => {
-      this.charging= false
-      this.data = quotesData
-    });
+      this.mark= id;
+      this.rute= this.rutaActiva.routerState.snapshot.url;
+      if(id!='id'){
+        this.search_2= id;
+      }
+      if(this.search.value==''){
+        this.search_1= 'Buscar';
+      }
+      else{
+        this.search_1= this.search.value;
+      }
+      this.charging= true;
+      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}`)
+      .then((response) => response.json())
+      .then(quotesData => {
+        this.charging= false
+        this.data = quotesData
+      });      
+    
+
   }
 
   editSensor(form: any) { // Guardar datos de sensores editado
@@ -124,11 +128,10 @@ export class SensorsComponent implements OnInit{
       }, 2000);
 
       setTimeout(() => {
-        this.getSensors('id','ASC');
+        this.getSensors(this.mark,this.ord_asc);
       }, 50);
       this.saved= true;
     }
-    this.change=false;
     this.change=false;
   }
 
@@ -145,7 +148,7 @@ export class SensorsComponent implements OnInit{
       }, 2000);
 
       setTimeout(() => {
-        this.getSensors('id','ASC');
+        this.getSensors(this.mark,this.ord_asc);
       }, 50);
       this.openClouse();
   
@@ -193,7 +196,7 @@ export class SensorsComponent implements OnInit{
           console.error(error); 
         });
         setTimeout(() => {
-          this.getSensors('id','ASC');
+          this.getSensors(this.mark,this.ord_asc);
         }, 50);
         this.openClouse();
         //
@@ -223,7 +226,7 @@ export class SensorsComponent implements OnInit{
       this.alert_delete= false;
     }, 2000);
     setTimeout(() => {
-      this.getSensors('id','ASC');
+      this.getSensors(this.mark,this.ord_asc);
     }, 50);
     this.openClouse();
   }
@@ -251,7 +254,8 @@ export class SensorsComponent implements OnInit{
   }
 
   orderColumn(id_actual: any){ // Ordenar columnas
-    if(!this.change && !this.change){
+    if(!this.change && !this.change && id_actual!=this.act_id){
+      this.act_id= id_actual;
        this.openEdit();
       this.state=2;
       fetch(`${this.id_sensors}/${id_actual}`)
@@ -262,9 +266,6 @@ export class SensorsComponent implements OnInit{
       .catch(error => {
         console.error(error); 
       });
-      setTimeout(() => {
-        this.getSensors('id','ASC');
-      }, 50);
       this.openClouse();
     }
   }
@@ -272,9 +273,9 @@ export class SensorsComponent implements OnInit{
   textSearch(event: any) { // search por texto
     clearTimeout(this.timeout);
     var $this = this;
-    this.timeout = setTimeout(function () {
+    this.timeout = setTimeout( () => {
       if (event.keyCode != 13) {
-        $this.getSensors('id','ASC');
+        $this.getSensors(this.mark,this.ord_asc);
         $this.openClouse();
       }
     }, 500);
@@ -291,7 +292,7 @@ export class SensorsComponent implements OnInit{
 
   deleteSearch(){ // Borrar search
     this.search.value= '';
-    this.getSensors('id','ASC');
+    this.getSensors(this.mark,this.ord_asc);
   }
 
   openNew(){ // Abrir Nuevo sensor
@@ -315,7 +316,7 @@ export class SensorsComponent implements OnInit{
 
   openEdit(){ // Abrir Editar sensor
     this.show= true;
-    this.state= 2
+    this.state= 2;
     this.show_3= false;
   }
 

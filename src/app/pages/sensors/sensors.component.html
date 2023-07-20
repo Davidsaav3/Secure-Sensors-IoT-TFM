@@ -35,55 +35,56 @@
 					<thead>
 						<tr>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'position'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getSensors('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getSensors('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getSensors('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getSensors('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'sensors.order' | translate }}</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'type'}">
-								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getSensors('type','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getSensors('type','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getSensors('type','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getSensors('type','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.type' | translate }}</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'metric'}">
-								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getSensors('metric','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getSensors('metric','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getSensors('metric','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getSensors('metric','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.metric' | translate }}</th>
 							<th class="d-none d-md-none d-lg-block" scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'description'}">
-								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getSensors('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getSensors('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getSensors('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getSensors('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.description' | translate }}</th>
 
-							<th *ngIf="show==false" scope="col"style="cursor: pointer; text-align: center;" [ngClass]="{'mark': mark == 'valuemin'}">
-								<svg *ngIf="alt_6_a" (click)="alt_6_a=false;getSensors('valuemin','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th *ngIf="show==false" scope="col"style="cursor: pointer; text-align: center;" [ngClass]="{'mark': mark == 'correction_general'}">
+								<svg *ngIf="alt_6_a" (click)="alt_6_a=false;getSensors('correction_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_6_a" (click)="alt_6_a=true;getSensors('valuemin','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_6_a" (click)="alt_6_a=true;getSensors('correction_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								  {{ 'sensors.general' | translate }}</th>
-							<th *ngIf="show==false" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'valuemax'}">
-								<svg *ngIf="alt_7_a" (click)="alt_7_a=false;getSensors('correction_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th *ngIf="show==false" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_time_general'}">
+								<svg *ngIf="alt_7_a" (click)="alt_7_a=false;getSensors('correction_time_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_7_a" (click)="alt_7_a=true;getSensors('correction_time_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_7_a" (click)="alt_7_a=true;getSensors('correction_time_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
-								  {{ 'sensors.time_general' | translate }}</th>							
-							
+								  {{ 'sensors.time_general' | translate }}
+							</th>							
+					
 							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
@@ -136,7 +137,7 @@
 						<h1 *ngIf="state==2">{{ 'sensors.of' | translate }} {{ sensors.type }}</h1>
 					</div>
 
-					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="type" name="type" value="{{ sensors.type }}" [(ngModel)]="sensors.id">
+					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ sensors.id }}" [(ngModel)]="sensors.id">
 
 					<div class="col-12 pt-3 form-group">
 						<label for="type">{{ 'sensors.type' | translate }}</label>
