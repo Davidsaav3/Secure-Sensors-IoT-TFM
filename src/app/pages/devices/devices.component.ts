@@ -229,13 +229,20 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             for (let index = 0; index < this.markers.length; index++) {
                 //console.log(this.data2.length)
                   cont2='';
-                  for (let index2 = 0; index2 < this.data2.length; index2++) {
+                  for (let index2 = 0; index2 < this.data2.length/2; index2++) {
                     //console.log(this.data2[index2][0])
                     if(this.data2[index2].length>0 && this.data2[index2][0].id_device==this.markers[index].data.id){
                       for (let index3 = 0; index3 < this.data2[index2].length; index3++) {
-                        cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                                  <h6 class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</h6>
-                                </span>`
+                        if(this.data2[index2][index3].enable==false){
+                          cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2">
+                          <h6 class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</h6>
+                        </span>`
+                        }
+                        if(this.data2[index2][index3].enable==true){
+                          cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2">
+                          <h6 class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</h6>
+                        </span>`
+                        }
                       }
                     } 
                   }
