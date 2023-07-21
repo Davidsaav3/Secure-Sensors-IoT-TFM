@@ -181,7 +181,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         this.getCornerCoordinates();
         //console.log("MAP");
 
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+        fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
         .then((response) => response.json())
         .then(data => {
           this.data= data;

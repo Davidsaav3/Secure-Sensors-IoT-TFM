@@ -73,6 +73,7 @@ con.connect(function(err) {
             }
             else{
               console.log("ZONA 1 MAP")
+              console.log(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
               con.query(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
                 if (err) throw err;
                   res.send(result)
@@ -113,7 +114,7 @@ con.connect(function(err) {
             }); 
           }
           else{
-            console.log("ZONA 5 MAP")
+            console.log(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
             con.query(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
