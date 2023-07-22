@@ -13,7 +13,7 @@ export class DevicesNewEditComponent implements OnInit{
 
   sharedLat: any = '';
   sharedLon: any = '';
-  date= '';
+  date: any;
   state= 0; //0 new //1 duplicate // 2 edit
   rute='';
   rute2: any;
@@ -64,7 +64,7 @@ export class DevicesNewEditComponent implements OnInit{
     lat: this.sharedLat,
     lon: this.sharedLon,
     cota: 10,
-    timezone: '+01:00',
+    timezone: 'Brussels, Copenhagen, Madrid, Paris',
     organizationid: '',
     enable: 0,
     createdAt: '',
@@ -271,6 +271,8 @@ export class DevicesNewEditComponent implements OnInit{
 }
 
 newDevice(form: any) { // Guardar Dispositivos
+  this.createDate();
+  this.devices.createdAt= this.date;
   this.dataSharingService.sharedLat$.subscribe(data => {
     this.devices.lat = data;
   });
@@ -353,12 +355,6 @@ newDevice(form: any) { // Guardar Dispositivos
 
   createDate(){ // Genera fecha
     const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-    this.date= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    this.date= currentDate.toISOString();
   }
 }

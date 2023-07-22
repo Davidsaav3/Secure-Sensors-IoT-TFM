@@ -80,6 +80,19 @@ export class SensorsComponent implements OnInit{
     correction_time_general: null,
   }
 
+  sensors_copy = {
+    id: '', 
+    type: '',    
+    metric: '', 
+    description: '',
+    errorvalue: null,
+    valuemax: null,
+    valuemin: null,
+    position: 0,
+    correction_general: null,
+    correction_time_general: null,
+  }
+
   aux_1 = {
     id: '',
   }
@@ -262,6 +275,17 @@ export class SensorsComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.sensors= data[0];
+        console.log(data[0].sensors_copy)
+        this.sensors_copy.id= data[0].id;
+        this.sensors_copy.type= data[0].type; 
+        this.sensors_copy.metric= data[0].metric;
+        this.sensors_copy.description= data[0].description;
+        this.sensors_copy.errorvalue= data[0].errorvalue;
+        this.sensors_copy.valuemax= data[0].valuemax;
+        this.sensors_copy.valuemin= data[0].valuein;
+        this.sensors_copy.position= data[0].position;
+        this.sensors_copy.correction_general= data[0].correction_general;
+        this.sensors_copy.correction_time_general= data[0].correction_time_general;
       })
       .catch(error => {
         console.error(error); 
@@ -318,6 +342,11 @@ export class SensorsComponent implements OnInit{
     this.show= true;
     this.state= 2;
     this.show_3= false;
+  }
+
+  recharge(){
+    this.change= false;
+    this.sensors= this.sensors_copy;
   }
 
   clouseAll(){ // Cerrar todas las pestañas

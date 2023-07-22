@@ -30,6 +30,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   topRightCoordinates: string= '';
   bottomLeftCoordinates: string= '';
   bottomRightCoordinates: string= '';
+  date_show: any;
 
   geojson: any;
   geojson2: any;
@@ -845,6 +846,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
     this.color_map = localStorage.getItem('color_map') ?? '0';
     //console.log(this.color_map)
+  }
+
+  formatDateTime(date2: any) {
+    let dat='';
+    const date = new Date(date2)
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    if(date2==null){
+      dat= '';
+    }
+    return dat;
   }
 
 }
