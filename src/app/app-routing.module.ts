@@ -5,6 +5,7 @@ import { DeviceComponent } from './pages/device.component';
 import { DevicesNewEditComponent } from './pages/devices-new-edit/devices-new-edit.component';
 import { DevicesComponent } from './pages/devices/devices.component';
 import { SensorsComponent } from './pages/sensors/sensors.component';
+import { EstructureComponent } from './pages/estructure/estructure.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,9 @@ const routes: Routes = [
   },
   { 
     path:'sensors', component: SensorsComponent
+  },
+  { 
+    path:'estructure', component: EstructureComponent
   },
   {
     path:'**',
