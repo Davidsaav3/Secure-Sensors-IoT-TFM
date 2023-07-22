@@ -122,6 +122,10 @@
     "estructure.buscar_estructure" : "Search data estructures...",
     "estructure.configuration" : "Configuration",
     "estructure.new" : "New data estructure",
-    "estructure" : "Data estructure"
-
+    "estructure" : "Data estructure",
+    "estructure.erase_estructure" : "Delete data estructure",
+    "estructure.m1.1" : "Delete sensor data estructure ?",
+    "estructure.m1.2" : "This action is not reversible. This data estructure will be permanently deleted.",
+    "estructure.m2.1" : "Exit without saving ?",
+    "estructure.m2.2" : "The edited data structure will not be saved."
 }

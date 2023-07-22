@@ -217,8 +217,8 @@
 			<div class="col-12 mt-5">
 				<div class="row" *ngIf="state==1 || state==0">
 					<div class="col-6 mt-3">
-						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.cancel' | translate }}</button>
+						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6 mt-3">
 						<button (click)="newSensor(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
@@ -226,7 +226,7 @@
 				</div>
 				<div class="row" *ngIf="state==2">
 					<div class="col-6 mt-3">
-						<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
+						<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">Restablecer datos</button>
 					</div>
 					<div class="col-6 mt-3">
@@ -254,7 +254,7 @@
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
 					<div class="col-6">
-						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
 						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteSensor(sensors.id)" disabled *ngIf="change || change">{{ 'sensors.delete' | translate }}</button>

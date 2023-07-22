@@ -46,7 +46,7 @@ export class EstructureComponent implements OnInit{
   view_dup= 1000;
   pencil_dup= 1000;
   timeout: any = null;
-  state= 0;
+  state= 1;
   show=false;
   show_3= true;
   alert_delete: any= false;
@@ -68,6 +68,12 @@ export class EstructureComponent implements OnInit{
   ord_asc= 'ASC';
 
   estructure = {
+    id_estructure: '', 
+    description: '',    
+    configuration: '', 
+  }
+
+  estructure_copy = {
     id_estructure: '', 
     description: '',    
     configuration: '', 
@@ -202,7 +208,7 @@ export class EstructureComponent implements OnInit{
           this.estructure.description= description_2;
         })
         this.change= true;
-        this.state= 0;
+        this.state= 1;
       })
     }
   }
@@ -241,7 +247,6 @@ export class EstructureComponent implements OnInit{
 
   clouse(){ 
     this.show= false;
-    this.state=-1;
     this.openClouse();
     this.change=false;
     this.change=false;
@@ -257,6 +262,10 @@ export class EstructureComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.estructure= data[0];
+
+        this.estructure_copy.id_estructure= data[0].id_estructure;
+        this.estructure_copy.description= data[0].description;
+        this.estructure_copy.configuration= data[0].configuration;
       })
       .catch(error => {
         console.error(error); 
@@ -306,6 +315,11 @@ export class EstructureComponent implements OnInit{
     this.show= true;
     this.state= 2;
     this.show_3= false;
+  }
+
+  recharge(){
+    this.change= false;
+    this.estructure= this.estructure_copy;
   }
 
   clouseAll(){ // Cerrar todas las pestañas
