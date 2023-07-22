@@ -89,8 +89,8 @@
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
 					</thead>
-					<tbody *ngFor="let quote of data; let i = index">
-						<tr style="cursor: pointer;" [ngClass]="{'disabled': change || change }">
+					<tbody *ngFor="let quote of data; let i = index">{{act_id}}{{quote.id.toString()}}
+						<tr style="cursor: pointer;" [ngClass]="{'disabled': change , 'mark':act_id==quote.id.toString() }">
 							<th (click)="orderColumn(quote.id)">{{ quote.position }}</th>
 
 							<td (click)="orderColumn(quote.id)">{{ quote.type }}</td>
@@ -173,7 +173,7 @@
 
 					<div class="col-md-6 mt-5">
 						<label for="errorvalue">{{ 'sensors.error_value' | translate }}</label>
-						<input type="number" min="0" (ngModelChange)="change=true" value="{{ sensors.errorvalue }}" id="errorvalue" class="form-control" name="errorvalue" [(ngModel)]="sensors['errorvalue']" >
+						<input type="number" (ngModelChange)="change=true" value="{{ sensors.errorvalue }}" id="errorvalue" class="form-control" name="errorvalue" [(ngModel)]="sensors['errorvalue']" >
 						<div *ngIf="form.submitted && form.controls['errorvalue'].errors" class="text-danger">
 							<div *ngIf="form.controls['errorvalue'].errors['required']">{{ 'sensors.error_value' | translate }} is required.</div>
 						</div>
@@ -189,7 +189,7 @@
 
 					<div class="col-md-6 mt-2">
 						<label for="valuemin">{{ 'sensors.value_min' | translate }}</label>
-						<input type="number" min="0" (ngModelChange)="change=true" value="{{ sensors.valuemin }}" id="valuemin" class="form-control" name="valuemin" [(ngModel)]="sensors['valuemin']" >
+						<input type="number" (ngModelChange)="change=true" value="{{ sensors.valuemin }}" id="valuemin" class="form-control" name="valuemin" [(ngModel)]="sensors['valuemin']" >
 						<div *ngIf="form.submitted && form.controls['valuemin'].errors" class="text-danger">
 							<div *ngIf="form.controls['valuemin'].errors['required']">{{ 'sensors.value_min' | translate }} is required.</div>
 						</div>
@@ -197,7 +197,7 @@
 
 					<div class="col-md-6 mt-2">
 						<label for="valuemax">{{ 'sensors.value_max' | translate }}</label>
-						<input type="number" min="0" (ngModelChange)="change=true" value="{{ sensors.valuemax }}" id="valuemax" class="form-control" name="valuemax" [(ngModel)]="sensors['valuemax']" >
+						<input type="number" (ngModelChange)="change=true" value="{{ sensors.valuemax }}" id="valuemax" class="form-control" name="valuemax" [(ngModel)]="sensors['valuemax']" >
 						<div *ngIf="form.submitted && form.controls['valuemax'].errors" class="text-danger">
 							<div *ngIf="form.controls['valuemax'].errors['required']">{{ 'sensors.value_max' | translate }} is required.</div>
 						</div>

@@ -2,7 +2,7 @@
 <form class="row cont0 needs-validation" #form="ngForm">
     <div class="row p-0 m-0" >
         <div *ngIf="show_form" class="p-0" [ngClass]="{'c200': !this.show_map, 'c20': this.show_map}"> 
-            <div class="cont1">
+            <div class="cont1 pb-0">
                 <div class="row c1">
                     <div class="col-12">
                         <div class="row pb-3">
@@ -100,6 +100,13 @@
                                     <div *ngIf="form.controls['description_origin'].errors['required']">{{ 'devices.edit.description' | translate }} is required.</div>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <label for="id_data_estructure">{{ 'estructure' | translate }}</label>
+                                <select type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']"></select>
+                                <div *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
+                                    <div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'estructure' | translate }} is required.</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -179,50 +186,53 @@
                             </div>
                         </div>
                     </div> 
-                    <div class="col-11 col-lg-4 col-md-11 col-11"> 
+                    <div style="position: relative;" class="col-11 col-lg-4 col-md-11 col-11"> 
                         <label for="timezone" class="form-label m-0">{{ 'devices.edit.zone' | translate }}</label>
                         <select class="form-select" aria-label="Default select example"(ngModelChange)="changed=true" [value]="devices['timezone']" type="text" id="timezone" class="form-control" name="timezone" [(ngModel)]="devices['timezone']" type>
-                            <option value="Eniwetok, Kwajalein">Eniwetok, Kwajalein</option>
-                            <option value="Midway Island, Samoa">Midway Island, Samoa</option>
-                            <option value="Hawaii">Hawaii</option>
-                            <option value="Taiohae">Taiohae</option>
-                            <option value="Alaska">Alaska</option>
-                            <option value="Pacific Time (US, Canada)">Pacific Time (US, Canada)</option>
-                            <option value="Mountain Time (US, Canada)">Mountain Time (US, Canada)</option>
-                            <option value="Central Time (US, Canada), Mexico City">Central Time (US, Canada), Mexico City</option>
-                            <option value="Eastern Time (US, Canada), Bogota, Lima">Eastern Time (US, Canada), Bogota, Lima</option>
-                            <option value="Caracas">Caracas</option>
-                            <option value="Atlantic Time (Canada), Caracas, La Paz">Atlantic Time (Canada), Caracas, La Paz</option>
-                            <option value="Newfoundland">Newfoundland</option>
-                            <option value="Brazil, Buenos Aires, Georgetown">Brazil, Buenos Aires, Georgetown</option>
-                            <option value="Mid-Atlantic">Mid-Atlantic</option>
-                            <option value="Azores, Cape Verde Islands">Azores, Cape Verde Islands</option>
-                            <option value="Western Europe Time, London, Lisbon, Casablanca">Western Europe Time, London, Lisbon, Casablanca</option>
-                            <option value="Brussels, Copenhagen, Madrid, Paris" selected="selected">Brussels, Copenhagen, Madrid, Paris</option>
-                            <option value="Kaliningrad, South Africa">Kaliningrad, South Africa</option>
-                            <option value="Baghdad, Riyadh, Moscow, St. Petersburg">Baghdad, Riyadh, Moscow, St. Petersburg</option>
-                            <option value="Tehran">Tehran</option>
-                            <option value="Abu Dhabi, Muscat, Baku, Tbilisi">Abu Dhabi, Muscat, Baku, Tbilisi</option>
-                            <option value="Kabul">Kabul</option>
-                            <option value="Ekaterinburg, Islamabad, Karachi, Tashkent">Ekaterinburg, Islamabad, Karachi, Tashkent</option>
-                            <option value="Bombay, Calcutta, Madras, New Delhi">Bombay, Calcutta, Madras, New Delhi</option>
-                            <option value="Kathmandu, Pokhara">Kathmandu, Pokhara</option>
-                            <option value="Almaty, Dhaka, Colombo">Almaty, Dhaka, Colombo</option>
-                            <option value="Yangon, Mandalay">Yangon, Mandalay</option>
-                            <option value="Bangkok, Hanoi, Jakarta">Bangkok, Hanoi, Jakarta</option>
-                            <option value="Beijing, Perth, Singapore, Hong Kong">Beijing, Perth, Singapore, Hong Kong</option>
-                            <option value="Eucla">Eucla</option>
-                            <option value="Tokyo, Seoul, Osaka, Sapporo, Yakutsk">Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
-                            <option value="Adelaide, Darwin">Adelaide, Darwin</option>
-                            <option value="Eastern Australia, Guam, Vladivostok">Eastern Australia, Guam, Vladivostok</option>
-                            <option value="Lord Howe Island">Lord Howe Island</option>
-                            <option value="Magadan, Solomon Islands, New Caledonia">Magadan, Solomon Islands, New Caledonia</option>
-                            <option value="Norfolk Island">Norfolk Island</option>
-                            <option value="Auckland, Wellington, Fiji, Kamchatka">Auckland, Wellington, Fiji, Kamchatka</option>
-                            <option value="Chatham Islands">Chatham Islands</option>
-                            <option value="Apia, Nukualofa">Apia, Nukualofa</option>
-                            <option value="Line Islands, Tokelau">Line Islands, Tokelau</option>
+                            <option value="Eniwetok, Kwajalein">Eniwetok, Kwajalein (GMT -12:00)</option>
+                            <option value="Midway Island, Samoa">Midway Island, Samoa (GMT -11:00)</option>
+                            <option value="Hawaii">Hawaii (GMT -10:00)</option>
+                            <option value="Taiohae">Taiohae (GMT -9:30)</option>
+                            <option value="Alaska">Alaska (GMT -9:00)</option>
+                            <option value="Pacific Time (US & Canada)">Pacific Time (US & Canada) (GMT -8:00)</option>
+                            <option value="Mountain Time (US & Canada)">Mountain Time (US & Canada) (GMT -7:00)</option>
+                            <option value="Central Time (US & Canada), Mexico City">Central Time (US & Canada), Mexico City (GMT -6:00)</option>
+                            <option value="Eastern Time (US & Canada), Bogota, Lima">Eastern Time (US & Canada), Bogota, Lima (GMT -5:00)</option>
+                            <option value="Caracas">Caracas (GMT -4:30)</option>
+                            <option value="Atlantic Time (Canada), Caracas, La Paz">Atlantic Time (Canada), Caracas, La Paz (GMT -4:00)</option>
+                            <option value="Newfoundland">Newfoundland (GMT -3:30)</option>
+                            <option value="Brazil, Buenos Aires, Georgetown">Brazil, Buenos Aires, Georgetown (GMT -3:00)</option>
+                            <option value="Mid-Atlantic">Mid-Atlantic (GMT -2:00)</option>
+                            <option value="Azores, Cape Verde Islands">Azores, Cape Verde Islands (GMT -1:00)</option>
+                            <option value="Western Europe Time, London, Lisbon, Casablanca">Western Europe Time, London, Lisbon, Casablanca (GMT)</option>
+                            <option value="Brussels, Copenhagen, Madrid, Paris" selected="selected">Brussels, Copenhagen, Madrid, Paris (GMT +1:00)</option>
+                            <option value="Kaliningrad, South Africa">Kaliningrad,South Africa (GMT +2:00)</option>
+                            <option value="Baghdad, Riyadh, Moscow, St. Petersburg">Baghdad, Riyadh,Moscow, St. Petersburg (GMT +3:00)</option>
+                            <option value="Tehran">Tehran (GMT +3:30)</option>
+                            <option value="Abu Dhabi, Muscat, Baku, Tbilisi">Abu Dhabi, Muscat, Baku, Tbilisi (GMT +4:00)</option>
+                            <option value="Kabul">Kabul (GMT +4:30)</option>
+                            <option value="Ekaterinburg, Islamabad, Karachi, Tashkent">Ekaterinburg, Islamabad, Karachi, Tashkent (GMT +5:00)</option>
+                            <option value="Bombay, Calcutta, Madras, New Delhi">Bombay, Calcutta, Madras, New Delhi (GMT +5:30)</option>
+                            <option value="+05:75">Kathmandu, Pokhara (GMT +5:45)</option>
+                            <option value="+06:00">Almaty, Dhaka, Colombo (GMT +6:00)</option>
+                            <option value="Yangon, Mandala">Yangon, Mandalay (GMT +6:30)</option>
+                            <option value="Bangkok, Hanoi, Jakarta">Bangkok, Hanoi, Jakarta (GMT +7:00)</option>
+                            <option value="Beijing, Perth, Singapore, Hong Kong">Beijing, Perth, Singapore, Hong Kong (GMT +8:00)</option>
+                            <option value="Eucla">Eucla (GMT +8:45)</option>
+                            <option value="Tokyo, Seoul, Osaka, Sapporo, Yakutsk">Tokyo, Seoul, Osaka, Sapporo, Yakutsk (GMT +9:00)</option>
+                            <option value="Adelaide, Darwin">Adelaide, Darwin (GMT +9:30)</option>
+                            <option value="Eastern Australia, Guam, Vladivostok">Eastern Australia, Guam, Vladivostok (GMT +10:00)</option>
+                            <option value="Lord Howe Island">Lord Howe Island (GMT +10:30)</option>
+                            <option value="Magadan, Solomon Islands, New Caledonia">Magadan, Solomon Islands, New Caledonia (GMT +11:00)</option>
+                            <option value="Norfolk Island">Norfolk Island (GMT +11:30)</option>
+                            <option value="Auckland, Wellington, Fiji, Kamchatka">Auckland, Wellington, Fiji, Kamchatka (GMT +12:00)</option>
+                            <option value="Chatham Islands">Chatham Islands (GMT +12:45)</option>
+                            <option value="Apia, Nukualofa">Apia, Nukualofa (GMT +13:00)</option>
+                            <option value="Line Islands, Tokelau">Line Islands, Tokelau (GMT +14:00)</option>
                         </select>
+                        <svg style="position: absolute; top:35px; right:20px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                        </svg>
                         <div *ngIf="form.submitted && form.controls['timezone'].errors" class="text-danger">
                             <div *ngIf="form.controls['timezone'].errors['required']">{{ 'devices.edit.zone' | translate }} is required.</div>
                         </div>

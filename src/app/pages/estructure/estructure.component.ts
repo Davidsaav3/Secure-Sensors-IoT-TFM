@@ -248,6 +248,7 @@ export class EstructureComponent implements OnInit{
   }
 
   orderColumn(id_actual: any){ // Ordenar columnas
+    this.show= true;
     if(!this.change && !this.change && id_actual!=this.act_id){
       this.act_id= id_actual;
        this.openEdit();

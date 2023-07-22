@@ -96,6 +96,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
+      id_data_estructure: 1,
     }]
   }
 
@@ -111,6 +112,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
+      id_data_estructure: 1,
     }]
   }
 
@@ -126,6 +128,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
+      id_data_estructure: 1,
     }]
   }
 
@@ -387,6 +390,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
+      id_data_estructure: 1,
     });
     this.search.devices_act= 2;
     this.search.sensors_act= 2;
@@ -407,6 +411,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
+      id_data_estructure: 1,
     });
     this.Page(1);
   }
@@ -426,6 +431,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           position: '',
           correction_general: null,
           correction_time_general: null,
+          id_data_estructure: 1,
         });
         this.devices();    
       }
@@ -462,6 +468,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               position: '',
               correction_general: null,
               correction_time_general: null,
+              id_data_estructure: 1,
             });            
             this.devices();
             console.log("4")    

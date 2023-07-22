@@ -118,6 +118,12 @@
     "first" : "Primera página",
     "last" : "Ultima página",
     "res" : "Resultado por página",
-    "sin" : "Sin sensores"
+    "sin" : "Sin sensores",
+
+    "estructure.buscar_estructure" : "Buscar estructuras de datos...",
+    "estructure.configuration" : "Configuración",
+    "estructure.new" : "Nueva estructura de datos",
+    "estructure" : "Estructura de datos"
+
 
 }

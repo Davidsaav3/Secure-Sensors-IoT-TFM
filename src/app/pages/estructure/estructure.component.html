@@ -1,19 +1,19 @@
 <app-navbar></app-navbar>
-<div class="m-0 p-0 row d-flex" [ngClass]="{'rev': this.width<965, '': this.width>=965}">
+<div class="m-0 p-0 row d-flex">
 
-	<div class="cc2 cont me-0" [ngClass]="{'c100': this.show_3==true || this.width<965, 'c10': this.show_3==false}">
+	<div class="cc2 cont me-0">
 		<div class="p-3 pb-0 pe-2">
 				<div class="row d-flex">
 					<div class="col-6 col-sm-6 col-lg-2 mb-3">
 						<div class="w-100 d-flex" style="position: relative;">
-							<input (keyup)="textSearch($event)" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'estructure.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
-							<input (keyup)="textSearch($event)" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'estructure.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+							<input (keyup)="textSearch($event)" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'estructure.buscar_estructure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+							<input (keyup)="textSearch($event)" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'estructure.buscar_estructure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
 							<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;" class="" type="" (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 						</div>
 					</div>
 				<div class="col-6 col-sm-6 col-lg-10 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew()" [ngClass]="{'disabled': change || change}">{{ 'estructure.nuevo_sensor' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew()" [ngClass]="{'disabled': change || change}">{{ 'estructure.new' | translate }}</button>
 					</div>
 				</div>
 			</div>	
@@ -41,7 +41,7 @@
 								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructure('id_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
-								{{ 'estructure.id_estructure' | translate }}
+								{{ 'sensors.id' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'description'}">
 								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getEstructure('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -50,7 +50,7 @@
 								  <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getEstructure('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
-								{{ 'estructure.description' | translate }}
+								{{ 'sensors.description' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'configuration'}">
 								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructure('configuration','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -63,10 +63,59 @@
 							</th>
 											
 					
-							<th scope="col" style="text-align: center;">{{ 'estructure.duplicate' | translate }}</th>
-							<th scope="col" style="text-align: center;">{{ 'estructure.edit' | translate }}</th>
+							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
+							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
 					</thead>
+					<tbody>
+						<tr class="" *ngIf="show" style="cursor: pointer;">
+							<form #form="ngForm" class="row needs-validation p-3"> 
+
+								<th>
+									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
+								</th>
+								<th>
+									<label for="description">{{ 'estructure.description' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required type>
+									<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
+										<div *ngIf="form.controls['description'].errors['required']">{{ 'estructure.description' | translate }} is required.</div>
+									</div>
+								</th>
+								<th>
+									<label for="configuration">{{ 'estructure.order' | translate }}</label>
+									<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']">
+									<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
+										<div *ngIf="form.controls['configuration'].errors['required']">{{ 'estructure.order' | translate }} is required.</div>
+									</div>
+								</th>
+
+								<th class="row" *ngIf="state==1 || state==0">
+									<div class="col-6 mt-3">
+										<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
+										<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.cancel' | translate }}</button>
+									</div>
+									<div class="col-6 mt-3">
+										<button (click)="newEstructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+									</div>	
+								</th>
+
+								<th class="row" *ngIf="state==2">
+									<div class="col-6 mt-3">
+										<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
+										<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensor.cancel' | translate }}</button>
+									</div>
+									<div class="col-6 mt-3">
+										<button type="submit" (click)="editEstructure(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+									</div>	
+									<div class="col-12 mt-3">
+										<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'sensors.erase_sensor' | translate }}</button>
+									</div>
+								</th>
+
+							</form>
+						</tr>
+					</tbody>
+					<!---->
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr style="cursor: pointer;" [ngClass]="{'disabled': change || change }">
 							<th (click)="orderColumn(quote.id_estructure)">{{ quote.id_estructure }}</th>
@@ -97,64 +146,6 @@
 				</table>
 			</div>		
 		</div> 
-	</div>
-
-		<div class="cc2 cont" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
-		<form #form="ngForm" class="row needs-validation p-3"> 
-			<div class="col-12">
-				<div class="row">
-					
-					<div class="col-12">
-						<h1 *ngIf="state==0">Duplicar {{estructure.description}}</h1>
-						<h1 *ngIf="state==1">{{ 'sensors.nuevo_sensor' | translate }}</h1>
-						<h1 *ngIf="state==2">{{ 'sensors.of' | translate }} {{ estructure.description }}</h1>
-					</div>
-
-					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
-
-					<div class="col-6 mt-2">
-						<label for="description">{{ 'estructure.description' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required type>
-						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
-							<div *ngIf="form.controls['description'].errors['required']">{{ 'estructure.description' | translate }} is required.</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 mt-2">
-						<label for="configuration">{{ 'estructure.order' | translate }}</label>
-						<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']">
-						<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
-							<div *ngIf="form.controls['configuration'].errors['required']">{{ 'estructure.order' | translate }} is required.</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-
-			<div class="col-12 mt-5">
-				<div class="row" *ngIf="state==1 || state==0">
-					<div class="col-6 mt-3">
-						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.cancel' | translate }}</button>
-					</div>
-					<div class="col-6 mt-3">
-						<button (click)="newEstructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-					</div>	
-				</div>
-				<div class="row" *ngIf="state==2">
-					<div class="col-6 mt-3">
-						<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
-						<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensor.cancel' | translate }}</button>
-					</div>
-					<div class="col-6 mt-3">
-						<button type="submit" (click)="editEstructure(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-					</div>	
-					<div class="col-12 mt-3">
-						<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'sensors.erase_sensor' | translate }}</button>
-					</div>
-				</div>
-			</div>
-		</form>
 	</div>
 </div>
 

@@ -30,7 +30,6 @@
             <label style="display: none" [for]="'id_device'+i">{{ 'devices.sensors.id_device' | translate }}</label>
             <input type="number" min="0" maxlength="11" (ngModelChange)="updatesharedList()" style="display: none" class="form-control" [id]="'id_device'+i" [name]="'id_device'+i" value="{{this.id}}" [(ngModel)]="item.id_device">
           
-
             <th scope="col2" class="pb-0 input-0">
               <label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
               <input type="number" min="0" maxlength="11" (ngModelChange)="updatesharedList()" value="{{ item.orden }}" type="text" class="form-control" [id]="'orden'+i" [name]="'orden'+i" [(ngModel)]="item['orden']" required>

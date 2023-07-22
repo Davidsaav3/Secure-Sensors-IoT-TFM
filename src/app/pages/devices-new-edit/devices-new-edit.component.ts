@@ -69,6 +69,7 @@ export class DevicesNewEditComponent implements OnInit{
     enable: 0,
     createdAt: '',
     updatedAt: '',
+    id_data_estructure: 1,
   }
 
   sensors = {

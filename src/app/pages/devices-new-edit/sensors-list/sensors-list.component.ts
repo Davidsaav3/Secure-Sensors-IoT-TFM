@@ -21,7 +21,7 @@ export class SensorsListComponent  implements OnInit{
   id_sensors: string = 'http://localhost:5172/api/id/sensors_types';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
-  view_can= 1;
+  view_can= -1;
   activeLang='en';
   search_1='orden';
   search_2='id';

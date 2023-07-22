@@ -369,7 +369,7 @@ con.connect(function(err) {
     }); 
   }
   else{
-      con.query(`SELECT * FROM data_estructure WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%' order by ${type1} ${type2}`, function (err, result) {
+      con.query(`SELECT * FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' order by ${type1} ${type2}`, function (err, result) {
       if (err) throw err;
         res.send(result)
     }); 
