@@ -19,8 +19,9 @@ export class DevicesNewEditComponent implements OnInit{
   rute2: any;
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+    onResize(event: any) {
     window.resizeBy(-1, 0);
+    this.resize();
   }
 
   constructor(private router: Router, private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,private DevicesMapComponent: DevicesMapComponent) { 
@@ -53,6 +54,7 @@ export class DevicesNewEditComponent implements OnInit{
   changed= false;
   data: any;
   id_max= 2;
+  width= 0;
 
   devices = {    
     id: '',    
@@ -111,8 +113,10 @@ export class DevicesNewEditComponent implements OnInit{
         correction_time_general: null,
       }]
   }
-  
 
+  resize(): void{ // Redimensionar pantalla
+    this.width = window.innerWidth;
+  }
 
   ngOnInit(): void { // Inicializador
     this.rute= this.router.routerState.snapshot.url;
@@ -194,6 +198,8 @@ export class DevicesNewEditComponent implements OnInit{
         }
       });
     }, 500);
+    this.onResize(0);
+    this.dataSharingService.updatesharedAmp(false);  
   }
 
   getDevices(){ // Obtener Dispositivos
@@ -335,7 +341,8 @@ newDevice(form: any) { // Guardar Dispositivos
     this.dataSharingService.updatesharedAmp(true);
     if(this.rute2[2]=='edit'){
       this.onResize(0);
-    }  }
+    }  
+  }
   hideForm(){ // Contrarer formulario
     this.show_form=false;
     this.dataSharingService.updatesharedAmp(false);

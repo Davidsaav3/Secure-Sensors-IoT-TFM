@@ -9,8 +9,12 @@ import { Router } from '@angular/router';
 
 export class SensorsComponent implements OnInit{
 
-  @HostListener('window:resize')
   public activeLang = 'es';
+  @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+    window.resizeBy(-1, 0);
+    this.resize();
+  }
 
   constructor(public rutaActiva: Router) {
     this.resize();
