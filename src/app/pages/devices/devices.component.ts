@@ -313,7 +313,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           let labelLayerId;
           if (layers !== undefined) {
             const labelLayer = layers.find(
-              (layer) => layer.type === 'symbol' && layer.layout && layer.layout['text-field']
+              (layer) => layer.type == 'symbol' && layer.layout && layer.layout['text-field']
             );
             if (labelLayer) {
               labelLayerId = labelLayer.id;

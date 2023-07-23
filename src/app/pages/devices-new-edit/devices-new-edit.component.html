@@ -102,7 +102,11 @@
                             </div>
                             <div class="col-md-12">
                                 <label for="id_data_estructure">{{ 'estructure' | translate }}</label>
-                                <select type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']"></select>
+                                <select type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
+                                    <ng-container *ngFor="let id of estructures.estructure;let j=index">
+                                        <option [selected]="id.id_estructure==devices['id_data_estructure']" value="{{id.id_estructure}}">{{id.description}}</option>
+                                    </ng-container>
+                                </select>
                                 <div *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
                                     <div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'estructure' | translate }} is required.</div>
                                 </div>
@@ -155,7 +159,7 @@
                 </div>
 
                 <div class="row c6">
-                    <div class="col-1 pt-4" (click)="recharge()" style="cursor: pointer;">
+                    <div *ngIf="this.rute2[2]=='edit' || state==1" class="col-1 pt-4" (click)="recharge()" style="cursor: pointer;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
                             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
@@ -165,27 +169,27 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="lat">{{ 'devices.edit.lat' | translate }}</label>
-                                <input (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type>
+                                <input (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
                                 <div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
                                     <div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} is required.</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="lon">{{ 'devices.edit.long' | translate }}</label>
-                                <input (ngModelChange)="updatesharedLon()" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type>
+                                <input (ngModelChange)="updatesharedLon()" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
                                 <div *ngIf="form.submitted && form.controls['lon'].errors" class="text-danger">
                                     <div *ngIf="form.controls['lon'].errors['required']">{{ 'devices.edit.long' | translate }} is required.</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="cota">{{ 'devices.edit.alt' | translate }}</label>
-                                <input (ngModelChange)="updatesharedLat()" [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type>
+                                <input (ngModelChange)="updatesharedLat()" [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
                                 <div *ngIf="form.submitted && form.controls['cota'].errors" class="text-danger">
                                     <div *ngIf="form.controls['cota'].errors['required']">{{ 'devices.edit.alt' | translate }} is required.</div>
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <div style="position: relative;" class="col-11 col-lg-4 col-md-11 col-11"> 
                         <label for="timezone" class="form-label m-0">{{ 'devices.edit.zone' | translate }}</label>
                         <select class="form-select" aria-label="Default select example"(ngModelChange)="changed=true" [value]="devices['timezone']" type="text" id="timezone" class="form-control" name="timezone" [(ngModel)]="devices['timezone']" type>

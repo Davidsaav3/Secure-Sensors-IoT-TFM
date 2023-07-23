@@ -38,6 +38,8 @@ export class DevicesNewEditComponent implements OnInit{
   delete_all_sensors_devices: string = 'http://localhost:5172/api/delete_all/sensors_devices';
   max_device: string = 'http://localhost:5172/api/max/device_configurations';
   get_device: string = 'http://localhost:5172/api/get/device_configurations';
+  get_estructure: string = 'http://localhost:5172/api/get/data_estructure/Buscar/id_estructure/ASC';
+
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
   view_can= false;
@@ -70,6 +72,7 @@ export class DevicesNewEditComponent implements OnInit{
     createdAt: '',
     updatedAt: '',
     id_data_estructure: 1,
+    estructure_name: ''
   }
 
   sensors = {
@@ -82,6 +85,14 @@ export class DevicesNewEditComponent implements OnInit{
         nodata: true,
         orden: 1,
         type_name: 1,
+      }]
+  }
+
+  estructures = {
+    estructure : [{
+        id_estructure: 1, 
+       description: '',
+       configuration: ''
       }]
   }
 
@@ -106,7 +117,8 @@ export class DevicesNewEditComponent implements OnInit{
   ngOnInit(): void { // Inicializador
     this.rute= this.router.routerState.snapshot.url;
     this.rute2 = this.rute.split('/');
-    
+    this.getEstructures();
+
     if(this.rute2[2]=='edit'){
         this.dataSharingService.updatesharedAmp(false);
         this.getDevices()
@@ -346,11 +358,19 @@ newDevice(form: any) { // Guardar Dispositivos
     });
   }
 
+  getEstructures(){
+    fetch(`${this.get_estructure}`)
+      .then((response) => response.json())
+      .then(quotesData => {
+        this.estructures.estructure = quotesData;
+      });   
+  }
+
   deleteMarker(){
-    this.devices.lat= 0;
-    this.devices.lon= 0;
-    this.devices.cota= 0;
-    this.devices.timezone= '';
+    this.devices.lat= null;
+    this.devices.lon= null;
+    this.devices.cota= 10;
+    this.devices.timezone= 'Brussels, Copenhagen, Madrid, Paris';
   }
 
   createDate(){ // Genera fecha

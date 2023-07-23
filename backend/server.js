@@ -134,7 +134,7 @@ con.connect(function(err) {
 
   app.get("/api/id/device_configurations/:id", (req,res)=>{ /*/ ID  /*/
   let id= parseInt(req.params.id);
-    con.query("SELECT * FROM device_configurations WHERE id= ?", id, function (err, result) {
+    con.query("SELECT *, (SELECT description FROM data_estructure WHERE id_estructure= id_data_Estructure) As estructure_name FROM device_configurations WHERE id= ?", id, function (err, result) {
       if (err) throw err;
         res.send(result)
     });
@@ -167,7 +167,8 @@ con.connect(function(err) {
     let organizationid= req.body.organizationid;
     let createdAt= req.body.createdAt;
     let updatedAt= req.body.updatedAt;
-    con.query("INSERT INTO device_configurations (uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,createdAt,updatedAt) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,createdAt,updatedAt], function (err, result) {
+    let id_data_estructure= req.body.id_data_estructure;
+    con.query("INSERT INTO device_configurations (uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,createdAt,updatedAt,id_data_estructure) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,createdAt,updatedAt,id_data_estructure], function (err, result) {
       if (err) throw err;
         res.send(result)
     });
@@ -191,7 +192,8 @@ con.connect(function(err) {
     let organizationid= req.body.organizationid;
     let id7= req.body.id;
     let updatedAt= req.body.updatedAt;
-    con.query("UPDATE device_configurations SET uid=?,alias=?,origin=?,description_origin=?,application_id=?,topic_name=?,typemeter=?,lat=?,lon=?,cota=?,timezone=?,enable=?,organizationid=?, updatedAt=? WHERE id= ?",[uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,updatedAt,id7], function (err, result) {
+    let id_data_estructure= req.body.id_data_estructure;
+    con.query("UPDATE device_configurations SET uid=?,alias=?,origin=?,description_origin=?,application_id=?,topic_name=?,typemeter=?,lat=?,lon=?,cota=?,timezone=?,enable=?,organizationid=?, updatedAt=?, id_data_estructure=? WHERE id= ?",[uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,updatedAt,id_data_estructure,id7], function (err, result) {
       if (err) throw err;
         res.send(result)
     });
