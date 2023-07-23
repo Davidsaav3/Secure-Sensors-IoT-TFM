@@ -83,7 +83,7 @@
 
   <div class="p-4 pt-0 mb-5" *ngIf="open_map_list==true" style="position: fixed; z-index: 1000; width: 97vw" >
     <div class="row">
-      <div class="over p-0 " style="height: 72vh; background-color: #fff;"> 
+      <div class="over p-0 " style="height: 71vh; background-color: #fff;"> 
       
         <div *ngIf="data.length<=0" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
           <div style="height: min-content;">
@@ -262,9 +262,9 @@
       </div>  
   </div>
 
-  <div class="p-4 pt-0 w-96" style="z-index: -10000;" >
-    <div class="row" style="height: 78vh;">
-      <div id="map" #map style="height: 78vh;">
+  <div class="p-4 pt-0" style="z-index: -10000;" >
+    <div class="row" style="height: 76vh;">
+      <div id="map" #map style="height: 76vh;">
         <div id="menu">
           <input *ngIf="color_map=='streets-v12'" id="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
           <input (click)="color_map='streets-v12';saveStorage()" *ngIf="color_map!='streets-v12'" id="streets-v12" type="radio" name="rtoggle" value="streets">
