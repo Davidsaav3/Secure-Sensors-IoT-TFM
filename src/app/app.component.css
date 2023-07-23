@@ -114,7 +114,7 @@
   .cont{
       background-color: white;
       border-radius: 10px;
-      height: 88vh;
+      height: 90vh;
   }
   
   .cont_recto{
@@ -132,11 +132,11 @@
   }
 
   .c100{
-    width: 98.5%;
+    width: 98%;
   }
 
   .sensores_2_20{
-    width: 26.5%;
+    width: 28%;
   }
   .sensores_2_100{
     width: 96%;
@@ -165,7 +165,7 @@
       padding: 1em;
       border-radius: 10px;
       margin-bottom: 1em;
-      min-height: 86vh;
+      height: 82vh;
   }
 
   .cont2{
@@ -173,7 +173,7 @@
       border-radius: 10px;
       height: max-content;
       margin-bottom: 1em;
-      min-height: 86vh;
+      height: 82vh;
   }
 
   .cont3{
@@ -228,7 +228,7 @@
   }
 
   .c5{
-      height: 70vh;
+      height: 62vh;
   }
 
   .c6{

@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="m-0 p-0 row d-flex">
 
-	<div class="cc2 cont me-0">
+	<div class="cc2 cont me-0 c100">
 		<div class="p-3 pb-0 pe-2">
 				<div class="row d-flex">
 					<div class="col-6 col-sm-6 col-lg-2 mb-3">
@@ -63,7 +63,6 @@
 								{{ 'estructure.configuration' | translate }}
 							</th>
 											
-					
 							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
@@ -101,7 +100,7 @@
 						<!---->
 						<tr *ngIf="quote.id_estructure==act_id">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 pb-4 row"> 
+								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 row w-100"> 
 									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
 									
 									<div class="col-12 col-lg-3 pe-3">

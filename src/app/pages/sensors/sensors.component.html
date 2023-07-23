@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="m-0 p-0 row d-flex" [ngClass]="{'rev': this.width<965, '': this.width>=965}">
+<div class="m-0 p-0 row d-flex" style="justify-content: space-around" [ngClass]="{'rev': this.width<965, '': this.width>=965}">
 
 	<div class="cc2 cont me-0" [ngClass]="{'c100': this.show_3==true || this.width<965, 'c10': this.show_3==false}">
 		<div class="p-3 pb-0 pe-2">
@@ -171,7 +171,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-6 mt-2" [ngClass]="{'mt-5': this.width>=965}">
+					<div class="col-md-6 mt-2" [ngClass]="{'mt-4': this.width>=965}">
 						<label for="errorvalue">{{ 'sensors.error_value' | translate }}</label>
 						<input type="number" (ngModelChange)="change=true" value="{{ sensors.errorvalue }}" id="errorvalue" class="form-control" name="errorvalue" [(ngModel)]="sensors['errorvalue']" >
 						<div *ngIf="form.submitted && form.controls['errorvalue'].errors" class="text-danger">
@@ -179,7 +179,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-6 mt-2" [ngClass]="{'mt-5': this.width>=965}">
+					<div class="col-md-6 mt-2" [ngClass]="{'mt-4': this.width>=965}">
 						<label for="time_general">{{ 'sensors.time_general' | translate }}</label>
 						<input (ngModelChange)="change=true" value="{{ sensors.correction_time_general }}" type="text" id="time_general" class="form-control" name="time_general" [(ngModel)]="sensors['correction_time_general']" type>
 						<div *ngIf="form.submitted && form.controls['time_general'].errors" class="text-danger">
@@ -214,7 +214,8 @@
 				</div>
 			</div>
 
-			<div class="col-12 mt-5">
+			
+			<div class="col-12 mt-4" >
 				<div class="row" *ngIf="state==1 || state==0">
 					<div class="col-6 mt-3">
 						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
