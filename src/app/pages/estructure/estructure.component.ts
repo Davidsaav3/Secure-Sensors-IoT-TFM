@@ -167,6 +167,8 @@ export class EstructureComponent implements OnInit{
   }
 
   duplicateEstructure(num: any, description: any){ // Duplicar sensor
+    this.act_id= '1';
+    
     if(!this.change && !this.change){
       this.aux_1 = {
         id_estructure: num,    
@@ -305,10 +307,11 @@ export class EstructureComponent implements OnInit{
       description: '',    
       configuration: '', 
     }
-    
+    this.act_id= '1';
     this.show= true;
     this.openClouse();
     this.state= 1;
+
   }
 
   openEdit(){ // Abrir Editar sensor

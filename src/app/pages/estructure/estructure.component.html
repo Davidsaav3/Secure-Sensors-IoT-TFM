@@ -31,56 +31,8 @@
 				</div>
 			</div>
 			<div *ngIf="data!=null && data.length>0" class="col-12 pe-0 over" style="max-height: 77vh;"> 
-				<div *ngIf="show" style="cursor: pointer;">
-					<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 pb-4"> 
-
-						<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
-						
-						<div class="col-3 pe-3">
-							<label for="description">{{ 'sensors.description' | translate }}</label>
-							<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required>
-							<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
-								<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} is required.</div>
-							</div>
-						</div>
-						<div class="col-3 pe-3">
-							<label for="configuration">{{ 'estructure.configuration' | translate }}</label>
-							<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
-							<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
-								<div *ngIf="form.controls['configuration'].errors['required']">{{ 'estructure.configuration' | translate }} is required.</div>
-							</div>
-						</div>
-
-						<div class="col-6 mt-4"  *ngIf="state==1">
-							<div class="row">
-								<div class="col-6">
-									<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-									<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">Restablecer datos</button>
-								</div>
-								<div class="col-6">
-									<button (click)="newEstructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-								</div>	
-							</div>
-						</div>
-
-						<div class="col-6 mt-4" *ngIf="state==2">
-							<div class="row">
-								<div class="col-3">
-									<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-									<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">Restablecer datos</button>
-								</div>
-								<div class="col-3">
-									<button type="submit" (click)="editEstructure(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-								</div>	
-								<div class="col-6">
-									<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'estructure.erase_estructure' | translate }}</button>
-								</div>
-							</div>
-						</div>
-
-					</form>
-				</div>
-				<table class="table table-hover">
+				
+				<table id="myTable" class="table table-hover">
 					<thead>
 						<tr>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'id_estructure'}">
@@ -116,9 +68,11 @@
 							<td scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</td>
 						</tr>
 					</thead>
-						
+					<!---->
+					
 					<!---->
 					<tbody *ngFor="let quote of data; let i = index">
+						
 						<tr style="cursor: pointer;" [ngClass]="{'disabled': change || change }">
 							<th [ngClass]="{'mark': act_id == quote.id_estructure.toString() && state==2}" (click)="orderColumn(quote.id_estructure)">{{ quote.id_estructure }}</th>
 							<td [ngClass]="{'mark': act_id == quote.id_estructure.toString() && state==2}" (click)="orderColumn(quote.id_estructure)">{{ quote.description }}</td>
@@ -143,7 +97,57 @@
 									<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
 								</svg>
 							</td>
-						</tr>	
+						</tr>
+						<!---->
+						<tr *ngIf="quote.id_estructure==act_id">
+							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
+								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 pb-4"> 
+									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
+									
+									<div class="col-3 pe-3">
+										<label for="description">{{ 'sensors.description' | translate }}</label>
+										<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required>
+										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
+											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} is required.</div>
+										</div>
+									</div>
+									<div class="col-3 pe-3">
+										<label for="configuration">{{ 'estructure.configuration' | translate }}</label>
+										<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
+										<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
+											<div *ngIf="form.controls['configuration'].errors['required']">{{ 'estructure.configuration' | translate }} is required.</div>
+										</div>
+									</div>
+			
+									<div class="col-6 mt-4"  *ngIf="state==1">
+										<div class="row">
+											<div class="col-6">
+												<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+												<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">Restablecer datos</button>
+											</div>
+											<div class="col-6">
+												<button (click)="newEstructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+											</div>	
+										</div>
+									</div>
+			
+									<div class="col-6 mt-4" *ngIf="state==2">
+										<div class="row">
+											<div class="col-3">
+												<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+												<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">Restablecer datos</button>
+											</div>
+											<div class="col-3">
+												<button type="submit" (click)="editEstructure(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+											</div>	
+											<div class="col-6">
+												<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'estructure.erase_estructure' | translate }}</button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>		
