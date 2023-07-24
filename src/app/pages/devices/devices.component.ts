@@ -22,7 +22,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   @ViewChild('map') divMap?: ElementRef;
   constructor(private router: Router) { }
 
-  zoom: number = 7;
+  zoom: number = 1.5;
   map?: mapboxgl.Map;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
   markers: MarkerAndColor[] = [];
@@ -238,27 +238,32 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                     if(this.data2[index2].length>0 && this.data2[index2][0].id_device==this.markers[index].data.id){
                       for (let index3 = 0; index3 < this.data2[index2].length; index3++) {
                         if(this.data2[index2][index3].enable==false){
-                          cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2">
-                          <h6 class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</h6>
+                          cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
+                          <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</p>
                         </span>`
                         }
                         if(this.data2[index2][index3].enable==true){
-                          cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2">
-                          <h6 class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</h6>
+                          cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2 mb-1">
+                          <p style="font-size: small; font-weight: 500;" class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</p>
                         </span>`
                         }
                       }
                     } 
                   }
                 
-                          
-              contenido= `<h5><strong>${this.markers[index].name}</strong></h5>
-                          <h6 class="p-0 m-0" ><strong>Uid:</strong> ${this.markers[index].data.uid}</h6>
-                          <h6 class=""><strong>Alias:</strong> ${this.markers[index].data.alias}</h6>
-                          <div style="display: inline-block; height: min-content;">
-                            ${cont2}
-                          </div>`
-    
+                     
+              contenido= `<p style="font-size: x-large;" class="m-0 p-0 pb-2"><strong>${this.markers[index].name}</strong></p><p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
+              if(this.markers[index].data.uid!=''){
+                contenido+= `<p style="font-size: medium;" class="p-0 m-0" ><strong>Uid </strong> ${this.markers[index].data.uid}</p>`
+              } 
+              if(this.markers[index].data.alias!=''){
+                contenido+= `<p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
+              }   
+              if(cont2.length>0){
+                contenido+= `<div style="display: inline-block; height: min-content;" class="pt-3">${cont2}</div>`
+              }          
+              
+
               cont.push({
                 'type': 'Feature',
                 'properties': {

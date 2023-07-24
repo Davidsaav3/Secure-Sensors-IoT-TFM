@@ -151,6 +151,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.map.addControl(new mapboxgl.NavigationControl());
 
       this.map.on('click', (e) => {
+        //e.lngLat.lat= e.lngLat.lat-1;
         this.deleteMarker();
         this.createMarker(e.lngLat.wrap());
         this.updatesharedAct();

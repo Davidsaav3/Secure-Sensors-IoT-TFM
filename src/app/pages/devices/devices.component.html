@@ -226,7 +226,7 @@
         </div>
         <div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
           <nav aria-label="Page navigation example">
-            <ul class="pagination mt-3 mb-0">
+            <ul *ngIf="data.length>0" class="pagination mt-3 mb-0">
               <li class="page-item" >
                 <a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
                   <span aria-hidden="true">{{ 'first' | translate }}</span>
