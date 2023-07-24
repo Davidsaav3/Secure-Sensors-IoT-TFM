@@ -71,7 +71,7 @@
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr *ngIf="quote.id_estructure==act_id && (state==0 || state==1)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 row w-100"> 
+								<form style="display: flex;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 row w-100"> 
 									
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
@@ -132,7 +132,7 @@
 						<!---->
 						<tr *ngIf="quote.id_estructure==act_id && (state==2)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 row w-100"> 
+								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
 									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
 									
 									<div class="col-12 col-lg-3 pe-3">
@@ -203,7 +203,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: 0px;">
-            <h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+            <h3 class="modal-title">Restablecer los datos?</h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" >

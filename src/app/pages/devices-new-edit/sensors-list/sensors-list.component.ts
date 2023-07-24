@@ -18,9 +18,13 @@ export class SensorsListComponent  implements OnInit{
   @HostListener('window:resize', ['$event'])
     onResize(event: any) {
     window.resizeBy(-1, 0);
+    this.resize();
   }
 
-  constructor(private rutaActiva: ActivatedRoute,private dataSharingService: DataSharingService) { }
+  constructor(private rutaActiva: ActivatedRoute,private dataSharingService: DataSharingService) { 
+    this.resize();
+  }
+  
   get_sensors: string = 'http://localhost:5172/api/get/sensors_types';
   id_device_sensors_devices: string = 'http://localhost:5172/api/id_device/sensors_devices';
   id_sensors: string = 'http://localhost:5172/api/id/sensors_types';
@@ -75,6 +79,10 @@ export class SensorsListComponent  implements OnInit{
         this.show_large= data;
       });
     }, 10);
+  }
+
+  resize(): void{ // Redimensionar pantalla
+    this.width = window.innerWidth;
   }
 
   getOrden(num: any){ // Asocia un order al sensor segun su type

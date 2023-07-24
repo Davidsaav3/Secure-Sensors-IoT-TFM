@@ -31,7 +31,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   bottomLeftCoordinates: string= '';
   bottomRightCoordinates: string= '';
   date_show: any;
-
   geojson: any;
   geojson2: any;
 
@@ -151,13 +150,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.readStorage();
   }
 
-  orderDevices(id: any, ord_asc: any){
+  orderDevices(id: any, ord_asc: any){ // ordenar dispositivos
     this.mark= id;
     this.ord_asc= ord_asc;
     this.devices();
   }
 
-  devices(){     
+  devices(){ // obtener dispositivos
     this.deleteMarker()
     setTimeout(() =>{
       this.deleteMarker()
@@ -218,10 +217,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           }
         })
 
-
-        //
         //console.log(this.data2)
-
 
         setTimeout(() =>{
           if(this.map!=null){
@@ -290,12 +286,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               'features': this.geojson2.features
             }
             });
-            /*console.log({'type': 'geojson',
-            'data': {
-              'type': 'FeatureCollection',
-              'features': [ this.geojson2.features[0],this.geojson2.features[1] ]
-            }
-            })*/
           } 
   
           if(this.map!=null){

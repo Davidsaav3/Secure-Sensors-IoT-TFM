@@ -192,7 +192,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     }, 50);
   }
 
-  createMap(pos: any){
+  createMap(pos: any){ // crea el mapa
     if ( !this.divMap ) throw 'No hay mapa';
       this.ngOnDestroy();
       this.map = new mapboxgl.Map({
@@ -230,7 +230,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     this.addMarker( lngLat, color );
   }
 
-  updatesharedAct() { // Enviar 
+  updatesharedAct() { // Enviar act
     this.dataSharingService.updatesharedAct(true);
   }
 
@@ -271,31 +271,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  goMarker( marker: mapboxgl.Marker ) { // Va a una localización
-    /*this.map?.flyTo({
-      zoom: 14,
-      center: marker.getLngLat()
-    });*/
-  }
-
   saveStorage() { // Guarda datos
-    /*const plainMarkers: PlainMarker[] = this.markers.map( ({ color, marker }) => {
-      return {
-        color,
-        lngLat: marker.getLngLat().toArray()
-      }
-    });
-    localStorage.setItem('plainMarkers', JSON.stringify( plainMarkers ));*/
     localStorage.setItem('color_map', this.color_map);
   }
 
   readStorage() { // Recupera datos
-    /*const plainMarkersString = localStorage.getItem('plainMarkers') ?? '[]';
-    const plainMarkers: PlainMarker[] = JSON.parse( plainMarkersString );
-    plainMarkers.forEach( ({ color, lngLat }) => {
-      const [ lng, lat ] = lngLat;
-      const coords = new mapboxgl.LngLat( lng, lat );
-    })*/
     this.color_map = localStorage.getItem('color_map') ?? '0';
   }
 

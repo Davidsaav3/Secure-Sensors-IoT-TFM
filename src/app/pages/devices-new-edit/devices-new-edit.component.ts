@@ -114,10 +114,6 @@ export class DevicesNewEditComponent implements OnInit{
       }]
   }
 
-  resize(): void{ // Redimensionar pantalla
-    this.width = window.innerWidth;
-  }
-
   ngOnInit(): void { // Inicializador
     this.rute= this.router.routerState.snapshot.url;
     this.rute2 = this.rute.split('/');
@@ -365,7 +361,7 @@ newDevice(form: any) { // Guardar Dispositivos
     });
   }
 
-  getEstructures(){
+  getEstructures(){ // optener estructuras de datos
     fetch(`${this.get_estructure}`)
       .then((response) => response.json())
       .then(quotesData => {
@@ -373,7 +369,7 @@ newDevice(form: any) { // Guardar Dispositivos
       });   
   }
 
-  deleteMarker(){
+  deleteMarker(){ // eliminar elementos del mapa
     this.devices.lat= null;
     this.devices.lon= null;
     this.devices.cota= 10;
@@ -385,5 +381,9 @@ newDevice(form: any) { // Guardar Dispositivos
   createDate(){ // Genera fecha
     const currentDate = new Date();
     this.date= currentDate.toISOString();
+  }
+
+  resize(): void{ // Redimensionar pantalla
+    this.width = window.innerWidth;
   }
 }

@@ -252,7 +252,7 @@ export class SensorsComponent implements OnInit{
    }
   }
 
-  clouse(){ 
+  clouse(){  // cerrar tarjeta
     this.show= false;
     this.state=-1;
     this.openClouse();
@@ -338,7 +338,7 @@ export class SensorsComponent implements OnInit{
     this.show_3= false;
   }
 
-  recharge(){
+  recharge(){ // recargar sensores
     this.change= false;
     this.sensors= this.sensors_copy;
   }
