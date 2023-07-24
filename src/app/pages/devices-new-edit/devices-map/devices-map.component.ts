@@ -182,7 +182,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.dataSharingService.sharedLon$.subscribe(data => {
         this.sharedLon = data;
       });
-      console.log(this.sharedLat, this.currentLngLat.lat, this.sharedLon, this.currentLngLat.lng)
+      //console.log(this.sharedLat, this.currentLngLat.lat, this.sharedLon, this.currentLngLat.lng)
       if(this.sharedLat!=this.currentLngLat.lat || this.sharedLon!=this.currentLngLat.lng){
         this.deleteMarker();
         this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);

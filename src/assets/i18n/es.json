@@ -35,7 +35,7 @@
     "sensors.all" : "Todos",
 
     "sensors.sensors" : "Sensores",
-    "sensors.duplicate" : "Duplicar",
+    "sensors.duplicate" : "Duplicar ",
     "sensors.edit" : "Editar",
     "sensors.erase" : "Limpiar filtros",
     "sensors.cancel" : "Cancelar",
@@ -131,5 +131,10 @@
     "estructure.m2.2" : "No se guardará la estructura de datos editado.",
     "estructure.e2" : "Estructura de datos guardada!",
     "estructure.e3" : "Estructura de datos eliminada!",
-    "estructure.e4" : "Estructura de datos creada!"
+    "estructure.e4" : "Estructura de datos creada!",
+    "required" : " es requerido.",
+    "reset.data" : "Restablecer datos",
+    "reset.data2" : "Restablecer datos ?",
+    "irreversible" : "Esta acción es irréversible."
+
 }

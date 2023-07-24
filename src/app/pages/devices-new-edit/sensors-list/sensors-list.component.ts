@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, HostListener} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { DataSharingService } from '../../../services/data_sharing.service';
@@ -15,6 +15,11 @@ import { DataSharingService } from '../../../services/data_sharing.service';
 
 export class SensorsListComponent  implements OnInit{
 
+  @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+    window.resizeBy(-1, 0);
+  }
+
   constructor(private rutaActiva: ActivatedRoute,private dataSharingService: DataSharingService) { }
   get_sensors: string = 'http://localhost:5172/api/get/sensors_types';
   id_device_sensors_devices: string = 'http://localhost:5172/api/id_device/sensors_devices';
@@ -29,6 +34,7 @@ export class SensorsListComponent  implements OnInit{
   delete_it: any;
   show_large= true;
   duplicate= false;
+  width= 0;
 
   select_sensors = {
     sensors : [

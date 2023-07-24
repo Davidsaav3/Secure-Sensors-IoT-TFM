@@ -446,20 +446,20 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
           if(this.select_sensors_2.sensors[index].id>=0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
-            console.log("1")
+            //console.log("1")
             this.devices();    
           }
           if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
-            console.log("2")
+            //console.log("2")
             this.devices();    
           }
           if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors= this.select_sensors_3.sensors;
-            console.log("3")
+            //console.log("3")
           }
           if(this.select_sensors_2.sensors.length==0){
             this.select_sensors_2.sensors= [];
@@ -477,7 +477,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               id_data_estructure: 1,
             });            
             this.devices();
-            console.log("4")    
+            //console.log("4")    
           }
         }
       }

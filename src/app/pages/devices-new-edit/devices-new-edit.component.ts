@@ -378,6 +378,8 @@ newDevice(form: any) { // Guardar Dispositivos
     this.devices.lon= null;
     this.devices.cota= 10;
     this.devices.timezone= 'Brussels, Copenhagen, Madrid, Paris';
+    this.updatesharedLat();
+    this.updatesharedLon();
   }
 
   createDate(){ // Genera fecha

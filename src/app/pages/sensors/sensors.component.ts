@@ -269,7 +269,7 @@ export class SensorsComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.sensors= data[0];
-        console.log(data[0].sensors_copy)
+        //console.log(data[0].sensors_copy)
         this.sensors_copy.id= data[0].id;
         this.sensors_copy.type= data[0].type; 
         this.sensors_copy.metric= data[0].metric;

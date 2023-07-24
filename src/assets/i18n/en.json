@@ -130,5 +130,10 @@
     "estructure.m2.2" : "The edited data structure will not be saved.",
     "estructure.e2" : "Data structure saved!",
     "estructure.e3" : "Data structure removed!",
-    "estructure.e4" : "Data structure created!"
+    "estructure.e4" : "Data structure created!",
+    "required" : " is required.",
+    "reset.data" : "Reset data",
+    "reset.data2" : "Reset data",
+    "irreversible" : "This action is irreversible."
+
 }

@@ -135,7 +135,7 @@ export class EstructureComponent implements OnInit{
   newEstructure(form: any) { // Guardar datos de estructuras nuevo
     this.state= 1;
     if (form.valid) {
-      console.log(this.estructure.id_estructure)
+      //console.log(this.estructure.id_estructure)
       fetch(this.post_estructure, {
         method: "POST",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })

@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev': this.width<965, '': this.width>=965}">
+<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev ps-2': this.width<965, '': this.width>=965}">
 
 	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.show_3==true || this.width<965, 'c10': this.show_3==false}">
 		<div class="p-3 pb-0 pe-2">
@@ -132,7 +132,7 @@
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 					
 					<div class="col-12">
-						<h1 *ngIf="state==0">Duplicar {{sensors.type}}</h1>
+						<h1 *ngIf="state==0">{{ 'sensors.duplicate' | translate }} {{sensors.type}}</h1>
 						<h1 *ngIf="state==1">{{ 'sensors.nuevo_sensor' | translate }}</h1>
 						<h1 *ngIf="state==2">{{ 'sensors.of' | translate }} {{ sensors.type }}</h1>
 					</div>
@@ -143,7 +143,7 @@
 						<label for="type">{{ 'sensors.type' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="sensors['type']" required type>
 						<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
-							<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} is required.</div>
+							<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -151,7 +151,7 @@
 						<label for="metric">{{ 'sensors.metric' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.metric }}" type="text" id="metric" class="form-control" name="metric" [(ngModel)]="sensors['metric']" required type>
 						<div *ngIf="form.submitted && form.controls['metric'].errors" class="text-danger">
-							<div *ngIf="form.controls['metric'].errors['required']">{{ 'sensors.metric' | translate }} is required.</div>
+							<div *ngIf="form.controls['metric'].errors['required']">{{ 'sensors.metric' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -159,7 +159,7 @@
 						<label for="position">{{ 'sensors.order' | translate }}</label>
 						<input type="number" min="0" maxlength="11" (ngModelChange)="change=true" value="{{ sensors.position }}" id="position" class="form-control" name="position" [(ngModel)]="sensors['position']">
 						<div *ngIf="form.submitted && form.controls['position'].errors" class="text-danger">
-							<div *ngIf="form.controls['position'].errors['required']">{{ 'sensors.order' | translate }} is required.</div>
+							<div *ngIf="form.controls['position'].errors['required']">{{ 'sensors.order' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -167,7 +167,7 @@
 						<label for="description">{{ 'sensors.description' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="sensors['description']" type>
 						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
-							<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} is required.</div>
+							<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -175,7 +175,7 @@
 						<label for="errorvalue">{{ 'sensors.error_value' | translate }}</label>
 						<input type="number" (ngModelChange)="change=true" value="{{ sensors.errorvalue }}" id="errorvalue" class="form-control" name="errorvalue" [(ngModel)]="sensors['errorvalue']" >
 						<div *ngIf="form.submitted && form.controls['errorvalue'].errors" class="text-danger">
-							<div *ngIf="form.controls['errorvalue'].errors['required']">{{ 'sensors.error_value' | translate }} is required.</div>
+							<div *ngIf="form.controls['errorvalue'].errors['required']">{{ 'sensors.error_value' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -183,7 +183,7 @@
 						<label for="time_general">{{ 'sensors.time_general' | translate }}</label>
 						<input (ngModelChange)="change=true" value="{{ sensors.correction_time_general }}" type="text" id="time_general" class="form-control" name="time_general" [(ngModel)]="sensors['correction_time_general']" type>
 						<div *ngIf="form.submitted && form.controls['time_general'].errors" class="text-danger">
-							<div *ngIf="form.controls['time_general'].errors['required']">{{ 'sensors.time_general' | translate }} is required.</div>
+							<div *ngIf="form.controls['time_general'].errors['required']">{{ 'sensors.time_general' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -191,7 +191,7 @@
 						<label for="valuemin">{{ 'sensors.value_min' | translate }}</label>
 						<input type="number" (ngModelChange)="change=true" value="{{ sensors.valuemin }}" id="valuemin" class="form-control" name="valuemin" [(ngModel)]="sensors['valuemin']" >
 						<div *ngIf="form.submitted && form.controls['valuemin'].errors" class="text-danger">
-							<div *ngIf="form.controls['valuemin'].errors['required']">{{ 'sensors.value_min' | translate }} is required.</div>
+							<div *ngIf="form.controls['valuemin'].errors['required']">{{ 'sensors.value_min' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -199,7 +199,7 @@
 						<label for="valuemax">{{ 'sensors.value_max' | translate }}</label>
 						<input type="number" (ngModelChange)="change=true" value="{{ sensors.valuemax }}" id="valuemax" class="form-control" name="valuemax" [(ngModel)]="sensors['valuemax']" >
 						<div *ngIf="form.submitted && form.controls['valuemax'].errors" class="text-danger">
-							<div *ngIf="form.controls['valuemax'].errors['required']">{{ 'sensors.value_max' | translate }} is required.</div>
+							<div *ngIf="form.controls['valuemax'].errors['required']">{{ 'sensors.value_max' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -207,7 +207,7 @@
 						<label for="general">{{ 'sensors.general' | translate }}</label>
 						<input (ngModelChange)="change=true" value="{{ sensors.correction_general }}" type="text" id="general" class="form-control" name="general" [(ngModel)]="sensors['correction_general']" type>
 						<div *ngIf="form.submitted && form.controls['general'].errors" class="text-danger">
-							<div *ngIf="form.controls['general'].errors['required']">{{ 'sensors.general' | translate }} is required.</div>
+							<div *ngIf="form.controls['general'].errors['required']">{{ 'sensors.general' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -228,7 +228,7 @@
 				<div class="row" *ngIf="state==2">
 					<div class="col-6 mt-3">
 						<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">Restablecer datos</button>
+						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-6 mt-3">
 						<button (click)="editSensor(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
@@ -271,19 +271,19 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header" style="border-bottom: 0px;">
-            <h3 class="modal-title">Restablecer los datos?</h3>
+            <h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" >
-            <p class="not">Esta acción es irréversible.</p>
+            <p class="not">{{ 'irreversible' | translate }}</p>
           </div>
           <div class="modal-footer" style="border-top: 0px;">
             <div class="row">
                 <div class="col-7">
-                    <button style="width: max-content;" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="recharge()">Restablecer datos</button>
+                    <button style="width: max-content;" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
                 </div>
                 <div class="col-5">
-					<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">Cancelar</button>
+					<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
                 </div>
             </div>
           </div>
