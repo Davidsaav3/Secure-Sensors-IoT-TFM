@@ -168,7 +168,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="lat">{{ 'devices.edit.lat' | translate }}</label>
-                                <input (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
+                                <input (ngModelChange)="updatesharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
                                 <div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
                                     <div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} is required.</div>
                                 </div>
@@ -182,7 +182,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="cota">{{ 'devices.edit.alt' | translate }}</label>
-                                <input (ngModelChange)="updatesharedLat()" [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
+                                <input [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
                                 <div *ngIf="form.submitted && form.controls['cota'].errors" class="text-danger">
                                     <div *ngIf="form.controls['cota'].errors['required']">{{ 'devices.edit.alt' | translate }} is required.</div>
                                 </div>

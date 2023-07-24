@@ -174,6 +174,21 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         }
       }
     }
+    setInterval(() => {
+      this.dataSharingService.sharedLat$.subscribe(data => {
+        this.sharedLat = data;
+      });
+      this.dataSharingService.sharedLon$.subscribe(data => {
+        this.sharedLon = data;
+      });
+      console.log(this.sharedLat, this.currentLngLat.lat, this.sharedLon, this.currentLngLat.lng)
+      if(this.sharedLat!=this.currentLngLat.lat || this.sharedLon!=this.currentLngLat.lng){
+        this.deleteMarker();
+        this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
+        this.createMarker(this.currentLngLat);
+        //this.auxInit();
+      }
+    }, 50);
   }
 
   createMap(pos: any){
@@ -203,21 +218,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   }
   updatesharedLon() { // ctualizar Longitud
     this.dataSharingService.updatesharedLon(this.sharedLon);
-  }
-
-  mapListeners() { // Zoom y Move del mapa
-    if ( !this.map ) throw 'Mapa no inicializado';
-    this.map.on('zoom', (ev) => {
-      this.zoom = this.map!.getZoom();
-    });
-    this.map.on('zoomend', (ev) => {
-      if ( this.map!.getZoom() < 18 ) return;
-      this.map!.zoomTo(18);
-    });
-    this.map.on('move', () => {
-      this.currentLngLat = this.map!.getCenter();
-    });
-
   }
 
   /* /////////////////////////// */
