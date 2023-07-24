@@ -45,7 +45,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.dataSharingService.sharedLon$.subscribe(data => {
         this.sharedLon = data;
       }); 
-      setTimeout(() => { this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);}, 50);
+      this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);//setTimeout
     }
    }
 
@@ -139,7 +139,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           draggable: false
         }).setLngLat( this.currentLngLat ).addTo( this.map );
     
-        setTimeout(() =>{this.goMarker( marker );}, 50);
+        this.goMarker( marker );//setTimeout
     
         this.map.addControl(
           new mapboxgl.GeolocateControl({
@@ -246,7 +246,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           draggable: false
         }).setLngLat( this.currentLngLat ).addTo( this.map );
       
-        setTimeout(() =>{this.goMarker( marker );}, 50);
+        this.goMarker( marker );//setTimeout
       }
     return this.map;
   }

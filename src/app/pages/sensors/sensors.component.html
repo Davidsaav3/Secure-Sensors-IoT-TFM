@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
-<div class="m-0 p-0 row d-flex" style="justify-content: space-around" [ngClass]="{'rev': this.width<965, '': this.width>=965}">
+<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev': this.width<965, '': this.width>=965}">
 
-	<div class="cc2 cont me-0" [ngClass]="{'c100': this.show_3==true || this.width<965, 'c10': this.show_3==false}">
+	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.show_3==true || this.width<965, 'c10': this.show_3==false}">
 		<div class="p-3 pb-0 pe-2">
 				<div class="row d-flex">
 					<div class="col-6 col-sm-6 col-lg-2 mb-3">
@@ -90,8 +90,8 @@
 						</tr>
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
-						<tr style="cursor: pointer;" [ngClass]="{'disabled': change}">							
-							<th [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.position }}</th>
+						<tr style="cursor: pointer;"  [ngClass]="{'disabled': change}">							
+							<th class="rounded-0" [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.position }}</th>
 
 							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.type }}</td>
 							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.metric }}</td>
@@ -126,7 +126,7 @@
 		</div> 
 	</div>
 
-		<div class="cc2 cont" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
+		<div class="cc2 cont mx-0" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
 		<form #form="ngForm" class="row needs-validation p-3"> 
 			<div class="col-12">
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">

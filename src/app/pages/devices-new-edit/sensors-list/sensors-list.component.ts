@@ -63,7 +63,7 @@ export class SensorsListComponent  implements OnInit{
   }
 
   ngOnInit(): void { // Inicialización
-    setTimeout(() =>{this.getDevices('id')}, 50);
+    this.getDevices('id');//setTimeout
     setInterval(() => {
       this.dataSharingService.sharedAmp$.subscribe(data => {
         this.show_large= data;
@@ -72,13 +72,11 @@ export class SensorsListComponent  implements OnInit{
   }
 
   getOrden(num: any){ // Asocia un order al sensor segun su type
-    setTimeout(() =>{
-      fetch(`${this.id_sensors}/${this.sensors.sensors[num].id_type_sensor}`)
-      .then(response => response.json())
-      .then(data => {
-        this.sensors.sensors[num].orden= data[0].position;
-      })
-    }, 10);
+    fetch(`${this.id_sensors}/${this.sensors.sensors[num].id_type_sensor}`)
+    .then(response => response.json())
+    .then(data => {
+      this.sensors.sensors[num].orden= data[0].position;
+    })
     this.updatesharedList();
   }
 

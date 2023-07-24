@@ -143,10 +143,7 @@ export class SensorsComponent implements OnInit{
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
-
-      setTimeout(() => {
-        this.getSensors(this.mark,this.ord_asc);
-      }, 50);
+      this.getSensors(this.mark,this.ord_asc);
       this.saved= true;
     }
     this.change=false;
@@ -163,10 +160,6 @@ export class SensorsComponent implements OnInit{
       setTimeout(() => {
         this.alert_new= false;
       }, 2000);
-
-      setTimeout(() => {
-        this.getSensors(this.mark,this.ord_asc);
-      }, 50);
       this.openClouse();
   
       fetch(this.max_sensors)
@@ -177,6 +170,7 @@ export class SensorsComponent implements OnInit{
     }
     this.change=false;
     this.change=false;
+    this.getSensors(this.mark,this.ord_asc);
   }
   
   resize(): void{ // Redimensionar pantalla
@@ -212,11 +206,8 @@ export class SensorsComponent implements OnInit{
         .catch(error => {
           console.error(error); 
         });
-        setTimeout(() => {
-          this.getSensors(this.mark,this.ord_asc);
-        }, 50);
         this.openClouse();
-        //
+       
         fetch(this.max_sensors)
         .then(response => response.json())
         .then(data => {
@@ -227,6 +218,7 @@ export class SensorsComponent implements OnInit{
         this.change= true;
         this.state= 0;
       })
+
     }
   }
 
@@ -242,9 +234,7 @@ export class SensorsComponent implements OnInit{
     setTimeout(() => {
       this.alert_delete= false;
     }, 2000);
-    setTimeout(() => {
-      this.getSensors(this.mark,this.ord_asc);
-    }, 50);
+    this.getSensors(this.mark,this.ord_asc);
     this.openClouse();
   }
 
@@ -360,4 +350,25 @@ export class SensorsComponent implements OnInit{
     this.change=false;
     this.change=false;
   }
+
+  /*
+  new Promise((resolve, reject) => {
+    fetch(`${this.id_sensors}/${num}`)
+    .then(response => response.json())
+    .then(data => {
+      this.sensors= data[0];
+      resolve(this.sensors);
+    })
+    .catch(error => {
+      console.error(error); 
+      reject(error);
+    });
+  })
+  .then(data => {
+    //this.getSensors(this.mark,this.ord_asc);
+  })
+  .catch(error => {
+    console.error('Error al obtener los datos:', error);
+  })
+  */
 }

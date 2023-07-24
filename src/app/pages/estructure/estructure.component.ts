@@ -126,9 +126,7 @@ export class EstructureComponent implements OnInit{
         this.save_ok= false;
       }, 2000);
 
-      setTimeout(() => {
-        this.getEstructure(this.mark,this.ord_asc);
-      }, 50);
+      this.getEstructure(this.mark,this.ord_asc);
       this.saved= true;
     }
     this.change=false;
@@ -146,12 +144,8 @@ export class EstructureComponent implements OnInit{
       setTimeout(() => {
         this.alert_new= false;
       }, 2000);
-
-      setTimeout(() => {
-        this.getEstructure(this.mark,this.ord_asc);
-      }, 50);
       this.openClouse();
-  
+
       fetch(this.max_estructure)
       .then(response => response.json())
       .then(data => {
@@ -160,6 +154,7 @@ export class EstructureComponent implements OnInit{
     }
     this.change=false;
     this.change=false;
+    this.getEstructure(this.mark,this.ord_asc);
   }
   
   resize(): void{ // Redimensionar pantalla
@@ -197,9 +192,6 @@ export class EstructureComponent implements OnInit{
         .catch(error => {
           console.error(error); 
         });
-        setTimeout(() => {
-          this.getEstructure(this.mark,this.ord_asc);
-        }, 50);
         this.openClouse();
         //
         fetch(this.max_estructure)
@@ -213,6 +205,7 @@ export class EstructureComponent implements OnInit{
         this.state= 1;
       })
     }
+    
   }
 
   deleteEstructure(id_actual: any){ // Eliminar sensor
@@ -227,9 +220,7 @@ export class EstructureComponent implements OnInit{
     setTimeout(() => {
       this.alert_delete= false;
     }, 2000);
-    setTimeout(() => {
-      this.getEstructure(this.mark,this.ord_asc);
-    }, 50);
+    this.getEstructure(this.mark,this.ord_asc);
     this.openClouse();
   }
 

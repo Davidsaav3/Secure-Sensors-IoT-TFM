@@ -22,9 +22,9 @@ export class NavbarComponent {
   }
 
   changeLenguaje() {
-    setTimeout(() =>{
+    setTimeout(() =>{ 
       this.translate.use(this.activeLang);
-    }, 10);
+    }, 1);
   }
   
 }

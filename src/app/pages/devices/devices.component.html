@@ -160,7 +160,7 @@
                 <tbody>
                   <tr *ngFor="let quote of data; let i = index" style="cursor: pointer;">
 
-                    <th [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.uid }}</th>
+                    <th class="rounded-0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.uid }}</th>
                     <td class="d-none d-md-none d-lg-table-cell" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.topic_name }}</td>
                     <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.application_id }}</td>
 
