@@ -22,12 +22,5 @@
 		<input (click)="color_map='dark-v11';saveStorage()" *ngIf="color_map!='dark-v11'" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
 		<label for="dark-v11">{{ 'oscuro' | translate }}</label>
 	</div>
-  
-	<div class="floating-range p-2">
-	  	<!--<button *ngFor="let colorMarker of markers; let i = index" style="background-color: gray" (click)="goMarker( colorMarker.marker)" class="ps-2 pe-2 d-flex btn btn-infp">
-			<p class="p-0 m-0 pe-1" style="color: aliceblue;">{{ 'deselect' | translate }}</p>
-			<button (click)="deleteMarker(i)" type="button ps-4" class="btn-close btn-close-white" aria-label="Close" ></button>
-	  	</button>-->
-	</div>
 	
 </div>

@@ -128,5 +128,8 @@
     "estructure.m1.1" : "Eliminar estructura de datos ?",
     "estructure.m1.2" : "Esta acción no es rebersible. Se borrará definitivamente esta estructura de datos.",
     "estructure.m2.1" : "Salir sin guardar ?",
-    "estructure.m2.2" : "No se guardará la estructura de datos editado."
+    "estructure.m2.2" : "No se guardará la estructura de datos editado.",
+    "estructure.e2" : "Estructura de datos guardada!",
+    "estructure.e3" : "Estructura de datos eliminada!",
+    "estructure.e4" : "Estructura de datos creada!"
 }

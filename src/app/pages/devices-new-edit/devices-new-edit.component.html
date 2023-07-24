@@ -2,7 +2,7 @@
 <form class="row cont0 needs-validation" #form="ngForm" >
     <div class="row p-0 m-0" [ngClass]="{'flex-column': this.width<965}">
         <div *ngIf="show_form" class="p-0" [ngClass]="{'c200': !this.show_map || this.width<965, 'c20': this.show_map || this.width>=965}"> 
-            <div class="cont1 pb-0">
+            <div class="cont1 pb-0" [ngClass]="{'alt': this.width>=965}">
                 <div class="row c1">
                     <div class="col-12">
                         <div class="row pb-3">
@@ -123,7 +123,7 @@
         </div>
 
         <div *ngIf="show_map" class="p-0" [ngClass]="{'c200': !this.show_form || this.width<965, 'c20': this.show_form || this.width>=965}">
-            <div class="cont2 ms-lg-3 ms-0 ms-md-0" >
+            <div class="cont2 ms-lg-3 ms-0 ms-md-0" [ngClass]="{'alt': this.width>=965}" >
                 
                 <div *ngIf="this.rute2[2]=='edit'" class="c4 d-flex justify-content-between">
                     <div class="col-6" >

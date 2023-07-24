@@ -127,5 +127,8 @@
     "estructure.m1.1" : "Delete sensor data estructure ?",
     "estructure.m1.2" : "This action is not reversible. This data estructure will be permanently deleted.",
     "estructure.m2.1" : "Exit without saving ?",
-    "estructure.m2.2" : "The edited data structure will not be saved."
+    "estructure.m2.2" : "The edited data structure will not be saved.",
+    "estructure.e2" : "Data structure saved!",
+    "estructure.e3" : "Data structure removed!",
+    "estructure.e4" : "Data structure created!"
 }

@@ -57,9 +57,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   zoom: number = 10;
   map?: mapboxgl.Map;
   markers: MarkerAndColor[] = [];
-  start= false;
   color_map= 'streets-v12';
-
   id_max= 1;
   state= 1;
   
@@ -100,11 +98,9 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
     setInterval(() => {
       if(this.map!=undefined){
-        //this.map.on('load', () => {
-            if(this.map!=undefined){
-              this.map.resize();
-            }
-        //});
+        if(this.map!=undefined){
+          this.map.resize();
+        }
       }
     }, 50);
   }
@@ -114,72 +110,33 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         if ( !this.divMap ) throw 'No hay mapa';
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(position => { 
-              this.map= this.createMapNew(position.coords.longitude, position.coords.latitude);
+              this.map= this.createMap([position.coords.longitude, position.coords.latitude]);
               this.auxInit();
             },
             (error) => {
-              this.map= this.createMapNew(-3.7034137886912504,40.41697654880073);
+              this.map= this.createMap([-3.7034137886912504,40.41697654880073]);
               console.log("Error geo", error);
               this.auxInit()
             }
           );
         } 
         else {
-          this.map= this.createMapNew(-3.7034137886912504,40.41697654880073);
+          this.map= this.createMap([-3.7034137886912504,40.41697654880073]);
           console.log("Geo no compatible");
           this.auxInit();
         }
     }
     //
     if(this.rute2[2]=='edit'){
-        this.map= this.createMapEdit();
+        this.deleteMarker();
+        this.map= this.createMap(this.currentLngLat);
         this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
-        const marker = new mapboxgl.Marker({
-          color: '#0dcaf0',
-          draggable: false
-        }).setLngLat( this.currentLngLat ).addTo( this.map );
-    
-        this.goMarker( marker );//setTimeout
-    
-        this.map.addControl(
-          new mapboxgl.GeolocateControl({
-          positionOptions: {
-          enableHighAccuracy: true
-          },
-          trackUserLocation: true,
-          showUserHeading: true
-          })
-        );
-        this.map.addControl(new mapboxgl.NavigationControl());
-    
-        this.map.on('click', (e) => {
-          this.createMarker(e.lngLat.wrap());
-          this.ngAfterViewInit();
-          this.start= true;
-          this.updatesharedAct();
-        });
-    
-        let layerList = document.getElementById('menu');
-        if (layerList != null) {
-          let inputs = layerList.getElementsByTagName('input');
-          if (inputs != null) {
-            const inputArray = Array.from(inputs);
-            
-            for (const input of inputArray) {
-              input.onclick = (layer: any) => {
-                const layerId = layer.target.id;
-                if (this.map != null) {
-                  this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
-                }
-              };
-              
-            }
-          }
-        }
+        this.createMarker(this.currentLngLat);
+        this.auxInit();
     }
   }
 
-  auxInit(){ // Auxiliar de ngAfterViewInit [`NO EN EDIT]
+  auxInit(){ // Auxiliar de ngAfterViewInit [NO EN EDIT]
     if(this.map!=undefined){
       this.map.addControl(
         new mapboxgl.GeolocateControl({
@@ -194,9 +151,10 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.map.addControl(new mapboxgl.NavigationControl());
 
       this.map.on('click', (e) => {
+        this.deleteMarker();
         this.createMarker(e.lngLat.wrap());
-        this.start= true;
-        this.ngAfterViewInit();
+        this.updatesharedAct();
+        //this.ngAfterViewInit();
       });
   
       let layerList = document.getElementById('menu');
@@ -218,56 +176,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  createMapNew(lon: any, lat: any){ // Crear mapa
+  createMap(pos: any){
     if ( !this.divMap ) throw 'No hay mapa';
-
-      if(this.start==false){
-        this.ngOnDestroy();
-        this.map = new mapboxgl.Map({
-          container: this.divMap?.nativeElement,
-          style: 'mapbox://styles/mapbox/'+this.color_map, 
-          center: [lon, lat],
-          zoom: this.zoom,
-      });
-      }
-      else{
-        this.ngOnDestroy();
-        this.map = new mapboxgl.Map({
-          container: this.divMap.nativeElement, 
-          style: 'mapbox://styles/mapbox/'+this.color_map, 
-          center: this.currentLngLat,
-          zoom: this.zoom,
-        });
-
-        this.mapListeners();
-        this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
-        const marker = new mapboxgl.Marker({
-          color: '#0dcaf0',
-          draggable: false
-        }).setLngLat( this.currentLngLat ).addTo( this.map );
-      
-        this.goMarker( marker );//setTimeout
-      }
-    return this.map;
-  }
-
-  createMapEdit(){
-    if ( !this.divMap ) throw 'No hay mapa';
-
-    if(this.start==false){
-      this.ngOnDestroy();
-      this.map = new mapboxgl.Map({
-        container: this.divMap.nativeElement,
-        style: 'mapbox://styles/mapbox/'+this.color_map, 
-        center: this.currentLngLat,
-        zoom: this.zoom,
-      });
-      this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
-      this.createMarker(this.currentLngLat);
-
-      return this.map;
-    }
-    else{
       this.ngOnDestroy();
       this.map = new mapboxgl.Map({
         container: this.divMap.nativeElement,
@@ -276,7 +186,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         zoom: this.zoom,
       });
       return this.map;
-    }
+    
   }
   
   ngOnDestroy(): void { // Destructor del mapa
@@ -348,11 +258,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   }
 
   deleteMarker() { // Quita chincheta
-    this.markers= [];
-    this.dataSharingService.updatesharedLat('');
-    this.dataSharingService.updatesharedLon('');
-    this.updatesharedAct();
-
     for (let index = 0; index < this.markers.length; index++) {
       this.markers[index].marker.remove();
     }
@@ -360,13 +265,16 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     for (let i = 0; i < contenidoSuperpuesto.length; i++) {
       contenidoSuperpuesto[i].remove();
     }
+    if(this.map!=undefined){
+      //this.map.removeSource('places');
+    }
   }
 
   goMarker( marker: mapboxgl.Marker ) { // Va a una localización
-    this.map?.flyTo({
+    /*this.map?.flyTo({
       zoom: 14,
       center: marker.getLngLat()
-    });
+    });*/
   }
 
   saveStorage() { // Guarda datos
