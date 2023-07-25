@@ -33,6 +33,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   date_show: any;
   geojson: any;
   geojson2: any;
+  array_sensors: any;
+  pag_tam:any;
+  pag_pag: any;
 
   pos_x_1= '0';
   pos_x_2= '0';
@@ -144,7 +147,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   ngOnInit(): void { // Inicialización
-    this.orderDevices('uid','ASC');
     this.getorderDevices();
     this.select_sensors_2.sensors= [];
     this.readStorage();
@@ -157,9 +159,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   devices(){ // obtener dispositivos
-    this.deleteMarker()
+    this.deleteMarker();
     setTimeout(() =>{
-      this.deleteMarker()
+      //this.deleteMarker()
 
       if(this.search.value==''){
         this.search_text= 'Buscar';
@@ -175,33 +177,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
         array.push(this.select_sensors_3.sensors[index].id);
       }
-      var array_sensors = array.join(',');
-      let pag_tam= 1;
-      let pag_pag= 100000;
+      this.array_sensors = array.join(',');
+      this.pag_tam= 1;
+      this.pag_pag= 100000;
 
 
       if(this.open_map_list==false){ // MAP //
-        this.getCornerCoordinates();
-        //console.log("MAP");
-
-        fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
-        .then((response) => response.json())
+        this.getDatos()
         .then(data => {
-          this.data= data;
-          for (let quote of this.data) {
-            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-            .then(response => response.json())
-            .then(data => {
-              //console.log("zona 4")
-              this.data2.push(data);
-            })
-            .catch(error => {
-              console.error(error); 
-            });  
-          }
-          //console.log("zona 1")
-          this.deleteMarker()
-
           for(let quote of this.data) {
             let color= '#198754';
             if(quote.enable==0){
@@ -215,113 +198,117 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             let enable=parseInt(quote.id);
             this.addMarker( coords, color , name, enable, quote);
           }
-        })
-
-        //console.log(this.data2)
-
-        setTimeout(() =>{
-          if(this.map!=null){
-            //
-            let contenido;
-            let cont= [];
-            let cont2='';
   
-            for (let index = 0; index < this.markers.length; index++) {
-                //console.log(this.data2.length)
-                  cont2='';
-                  for (let index2 = 0; index2 < this.data2.length/2; index2++) {
-                    //console.log(this.data2[index2][0])
-                    if(this.data2[index2].length>0 && this.data2[index2][0].id_device==this.markers[index].data.id){
-                      for (let index3 = 0; index3 < this.data2[index2].length; index3++) {
-                        if(this.data2[index2][index3].enable==false){
-                          cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
-                          <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</p>
-                        </span>`
-                        }
-                        if(this.data2[index2][index3].enable==true){
-                          cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2 mb-1">
-                          <p style="font-size: small; font-weight: 500;" class="mb-0 d-none d-md-none d-lg-block">${this.data2[index2][index3].type_name}</p>
-                        </span>`
-                        }
-                      }
-                    } 
+          //console.log(this.data2)
+  
+          setTimeout(()=>{
+            if(this.map!=null){
+              //
+              let contenido;
+              let cont= [];
+              let cont2='';
+              
+              for (let index = 0; index < this.markers.length; index++) {
+                cont2='';
+                //console.log(this.data2)
+                //console.log(this.data2[index][0].id_device)
+                //console.log(this.markers[index].data.id)
+                if(this.data2[index].length>0 && this.data2[index][0].id_device==this.markers[index].data.id){
+                  for (let index3 = 0; index3 < this.data2[index].length; index3++) {
+                    if(this.data2[index][index3].enable==false){
+                      cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
+                      <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data2[index][index3].type_name}</p>
+                    </span>`
+                    }
+                    if(this.data2[index][index3].enable==true){
+                      cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2 mb-1">
+                      <p style="font-size: small; font-weight: 500;" class="mb-0 d-none d-md-none d-lg-block">${this.data2[index][index3].type_name}</p>
+                    </span>`
+                    }
                   }
+                } 
                 
-                     
-              contenido= `<p style="font-size: x-large;" class="m-0 p-0 pb-2"><strong>${this.markers[index].name}</strong></p><p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
-              if(this.markers[index].data.uid!=''){
-                contenido+= `<p style="font-size: medium;" class="p-0 m-0" ><strong>Uid </strong> ${this.markers[index].data.uid}</p>`
-              } 
-              if(this.markers[index].data.alias!=''){
-                contenido+= `<p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
-              }   
-              if(cont2.length>0){
-                contenido+= `<div style="display: inline-block; height: min-content;" class="pt-3">${cont2}</div>`
-              }          
-              
-
-              cont.push({
-                'type': 'Feature',
-                'properties': {
-                  'description': contenido
-                },
-                  'geometry': {
-                    'type': 'Point',
-                    'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
-                }
-              })
+                contenido= `<p style="font-size: x-large;" class="m-0 p-0 pb-2"><strong>${this.markers[index].name}</strong></p><p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
+                if(this.markers[index].data.uid!=''){
+                  contenido+= `<p style="font-size: medium;" class="p-0 m-0" ><strong>Uid </strong> ${this.markers[index].data.uid}</p>`
+                } 
+                if(this.markers[index].data.alias!=''){
+                  console.log(this.markers[index].data.alias)
+                  contenido+= `<p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
+                }   
+                if(cont2.length>0){
+                  contenido+= `<div style="display: inline-block; height: min-content;" class="pt-3">${cont2}</div>`
+                }                    
   
-            
+                cont.push({
+                  'type': 'Feature',
+                  'properties': {
+                    'description': contenido
+                  },
+                    'geometry': {
+                      'type': 'Point',
+                      'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
+                  }
+                })
+    
               
-            }            
-            //console.log(cont)
-            this.geojson2 = { 
-              'features': 
-              cont
-            };
-            //console.log(this.geojson2.features[0])
-            this.map.addSource('places', {'type': 'geojson',
-            'data': {
-              'type': 'FeatureCollection',
-              'features': this.geojson2.features
-            }
-            });
-          } 
-  
-          if(this.map!=null){
-            this.map.addLayer({
-              'id': 'places',
-              'type': 'circle',
-              'source': 'places',
-              'paint': {
-              'circle-radius': 50,
-              'circle-color': '#FFFFFF', 
-              'circle-opacity': 0
+                
+              }            
+              //console.log(cont)
+              this.geojson2 = { 
+                'features': 
+                cont
+              };
+              //console.log(this.geojson2.features[0])
+              this.map.addSource('places', {'type': 'geojson',
+              'data': {
+                'type': 'FeatureCollection',
+                'features': this.geojson2.features
               }
-            });
+              });
   
-          }
-          let layers;
-          if (this.map != null) {
-            layers = this.map.getStyle().layers;
-          }
-          let labelLayerId;
-          if (layers !== undefined) {
-            const labelLayer = layers.find(
-              (layer) => layer.type == 'symbol' && layer.layout && layer.layout['text-field']
-            );
-            if (labelLayer) {
-              labelLayerId = labelLayer.id;
+  
+            } 
+    
+            if(this.map!=null){
+              this.map.addLayer({
+                'id': 'places',
+                'type': 'circle',
+                'source': 'places',
+                'paint': {
+                'circle-radius': 50,
+                'circle-color': '#FFFFFF', 
+                'circle-opacity': 0
+                }
+              });
+    
             }
-          } 
-        }, 1);
+            let layers;
+            if (this.map != null) {
+              layers = this.map.getStyle().layers;
+            }
+            let labelLayerId;
+            if (layers !== undefined) {
+              const labelLayer = layers.find(
+                (layer) => layer.type == 'symbol' && layer.layout && layer.layout['text-field']
+              );
+              if (labelLayer) {
+                labelLayerId = labelLayer.id;
+              }
+            } 
+          }, 100);
+        
+        })
+        .catch(error => {
+          console.error('Error al obtener los datos:', error);
+        });
       }
       
 
 
       if(this.open_map_list==true){ // LIST //
         this.charging= true;
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${pag_tam}/${pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
           //console.log("zona 2")
@@ -335,7 +322,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         //
 
         //console.log("LIST")
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
           //console.log("zona 3")
@@ -364,6 +351,31 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       }
     }, 1);
     //console.log(this.markers)
+  }
+
+  getDatos() {
+    this.getCornerCoordinates();
+    //console.log("MAP");
+    return new Promise((resolve, reject) => {
+      fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
+      .then((response) => response.json())
+      .then(data => {
+        this.data= data;
+        for (let quote of this.data) {
+          fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+          .then(response => response.json())
+          .then(data => {
+            //console.log("zona 4")
+            this.data2.push(data);
+            resolve(data); // Resuelve la promesa con los datos obtenidos
+          })
+          .catch(error => {
+            console.error(error); 
+            reject(error); // Rechaza la promesa en caso de error
+          });  
+        }
+      })
+    });
   }
   
   deleteSearch(){ // Eliminar filtros
@@ -823,6 +835,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     for (let index = 0; index < this.markers.length; index++) {
       this.markers[index].marker.remove();
     }
+    this.data2= [];
+    this.markers= [];
     let contenidoSuperpuesto = document.getElementsByClassName('marker_text');
     for (let i = 0; i < contenidoSuperpuesto.length; i++) {
       contenidoSuperpuesto[i].remove();
@@ -830,6 +844,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     if(this.map!=undefined){
       //this.map.removeSource('places');
     }
+   // console.log(this.markers);
   }
 
   saveStorage() { // Guarda datos
