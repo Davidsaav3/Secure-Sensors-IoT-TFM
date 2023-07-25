@@ -36,11 +36,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   array_sensors: any;
   pag_tam:any;
   pag_pag: any;
+  lat: any;
+  lon: any;
 
   pos_x_1= '0';
   pos_x_2= '0';
   pos_y_1= '0';
   pos_y_2= '0';
+  start= true;
 
   /**/
   
@@ -153,6 +156,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   orderDevices(id: any, ord_asc: any){ // ordenar dispositivos
+    //this.newMap();
+    this.deleteMarker();
     this.mark= id;
     this.ord_asc= ord_asc;
     this.devices();
@@ -228,12 +233,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                   }
                 } 
                 
-                contenido= `<p style="font-size: x-large;" class="m-0 p-0 pb-2"><strong>${this.markers[index].name}</strong></p><p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
+                contenido= `<p style="font-size: x-large;" class="m-0 p-0 pb-2"><strong>${this.markers[index].name}</strong></p>`
                 if(this.markers[index].data.uid!=''){
                   contenido+= `<p style="font-size: medium;" class="p-0 m-0" ><strong>Uid </strong> ${this.markers[index].data.uid}</p>`
                 } 
                 if(this.markers[index].data.alias!=''){
-                  console.log(this.markers[index].data.alias)
                   contenido+= `<p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
                 }   
                 if(cont2.length>0){
@@ -425,6 +429,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   orderSelect(){
+    this.newMap();
     this.timeout = setTimeout( () => {
       this.select_sensors_3.sensors= [];
       if(this.select_sensors_2.sensors.length==0){
@@ -488,7 +493,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }, 1);
   }
 
-  getorderDevices(){ 
+  getorderDevices(){
+    this.deleteMarker(); 
     this.rute= this.router.routerState.snapshot.url;
     fetch(this.max_device)
     .then(response => response.json())
@@ -622,38 +628,53 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   /**/
 
   ngAfterViewInit(): void { // Después de ngOnInit
-    if ( !this.divMap ) throw 'No hay mapa';
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => { 
-          this.map = new mapboxgl.Map({
-              container: this.divMap?.nativeElement, 
-              style: 'mapbox://styles/mapbox/'+this.color_map,
-              center: [position.coords.longitude, position.coords.latitude],
-              zoom: this.zoom, 
-          });
-          this.auxInit();
-        },
-        (error) => {
-          this.map = new mapboxgl.Map({
+    this.newMap();
+    this.start= false;
+  }
+
+  newMap(){
+    if(this.start==false){
+        this.map = new mapboxgl.Map({
             container: this.divMap?.nativeElement, 
-            style: 'mapbox://styles/mapbox/'+this.color_map, 
-            center: [-3.7034137886912504,40.41697654880073],
+            style: 'mapbox://styles/mapbox/'+this.color_map,
+            center: [this.currentLngLat.lng, this.currentLngLat.lat],
             zoom: this.zoom, 
         });
-          console.log("Error geo", error);
-          this.auxInit()
-        }
-      );
-    } 
-    else {
-      this.map = new mapboxgl.Map({
-        container: this.divMap?.nativeElement, 
-        style: 'mapbox://styles/mapbox/'+this.color_map, 
-        center: [-3.7034137886912504,40.41697654880073],
-        zoom: this.zoom, 
-    });      
-      console.log("Geo no compatible");
-      this.auxInit();
+        this.auxInit();
+    }
+    else{
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(position => { 
+            this.map = new mapboxgl.Map({
+                container: this.divMap?.nativeElement, 
+                style: 'mapbox://styles/mapbox/'+this.color_map,
+                center: [position.coords.longitude, position.coords.latitude],
+                zoom: this.zoom, 
+            });
+            this.auxInit();
+          },
+          (error) => {
+            this.map = new mapboxgl.Map({
+              container: this.divMap?.nativeElement, 
+              style: 'mapbox://styles/mapbox/'+this.color_map, 
+              center: [-3.7034137886912504,40.41697654880073],
+              zoom: this.zoom, 
+          });
+            console.log("Error geo", error);
+            this.auxInit()
+          }
+        );
+      } 
+      else {
+        this.map = new mapboxgl.Map({
+          container: this.divMap?.nativeElement, 
+          style: 'mapbox://styles/mapbox/'+this.color_map, 
+          center: [-3.7034137886912504,40.41697654880073],
+          zoom: this.zoom, 
+        });      
+        console.log("Geo no compatible");
+        this.auxInit();
+      }
     }
   }
 

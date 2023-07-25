@@ -45,12 +45,12 @@
               </svg>
             </div>
             <div class="col-4 col-lg-3 p-0 m-0 pb-3">
-              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderDevices('uid','ASC')" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderSelect()" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
               </select>
-              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderDevices('uid','ASC')" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderSelect()" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -60,7 +60,7 @@
         </div>
         <!---->
         <div class="col-12 col-lg-2 p-0 m-0 pb-3 px-3">
-          <select  (ngModelChange)="orderDevices('uid','ASC')" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
+          <select  (ngModelChange)="orderSelect()" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
             <option selected [ngValue]="2">{{ 'sensors.all_devices' | translate }}</option>
             <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
             <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
