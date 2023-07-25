@@ -390,7 +390,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           */
         })
 
-        setTimeout( () => {
+        setTimeout( () => { // en markers tmb hacer lo comprobar si ya existe...........................................................
           for (let quote of this.data) {
             fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
             .then(response => response.json())
@@ -404,7 +404,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               reject(error); 
             });  
           }
-        }, 1000)
+        }, 500)
     });
   }
   
