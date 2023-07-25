@@ -22,7 +22,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   @ViewChild('map') divMap?: ElementRef;
   constructor(private router: Router) { }
 
-  zoom: number = 1.5;
+  zoom: number = 7;
   map?: mapboxgl.Map;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
   markers: MarkerAndColor[] = [];
@@ -308,16 +308,44 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       }
       
       if(this.open_map_list==true){ // LIST //
+        this.charging= true;
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          //console.log("zona 2")
           this.charging= false;
           this.totalPages= Math.ceil(data.length/this.quantPage);
           this.total= data.length;
+          //console.log(this.totalPages)
         })
-        this.getDatos('0') 
+        this.charging= true;
+
+        //
+
+        //console.log("LIST")
+        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        .then((response) => response.json())
+        .then(data => {
+          this.charging= false;
+          this.data= data;
+          for (let quote of this.data) {
+              fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+              .then(response => response.json())
+              .then(data => {
+                quote.sensor= data;
+              })
+              .catch(error => {
+                console.error(error); 
+              });  
+          }
+          if(this.data.length<this.quantPage){
+            this.cosa= this.total;
+          }
+          else{
+            this.cosa= this.quantPage*this.currentPage;
+          }
+        })
       }
-      
     }, 1);
   }
 
@@ -341,32 +369,30 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
     this.charging= true;
     return new Promise((resolve, reject) => {
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          this.data= data;
-          for (let quote of this.data) {
-              fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-              .then(response => response.json())
-              .then(data => {
-                quote.sensor= data;
-                this.data2.push(data);
-
-                this.charging= false;
-                resolve(data); 
-              })
-              .catch(error => {
-                console.error(error); 
-                reject(error); 
-              });  
-          }
-          if(this.data.length<this.quantPage){
-            this.cosa= this.total;
-          }
-          else{
-            this.cosa= this.quantPage*this.currentPage;
+          if(this.data.length!=data.length){
+            this.newMap();
+            this.data= data;
           }
         })
+
+        setTimeout( () => {
+          for (let quote of this.data) {
+            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+            .then(response => response.json())
+            .then(data => {
+              this.data2.push(data);
+              this.charging= false;
+              resolve(data); 
+            })
+            .catch(error => {
+              console.error(error); 
+              reject(error); 
+            });  
+          }
+        }, 100)
     });
   }
   
