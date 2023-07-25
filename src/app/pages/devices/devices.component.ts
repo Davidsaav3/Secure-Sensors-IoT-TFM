@@ -186,9 +186,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.pag_tam= 1;
       this.pag_pag= 100000;
 
-
       if(this.open_map_list==false){ // MAP //
-        this.getDatos()
+        this.getDatos('1')
         .then(data => {
           for(let quote of this.data) {
             let color= '#198754';
@@ -308,43 +307,59 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         });
       }
       
-
-
       if(this.open_map_list==true){ // LIST //
-        this.charging= true;
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          //console.log("zona 2")
           this.charging= false;
           this.totalPages= Math.ceil(data.length/this.quantPage);
           this.total= data.length;
-          //console.log(this.totalPages)
         })
-        this.charging= true;
+        this.getDatos('0') 
+      }
+      
+    }, 1);
+  }
 
-        //
+  getDatos(num: any) {
+    this.getCornerCoordinates();
+    let pos_x_1= '0';
+    let pos_x_2= '0';
+    let pos_y_1= '0';
+    let pos_y_2= '0';
+    this.pag_tam= this.currentPage;
+    this.pag_pag= this.quantPage;
 
-        //console.log("LIST")
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+    if(num=='1'){
+      pos_x_1= this.pos_x_1;
+      pos_x_2= this.pos_x_2;
+      pos_y_1= this.pos_y_1;
+      pos_y_2= this.pos_y_2;
+      this.pag_tam= 1;
+      this.pag_pag= 10000;
+    }
+
+    this.charging= true;
+    return new Promise((resolve, reject) => {
+        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          //console.log("zona 3")
-          this.charging= false;
           this.data= data;
           for (let quote of this.data) {
               fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
               .then(response => response.json())
               .then(data => {
-                //console.log("zona 4")
                 quote.sensor= data;
+                this.data2.push(data);
+
+                this.charging= false;
+                resolve(data); 
               })
               .catch(error => {
                 console.error(error); 
+                reject(error); 
               });  
           }
-          //console.log(this.data.length)
-          //console.log(this.total)
           if(this.data.length<this.quantPage){
             this.cosa= this.total;
           }
@@ -352,33 +367,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.cosa= this.quantPage*this.currentPage;
           }
         })
-      }
-    }, 1);
-    //console.log(this.markers)
-  }
-
-  getDatos() {
-    this.getCornerCoordinates();
-    //console.log("MAP");
-    return new Promise((resolve, reject) => {
-      fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${this.pos_x_1}/${this.pos_x_2}/${this.pos_y_1}/${this.pos_y_2}`)   
-      .then((response) => response.json())
-      .then(data => {
-        this.data= data;
-        for (let quote of this.data) {
-          fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-          .then(response => response.json())
-          .then(data => {
-            //console.log("zona 4")
-            this.data2.push(data);
-            resolve(data); // Resuelve la promesa con los datos obtenidos
-          })
-          .catch(error => {
-            console.error(error); 
-            reject(error); // Rechaza la promesa en caso de error
-          });  
-        }
-      })
     });
   }
   
