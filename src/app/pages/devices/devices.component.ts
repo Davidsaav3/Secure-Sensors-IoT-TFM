@@ -372,10 +372,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          let entrar= false;
+          for (const obj of data) {
+            if (!this.data.some(f => f.id === obj.id)) {
+              entrar= true;
+              this.data.push(obj);
+            }
+          }
+          if(entrar){
+            this.newMap();
+          }
+          /*
           if(this.data.length!=data.length){
             this.newMap();
             this.data= data;
           }
+          */
         })
 
         setTimeout( () => {
@@ -392,7 +404,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               reject(error); 
             });  
           }
-        }, 100)
+        }, 1000)
     });
   }
   
