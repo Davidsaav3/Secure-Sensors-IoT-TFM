@@ -32,6 +32,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   rute2: any;
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
+  sharedCota: any = 10;
   currentLngLat: mapboxgl.LngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
 
   constructor(private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
@@ -175,6 +176,62 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         }
       }
     }
+
+    if(this.map!=undefined){
+      this.map.on('style.load', () => {
+        if(this.map!=undefined){
+          let layers;
+          if (this.map != null) {
+            layers = this.map.getStyle().layers;
+          }
+          let labelLayerId;
+          if (layers !== undefined) {
+            const labelLayer = layers.find(
+              (layer) => layer.type == 'symbol' && layer.layout && layer.layout['text-field']
+            );
+            if (labelLayer) {
+              labelLayerId = labelLayer.id;
+            }
+            if(this.map!=undefined){
+              this.map.addLayer({
+                'id': 'add-3d-buildings',
+                'source': 'composite',
+                'source-layer': 'building',
+                'filter': ['==', 'extrude', 'true'],
+                'type': 'fill-extrusion',
+                'minzoom': 15,
+                'paint': {
+                'fill-extrusion-color': '#aaa',
+    
+                'fill-extrusion-height': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                15,
+                0,
+                15.05,
+                ['get', 'height']
+                ],
+                'fill-extrusion-base': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                15,
+                0,
+                15.05,
+                ['get', 'min_height']
+                ],
+                'fill-extrusion-opacity': 0.6
+                }
+                },
+                labelLayerId
+              );
+            }
+          } 
+        }
+      });
+    }
+
     setInterval(() => {
       this.dataSharingService.sharedLat$.subscribe(data => {
         this.sharedLat = data;

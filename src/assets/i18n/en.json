@@ -134,6 +134,7 @@
     "required" : " is required.",
     "reset.data" : "Reset data",
     "reset.data2" : "Reset data",
-    "irreversible" : "This action is irreversible."
+    "irreversible" : "This action is irreversible.",
+    "no_estructure" : "Data structures not found, disable filters"
 
 }

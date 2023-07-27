@@ -7,9 +7,10 @@ import { BehaviorSubject } from 'rxjs';
 export class DataSharingService {
   private sharedLat = new BehaviorSubject<any>('');
   sharedLat$ = this.sharedLat.asObservable();
-
   private sharedLon = new BehaviorSubject<any>('');
   sharedLon$ = this.sharedLon.asObservable();
+  private sharedCota = new BehaviorSubject<any>('');
+  sharedCota$ = this.sharedCota.asObservable();
 
   private sharedList = new BehaviorSubject<any>('');
   sharedList$ = this.sharedList.asObservable();
@@ -25,6 +26,9 @@ export class DataSharingService {
   }
   updatesharedLon(sharedLon: any) {
     this.sharedLon.next(sharedLon);
+  }
+  updatesharedCota(sharedCota: any) {
+    this.sharedCota.next(sharedCota);
   }
 
   updatesharedList(sharedList: any) {

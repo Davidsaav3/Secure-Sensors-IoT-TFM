@@ -13,6 +13,8 @@ export class DevicesNewEditComponent implements OnInit{
 
   sharedLat: any = '';
   sharedLon: any = '';
+  sharedCota: any = '';
+
   date: any;
   state= 0; //0 new //1 duplicate // 2 edit
   rute='';
@@ -67,7 +69,7 @@ export class DevicesNewEditComponent implements OnInit{
     typemeter: '',
     lat: this.sharedLat,
     lon: this.sharedLon,
-    cota: 10,
+    cota: 10, //this.sharedCota,
     timezone: 'Brussels, Copenhagen, Madrid, Paris',
     organizationid: '',
     enable: 0,
@@ -130,8 +132,12 @@ export class DevicesNewEditComponent implements OnInit{
         this.dataSharingService.sharedLon$.subscribe(data => {
           this.devices.lon = data;
         });
+        this.dataSharingService.sharedCota$.subscribe(data => {
+          //this.devices.cota = data;
+        });
         this.updatesharedLat();
         this.updatesharedLon();
+        this.updatesharedCota();
     }
     //    
     if(this.rute2[2]=='new'){
@@ -182,6 +188,9 @@ export class DevicesNewEditComponent implements OnInit{
         this.dataSharingService.sharedLon$.subscribe(data => {
           this.devices.lon = data;
         });
+        this.dataSharingService.sharedCota$.subscribe(data => {
+          //this.devices.cota = data;
+        });
         this.dataSharingService.sharedList$.subscribe(data => {
           this.sensors.sensors= data;
         });
@@ -215,6 +224,9 @@ export class DevicesNewEditComponent implements OnInit{
     });
     this.dataSharingService.sharedLon$.subscribe(data => {
       this.devices.lon = data;
+    });
+    this.dataSharingService.sharedCota$.subscribe(data => {
+      //this.devices.cota = data;
     });
     this.dataSharingService.sharedList$.subscribe(data => {
       this.sensors.sensors= data;
@@ -293,6 +305,9 @@ newDevice(form: any) { // Guardar Dispositivos
   this.dataSharingService.sharedLon$.subscribe(data => {
     this.devices.lon = data;
   });
+  this.dataSharingService.sharedCota$.subscribe(data => {
+    //this.devices.cota = data;
+  });
   this.dataSharingService.sharedList$.subscribe(data => {
     this.sensors.sensors= data;
     //console.log(this.sensors.sensors)
@@ -324,6 +339,9 @@ newDevice(form: any) { // Guardar Dispositivos
   }
   updatesharedLon() { // Actualizar Longitud
     this.dataSharingService.updatesharedLon(this.devices.lon);
+  }
+  updatesharedCota() { // Actualizar Longitud
+    this.dataSharingService.updatesharedCota(this.devices.cota);
   }
 
   recharge(){ // Recargar
@@ -372,10 +390,11 @@ newDevice(form: any) { // Guardar Dispositivos
   deleteMarker(){ // eliminar elementos del mapa
     this.devices.lat= null;
     this.devices.lon= null;
-    this.devices.cota= 10;
+    //this.devices.cota= 10;
     this.devices.timezone= 'Brussels, Copenhagen, Madrid, Paris';
     this.updatesharedLat();
     this.updatesharedLon();
+    this.updatesharedCota();
   }
 
   createDate(){ // Genera fecha

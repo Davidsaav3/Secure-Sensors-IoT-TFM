@@ -135,6 +135,7 @@
     "required" : " es requerido.",
     "reset.data" : "Restablecer datos",
     "reset.data2" : "Restablecer datos ?",
-    "irreversible" : "Esta acción es irréversible."
+    "irreversible" : "Esta acción es irréversible.",
+    "no_estructure" : "Estructura de datos no encontradas, desactive filtros"
 
 }
