@@ -38,18 +38,18 @@
         <div class="col-12 col-lg-4">
           <div class="row d-flex px-3">
             <div class="col-8 col-lg-9 p-0 m-0 mb-3" style="position: relative; border-radius: 6px; border: 1px solid #d8d8d8 ; border-top-right-radius: 0em; border-bottom-right-radius: 0em;">
-              <ng-select [items]="select_sensors_1.sensors" (ngModelChange)="orderSelect()" bindLabel="name" appendTo="ng-select" [multiple]="true" [(ngModel)]="select_sensors_2.sensors" style="background-color: #E3E3E3;" class="selectpicker" aria-label="Default select example" id="sel_type" name="sel_type" style="height:fit-content;"></ng-select>
+              <ng-select [items]="select_sensors_1.sensors" (ngModelChange)="filterDevices()" bindLabel="name" appendTo="ng-select" [multiple]="true" [(ngModel)]="select_sensors_2.sensors" style="background-color: #E3E3E3;" class="selectpicker" aria-label="Default select example" id="sel_type" name="sel_type" style="height:fit-content;"></ng-select>
               <svg style="position: absolute; top:10px; right:40px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
               </svg>
             </div>
             <div class="col-4 col-lg-3 p-0 m-0 pb-3">
-              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderSelect()" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="filterDevices()" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
               </select>
-              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="orderSelect()" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (ngModelChange)="filterDevices()" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -59,7 +59,7 @@
         </div>
         <!---->
         <div class="col-12 col-lg-2 p-0 m-0 pb-3 px-3">
-          <select  (ngModelChange)="orderSelect()" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
+          <select  (ngModelChange)="filterDevices()" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
             <option selected [ngValue]="2">{{ 'sensors.all_devices' | translate }}</option>
             <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
             <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>

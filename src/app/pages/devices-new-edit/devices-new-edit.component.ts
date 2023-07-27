@@ -318,8 +318,8 @@ newDevice(form: any) { // Guardar Dispositivos
       method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
+    this.newSensor();
   }
-  this.newSensor();
 }
 
   deleteDevice(id_actual: any){ // Eliminar Dispositivo
