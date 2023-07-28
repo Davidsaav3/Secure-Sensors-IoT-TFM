@@ -73,8 +73,10 @@ con.connect(function(err) {
             }
             else{
               console.log("ZONA 1 MAP")
-              console.log(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
-              con.query(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+              console.log(`SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where d.id IN ${consulta} AND d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`)
+              // SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}
+              // SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device;
+              con.query(`SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where d.id IN ${consulta} AND d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
                 if (err) throw err;
                   res.send(result)
               }); 
@@ -114,7 +116,8 @@ con.connect(function(err) {
             }); 
           }
           else{
-            console.log(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
+            console.log("ZONA 6 MAP")
+            //console.log(`SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
             con.query(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
@@ -123,7 +126,7 @@ con.connect(function(err) {
         }
       }
       else{
-        console.log("ZONA 6")
+        console.log("ZONA 7")
           con.query(`SELECT * FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
           if (err) throw err;
             res.send(result)

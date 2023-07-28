@@ -107,6 +107,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }]
   }
 
+  sensor: any = {
+      id: 0,
+      enable: 1,
+      type_name: 'David'
+  }
+
   select_sensors_2 = {
     sensors : [{
       id: -1, 
@@ -405,6 +411,36 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then(data => {
           if(this.state=='0'){
             let entrar= false;
+            console.log(data)
+            for (const obj of data) {
+              if (!this.data.some(f => f.id === obj.id)) {
+                entrar= true;
+                this.data.push(obj);
+              }
+              /*let aux= [];
+              let cont= 0;
+              let ult_id;
+              if(data.id==ult_id){
+                let sensor2 ={ id: cont, enable: this.data.enable_sensor, type_name: this.data.type_name;}
+                aux.push(sensor2);
+                cont++;
+              }
+              this.data2.push(data);*/
+            }
+            if(entrar){
+              this.newMap();
+            }
+          }
+          //
+          if(this.state=='1'){
+            if(this.data.length!=data.length){
+              this.newMap();
+              this.data= data;
+            }
+          }
+          /*if(this.state=='0'){
+            let entrar= false;
+            console.log(data)
             for (const obj of data) {
               if (!this.data.some(f => f.id === obj.id)) {
                 entrar= true;
@@ -421,7 +457,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               this.newMap();
               this.data= data;
             }
-          }
+          }*/
          
         })
 
@@ -440,6 +476,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             });  
           }
         }, 500)
+        console.log(this.data2)
     });
   }
   
