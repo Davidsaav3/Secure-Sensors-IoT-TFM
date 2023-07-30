@@ -128,8 +128,9 @@ export class EstructureComponent implements OnInit{
 
       this.getEstructure(this.mark,this.ord_asc);
       this.saved= true;
+      this.change=false;
+      this.getEstructure(this.mark,this.ord_asc);
     }
-    this.change=false;
   }
 
   newEstructure(form: any) { // Guardar datos de estructuras nuevo
@@ -151,10 +152,11 @@ export class EstructureComponent implements OnInit{
       .then(data => {
         this.id= parseInt(data[0].id+1);
       })
+      this.change=false;
+      this.change=false;
+      this.getEstructure(this.mark,this.ord_asc);
+      this.getEstructure(this.mark,this.ord_asc);
     }
-    this.change=false;
-    this.change=false;
-    this.getEstructure(this.mark,this.ord_asc);
   }
   
   resize(): void{ // Redimensionar pantalla
@@ -220,6 +222,7 @@ export class EstructureComponent implements OnInit{
     setTimeout(() => {
       this.alert_delete= false;
     }, 2000);
+    this.getEstructure(this.mark,this.ord_asc);
     this.getEstructure(this.mark,this.ord_asc);
     this.openClouse();
   }
