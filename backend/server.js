@@ -117,6 +117,7 @@ con.connect(function(err) {
           }
           else{
             console.log("ZONA 6 MAP")
+            //SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}
             //console.log(`SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
             con.query(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;

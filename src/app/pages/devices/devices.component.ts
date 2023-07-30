@@ -461,6 +461,32 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
          
         })
 
+                /*setTimeout( () => { 
+          this.data2= [];
+          let aux: { [id: number]: any[] } = {};
+          let array= [];
+          let id = 2;
+          let cont= 0;
+          //console.log(this.data[0])
+          for (let index = 0; index < this.data[0].length; index++) {
+            if(this.data[0][index].id!=id){
+              this.data2.push(aux);
+              cont= 0;
+              aux= [];
+            }
+            //console.log(this.data[0][index])
+            if (!aux[cont]) {
+              aux[cont] = [];
+            }
+            id= this.data[0][index].id; // Si el array para ese id aún no existe, lo creamos
+            aux[cont].push(this.data[0][index]);
+            //console.log(aux)
+            cont++;
+          }
+          console.log(this.data2);            
+        }, 1000)*/
+
+        //this.data2= [];
         setTimeout( () => { 
           for (let quote of this.data) {
             fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
@@ -476,7 +502,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             });  
           }
         }, 500)
-        console.log(this.data2)
+        //console.log(this.data2)
     });
   }
   
