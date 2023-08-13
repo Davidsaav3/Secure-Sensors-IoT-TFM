@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent {
   activeLang = 'es';
+  //activeLang = process.env.LENGUAJE_LANG[0];
 
   dup_ok=false;
   dup_not=false;

@@ -64,7 +64,7 @@ export class EstructureComponent implements OnInit{
 
   search_1='Buscar';
   search_2='type';
-  mark= 'id_estructure';
+  mark= 'description';
   ord_asc= 'ASC';
 
   estructure = {

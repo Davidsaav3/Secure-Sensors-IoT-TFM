@@ -157,6 +157,8 @@ export class DevicesNewEditComponent implements OnInit{
             .then(response => response.json())
             .then(data => {
               this.devices= data[0];
+              this.devices.createdAt= this.formatDateTime(data[0].createdAt);
+              this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
             })
             .catch(error => {
               console.error(error); 
@@ -212,6 +214,8 @@ export class DevicesNewEditComponent implements OnInit{
     .then(response => response.json())
     .then(data => {
       this.devices= data[0];
+      this.devices.createdAt= this.formatDateTime(data[0].createdAt);
+      this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
     })
     .catch(error => {
       console.error(error); 
@@ -404,5 +408,21 @@ newDevice(form: any) { // Guardar Dispositivos
 
   resize(): void{ // Redimensionar pantalla
     this.width = window.innerWidth;
+  }
+
+  formatDateTime(date2: any) {
+    let dat='';
+    const date = new Date(date2)
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    if(isNaN(date.getFullYear())){
+      dat= '';
+    }
+    return dat;
   }
 }

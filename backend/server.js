@@ -66,7 +66,7 @@ con.connect(function(err) {
           if(array_sensors!=-1 && devices_act!=2 && array_sensors!=-2){
             if(state=='0'){
               console.log("ZONA 1 LIST")
-              con.query(`SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+              con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where id IN ${consulta} AND enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
                 if (err) throw err;
                   res.send(result)
               }); 
@@ -76,7 +76,7 @@ con.connect(function(err) {
               console.log(`SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where d.id IN ${consulta} AND d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`)
               // SELECT * FROM device_configurations where id IN ${consulta} AND enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}
               // SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device;
-              con.query(`SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where d.id IN ${consulta} AND d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+              con.query(`SELECT d.*, s.orden, s.enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where d.id IN ${consulta} AND d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
                 if (err) throw err;
                   res.send(result)
               }); 
@@ -85,21 +85,21 @@ con.connect(function(err) {
           else{
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("ZONA 2")
-                con.query(`SELECT * FROM device_configurations where id IN ${consulta} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) { /////////////////////////////////////////////////////////
+                con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where id IN ${consulta} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
                 }); 
               }
               if(array_sensors==-2){
                 console.log("ZONA 3")
-                con.query(`SELECT * FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) { /////////////////////////////////////////////////////////
+                con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
                 }); 
               }
             if(devices_act!=2){
               console.log("ZONA 4")
-              con.query(`SELECT * FROM device_configurations where enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+              con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
                 if (err) throw err;
                   res.send(result)
               }); 
@@ -110,7 +110,7 @@ con.connect(function(err) {
         else{
           if(state=='0'){
             console.log("ZONA 5 LIST")
-            con.query(`SELECT * FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+            con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
@@ -119,7 +119,7 @@ con.connect(function(err) {
             console.log("ZONA 6 MAP")
             //SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}
             //console.log(`SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
-            con.query(`SELECT * FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(`SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
@@ -128,7 +128,7 @@ con.connect(function(err) {
       }
       else{
         console.log("ZONA 7")
-          con.query(`SELECT * FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
+          con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
           if (err) throw err;
             res.send(result)
         }); 
