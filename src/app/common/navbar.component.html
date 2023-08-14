@@ -20,9 +20,10 @@
 	<div class="col-lg-6 col-2 p-0 pt-2">
     <div class="d-flex" style="justify-content: flex-end;">
       <div class="pe-3">
-        <select (ngModelChange)="changeLenguaje()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
-          <option value='{{this.leng_lang[0]}}' [ngClass]="{'selected': activeLang == this.leng_lang[0]}" >{{this.leng_name[0]}}</option>
-          <option value='{{this.leng_lang[1]}}' [ngClass]="{'selected': activeLang == this.leng_lang[1]}">{{this.leng_name[1]}}</option>
+        <select  (ngModelChange)="changeLenguaje()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
+          <ng-container *ngFor="let quote of this.leng_lang; let i = index">
+            <option value='{{quote}}' [ngClass]="{'selected': activeLang == quote}" >{{this.leng_name[i]}}</option>
+          </ng-container>
         </select>
       </div>
       <div class="d-none d-xl-inline pe-3">
