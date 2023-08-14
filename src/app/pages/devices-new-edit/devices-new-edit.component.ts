@@ -248,6 +248,7 @@ export class DevicesNewEditComponent implements OnInit{
       this.saved= true;
     }
     this.editSensor();
+    this.changed= false;
   }
 
   editSensor() { // Guardar Sensores
@@ -265,6 +266,8 @@ export class DevicesNewEditComponent implements OnInit{
       })
       .then(response => response.json()) 
     }
+    this.changed= false;
+
     return;
   }
 
