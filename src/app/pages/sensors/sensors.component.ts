@@ -1,4 +1,4 @@
-import { Component , OnInit, HostListener} from '@angular/core';
+import { Component ,ElementRef, OnInit, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +16,7 @@ export class SensorsComponent implements OnInit{
     this.resize();
   }
 
-  constructor(public rutaActiva: Router) {
+  constructor(public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -129,8 +129,11 @@ export class SensorsComponent implements OnInit{
         this.charging= false
         this.data = quotesData
       });      
-    
-
+      
+      const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
+      if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
+      }
   }
 
   editSensor(form: any) { // Guardar datos de sensores editado
@@ -215,7 +218,7 @@ export class SensorsComponent implements OnInit{
           this.sensors.id= data[0].id;
           this.sensors.type= type_2;
         })
-        this.change= true;
+        //this.change= true;
         this.state= 0;
       })
 

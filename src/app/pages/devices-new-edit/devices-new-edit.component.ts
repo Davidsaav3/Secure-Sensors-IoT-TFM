@@ -296,7 +296,7 @@ export class DevicesNewEditComponent implements OnInit{
         .then(response => response.json()) 
       }
     }
-    this.router.navigate(['/devices']);
+    this.router.navigate([`/devices/edit/${this.id}`]);
     return;
 }
 

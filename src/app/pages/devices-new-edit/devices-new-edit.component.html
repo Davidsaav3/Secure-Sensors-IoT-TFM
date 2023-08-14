@@ -116,20 +116,20 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <div style="position: relative;" class="col-md-12">
                                 <label for="id_data_estructure">{{ 'estructure' | translate }}</label>
                                 <select type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
                                     <ng-container *ngFor="let id of estructures.estructure;let j=index">
                                         <option [selected]="id.id_estructure==devices['id_data_estructure']" value="{{id.id_estructure}}">{{id.description}}</option>
                                     </ng-container>
                                 </select>
-                                <div style="position: relative;" *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
+                                <div>
+                                    <svg style="position: absolute; top:35px; right:20px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                </div>
+                                <div *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
                                     <div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'estructure' | translate }} {{ 'required' | translate }}</div>
-                                    <div>
-                                        <svg style="position: absolute; top:35px; right:20px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                        </svg>
-                                    </div>
                                 </div>
                             </div>
                         </div>

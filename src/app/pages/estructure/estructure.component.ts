@@ -154,8 +154,9 @@ export class EstructureComponent implements OnInit{
       })
       this.change=false;
       this.change=false;
+      //this.getEstructure(this.mark,this.ord_asc);
       this.getEstructure(this.mark,this.ord_asc);
-      this.getEstructure(this.mark,this.ord_asc);
+      this.openEdit();
     }
   }
   
@@ -203,8 +204,8 @@ export class EstructureComponent implements OnInit{
           this.estructure.id_estructure= data[0].id_estructure;
           this.estructure.description= description_2;
         })
-        this.change= true;
-        this.state= 1;
+        //this.change= true;
+        this.state= 0;
       })
     }
     
@@ -233,7 +234,7 @@ export class EstructureComponent implements OnInit{
   }
 
   update(){ // Guardar estructuras en el popup de salir sin guardar
-   if(this.show==true && this.state==1){
+   if(this.show==true && (this.state==0 || this.state==1)){
     this.newEstructure(this.estructure);
    }
    if(this.show==false && this.state==2){
@@ -305,7 +306,6 @@ export class EstructureComponent implements OnInit{
     this.show= true;
     this.openClouse();
     this.state= 1;
-
   }
 
   openEdit(){ // Abrir Editar sensor
