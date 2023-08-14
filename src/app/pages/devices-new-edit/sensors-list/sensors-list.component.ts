@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { DataSharingService } from '../../../services/data_sharing.service';
+import { environment } from "../../../../../environments/environment"
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +32,9 @@ export class SensorsListComponent  implements OnInit{
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
   view_can= -1;
-  activeLang='en';
+  leng_name= environment.lenguaje_name;
+  leng_lang= environment.lenguaje_lang;
+  activeLang = environment.lenguaje_lang[0];
   search_1='orden';
   search_2='id';
   show_map= true;

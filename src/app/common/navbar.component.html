@@ -21,8 +21,8 @@
     <div class="d-flex" style="justify-content: flex-end;">
       <div class="pe-3">
         <select (ngModelChange)="changeLenguaje()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
-          <option value="es" [ngClass]="{'selected': activeLang == 'es'}" >Español</option>
-          <option value="en" [ngClass]="{'selected': activeLang == 'en'}">English</option>
+          <option value='{{this.leng_lang[0]}}' [ngClass]="{'selected': activeLang == this.leng_lang[0]}" >{{this.leng_name[0]}}</option>
+          <option value='{{this.leng_lang[1]}}' [ngClass]="{'selected': activeLang == this.leng_lang[1]}">{{this.leng_name[1]}}</option>
         </select>
       </div>
       <div class="d-none d-xl-inline pe-3">

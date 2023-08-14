@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { DataSharingService } from '../../services/data_sharing.service';
 import { DevicesMapComponent } from './devices-map/devices-map.component';
+import { environment } from "../../../../environments/environment"
 
 @Component({
   selector: 'app-devices-new-edit',
@@ -46,7 +47,9 @@ export class DevicesNewEditComponent implements OnInit{
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
   view_can= false;
-  activeLang='en';
+  leng_name= environment.lenguaje_name;
+  leng_lang= environment.lenguaje_lang;
+  activeLang = environment.lenguaje_lang[0];
   show_map=true;
   show_form= true;
   view_rec= false;

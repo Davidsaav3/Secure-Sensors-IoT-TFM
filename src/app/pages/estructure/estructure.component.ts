@@ -1,5 +1,6 @@
 import { Component , OnInit, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from "../../../../environments/environment"
 
 @Component({
   selector: 'app-estructure',
@@ -10,7 +11,9 @@ import { Router } from '@angular/router';
 export class EstructureComponent implements OnInit{
 
   @HostListener('window:resize')
-  public activeLang = 'es';
+  leng_name= environment.lenguaje_name;
+  leng_lang= environment.lenguaje_lang;
+  public activeLang = environment.lenguaje_lang[0];
 
   constructor(public rutaActiva: Router) {
     this.resize();

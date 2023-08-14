@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
+import { environment } from "../../../environments/environment"
 
 @Component({
   selector: 'app-navbar',
@@ -8,9 +9,9 @@ import { Router } from '@angular/router';
   styleUrls: ['../app.component.css']
 })
 export class NavbarComponent {
-  activeLang = 'es';
-  //activeLang = process.env.LENGUAJE_LANG[0];
-
+  leng_name= environment.lenguaje_name;
+  leng_lang= environment.lenguaje_lang;
+  activeLang = environment.lenguaje_lang[0];
   dup_ok=false;
   dup_not=false;
   rute='';

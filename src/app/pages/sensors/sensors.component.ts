@@ -1,5 +1,6 @@
 import { Component ,ElementRef, OnInit, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from "../../../../environments/environment"
 
 @Component({
   selector: 'app-sensors',
@@ -8,8 +9,9 @@ import { Router } from '@angular/router';
 })
 
 export class SensorsComponent implements OnInit{
-
-  public activeLang = 'es';
+  leng_name= environment.lenguaje_name;
+  leng_lang= environment.lenguaje_lang;
+  public activeLang = environment.lenguaje_lang[0];
   @HostListener('window:resize', ['$event'])
     onResize(event: any) {
     window.resizeBy(-1, 0);
