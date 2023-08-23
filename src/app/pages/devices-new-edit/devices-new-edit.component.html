@@ -14,12 +14,12 @@
                             <div class="col-3 d-flex justify-content-end">
                                 <div class="form-check form-switch">
                                     <label class="toggle tt1 t1">
-                                        <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" name="enable" [(ngModel)]="devices.enable">
+                                  <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" name="enable" [(ngModel)]="devices.enable">
                                         <span class="slider"></span>
-                                        <ng-container *ngIf="this.activeLang=='{{this.leng_lang[0]}}'">
+                                        <ng-container *ngIf="this.activeLang==this.leng_lang[0]">
                                             <span class="labels t1" data-on="Activado" data-off="Desactivado"></span>
                                         </ng-container>
-                                        <ng-container *ngIf="this.activeLang=='{{this.leng_lang[1]}}'">
+                                        <ng-container *ngIf="this.activeLang==this.leng_lang[1]">
                                             <span class="labels t1" data-on="Enable" data-off="Disable"></span>
                                         </ng-container>
                                     </label>

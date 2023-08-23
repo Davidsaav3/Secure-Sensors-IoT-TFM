@@ -1,6 +1,6 @@
 <form class="" *ngIf="show_map" #form="ngForm" #miDiv>
 
-	<div class="row pb-0 pb-3 d-flex">
+	<div class="row pb-0 pb-1 d-flex">
 		<div class="col d-flex" style="justify-content: flex-end;">
       <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
 		</div>
@@ -8,7 +8,7 @@
 
 	<div class="row">
 		<div class="col-12"> 
-			<div class="over" style="height: 28vh; background-color: #f8f8f8;" > 
+			<div class="over" style="height: 20vh; background-color: #f8f8f8;" > 
 			<table class="table table-hover">
 				<thead>
 				  <tr>
@@ -83,10 +83,10 @@
                 <label style="display: none" [for]="'enable'+i">{{ 'devices.sensors.enable' | translate }}</label>
                 <input maxlength="4" (ngModelChange)="updatesharedList()" type="checkbox" [id]="'enable'+i" [name]="'enable'+i" checked [(ngModel)]="item.enable">
                 <span class="slider"></span>
-                <ng-container *ngIf="this.activeLang=='{{this.leng_lang[0]}}'">
+                <ng-container *ngIf="this.activeLang==this.leng_lang[0]">
                   <span class="labels t2" data-on="Activado" data-off="Desactivado"></span>
                 </ng-container>
-                <ng-container *ngIf="this.activeLang=='{{this.leng_lang[1]}}'">
+                <ng-container *ngIf="this.activeLang==this.leng_lang[1]">
                   <span class="labels t2" data-on="Enable" data-off="Disable"></span>
                 </ng-container>     						
               </label>
