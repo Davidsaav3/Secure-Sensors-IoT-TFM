@@ -11,15 +11,14 @@ export class DataSharingService {
   sharedLon$ = this.sharedLon.asObservable();
   private sharedCota = new BehaviorSubject<any>('');
   sharedCota$ = this.sharedCota.asObservable();
-
   private sharedList = new BehaviorSubject<any>('');
   sharedList$ = this.sharedList.asObservable();
-
   private sharedAmp = new BehaviorSubject<any>(false);
   sharedAmp$ = this.sharedAmp.asObservable();
-
   private sharedAct = new BehaviorSubject<any>(false);
   sharedAct$ = this.sharedAct.asObservable();
+  private sharedLeng = new BehaviorSubject<any>('init');
+  sharedLeng$ = this.sharedLeng.asObservable();
 
   updatesharedLat(sharedLat: any) {
     this.sharedLat.next(sharedLat);
@@ -39,6 +38,9 @@ export class DataSharingService {
   }
   updatesharedAct(sharedAct: any) {
     this.sharedAct.next(sharedAct);
+  }
+  updatesharedLeng(sharedLeng: any) {
+    this.sharedLeng.next(sharedLeng);
   }
 
 }

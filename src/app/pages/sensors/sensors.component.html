@@ -58,7 +58,7 @@
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.metric' | translate }}</th>
-							<th class="d-none d-md-none d-lg-block" scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'description'}">
+							<th class="d-none d-md-none d-lg-block rounded-0"  scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'description'}">
 								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getSensors('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
@@ -215,7 +215,7 @@
 			</div>
 
 			
-			<div class="col-12 mt-4" >
+			<div class="col-12 mt-3" >
 				<div class="row" *ngIf="state==1 || state==0">
 					<div class="col-6 mt-2">
 						<!--*ngIf="change==false"--><button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
@@ -233,7 +233,7 @@
 					<div class="col-6 mt-2">
 						<button (click)="editSensor(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>	
-					<div class="col-12 mt-4">
+					<div class="col-12 mt-3">
 						<div class="row d-flex" style="justify-content: flex-end;">
 							<div class="col-6">
 								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'sensors.erase_sensor' | translate }}</button>
@@ -284,7 +284,7 @@
           <div class="modal-footer" style="border-top: 0px;">
             <div class="row">
                 <div class="col-7">
-                    <button style="width: max-content;" type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
+                    <button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
                 </div>
                 <div class="col-5">
 					<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>

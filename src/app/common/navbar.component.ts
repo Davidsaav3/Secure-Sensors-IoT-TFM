@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 import { environment } from "../../../environments/environment"
+import { DataSharingService } from '../services/data_sharing.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,7 @@ export class NavbarComponent {
   rute='';
   rute2: any;
 
-  constructor(private translate: TranslateService,public rutaActiva: Router ) {
+  constructor(private translate: TranslateService,public rutaActiva: Router ,private dataSharingService: DataSharingService) {
     this.translate.setDefaultLang(this.activeLang);
     this.rute= this.rutaActiva.routerState.snapshot.url;
     this.rute2 = this.rute.split('/');
@@ -26,7 +27,9 @@ export class NavbarComponent {
   changeLenguaje() {
     setTimeout(() =>{ 
       this.translate.use(this.activeLang);
+      this.dataSharingService.updatesharedLeng(this.activeLang);
     }, 1);
+
   }
   
 }

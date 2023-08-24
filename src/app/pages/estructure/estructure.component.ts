@@ -149,17 +149,27 @@ export class EstructureComponent implements OnInit{
         this.alert_new= false;
       }, 2000);
       this.openClouse();
+      //this.getEstructure(this.mark,this.ord_asc);
 
       fetch(this.max_estructure)
       .then(response => response.json())
       .then(data => {
-        this.id= parseInt(data[0].id+1);
+        this.id= parseInt(data[0].id_estructure+1);
+        console.log(this.id)
+        let estructure = {
+          id_estructure: this.id, 
+          description: this.estructure.description,    
+          configuration: this.estructure.configuration, 
+        }
+        this.data.push(estructure)
+        this.data.sort((a: { description: string; }, b: { description: any; }) => {
+          return a.description.localeCompare(b.description);
+        });
+        this.act_id= this.id.toString();
+        this.openEdit();
+       this.state=2;
       })
       this.change=false;
-      this.change=false;
-      //this.getEstructure(this.mark,this.ord_asc);
-      this.getEstructure(this.mark,this.ord_asc);
-      this.openEdit();
     }
   }
   

@@ -207,9 +207,15 @@ export class DevicesNewEditComponent implements OnInit{
           this.changed= data;
         }
       });
+      //
+      this.dataSharingService.sharedLeng$.subscribe(data => {
+        if(data!='init'){
+          this.activeLang = data;
+        }
+      });
     }, 500);
     this.onResize(0);
-    this.dataSharingService.updatesharedAmp(false);  
+    this.dataSharingService.updatesharedAmp(false);
   }
 
   getDevices(){ // Obtener Dispositivos
