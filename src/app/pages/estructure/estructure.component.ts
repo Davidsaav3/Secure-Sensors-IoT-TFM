@@ -96,26 +96,44 @@ export class EstructureComponent implements OnInit{
   }
 
   getEstructure(id: any,ord: any){ // Obtener todos los estructuras
-      this.mark= id;
-      this.rute= this.rutaActiva.routerState.snapshot.url;
-      if(id!='id'){
-        this.search_2= id;
-      }
-      if(this.search.value==''){
-        this.search_1= 'Buscar';
-      }
-      else{
-        this.search_1= this.search.value;
-      }
-      this.charging= true;
-      fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}`)
-      .then((response) => response.json())
-      .then(quotesData => {
-        this.charging= false
-        this.data = quotesData
-      });      
-    
+    this.mark= id;
+    this.rute= this.rutaActiva.routerState.snapshot.url;
+    if(id!='id'){
+      this.search_2= id;
+    }
+    if(this.search.value==''){
+      this.search_1= 'Buscar';
+    }
+    else{
+      this.search_1= this.search.value;
+    }
+    this.charging= true;
+    fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}`)
+    .then((response) => response.json())
+    .then(quotesData => {
+      this.charging= false
+      this.data = quotesData
+    });
+  }
 
+  getEstructureButton(id: any,ord: any){
+    this.mark= id;
+    if (ord == 'ASC') {
+      if (id == 'description') {
+        this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+      }
+      if (id == 'configuration') {
+        this.data.sort((a: any, b: any) => a.configuration.localeCompare(b.configuration));
+      }
+    }
+    if (ord == 'DESC') {
+      if (id == 'description') {
+        this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
+      }
+      if (id == 'configuration') {
+        this.data.sort((a: any, b: any) => b.configuration.localeCompare(a.configuration));
+      }
+    }
   }
 
   editEstructure(form: any) { // Guardar datos de estructuras editado
@@ -124,15 +142,29 @@ export class EstructureComponent implements OnInit{
         method: "POST",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
+      this.data = this.data.filter((data: { id_estructure: string; }) => data.id_estructure !== this.estructure.id_estructure);
+      let estructure = {
+        id_estructure: this.estructure.id_estructure, 
+        description: this.estructure.description,    
+        configuration: this.estructure.configuration, 
+      }
+      this.data.push(estructure)
+      this.data.sort((a: { description: string; }, b: { description: any; }) => {
+        return a.description.localeCompare(b.description);
+      });
+      this.act_id= this.estructure.id_estructure.toString();
+      this.openEdit();
+      this.state=2;
+
       this.save_ok= true;
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
 
-      this.getEstructure(this.mark,this.ord_asc);
+      //this.getEstructure(this.mark,this.ord_asc);
       this.saved= true;
       this.change=false;
-      this.getEstructure(this.mark,this.ord_asc);
+      //this.getEstructure(this.mark,this.ord_asc);
     }
   }
 
@@ -167,7 +199,7 @@ export class EstructureComponent implements OnInit{
         });
         this.act_id= this.id.toString();
         this.openEdit();
-       this.state=2;
+        this.state=2;
       })
       this.change=false;
     }

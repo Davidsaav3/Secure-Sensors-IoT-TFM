@@ -138,19 +138,82 @@ export class SensorsComponent implements OnInit{
       }
   }
 
+  getEstructureButton(id: any,ord: any){
+    this.mark= id;
+    if (ord == 'ASC') {
+      if (id == 'position') {
+        this.data.sort((a: any, b: any) => {return a.position - b.position;});
+      }
+      if (id == 'type') {
+        this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
+      }
+      if (id == 'metric') {
+        this.data.sort((a: any, b: any) => a.metric.localeCompare(b.metric));
+      }
+      if (id == 'description') {
+        this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+      }
+      if (id == 'correction_general') {
+        this.data.sort((a: any, b: any) => a.correction_general.localeCompare(b.correction_general));
+      }
+      if (id == 'correction_time_general') {
+        this.data.sort((a: any, b: any) => a.correction_time_general.localeCompare(b.correction_time_general));
+      }
+    }
+    if (ord == 'DESC') {
+      if (id == 'position') {
+        this.data.sort((a: any, b: any) => {return b.position - a.position;});
+      }
+      if (id == 'type') {
+        this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
+      }
+      if (id == 'metric') {
+        this.data.sort((a: any, b: any) => b.metric.localeCompare(a.metric));
+      }
+      if (id == 'description') {
+        this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
+      }
+      if (id == 'correction_general') {
+        this.data.sort((a: any, b: any) => b.correction_general.localeCompare(a.correction_general));
+      }
+      if (id == 'correction_time_general') {
+        this.data.sort((a: any, b: any) => b.correction_time_general.localeCompare(a.correction_time_general));
+      }
+    }
+  }
+
   editSensor(form: any) { // Guardar datos de sensores editado
     if (form.valid) {
       fetch(this.update_sensors, {
         method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
-      .then(response => response.json()) 
+      .then(response => response.json())
+      this.data = this.data.filter((data: { id: string; }) => data.id !== this.sensors.id);
+      let sensors = {
+        id: this.sensors.id, 
+        type: this.sensors.type,    
+        metric: this.sensors.metric, 
+        description: this.sensors.description,
+        errorvalue: this.sensors.errorvalue,
+        valuemax: this.sensors.valuemax,
+        valuemin: this.sensors.valuemin,
+        position: this.sensors.position,
+        correction_general: this.sensors.correction_general,
+        correction_time_general: this.sensors.correction_time_general,
+      }
+      this.data.push(sensors)
+      this.data.sort((a:any,b:any) => {return a.position-b.position;});
+      this.act_id= this.sensors.id.toString();
+      this.openEdit();
+      this.state=2;
+
       this.save_ok= true;
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
-      this.getSensors(this.mark,this.ord_asc);
-      this.saved= true;
+      //this.getSensors(this.mark,this.ord_asc);
     }
+    this.saved= true;
     this.change=false;
   }
 
@@ -171,6 +234,9 @@ export class SensorsComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.id= parseInt(data[0].id+1);
+        this.act_id= this.id.toString();
+        this.openEdit();
+        this.state=2;
       })
     }
     this.change=false;
