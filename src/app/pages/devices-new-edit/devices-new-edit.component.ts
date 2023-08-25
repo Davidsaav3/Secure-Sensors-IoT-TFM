@@ -227,6 +227,7 @@ export class DevicesNewEditComponent implements OnInit{
     .then(response => response.json())
     .then(data => {
       this.devices= data[0];
+      this.createDate();
       this.devices.createdAt= this.formatDateTime(data[0].createdAt);
       this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
     })
@@ -249,7 +250,9 @@ export class DevicesNewEditComponent implements OnInit{
       this.sensors.sensors= data;
       //console.log(this.sensors.sensors)
     });
+    this.dataSharingService.updatesharedAct(false);
     
+    this.createDate();
     this.devices.updatedAt= this.date;
     this.getShsareSensors();
     if (form.valid) {
@@ -258,6 +261,9 @@ export class DevicesNewEditComponent implements OnInit{
       })
       .then(response => response.json()) 
       this.act_ok= true;
+      setTimeout(() => {
+        this.act_ok= false;
+      }, 2000);
       this.saved= true;
     }
     this.editSensor();
@@ -286,8 +292,8 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   newSensor() { // Guardar sensores
-    console.log(this.sensors.sensors)
-    console.log(this.id_max)
+    //console.log(this.sensors.sensors)
+    //console.log(this.id_max)
 
     var select_sensors = {
       id: this.id,   
@@ -311,10 +317,10 @@ export class DevicesNewEditComponent implements OnInit{
     if(this.state==1){
       this.getShsareSensors();
       this.devices.createdAt= this.data;
-      console.log(this.sensors.sensors)
+      //console.log(this.sensors.sensors)
       for(let quote of this.sensors.sensors) {
         quote.id_device= this.id_max;
-        console.log('HOLA 2')
+        //console.log('HOLA 2')
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
@@ -326,6 +332,7 @@ export class DevicesNewEditComponent implements OnInit{
 }
 
 newDevice(form: any) { // Guardar Dispositivos
+  this.dataSharingService.updatesharedAct(false);
   this.createDate();
   this.devices.createdAt= this.date;
   this.dataSharingService.sharedLat$.subscribe(data => {
@@ -364,12 +371,16 @@ newDevice(form: any) { // Guardar Dispositivos
   }
 
   updatesharedLat() { // Actualizar Latitud
-    this.dataSharingService.updatesharedLat(this.devices.lat);
+    setTimeout(() => {
+      this.dataSharingService.updatesharedLat(this.devices.lat);
+    }, 100);
   }
   updatesharedLon() { // Actualizar Longitud
-    this.dataSharingService.updatesharedLon(this.devices.lon);
+    setTimeout(() => {
+      this.dataSharingService.updatesharedLon(this.devices.lon);
+    }, 100);
   }
-  updatesharedCota() { // Actualizar Longitud
+  updatesharedCota() { // Actualizar Cota
     this.dataSharingService.updatesharedCota(this.devices.cota);
   }
 
@@ -381,14 +392,14 @@ newDevice(form: any) { // Guardar Dispositivos
 
   showForm(){ // Expandir formulario
     this.show_form=true;
-    this.dataSharingService.updatesharedAmp(true);
+    //this.dataSharingService.updatesharedAmp(true);
     if(this.rute2[2]=='edit'){
       this.onResize(0);
     }  
   }
   hideForm(){ // Contrarer formulario
     this.show_form=false;
-    this.dataSharingService.updatesharedAmp(false);
+    //this.dataSharingService.updatesharedAmp(false);
     if(this.rute2[2]=='edit'){
       this.onResize(0);
     }
@@ -405,7 +416,7 @@ newDevice(form: any) { // Guardar Dispositivos
   getShsareSensors(){  // Obtener sensores de otro componente
     this.dataSharingService.sharedList$.subscribe(data => {
       this.sensors.sensors= data;
-      console.log(this.sensors.sensors)
+      //console.log(this.sensors.sensors)
     });
   }
 

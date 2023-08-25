@@ -48,6 +48,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       }); 
       this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);//setTimeout
     }
+    /*if(this.rute2[2]=='new'){
+      this.sharedLat = 0;
+      this.sharedLon = 0;
+    }*/
+
    }
 
   @ViewChild('map') divMap?: ElementRef;

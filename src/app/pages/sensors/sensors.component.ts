@@ -82,8 +82,8 @@ export class SensorsComponent implements OnInit{
     valuemax: null,
     valuemin: null,
     position: 0,
-    correction_general: null,
-    correction_time_general: null,
+    correction_general: '',
+    correction_time_general: '',
   }
 
   sensors_copy = {
@@ -95,8 +95,8 @@ export class SensorsComponent implements OnInit{
     valuemax: null,
     valuemin: null,
     position: 0,
-    correction_general: null,
-    correction_time_general: null,
+    correction_general: '',
+    correction_time_general: '',
   }
 
   aux_1 = {
@@ -154,10 +154,10 @@ export class SensorsComponent implements OnInit{
         this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
       }
       if (id == 'correction_general') {
-        this.data.sort((a: any, b: any) => a.correction_general.localeCompare(b.correction_general));
+        this.data.sort((a: any, b: any) => {const valorA = a.correction_general || "";const valorB = b.correction_general || "";return valorA.localeCompare(valorB);});
       }
       if (id == 'correction_time_general') {
-        this.data.sort((a: any, b: any) => a.correction_time_general.localeCompare(b.correction_time_general));
+        this.data.sort((a: any, b: any) => {const valorA = a.correction_time_general || "";const valorB = b.correction_time_general || "";return valorA.localeCompare(valorB);});
       }
     }
     if (ord == 'DESC') {
@@ -174,10 +174,10 @@ export class SensorsComponent implements OnInit{
         this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
       }
       if (id == 'correction_general') {
-        this.data.sort((a: any, b: any) => b.correction_general.localeCompare(a.correction_general));
+        this.data.sort((a: any, b: any) => {const valorA = b.correction_general || "";const valorB = a.correction_general || "";return valorA.localeCompare(valorB);});
       }
       if (id == 'correction_time_general') {
-        this.data.sort((a: any, b: any) => b.correction_time_general.localeCompare(a.correction_time_general));
+        this.data.sort((a: any, b: any) => {const valorA = b.correction_time_general || "";const valorB = a.correction_time_general || "";return valorA.localeCompare(valorB);});
       }
     }
   }
@@ -407,8 +407,8 @@ export class SensorsComponent implements OnInit{
       valuemax: null,
       valuemin: null,
       position: 0,
-      correction_general: null,
-      correction_time_general: null,
+      correction_general: '',
+      correction_time_general: '',
     }
     
     this.show= true;
