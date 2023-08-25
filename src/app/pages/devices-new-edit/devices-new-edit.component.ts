@@ -156,6 +156,7 @@ export class DevicesNewEditComponent implements OnInit{
           }
     
           if(this.state==1){
+            this.getShsareSensors();
             fetch(`${this.id_device}/${this.id}`)
             .then(response => response.json())
             .then(data => {
@@ -177,14 +178,14 @@ export class DevicesNewEditComponent implements OnInit{
               for (let index = 0; index < data.length; index++) {
                 nombresExistentes.add(data[index].uid);
               }
-              console.log(nombresExistentes)
+              //console.log(nombresExistentes)
         
               let uid_2= this.devices['uid'];
               while(nombresExistentes.has(uid_2)) {
                 uid_2 = `${this.devices['uid']}_${contador}`;
                 contador++;
               }
-              console.log(uid_2)
+              //console.log(uid_2)
               this.devices.uid= uid_2;
             })
 
@@ -285,11 +286,13 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   newSensor() { // Guardar sensores
+    console.log(this.sensors.sensors)
     console.log(this.id_max)
 
     var select_sensors = {
       id: this.id,   
     }
+    //
     if(this.state==0){
       fetch(this.delete_all_sensors_devices, {
         method: "POST",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -306,10 +309,12 @@ export class DevicesNewEditComponent implements OnInit{
     }
     //
     if(this.state==1){
+      this.getShsareSensors();
       this.devices.createdAt= this.data;
+      console.log(this.sensors.sensors)
       for(let quote of this.sensors.sensors) {
         quote.id_device= this.id_max;
-        console.log('HOLA')
+        console.log('HOLA 2')
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
@@ -400,6 +405,7 @@ newDevice(form: any) { // Guardar Dispositivos
   getShsareSensors(){  // Obtener sensores de otro componente
     this.dataSharingService.sharedList$.subscribe(data => {
       this.sensors.sensors= data;
+      console.log(this.sensors.sensors)
     });
   }
 

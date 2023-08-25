@@ -76,7 +76,12 @@ export class SensorsListComponent  implements OnInit{
   }
 
   ngOnInit(): void { // Inicialización
+    this.sensors.sensors= [];
     this.getDevices('id');//setTimeout
+    setTimeout(() => {
+      this.updatesharedList();
+    }, 100);
+
     setInterval(() => {
       this.dataSharingService.sharedAmp$.subscribe(data => {
         this.show_large= data;
@@ -99,7 +104,6 @@ export class SensorsListComponent  implements OnInit{
     .then(data => {
       this.sensors.sensors[num].orden= data[0].position;
     })
-    this.updatesharedList();
   }
 
   getDevices(id: any){ // Obtener datos del dispositivo
@@ -139,25 +143,17 @@ export class SensorsListComponent  implements OnInit{
     this.sensors.sensors.push(sensors_aux);
     this.show_map= true;
     this.updatesharedList();
+    this.dataSharingService.updatesharedAct(true);
   }
 
-  deleteSensor(){ // Elimina sensor de la lista
-    this.sensors.sensors= this.sensors.sensors.filter((item) => item == this.delete_it)
-    this.updatesharedAct();
-  }
-
-  addShareSensor(id: any){ // Añadir a lista compartida
+  deleteSensor(id: any){ // Añadir a lista compartida
     this.delete_it= id;
     this.sensors.sensors= this.sensors.sensors.filter((item) => item.id != this.delete_it)
     this.updatesharedList();
+    this.dataSharingService.updatesharedAct(true);
   }
   updatesharedList() { // Enviar sensores a device-edit
-    //console.log(this.sensors.sensors)
     this.dataSharingService.updatesharedList(this.sensors.sensors);
-    this.updatesharedAct();
-  }
-  updatesharedAct() { // Enviar 
-    this.dataSharingService.updatesharedAct(true);
   }
 
 }
