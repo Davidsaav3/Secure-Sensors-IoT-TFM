@@ -4,14 +4,14 @@
 	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.show_3==true || this.width<965, 'c10': this.show_3==false}">
 		<div class="p-3 pb-0 pe-2">
 				<div class="row d-flex">
-					<div class="col-6 col-sm-6 col-lg-2 mb-3">
+					<div class="col-6 col-sm-6 col-lg-3 mb-3">
 						<div class="w-100 d-flex" style="position: relative;">
 							<input (keyup)="textSearch($event)" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
 							<input (keyup)="textSearch($event)" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
 							<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;" class="" type="" (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 						</div>
 					</div>
-				<div class="col-6 col-sm-6 col-lg-10 d-flex " style="justify-content: flex-end;">
+				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
 						<button type="button" class="btn btn-info" (click)="openNew()" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
 					</div>
@@ -31,7 +31,7 @@
 				</div>
 			</div>
 			<div *ngIf="data!=null && data.length>0" class="col-12 pe-0 over" style="max-height: 77vh;"> 
-				<table class="table table-hover">
+				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
 						<tr style="background-color: #fff;">
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'position'}">

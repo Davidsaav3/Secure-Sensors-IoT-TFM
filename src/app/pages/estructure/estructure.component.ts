@@ -292,7 +292,6 @@ export class EstructureComponent implements OnInit{
     this.show= false;
     this.openClouse();
     this.change=false;
-    this.change=false;
   }
 
   orderColumn(id_actual: any){ // Ordenar columnas
@@ -369,7 +368,6 @@ export class EstructureComponent implements OnInit{
     this.show_3= false;
     this.show= false;
     this.openClouse();
-    this.change=false;
     this.change=false;
   }
 }

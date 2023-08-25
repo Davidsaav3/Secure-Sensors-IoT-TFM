@@ -160,15 +160,16 @@ export class DevicesNewEditComponent implements OnInit{
             .then(response => response.json())
             .then(data => {
               this.devices= data[0];
-              this.devices.createdAt= this.formatDateTime(data[0].createdAt);
-              this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
+              this.createDate();
+              this.devices.createdAt= this.formatDateTime(this.date);
+              this.devices.updatedAt= '';
             })
             .catch(error => {
               console.error(error); 
             }); 
             this.changed= true;
             //
-            fetch(`${this.get_device}/1/Buscar/uid/ASC/-1/2/2/1/100000/0/0/0/0`)
+            fetch(`${this.get_device}/0/Buscar/uid/ASC/-1/2/2/1/100000/0/0/0/0`)
             .then((response) => response.json())
             .then(data => {
               let contador = 1;
@@ -176,14 +177,17 @@ export class DevicesNewEditComponent implements OnInit{
               for (let index = 0; index < data.length; index++) {
                 nombresExistentes.add(data[index].uid);
               }
+              console.log(nombresExistentes)
         
               let uid_2= this.devices['uid'];
               while(nombresExistentes.has(uid_2)) {
                 uid_2 = `${this.devices['uid']}_${contador}`;
                 contador++;
               }
+              console.log(uid_2)
               this.devices.uid= uid_2;
             })
+
           }
         })
         this.dataSharingService.updatesharedAmp(false);
@@ -207,15 +211,14 @@ export class DevicesNewEditComponent implements OnInit{
           this.changed= data;
         }
       });
-      //
-      this.dataSharingService.sharedLeng$.subscribe(data => {
-        if(data!='init'){
-          this.activeLang = data;
-        }
-      });
-    }, 500);
+      this.readStorage();
+    }, 10);
     this.onResize(0);
     this.dataSharingService.updatesharedAmp(false);
+  }
+
+  readStorage() { // Recupera datos
+    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
 
   getDevices(){ // Obtener Dispositivos
@@ -258,6 +261,7 @@ export class DevicesNewEditComponent implements OnInit{
     }
     this.editSensor();
     this.changed= false;
+    this.devices.updatedAt= this.formatDateTime(this.date);
   }
 
   editSensor() { // Guardar Sensores
@@ -281,6 +285,8 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   newSensor() { // Guardar sensores
+    console.log(this.id_max)
+
     var select_sensors = {
       id: this.id,   
     }
@@ -289,26 +295,28 @@ export class DevicesNewEditComponent implements OnInit{
         method: "POST",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
-    }
 
-    if(this.state==0){
       for(let quote of this.sensors.sensors) {
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(response => response.json()) 
       }
+      this.router.navigate([`/devices/edit/${this.id}`]);
     }
+    //
     if(this.state==1){
+      this.devices.createdAt= this.data;
       for(let quote of this.sensors.sensors) {
         quote.id_device= this.id_max;
+        console.log('HOLA')
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(response => response.json()) 
       }
+      this.router.navigate([`/devices/edit/${this.id_max}`]);
     }
-    this.router.navigate([`/devices/edit/${this.id}`]);
     return;
 }
 
@@ -406,7 +414,7 @@ newDevice(form: any) { // Guardar Dispositivos
   deleteMarker(){ // eliminar elementos del mapa
     this.devices.lat= null;
     this.devices.lon= null;
-    //this.devices.cota= 10;
+    this.devices.cota= 10;
     this.devices.timezone= 'Brussels, Copenhagen, Madrid, Paris';
     this.updatesharedLat();
     this.updatesharedLon();

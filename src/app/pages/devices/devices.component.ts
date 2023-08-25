@@ -508,12 +508,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
   
   deleteSearch(){ // Eliminar filtros
-    this.search.value= '';
     this.totalPages = 5;
     this.currentPage = 1;
     this.quantPage = 10;
     this.page= 1;
-    this.search.value= '';
     this.select_sensors_2.sensors= [];
     this.select_sensors_3.sensors= [];
     this.select_sensors_3.sensors.push({
@@ -680,6 +678,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   onKeySearch(event: any) { // Busqueda por texto
+    this.currentPage= 1;
+    this.deleteSearch();
     clearTimeout(this.timeout);
     var $this = this;
     this.timeout = setTimeout(function () {

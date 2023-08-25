@@ -81,14 +81,12 @@ export class SensorsListComponent  implements OnInit{
       this.dataSharingService.sharedAmp$.subscribe(data => {
         this.show_large= data;
       });
-      //
-      this.dataSharingService.sharedLeng$.subscribe(data => {
-        if(data!='init'){
-          this.activeLang = data;
-        }
-        console.log(this.activeLang)
-      });
+      this.readStorage()
     }, 10);
+  }
+
+  readStorage() { // Recupera datos
+    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
 
   resize(): void{ // Redimensionar pantalla
