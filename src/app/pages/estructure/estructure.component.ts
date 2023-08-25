@@ -187,12 +187,12 @@ export class EstructureComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.id= parseInt(data[0].id_estructure+1);
-        console.log(this.id)
         let estructure = {
-          id_estructure: this.id, 
+          id_estructure: this.id.toString(), 
           description: this.estructure.description,    
           configuration: this.estructure.configuration, 
         }
+        console.log(estructure.id_estructure)
         this.data.push(estructure)
         this.data.sort((a: { description: string; }, b: { description: any; }) => {
           return a.description.localeCompare(b.description);
@@ -257,8 +257,9 @@ export class EstructureComponent implements OnInit{
   }
 
   deleteEstructure(id_actual: any){ // Eliminar sensor
+    console.log(id_actual)
     var estructure2 = {
-      id_estructure: id_actual,    
+      id_estructure: this.act_id,    
     }
     fetch(this.delete_estructure, {
       method: "POST",body: JSON.stringify(estructure2),headers: {"Content-type": "application/json; charset=UTF-8"}

@@ -234,14 +234,27 @@ export class SensorsComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.id= parseInt(data[0].id+1);
+        let sensors = {
+          id: this.id, 
+          type: this.sensors.type,    
+          metric: this.sensors.metric, 
+          description: this.sensors.description,
+          errorvalue: this.sensors.errorvalue,
+          valuemax: this.sensors.valuemax,
+          valuemin: this.sensors.valuemin,
+          position: this.sensors.position,
+          correction_general: this.sensors.correction_general,
+          correction_time_general: this.sensors.correction_time_general,
+        }
+        this.data.push(sensors)
+        this.data.sort((a:any,b:any) => {return a.position-b.position;});
+
         this.act_id= this.id.toString();
         this.openEdit();
         this.state=2;
       })
     }
     this.change=false;
-    this.change=false;
-    this.getSensors(this.mark,this.ord_asc);
   }
   
   resize(): void{ // Redimensionar pantalla
@@ -306,7 +319,7 @@ export class SensorsComponent implements OnInit{
       this.alert_delete= false;
     }, 2000);
     this.getSensors(this.mark,this.ord_asc);
-    this.openClouse();
+    this.clouse();
   }
 
   hide(){ 

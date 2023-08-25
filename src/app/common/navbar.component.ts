@@ -19,17 +19,27 @@ export class NavbarComponent {
   rute2: any;
 
   constructor(private translate: TranslateService,public rutaActiva: Router ,private dataSharingService: DataSharingService) {
-    this.translate.setDefaultLang(this.activeLang);
     this.rute= this.rutaActiva.routerState.snapshot.url;
     this.rute2 = this.rute.split('/');
   }
 
+  ngOnInit(): void {
+    this.readStorage();
+    this.translate.use(this.activeLang);
+  }
+
   changeLenguaje() {
     setTimeout(() =>{ 
+      this.saveStorage();
       this.translate.use(this.activeLang);
-      this.dataSharingService.updatesharedLeng(this.activeLang);
     }, 1);
+  }
 
+  saveStorage() { // Guarda datos
+    localStorage.setItem('activeLang', this.activeLang);
+  }
+  readStorage() { // Recupera datos
+    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
   
 }
