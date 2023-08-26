@@ -65,42 +65,45 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   markers: MarkerAndColor[] = [];
   color_map= 'streets-v12';
   id_max= 1;
-  state= 1;
+  state= -1;
   
   ngOnInit(): void { // Inicializador
-    this.readStorage();
-    this.rute= this.rute1.routerState.snapshot.url;
-    this.rute2 = this.rute.split('/');
-
-    if(this.rute2[2]=='new'){
-        fetch(this.max_device)
-        .then(response => response.json())
-        .then(data => {
-          this.id_max= parseInt(data[0].id)+1;    
-          if(this.id<this.id_max){
-            this.state= 1;
-          }
-          if(this.id>=this.id_max){
-            this.state= 0;
-          }
-        })
-        this.dataSharingService.sharedLat$.subscribe(data => {
-          this.sharedLat = data;
-        });
-        this.dataSharingService.sharedLon$.subscribe(data => {
-          this.sharedLon = data;
-        });
-    }
+    fetch(this.max_device)
+    .then(response => response.json())
+    .then(data => {
+      this.id_max= parseInt(data[0].id);
+      if(this.id<=this.id_max){
+        this.state= 1;
+      }
+      if(this.id>this.id_max){
+        this.state= 0;
+      }
+    })
     //
-    if(this.rute2[2]=='edit'){
-        this.dataSharingService.sharedLat$.subscribe(data => {
-          this.sharedLat = data;
-        });
-        this.dataSharingService.sharedLon$.subscribe(data => {
-          this.sharedLon = data;
-        });
-        this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
-    }
+    setTimeout(() => {
+      this.readStorage();
+      this.rute= this.rute1.routerState.snapshot.url;
+      this.rute2 = this.rute.split('/');
+
+      if(this.rute2[2]=='new' && this.state==0){
+          this.dataSharingService.sharedLat$.subscribe(data => {
+            this.sharedLat = data;
+          });
+          this.dataSharingService.sharedLon$.subscribe(data => {
+            this.sharedLon = data;
+          });
+      }
+      //
+      if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
+          this.dataSharingService.sharedLat$.subscribe(data => {
+            this.sharedLat = data;
+          });
+          this.dataSharingService.sharedLon$.subscribe(data => {
+            this.sharedLon = data;
+          });
+          this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
+      }
+    }, 100);
 
     setInterval(() => {
       if(this.map!=undefined){
@@ -112,34 +115,39 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   }
 
   ngAfterViewInit(): void { // Despues de ngOnInit
-    if(this.rute2[2]=='new'){
-        if ( !this.divMap ) throw 'No hay mapa';
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(position => { 
-              this.map= this.createMap([position.coords.longitude, position.coords.latitude]);
-              this.auxInit();
-            },
-            (error) => {
-              this.map= this.createMap([-3.7034137886912504,40.41697654880073]);
-              console.log("Error geo", error);
-              this.auxInit()
-            }
-          );
-        } 
-        else {
-          this.map= this.createMap([-3.7034137886912504,40.41697654880073]);
-          console.log("Geo no compatible");
+    setTimeout(() => {
+      if(this.rute2[2]=='new' && this.state==0){
+          if ( !this.divMap ) throw 'No hay mapa';
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => { 
+                //console.log(position.coords.longitude)
+                //console.log(position.coords.latitude)
+                this.map= this.createMap([position.coords.longitude, position.coords.latitude]);
+                this.auxInit();
+              },
+              (error) => {
+                this.map= this.createMap([0,0]);
+                console.log("Error geo", error);
+                this.auxInit()
+              }
+            );
+          } 
+          else {
+            this.map= this.createMap([0,0]);
+            console.log("Geo no compatible");
+            this.auxInit();
+          }
+      }
+      //
+      if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
+          this.deleteMarker();
+          this.map= this.createMap(this.currentLngLat);
+          this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
+          this.createMarker(this.currentLngLat);
           this.auxInit();
-        }
-    }
-    //
-    if(this.rute2[2]=='edit'){
-        this.deleteMarker();
-        this.map= this.createMap(this.currentLngLat);
-        this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
-        this.createMarker(this.currentLngLat);
-        this.auxInit();
-    }
+      }
+    }, 100);
+
   }
 
   auxInit(){ // Auxiliar de ngAfterViewInit [NO EN EDIT]

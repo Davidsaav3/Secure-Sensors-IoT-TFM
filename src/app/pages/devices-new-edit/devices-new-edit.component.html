@@ -189,21 +189,21 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="lat">{{ 'devices.edit.lat' | translate }}</label>
-                                <input (ngModelChange)="updatesharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
+                                <input (ngModelChange)="updatesharedLat();changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
                                 <div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
                                     <div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} {{ 'required' | translate }}</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="lon">{{ 'devices.edit.long' | translate }}</label>
-                                <input (ngModelChange)="updatesharedLon()" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
+                                <input (ngModelChange)="updatesharedLon();changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
                                 <div *ngIf="form.submitted && form.controls['lon'].errors" class="text-danger">
                                     <div *ngIf="form.controls['lon'].errors['required']">{{ 'devices.edit.long' | translate }} {{ 'required' | translate }}</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="cota">{{ 'devices.edit.alt' | translate }}</label>
-                                <input [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
+                                <input (ngModelChange)="changed=true" [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
                                 <div *ngIf="form.submitted && form.controls['cota'].errors" class="text-danger">
                                     <div *ngIf="form.controls['cota'].errors['required']">{{ 'devices.edit.alt' | translate }} {{ 'required' | translate }}</div>
                                 </div>
