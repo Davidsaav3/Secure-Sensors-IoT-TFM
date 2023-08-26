@@ -246,7 +246,7 @@ con.connect(function(err) {
     let correction_specific= req.body.correction_specific;
     let correction_time_specific= req.body.correction_time_specific;
     let nodata= req.body.nodata;
-    console.log("cosas 1: "+correction_specific)
+    //console.log("cosas 1: "+correction_specific)
     console.log("cosas 2: "+correction_time_specific)
 
     if(nodata==true){

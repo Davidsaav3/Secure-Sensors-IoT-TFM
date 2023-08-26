@@ -415,7 +415,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then(data => {
           if(this.state=='0'){
             let entrar= false;
-            console.log(data)
+            //console.log(data)
             for (const obj of data) {
               if (!this.data.some(f => f.id === obj.id)) {
                 entrar= true;
@@ -444,7 +444,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           }
           /*if(this.state=='0'){
             let entrar= false;
-            console.log(data)
+            //console.log(data)
             for (const obj of data) {
               if (!this.data.some(f => f.id === obj.id)) {
                 entrar= true;
@@ -487,7 +487,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             //console.log(aux)
             cont++;
           }
-          console.log(this.data2);            
+          //console.log(this.data2);            
         }, 1000)*/
 
         //this.data2= [];

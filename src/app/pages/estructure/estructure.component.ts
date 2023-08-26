@@ -192,7 +192,7 @@ export class EstructureComponent implements OnInit{
           description: this.estructure.description,    
           configuration: this.estructure.configuration, 
         }
-        console.log(estructure.id_estructure)
+        //console.log(estructure.id_estructure)
         this.data.push(estructure)
         this.data.sort((a: { description: string; }, b: { description: any; }) => {
           return a.description.localeCompare(b.description);
@@ -257,7 +257,7 @@ export class EstructureComponent implements OnInit{
   }
 
   deleteEstructure(id_actual: any){ // Eliminar sensor
-    console.log(id_actual)
+    //console.log(id_actual)
     var estructure2 = {
       id_estructure: this.act_id,    
     }

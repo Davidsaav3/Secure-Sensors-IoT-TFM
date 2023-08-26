@@ -106,12 +106,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     }, 100);
 
     setInterval(() => {
-      if(this.map!=undefined){
-        if(this.map!=undefined){
-          this.map.resize();
-        }
+      if (this.map && this.map!=undefined){
+        this.map.on('load', () => {
+          if (this.map && this.map!=undefined){
+            this.map.resize();
+          }
+        })
       }
-    }, 50);
+    }, 100);
   }
 
   ngAfterViewInit(): void { // Despues de ngOnInit
@@ -280,8 +282,13 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   }
 
   showMap(){ // Redimesiona mapa
-    if (this.map)
-      this.map.resize();
+    if (this.map && this.map!=undefined){
+      this.map.on('load', () => {
+        if (this.map && this.map!=undefined){
+          this.map.resize();
+        }
+      })
+    }
   }
   
   updatesharedLat() { // Actualizar Latitud
