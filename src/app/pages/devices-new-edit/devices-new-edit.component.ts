@@ -46,6 +46,11 @@ export class DevicesNewEditComponent implements OnInit{
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
+  lon: any;
+  lat: any;
+  cota: any;
+  timezone: any;
+
   view_can= false;
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
@@ -161,6 +166,12 @@ export class DevicesNewEditComponent implements OnInit{
             .then(response => response.json())
             .then(data => {
               this.devices= data[0];
+              console.log(this.devices.lat)
+              this.lat= this.devices.lat;
+              this.lon= this.devices.lon;
+              this.cota= this.devices.cota;
+              this.timezone= this.devices.timezone;
+
               this.createDate();
               this.devices.createdAt= this.formatDateTime(this.date);
               this.devices.updatedAt= '';
@@ -390,6 +401,22 @@ newDevice(form: any) { // Guardar Dispositivos
   }
   updatesharedCota() { // Actualizar Cota
     this.dataSharingService.updatesharedCota(this.devices.cota);
+  }
+
+  recharge_map(){ // Recargar mapa
+    fetch(`${this.id_device}/${this.id}`)
+    .then(response => response.json())
+    .then(data => {
+      this.devices.lat= data[0].lat;
+      this.devices.lon= data[0].lon;
+      this.devices.cota= data[0].cota;
+      this.devices.timezone= data[0].timezone;
+      this.updatesharedLat();
+      this.updatesharedLon();
+    })
+    .catch(error => {
+      console.error(error); 
+    }); 
   }
 
   recharge(){ // Recargar
