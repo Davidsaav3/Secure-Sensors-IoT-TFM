@@ -107,11 +107,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
     setInterval(() => {
       if (this.map && this.map!=undefined){
-        this.map.on('load', () => {
+        //this.map.on('load', () => {
           if (this.map && this.map!=undefined){
             this.map.resize();
           }
-        })
+        //})
       }
     }, 100);
   }
@@ -283,11 +283,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
   showMap(){ // Redimesiona mapa
     if (this.map && this.map!=undefined){
-      this.map.on('load', () => {
+      //this.map.on('load', () => {
         if (this.map && this.map!=undefined){
           this.map.resize();
         }
-      })
+      //})
     }
   }
   
