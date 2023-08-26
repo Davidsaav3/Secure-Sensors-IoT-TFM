@@ -22,7 +22,7 @@ export class SensorsListComponent  implements OnInit{
     this.resize();
   }
 
-  constructor(private rutaActiva: ActivatedRoute,private dataSharingService: DataSharingService) { 
+  constructor(private rutaActiva: ActivatedRoute,public dataSharingService: DataSharingService) { 
     this.resize();
   }
   
@@ -54,8 +54,8 @@ export class SensorsListComponent  implements OnInit{
         valuemax: 1,
         valuemin: 1,
         position: 0,
-        correction_specific: '',
-        correction_time_specific: '',
+        correction_general: '',
+        correction_time_general: '',
       }]
   }
 

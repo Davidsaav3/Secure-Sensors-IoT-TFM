@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild,OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as mapboxgl from 'mapbox-gl';
+import { TranslateService } from '@ngx-translate/core';
+import { environment } from "environments/environment"
 
 interface MarkerAndColor {
   color: string;
@@ -20,8 +22,9 @@ interface MarkerAndColor {
 export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   @ViewChild('map') divMap?: ElementRef;
-  constructor(private router: Router) { }
+  constructor(private router: Router,private translate: TranslateService) { }
 
+  activeLang = environment.lenguaje_lang[0];
   zoom: number = 7;
   map?: mapboxgl.Map;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
@@ -551,6 +554,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.Page(1);
   }
 
+
   filterDevices(){ // Filtra por devices
     this.newMap();
     this.timeout = setTimeout( () => {
@@ -634,7 +638,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       //console.log("zona 6")
       data.unshift({
         id: -3, 
-        type: 'Todos los sensores',    
+        type: this.translate.instant('text_1'),    
         metric: '', 
         description: '',
         errorvalue: 1,
@@ -647,7 +651,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       data.unshift({
         id: -2, 
-        type: 'Sin sensores',    
+        type: this.translate.instant('text_2'),    
         metric: '', 
         description: '',
         errorvalue: 1,

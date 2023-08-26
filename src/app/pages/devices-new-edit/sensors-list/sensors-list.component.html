@@ -26,20 +26,20 @@
 				<tbody style="background-color: rgb(255, 255, 255);" *ngFor="let item of sensors.sensors;let i=index">
           <tr class="pb-0" style="overflow-y: scroll;">
             <label style="display: none" [for]="'id'+i">{{ 'devices.sensors.id' | translate }}</label>
-            <input (ngModelChange)="updatesharedList()" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
+            <input (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
             <label style="display: none" [for]="'id_device'+i">{{ 'devices.sensors.id_device' | translate }}</label>
-            <input type="number" min="0" maxlength="11" (ngModelChange)="updatesharedList()" style="display: none" class="form-control" [id]="'id_device'+i" [name]="'id_device'+i" value="{{this.id}}" [(ngModel)]="item.id_device">
+            <input type="number" min="0" maxlength="11" (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" style="display: none" class="form-control" [id]="'id_device'+i" [name]="'id_device'+i" value="{{this.id}}" [(ngModel)]="item.id_device">
           
             <td class="rounded-0" scope="col2" class="pb-0 input-0">
               <label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
-              <input type="number" min="0" maxlength="11" (ngModelChange)="updatesharedList()" value="{{ item.orden }}" type="text" class="form-control" [id]="'orden'+i" [name]="'orden'+i" [(ngModel)]="item['orden']" required>
+              <input type="number" min="0" maxlength="11" (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" value="{{ item.orden }}" type="text" class="form-control" [id]="'orden'+i" [name]="'orden'+i" [(ngModel)]="item['orden']" required>
               <div *ngIf="form.submitted && form.controls['orden'].errors" class="text-danger">
                   <div *ngIf="form.controls['orden'].errors['required']">{{ 'devices.sensors.order' | translate }} {{ 'required' | translate }}</div>
               </div>
             </td>
 
             <td class="rounded-0" scope="col"class="pb-0 input-1"> 
-              <select type="number" min="0" maxlength="11" (ngModelChange)="this.getOrden(i)" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor" >
+              <select type="number" min="0" maxlength="11" (ngModelChange)="this.getOrden(i);this.dataSharingService.updatesharedAct(true);" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor" >
                 <ng-container *ngFor="let id of select_sensors.sensors;let j=index">
                   <option [selected]="id.id==item.id_type_sensor" value="{{id.id}}">{{id.type}}</option>
                 </ng-container>
@@ -48,7 +48,7 @@
 
             <td *ngIf="show_large || this.width<965" class="pb-0 input-1">
               <label style="display: none" [for]="'datafield'+i">{{ 'devices.sensors.datafield' | translate }}</label>
-              <input maxlength="45" (ngModelChange)="updatesharedList()" value="{{ item.datafield }}" type="text" class="form-control" [id]="'datafield'+i" [name]="'datafield'+i" [(ngModel)]="item['datafield']" type>
+              <input maxlength="45" (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" value="{{ item.datafield }}" type="text" class="form-control" [id]="'datafield'+i" [name]="'datafield'+i" [(ngModel)]="item['datafield']" type>
               <div *ngIf="form.submitted && form.controls['datafield'].errors" class="text-danger">
                   <div *ngIf="form.controls['datafield'].errors['required']">{{ 'devices.sensors.datafield' | translate }} {{ 'required' | translate }}</div>
               </div>
@@ -57,14 +57,14 @@
             <td *ngIf="show_large || this.width<965" class="pb-0">
               <div class="form-check">
                 <label style="display: none" [for]="'nodata'+i">{{ 'devices.sensors.nodata' | translate }}</label>
-                <input min="0" maxlength="4" (ngModelChange)="updatesharedList()" class="form-check-input" type="checkbox" value="{{item.nodata}}" aria-label="Checkbox for following text input" [id]="'nodata'+i" [name]="'nodata'+i" [(ngModel)]="item.nodata">
+                <input min="0" maxlength="4" (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" class="form-check-input" type="checkbox" value="{{item.nodata}}" aria-label="Checkbox for following text input" [id]="'nodata'+i" [name]="'nodata'+i" [(ngModel)]="item.nodata">
                 <label class="form-check-label" for="flexCheckDefault">{{ 'devices.sensors.nodate' | translate }}</label>
               </div>
             </td>
 
             <td class="pb-0 input-1">
               <label style="display: none" [for]="'correction_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
-              <input (ngModelChange)="updatesharedList()" value="{{ item.correction_specific }}" type="text" class="form-control" [id]="'correction_specific'+i" [name]="'correction_specific'+i" [(ngModel)]="item['correction_specific']" type>
+              <input (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);;this.dataSharingService.updatesharedAct(true);" value="{{ item.correction_specific }}" type="text" class="form-control" [id]="'correction_specific'+i" [name]="'correction_specific'+i" [(ngModel)]="item['correction_specific']" type>
               <div *ngIf="form.submitted && form.controls['correction_specific'].errors" class="text-danger">
                   <div *ngIf="form.controls['correction_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
               </div>
@@ -72,7 +72,7 @@
 
             <td class="pb-0">
               <label style="display: none" [for]="'correction_time_specific'+i">{{ 'devices.sensors.time_specific' | translate }}</label>
-              <input (ngModelChange)="updatesharedList()" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
+              <input (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'correction_time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
               <div *ngIf="form.submitted && form.controls['correction_time_specific'].errors" class="text-danger">
                   <div *ngIf="form.controls['correction_time_specific'].errors['required']">{{ 'devices.sensors.time_specific' | translate }} {{ 'required' | translate }}</div>
               </div>
@@ -81,7 +81,7 @@
             <td class="pb-0">
               <label class="toggle t2 tt2 mt-1 mb-3">
                 <label style="display: none" [for]="'enable'+i">{{ 'devices.sensors.enable' | translate }}</label>
-                <input maxlength="4" (ngModelChange)="updatesharedList()" type="checkbox" [id]="'enable'+i" [name]="'enable'+i" checked [(ngModel)]="item.enable">
+                <input maxlength="4" (ngModelChange)="updatesharedList();this.dataSharingService.updatesharedAct(true);" type="checkbox" [id]="'enable'+i" [name]="'enable'+i" checked [(ngModel)]="item.enable">
                 <span class="slider"></span>
                 <ng-container *ngIf="this.activeLang==this.leng_lang[0]">
                   <span class="labels t2" data-on="Activado" data-off="Desactivado"></span>

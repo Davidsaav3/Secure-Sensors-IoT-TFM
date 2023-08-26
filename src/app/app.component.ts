@@ -10,9 +10,7 @@ import { environment } from "../../environments/environment"
 export class AppComponent {
 
   activeLang = environment.lenguaje_lang;
-  constructor(
-    private translate: TranslateService
-  ) {
+  constructor(private translate: TranslateService) {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
 

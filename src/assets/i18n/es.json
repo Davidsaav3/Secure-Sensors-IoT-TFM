@@ -136,6 +136,9 @@
     "reset.data" : "Restablecer datos",
     "reset.data2" : "Restablecer datos ?",
     "irreversible" : "Esta acción es irréversible.",
-    "no_estructure" : "Estructura de datos no encontradas, desactive filtros"
+    "no_estructure" : "Estructura de datos no encontradas, desactive filtros",
+
+    "text_1" : "Todos los sensores",
+    "text_2" : "Sin sensores"
 
 }

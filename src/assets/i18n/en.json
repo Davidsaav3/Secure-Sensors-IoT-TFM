@@ -135,6 +135,8 @@
     "reset.data" : "Reset data",
     "reset.data2" : "Reset data",
     "irreversible" : "This action is irreversible.",
-    "no_estructure" : "Data structures not found, disable filters"
+    "no_estructure" : "Data structures not found, disable filters",
 
+    "text_1" : "All sensors",
+    "text_2" : "without sensors"
 }
