@@ -191,12 +191,13 @@ export class DevicesNewEditComponent implements OnInit{
 
           }
           if(this.state==0){
-            this.devices.lon= 0;
             this.devices.lat= 0;
-            this.devices.cota= 10;
+            this.devices.lon= 0;
+            this.dataSharingService.updatesharedLon(0);
+            this.dataSharingService.updatesharedLat(0);
           }
+      
         })
-        if(this.state!=0){
           this.dataSharingService.sharedLat$.subscribe(data => {
             this.devices.lat = data;
           });
@@ -206,7 +207,7 @@ export class DevicesNewEditComponent implements OnInit{
           this.dataSharingService.sharedCota$.subscribe(data => {
             //this.devices.cota = data;
           });
-        }
+        
         this.dataSharingService.updatesharedAmp(false);
         this.dataSharingService.sharedList$.subscribe(data => {
           this.sensors.sensors= data;
