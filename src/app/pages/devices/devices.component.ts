@@ -688,7 +688,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     var $this = this;
     this.timeout = setTimeout(function () {
       if (event.keyCode != 13) {
-        $this.getDevices('0');
+        $this.getDevices('1');
       }
     }, 1);
   }
