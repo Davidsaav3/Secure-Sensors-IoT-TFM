@@ -130,7 +130,7 @@
 							</td>
 						</tr>
 						<!---->
-						<tr *ngIf="quote.id_estructure==act_id && (state==2)" id="primera">
+						<tr [ngClass]="{'mark_select': act_id == quote.id_estructure.toString()}" *ngIf="quote.id_estructure==act_id && (state==2)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
 								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
 									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">

@@ -1,4 +1,4 @@
-import { Component , OnInit, HostListener} from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef} from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from "../../../../environments/environment"
 
@@ -15,7 +15,7 @@ export class EstructureComponent implements OnInit{
   leng_lang= environment.lenguaje_lang;
   public activeLang = environment.lenguaje_lang[0];
 
-  constructor(public rutaActiva: Router) {
+  constructor(public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -133,6 +133,10 @@ export class EstructureComponent implements OnInit{
       if (id == 'configuration') {
         this.data.sort((a: any, b: any) => b.configuration.localeCompare(a.configuration));
       }
+    }
+    const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   }
 

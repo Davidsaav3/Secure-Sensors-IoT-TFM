@@ -113,28 +113,28 @@ export class SensorsComponent implements OnInit{
   }
 
   getSensors(id: any,ord: any){ // Obtener todos los sensores
-      this.mark= id;
-      this.rute= this.rutaActiva.routerState.snapshot.url;
-      if(id!='id'){
-        this.search_2= id;
-      }
-      if(this.search.value==''){
-        this.search_1= 'Buscar';
-      }
-      else{
-        this.search_1= this.search.value;
-      }
-      this.charging= true;
-      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}`)
-      .then((response) => response.json())
-      .then(quotesData => {
-        this.charging= false
-        this.data = quotesData
-      });      
-      const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
-      if (sectionElement) {
-        sectionElement.scrollIntoView({ behavior: 'smooth' });
-      }
+    this.mark= id;
+    this.rute= this.rutaActiva.routerState.snapshot.url;
+    if(id!='id'){
+      this.search_2= id;
+    }
+    if(this.search.value==''){
+      this.search_1= 'Buscar';
+    }
+    else{
+      this.search_1= this.search.value;
+    }
+    this.charging= true;
+    fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}`)
+    .then((response) => response.json())
+    .then(quotesData => {
+      this.charging= false
+      this.data = quotesData
+    });      
+    const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
   getEstructureButton(id: any,ord: any){ // Ordenar columnas
@@ -178,6 +178,10 @@ export class SensorsComponent implements OnInit{
       if (id == 'correction_time_general') {
         this.data.sort((a: any, b: any) => {const valorA = b.correction_time_general || "";const valorB = a.correction_time_general || "";return valorA.localeCompare(valorB);});
       }
+    }
+    const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
