@@ -38,7 +38,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   constructor(private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
     this.rute= this.rute1.routerState.snapshot.url;
     this.rute2 = this.rute.split('/');
-    
     if(this.rute2[2]=='edit'){
       this.dataSharingService.sharedLat$.subscribe(data => {
         this.sharedLat = data;
@@ -48,11 +47,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       }); 
       this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);//setTimeout
     }
-    /*if(this.rute2[2]=='new'){
-      this.sharedLat = 0;
-      this.sharedLon = 0;
-    }*/
-
    }
 
   @ViewChild('map') divMap?: ElementRef;
@@ -93,7 +87,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
             this.sharedLon = data;
           });
       }
-      //
+      
       if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
           this.dataSharingService.sharedLat$.subscribe(data => {
             this.sharedLat = data;
@@ -104,7 +98,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
       }
     }, 100);
-
+    //
     setInterval(() => {
       if (this.map && this.map!=undefined){
         //this.map.on('load', () => {
@@ -116,14 +110,12 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     }, 100);
   }
 
-  ngAfterViewInit(): void { // Despues de ngOnInit
+  ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
     setTimeout(() => {
       if(this.rute2[2]=='new' && this.state==0){
           if ( !this.divMap ) throw 'No hay mapa';
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => { 
-                //console.log(position.coords.longitude)
-                //console.log(position.coords.latitude)
                 this.map= this.createMap([position.coords.longitude, position.coords.latitude]);
                 this.auxInit();
               },
@@ -152,7 +144,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
   }
 
-  auxInit(){ // Auxiliar de ngAfterViewInit [NO EN EDIT]
+  auxInit(){ // Auxiliar de ngAfterViewInit
     if(this.map!=undefined){
       this.map.addControl(
         new mapboxgl.GeolocateControl({
@@ -302,9 +294,9 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     this.dataSharingService.updatesharedLon(this.sharedLon);
   }
 
-  /* /////////////////////////// */
+  /* //////////// MAPA /////////////// */
 
-  createMarker(marker: mapboxgl.LngLat) { // Añade chincheta 1
+  createMarker(marker: mapboxgl.LngLat) { // Añade chincheta (1)
     if ( !this.map ) return;
     const color= '#0dcaf0';
     const lngLat = marker;
@@ -315,7 +307,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     this.dataSharingService.updatesharedAct(true);
   }
 
-  addMarker( lngLat: mapboxgl.LngLat, color: string ) { // Crear chincheta 2
+  addMarker( lngLat: mapboxgl.LngLat, color: string ) { // Crear chincheta (2)
     if ( !this.map ) return;
     this.markers = [];
     this.markers.splice( 0, 1 );

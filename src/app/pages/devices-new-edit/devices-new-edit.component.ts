@@ -18,7 +18,7 @@ export class DevicesNewEditComponent implements OnInit{
   numerito= 0;
 
   date: any;
-  state= 0; //0 new //1 duplicate // 2 edit
+  state= 0; // 0 new // 1 duplicate // 2 edit //
   rute='';
   rute2: any;
 
@@ -190,14 +190,12 @@ export class DevicesNewEditComponent implements OnInit{
               for (let index = 0; index < data.length; index++) {
                 nombresExistentes.add(data[index].uid);
               }
-              //console.log(nombresExistentes)
-        
+      
               let uid_2= this.devices['uid'];
               while(nombresExistentes.has(uid_2)) {
                 uid_2 = `${this.devices['uid']}_${contador}`;
                 contador++;
               }
-              //console.log(uid_2)
               this.devices.uid= uid_2;
             })
 
@@ -208,7 +206,6 @@ export class DevicesNewEditComponent implements OnInit{
             this.dataSharingService.updatesharedLon(0);
             this.dataSharingService.updatesharedLat(0);
           }
-      
         })
           this.dataSharingService.sharedLat$.subscribe(data => {
             this.devices.lat = data;
@@ -238,7 +235,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.dataSharingService.updatesharedAmp(false);
   }
 
-  readStorage() { // Recupera datos
+  readStorage() { // Recupera datos de local storage
     this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
 
@@ -291,7 +288,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.devices.updatedAt= this.formatDateTime(this.date);
   }
 
-  editSensor() { // Guardar Sensores
+  editSensor() { // Guardar nuevos sensores de los dispositivos
     var devices4 = {
       id: this.id,   
     }
@@ -311,20 +308,16 @@ export class DevicesNewEditComponent implements OnInit{
     return;
   }
 
-  newSensor() { // Guardar sensores
-    //console.log(this.sensors.sensors)
-    //console.log(this.id_max)
-
+  newSensor() { // Guardar nuevos sensores de los dispositivos
     var select_sensors = {
       id: this.id,   
     }
-    //
+
     if(this.state==0){
       fetch(this.delete_all_sensors_devices, {
         method: "POST",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
-
       for(let quote of this.sensors.sensors) {
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -333,14 +326,12 @@ export class DevicesNewEditComponent implements OnInit{
       }
       this.router.navigate([`/devices/edit/${this.id}`]);
     }
-    //
+    
     if(this.state==1){
       this.getShsareSensors();
       this.devices.createdAt= this.data;
-      //console.log(this.sensors.sensors)
       for(let quote of this.sensors.sensors) {
         quote.id_device= this.id_max;
-        //console.log('HOLA 2')
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
@@ -349,40 +340,39 @@ export class DevicesNewEditComponent implements OnInit{
       this.router.navigate([`/devices/edit/${this.id_max}`]);
     }
     return;
-}
-
-newDevice(form: any) { // Guardar Dispositivos
-  this.dataSharingService.updatesharedAct(false);
-  this.createDate();
-  this.devices.createdAt= this.date;
-  this.dataSharingService.sharedLat$.subscribe(data => {
-    this.devices.lat = data;
-  });
-  this.dataSharingService.sharedLon$.subscribe(data => {
-    this.devices.lon = data;
-  });
-  this.dataSharingService.sharedCota$.subscribe(data => {
-    //this.devices.cota = data;
-  });
-  this.dataSharingService.sharedList$.subscribe(data => {
-    this.sensors.sensors= data;
-    //console.log(this.sensors.sensors)
-  });
-  
-  if (form.valid) {
-    fetch(this.post_device, {
-      method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
-    })
-    .then(response => response.json()) 
-    this.newSensor();
   }
-}
+
+  newDevice(form: any) { // Guardar Dispositivos
+    this.dataSharingService.updatesharedAct(false);
+    this.createDate();
+    this.devices.createdAt= this.date;
+    this.dataSharingService.sharedLat$.subscribe(data => {
+      this.devices.lat = data;
+    });
+    this.dataSharingService.sharedLon$.subscribe(data => {
+      this.devices.lon = data;
+    });
+    this.dataSharingService.sharedCota$.subscribe(data => {
+      //this.devices.cota = data;
+    });
+    this.dataSharingService.sharedList$.subscribe(data => {
+      this.sensors.sensors= data;
+      //console.log(this.sensors.sensors)
+    });
+
+    if (form.valid) {
+      fetch(this.post_device, {
+        method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+      })
+      .then(response => response.json()) 
+      this.newSensor();
+    }
+  }
 
   deleteDevice(id_actual: any){ // Eliminar Dispositivo
     var devices = {
       id: id_actual,    
     }
-    //console.log(devices.id)
     fetch(this.deleteDevice_device, {
       method: "POST",body: JSON.stringify(devices),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
@@ -421,33 +411,33 @@ newDevice(form: any) { // Guardar Dispositivos
     this.changed= false;
   }
 
-  recharge(){ // Recargar
+  recharge(){ // Recargar campos a sus valores originales
     this.ngOnInit()
     this.changed= false;
     this.dataSharingService.updatesharedAct(false);
     this.numerito++;
     this.dataSharingService.updatesharedList(this.numerito);
-    //this.dataSharingService.updatesharedList(true);
   }
 
   showForm(){ // Expandir formulario
     this.show_form=true;
-    //this.dataSharingService.updatesharedAmp(true);
     if(this.rute2[2]=='edit'){
       this.onResize(0);
     }  
   }
+
   hideForm(){ // Contrarer formulario
     this.show_form=false;
-    //this.dataSharingService.updatesharedAmp(false);
     if(this.rute2[2]=='edit'){
       this.onResize(0);
     }
   }
+
   showMap(){ // Expandir mapa
     this.dataSharingService.updatesharedAmp(true);
     this.show_map=false;
   }
+
   hideMap(){ // Contrarer mapa
     this.show_map=true;
     this.dataSharingService.updatesharedAmp(false);
@@ -487,7 +477,7 @@ newDevice(form: any) { // Guardar Dispositivos
     this.width = window.innerWidth;
   }
 
-  formatDateTime(date2: any) {
+  formatDateTime(date2: any) { // Formato fecha
     let dat='';
     const date = new Date(date2)
     const year = date.getFullYear();

@@ -167,14 +167,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   orderDevices(id: any, ord_asc: any){ // Ordenar dispositivos
-    //this.newMap();
     this.deleteMarker();
     this.mark= id;
     this.ord_asc= ord_asc;
     this.getDevices('0');
   }
 
-  getDevices(num: any){ // Obtener dispositivos
+  getDevices(num: any){ // Consulta (get dispositivos)
     this.state= num;
     if(this.state=='1'){
       this.deleteMarker();
@@ -214,9 +213,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             let enable=parseInt(quote.id);
             this.addMarker( coords, color , name, enable, quote);
           }
-  
-          //console.log(this.data2)
-  
+    
           setTimeout(()=>{
             if(this.map!=null){
               //
@@ -260,9 +257,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                   'properties': {
                     'description': contenido
                   },
-                    'geometry': {
-                      'type': 'Point',
-                      'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': [this.markers[index].marker.getLngLat().lng,this.markers[index].marker.getLngLat().lat]
                   }
                 })
     
@@ -356,11 +353,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          //console.log("zona 2")
           this.charging= false;
           this.totalPages= Math.ceil(data.length/this.quantPage);
           this.total= data.length;
-          //console.log(this.totalPages)
         })
         this.charging= true;
 
@@ -370,14 +365,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.charging= false;
           this.data= data;
           for (let quote of this.data) {
-              fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-              .then(response => response.json())
-              .then(data => {
-                quote.sensor= data;
-              })
-              .catch(error => {
-                console.error(error); 
-              });  
+            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+            .then(response => response.json())
+            .then(data => {
+              quote.sensor= data;
+            })
+            .catch(error => {
+              console.error(error); 
+            });  
           }
           if(this.data.length<this.quantPage){
             this.cosa= this.total;
@@ -467,10 +462,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               this.data= data;
             }
           }*/
-         
         })
-
-                /*setTimeout( () => { 
+        /*setTimeout( () => { 
           this.data2= [];
           let aux: { [id: number]: any[] } = {};
           let array= [];
@@ -483,18 +476,17 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               cont= 0;
               aux= [];
             }
-            //console.log(this.data[0][index])
-            if (!aux[cont]) {
-              aux[cont] = [];
+              //console.log(this.data[0][index])
+              if (!aux[cont]) {
+                aux[cont] = [];
+              }
+              id= this.data[0][index].id; // Si el array para ese id aún no existe, lo creamos
+              aux[cont].push(this.data[0][index]);
+              //console.log(aux)
+              cont++;
             }
-            id= this.data[0][index].id; // Si el array para ese id aún no existe, lo creamos
-            aux[cont].push(this.data[0][index]);
-            //console.log(aux)
-            cont++;
-          }
           //console.log(this.data2);            
         }, 1000)*/
-
         //this.data2= [];
         setTimeout( () => { 
           for (let quote of this.data) {
@@ -511,7 +503,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             });  
           }
         }, 500)
-        //console.log(this.data2)
     });
   }
   
@@ -585,20 +576,17 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
           if(this.select_sensors_2.sensors[index].id>=0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
-            //console.log("1")
             this.getDevices('1');    
           }
           if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
-            //console.log("2")
             this.getDevices('1');    
           }
           if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
             this.select_sensors_2.sensors= [];
             this.select_sensors_2.sensors= this.select_sensors_3.sensors;
-            //console.log("3")
           }
           if(this.select_sensors_2.sensors.length==0){
             this.select_sensors_2.sensors= [];
@@ -616,12 +604,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               id_data_estructure: 1,
             });            
             this.getDevices('1');
-            //console.log("4")    
           }
         }
       }
       
-      //(this.select_sensors_3.sensors)
     }, 1);
   }
 
@@ -631,7 +617,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
-      //console.log("zona 5")
       this.id= parseInt(data[0].id)+1;
     })
 
@@ -641,7 +626,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     .then((response) => response.json())
     .then(data => {
-      //console.log("zona 6")
       data.unshift({
         id: -3, 
         type: this.translate.instant('text_1'),    
@@ -730,7 +714,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  Page(num: any): void {
+  Page(num: any): void { // Pagina actual
     this.currentPage= num;
     this.getDevices('0');
   }
@@ -770,10 +754,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   newMap(){
     if(this.start==false){
         this.map = new mapboxgl.Map({
-            container: this.divMap?.nativeElement, 
-            style: 'mapbox://styles/mapbox/'+this.color_map,
-            center: [this.currentLngLat.lng, this.currentLngLat.lat],
-            zoom: this.zoom, 
+          container: this.divMap?.nativeElement, 
+          style: 'mapbox://styles/mapbox/'+this.color_map,
+          center: [this.currentLngLat.lng, this.currentLngLat.lat],
+          zoom: this.zoom, 
         });
         this.auxInit();
     }
@@ -781,10 +765,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(position => { 
             this.map = new mapboxgl.Map({
-                container: this.divMap?.nativeElement, 
-                style: 'mapbox://styles/mapbox/'+this.color_map,
-                center: [position.coords.longitude, position.coords.latitude],
-                zoom: this.zoom, 
+              container: this.divMap?.nativeElement, 
+              style: 'mapbox://styles/mapbox/'+this.color_map,
+              center: [position.coords.longitude, position.coords.latitude],
+              zoom: this.zoom, 
             });
             this.auxInit();
           },
@@ -831,10 +815,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.map.addControl(
         new mapboxgl.GeolocateControl({
         positionOptions: {
-        enableHighAccuracy: true
+          enableHighAccuracy: true
         },
-        trackUserLocation: true,
-        showUserHeading: true
+          trackUserLocation: true,
+          showUserHeading: true
         })
       );
       this.map.addControl(new mapboxgl.NavigationControl());
@@ -847,7 +831,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.getDevices('0');
         });
       }
-
       /*this.map.on('zoom', () => {
         this.getDevices('0');
       });    
@@ -888,7 +871,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   mapListeners() { // Listeners del mapa
     if ( !this.map ) throw 'Mapa no inicializado';
-    this.map.on('zoom', (ev) => {
+      this.map.on('zoom', (ev) => {
       this.zoom = this.map!.getZoom();
     });
     this.map.on('zoomend', (ev) => {
@@ -943,14 +926,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     })
     .setLngLat( lngLat )
     .addTo( this.map );  
-    marker.on('click', function() {
-    });
+    marker.on('click', function() {});
 
-      this.geojson = {
-        'id': 'FeatureCollection',
-        'type': 'FeatureCollection',
-        'features': [
-          {
+    this.geojson = {
+      'id': 'FeatureCollection',
+      'type': 'FeatureCollection',
+      'features': [
+        {
           'type': 'Feature',
           'properties': {
             'id': enable,
@@ -963,27 +945,27 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           'coordinates1': lngLat.lng,
           'coordinates2': lngLat.lat,
           }
-          }
-          ]
-        };
-         
-        for (const marker of this.geojson.features) {
-        const el = document.createElement('div');
-        el.className = 'marker_text';
-        el.style.backgroundSize = '100%';
-        el.style.marginTop = '10px';
-        el.innerHTML= `<p class="p-0 m-0" style="font-size:large; color:white; -webkit-text-stroke: 0.5px black">${marker.properties.name}</p>`;
-         
-        el.addEventListener('click', () => {
-          const url = `/devices/edit/${marker.properties.id}`; 
-          window.open(url, '_blank');
-        });
-         
-        const coords = new mapboxgl.LngLat( marker.geometry.coordinates1, marker.geometry.coordinates2 );
-        new mapboxgl.Marker(el)
-        .setLngLat(coords)
-        .addTo(this.map);
-      }
+        }
+      ]
+    };
+      
+    for (const marker of this.geojson.features) {
+      const el = document.createElement('div');
+      el.className = 'marker_text';
+      el.style.backgroundSize = '100%';
+      el.style.marginTop = '10px';
+      el.innerHTML= `<p class="p-0 m-0" style="font-size:large; color:white; -webkit-text-stroke: 0.5px black">${marker.properties.name}</p>`;
+      
+      el.addEventListener('click', () => {
+        const url = `/devices/edit/${marker.properties.id}`; 
+        window.open(url, '_blank');
+      });
+      
+      const coords = new mapboxgl.LngLat( marker.geometry.coordinates1, marker.geometry.coordinates2 );
+      new mapboxgl.Marker(el)
+      .setLngLat(coords)
+      .addTo(this.map);
+    }
     this.markers.push({ color, marker, name, enable, data});
   }
 
@@ -1000,21 +982,18 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     if(this.map!=undefined){
       //this.map.removeSource('places');
     }
-   // console.log(this.markers);
   }
 
   saveStorage() { // Guarda datos
     localStorage.setItem('open_map_list', this.open_map_list.toString());
     localStorage.setItem('color_map', this.color_map);
-    //console.log("pongo")
   }
   readStorage() { // Recupera datos
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
     this.color_map = localStorage.getItem('color_map') ?? '0';
-    //console.log(this.color_map)
   }
 
-  formatDateTime(date2: any) {
+  formatDateTime(date2: any) { // Formato fecha
     let dat='';
     const date = new Date(date2)
     const year = date.getFullYear();

@@ -131,14 +131,13 @@ export class SensorsComponent implements OnInit{
         this.charging= false
         this.data = quotesData
       });      
-      
       const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
       if (sectionElement) {
         sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
   }
 
-  getEstructureButton(id: any,ord: any){
+  getEstructureButton(id: any,ord: any){ // Ordenar columnas
     this.mark= id;
     if (ord == 'ASC') {
       if (id == 'position') {
@@ -211,13 +210,12 @@ export class SensorsComponent implements OnInit{
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
-      //this.getSensors(this.mark,this.ord_asc);
     }
     this.saved= true;
     this.change=false;
   }
 
-  newSensor(form: any) { // Guardar datos de sensores nuevo
+  newSensor(form: any) { // Guardar datos de sensores nuevos
     this.state= 1;
     if (form.valid) {
       fetch(this.post_sensors, {
@@ -299,10 +297,8 @@ export class SensorsComponent implements OnInit{
           this.sensors.id= data[0].id;
           this.sensors.type= type_2;
         })
-        //this.change= true;
         this.state= 0;
       })
-
     }
   }
 
@@ -322,7 +318,7 @@ export class SensorsComponent implements OnInit{
     this.clouse();
   }
 
-  hide(){ 
+  hide(){  // Ocultar tarjeta lateral
     this.alert_delete= false;
     this.alert_new= false;
   }
@@ -336,7 +332,7 @@ export class SensorsComponent implements OnInit{
    }
   }
 
-  clouse(){  // cerrar tarjeta
+  clouse(){  // Cerrar panel lateral
     this.show= false;
     this.state=-1;
     this.openClouse();
@@ -344,7 +340,7 @@ export class SensorsComponent implements OnInit{
     this.change=false;
   }
 
-  orderColumn(id_actual: any){ // Ordenar columnas
+  orderColumn(id_actual: any){ // Ordenar columnas (Peticion API)
     if(!this.change && !this.change && id_actual!=this.act_id){
       this.act_id= id_actual;
        this.openEdit();
@@ -353,7 +349,6 @@ export class SensorsComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.sensors= data[0];
-        //console.log(data[0].sensors_copy)
         this.sensors_copy.id= data[0].id;
         this.sensors_copy.type= data[0].type; 
         this.sensors_copy.metric= data[0].metric;
@@ -372,7 +367,7 @@ export class SensorsComponent implements OnInit{
     }
   }
   
-  textSearch(event: any) { // search por texto
+  textSearch(event: any) { // Busqueda por texto
     clearTimeout(this.timeout);
     var $this = this;
     this.timeout = setTimeout( () => {
@@ -392,7 +387,7 @@ export class SensorsComponent implements OnInit{
     }
   }
 
-  deleteSearch(){ // Borrar search
+  deleteSearch(){ // Borrar busqueda
     this.search.value= '';
     this.getSensors(this.mark,this.ord_asc);
   }
@@ -410,7 +405,6 @@ export class SensorsComponent implements OnInit{
       correction_general: '',
       correction_time_general: '',
     }
-    
     this.show= true;
     this.openClouse();
     this.state= 1;
@@ -435,24 +429,4 @@ export class SensorsComponent implements OnInit{
     this.change=false;
   }
 
-  /*
-  new Promise((resolve, reject) => {
-    fetch(`${this.id_sensors}/${num}`)
-    .then(response => response.json())
-    .then(data => {
-      this.sensors= data[0];
-      resolve(this.sensors);
-    })
-    .catch(error => {
-      console.error(error); 
-      reject(error);
-    });
-  })
-  .then(data => {
-    //this.getSensors(this.mark,this.ord_asc);
-  })
-  .catch(error => {
-    console.error('Error al obtener los datos:', error);
-  })
-  */
 }

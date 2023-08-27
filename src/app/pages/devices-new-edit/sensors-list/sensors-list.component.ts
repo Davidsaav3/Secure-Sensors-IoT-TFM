@@ -169,6 +169,7 @@ export class SensorsListComponent  implements OnInit{
     this.updatesharedList();
     this.dataSharingService.updatesharedAct(true);
   }
+  
   updatesharedList() { // Enviar sensores a device-edit
     this.dataSharingService.updatesharedList(this.sensors.sensors);
   }

@@ -116,7 +116,7 @@ export class EstructureComponent implements OnInit{
     });
   }
 
-  getEstructureButton(id: any,ord: any){
+  getEstructureButton(id: any,ord: any){ // Ordenar columnas (Peticion API)
     this.mark= id;
     if (ord == 'ASC') {
       if (id == 'description') {
@@ -160,18 +160,14 @@ export class EstructureComponent implements OnInit{
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
-
-      //this.getEstructure(this.mark,this.ord_asc);
       this.saved= true;
       this.change=false;
-      //this.getEstructure(this.mark,this.ord_asc);
     }
   }
 
-  newEstructure(form: any) { // Guardar datos de estructuras nuevo
+  newEstructure(form: any) { // Guardar datos de estructura nueva
     this.state= 1;
     if (form.valid) {
-      //console.log(this.estructure.id_estructure)
       fetch(this.post_estructure, {
         method: "POST",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
@@ -181,7 +177,6 @@ export class EstructureComponent implements OnInit{
         this.alert_new= false;
       }, 2000);
       this.openClouse();
-      //this.getEstructure(this.mark,this.ord_asc);
 
       fetch(this.max_estructure)
       .then(response => response.json())
@@ -192,7 +187,6 @@ export class EstructureComponent implements OnInit{
           description: this.estructure.description,    
           configuration: this.estructure.configuration, 
         }
-        //console.log(estructure.id_estructure)
         this.data.push(estructure)
         this.data.sort((a: { description: string; }, b: { description: any; }) => {
           return a.description.localeCompare(b.description);
@@ -211,7 +205,6 @@ export class EstructureComponent implements OnInit{
 
   duplicateEstructure(num: any, description: any){ // Duplicar sensor
     this.act_id= '1';
-    
     if(!this.change && !this.change){
       this.aux_1 = {
         id_estructure: num,    
@@ -241,7 +234,7 @@ export class EstructureComponent implements OnInit{
           console.error(error); 
         });
         this.openClouse();
-        //
+        
         fetch(this.max_estructure)
         .then(response => response.json())
         .then(data => {
@@ -249,7 +242,6 @@ export class EstructureComponent implements OnInit{
           this.estructure.id_estructure= data[0].id_estructure;
           this.estructure.description= description_2;
         })
-        //this.change= true;
         this.state= 0;
       })
     }
@@ -257,7 +249,6 @@ export class EstructureComponent implements OnInit{
   }
 
   deleteEstructure(id_actual: any){ // Eliminar sensor
-    //console.log(id_actual)
     var estructure2 = {
       id_estructure: this.act_id,    
     }
@@ -274,7 +265,7 @@ export class EstructureComponent implements OnInit{
     this.openClouse();
   }
 
-  hide(){ 
+  hide(){ // Cerrar alerta
     this.alert_delete= false;
     this.alert_new= false;
   }
@@ -288,7 +279,7 @@ export class EstructureComponent implements OnInit{
    }
   }
 
-  clouse(){ 
+  clouse(){ // Cerrar tarjeta 
     this.show= false;
     this.openClouse();
     this.change=false;
@@ -304,7 +295,6 @@ export class EstructureComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.estructure= data[0];
-
         this.estructure_copy.id_estructure= data[0].id_estructure;
         this.estructure_copy.description= data[0].description;
         this.estructure_copy.configuration= data[0].configuration;
@@ -316,7 +306,7 @@ export class EstructureComponent implements OnInit{
     }
   }
   
-  textSearch(event: any) { // search por texto
+  textSearch(event: any) { // Busqueda textual
     clearTimeout(this.timeout);
     var $this = this;
     this.timeout = setTimeout( () => {
@@ -336,7 +326,7 @@ export class EstructureComponent implements OnInit{
     }
   }
 
-  deleteSearch(){ // Borrar search
+  deleteSearch(){ // Borrar busqueda textual
     this.search.value= '';
     this.getEstructure(this.mark,this.ord_asc);
   }
@@ -359,7 +349,7 @@ export class EstructureComponent implements OnInit{
     this.show_3= false;
   }
 
-  recharge(){
+  recharge(){ // Recargar campos a sus valores originales
     this.change= false;
     this.estructure= this.estructure_copy;
   }
