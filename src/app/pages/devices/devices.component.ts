@@ -51,10 +51,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   /**/
   
-  max_device: string = 'http://localhost:5172/api/max/device_configurations';
-  get_device: string = 'http://localhost:5172/api/get/device_configurations';
-  id_device_sensors_devices: string = 'http://localhost:5172/api/id_device/sensors_devices';
-  get_sensors: string = 'http://localhost:5172/api/get/sensors_types';
+  max_device: string = 'http://localhost:5172/api/device_configurations/max';
+  get_device: string = 'http://localhost:5172/api/device_configurations/get';
+  id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id_device';
+  get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
   totalPages = 5;
   currentPage = 1;
   quantPage = 10;
@@ -637,6 +637,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
     let search_text= 'Buscar';
     let ord_asc= 'ASC';
+    console.log(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     fetch(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     .then((response) => response.json())
     .then(data => {

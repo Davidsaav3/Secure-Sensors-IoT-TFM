@@ -34,16 +34,16 @@ export class DevicesNewEditComponent implements OnInit{
     this.createDate();
   }
 
-  deleteDevice_device: string = 'http://localhost:5172/api/delete/device_configurations';
-  update_device: string = 'http://localhost:5172/api/update/device_configurations';
-  id_device: string = 'http://localhost:5172/api/id/device_configurations';
-  deleteDevice_all_sensors_devices: string = 'http://localhost:5172/api/delete_all/sensors_devices';
-  post_sensors_devices: string = 'http://localhost:5172/api/post/sensors_devices';
-  post_device: string = 'http://localhost:5172/api/post/device_configurations';
-  delete_all_sensors_devices: string = 'http://localhost:5172/api/delete_all/sensors_devices';
-  max_device: string = 'http://localhost:5172/api/max/device_configurations';
-  get_device: string = 'http://localhost:5172/api/get/device_configurations';
-  get_estructure: string = 'http://localhost:5172/api/get/data_estructure/Buscar/id_estructure/ASC';
+  deleteDevice_device: string = 'http://localhost:5172/api/device_configurations/delete';
+  update_device: string = 'http://localhost:5172/api/device_configurations/update';
+  id_device: string = 'http://localhost:5172/api/device_configurations/id';
+  deleteDevice_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete_all';
+  post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
+  post_device: string = 'http://localhost:5172/api/device_configurations/post';
+  delete_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete_all';
+  max_device: string = 'http://localhost:5172/api/device_configurations/max';
+  get_device: string = 'http://localhost:5172/api/device_configurations/get';
+  get_estructure: string = 'http://localhost:5172/api/data_estructure/get/Buscar/id_estructure/ASC';
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 

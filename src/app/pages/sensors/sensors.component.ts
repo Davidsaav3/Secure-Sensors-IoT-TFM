@@ -22,12 +22,12 @@ export class SensorsComponent implements OnInit{
     this.resize();
   }
 
-  max_sensors: string = 'http://localhost:5172/api/max/sensors_types';
-  get_sensors: string = 'http://localhost:5172/api/get/sensors_types';
-  post_sensors: string = 'http://localhost:5172/api/post/sensors_types';
-  delete_sensors: string = 'http://localhost:5172/api/delete/sensors_types';
-  update_sensors: string = 'http://localhost:5172/api/update/sensors_types';
-  id_sensors: string = 'http://localhost:5172/api/id/sensors_types';
+  max_sensors: string = 'http://localhost:5172/api/sensors_types/max';
+  get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
+  post_sensors: string = 'http://localhost:5172/api/sensors_types/post';
+  delete_sensors: string = 'http://localhost:5172/api/sensors_types/delete';
+  update_sensors: string = 'http://localhost:5172/api/sensors_types/update';
+  id_sensors: string = 'http://localhost:5172/api/sensors_types/id';
 
   alt_1_a=true;
   alt_1_b=false;

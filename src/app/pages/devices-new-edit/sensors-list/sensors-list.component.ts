@@ -26,9 +26,9 @@ export class SensorsListComponent  implements OnInit{
     this.resize();
   }
   
-  get_sensors: string = 'http://localhost:5172/api/get/sensors_types';
-  id_device_sensors_devices: string = 'http://localhost:5172/api/id_device/sensors_devices';
-  id_sensors: string = 'http://localhost:5172/api/id/sensors_types';
+  get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
+  id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id_device';
+  id_sensors: string = 'http://localhost:5172/api/sensors_types/id';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
   numerito= 1;

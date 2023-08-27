@@ -56,8 +56,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
    }
 
   @ViewChild('map') divMap?: ElementRef;
-  id_device: string = 'http://localhost:5172/api/id/device_configurations';
-  max_device: string = 'http://localhost:5172/api/max/device_configurations';
+  id_device: string = 'http://localhost:5172/api/device_configurations/id';
+  max_device: string = 'http://localhost:5172/api/device_configurations/max';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
   zoom: number = 10;

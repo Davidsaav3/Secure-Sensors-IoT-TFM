@@ -19,12 +19,12 @@ export class EstructureComponent implements OnInit{
     this.resize();
   }
 
-  max_estructure: string = 'http://localhost:5172/api/max/data_estructure';
-  get_estructure: string = 'http://localhost:5172/api/get/data_estructure';
-  post_estructure: string = 'http://localhost:5172/api/post/data_estructure';
-  delete_estructure: string = 'http://localhost:5172/api/delete/data_estructure';
-  update_estructure: string = 'http://localhost:5172/api/update/data_estructure';
-  id_estructure: string = 'http://localhost:5172/api/id/data_estructure';
+  max_estructure: string = 'http://localhost:5172/api/data_estructure/max';
+  get_estructure: string = 'http://localhost:5172/api/data_estructure/get';
+  post_estructure: string = 'http://localhost:5172/api/data_estructure/post';
+  delete_estructure: string = 'http://localhost:5172/api/data_estructure/delete';
+  update_estructure: string = 'http://localhost:5172/api/data_estructure/update';
+  id_estructure: string = 'http://localhost:5172/api/data_estructure/id';
 
   alt_1_a=true;
   alt_1_b=false;
