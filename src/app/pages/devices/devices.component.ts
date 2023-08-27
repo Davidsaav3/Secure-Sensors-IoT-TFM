@@ -414,14 +414,19 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then((response) => response.json())
         .then(data => {
           if(this.state=='0'){
-            let entrar= false;
+            if (this.data.length!=data.length /*&& this.data!=data*/) {
+              this.data= data;
+              this.newMap();
+            }
+            //let entrar= false;
             //console.log(data)
-            for (const obj of data) {
+            //comp longitud y despues objetos (NO ACUMULAR)
+            /*for (const obj of data) {
               if (!this.data.some(f => f.id === obj.id)) {
                 entrar= true;
                 this.data.push(obj);
               }
-              /*let aux= [];
+              let aux= [];
               let cont= 0;
               let ult_id;
               if(data.id==ult_id){
@@ -429,11 +434,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                 aux.push(sensor2);
                 cont++;
               }
-              this.data2.push(data);*/
+              this.data2.push(data);
             }
             if(entrar){
               this.newMap();
-            }
+            }*/
           }
           //
           if(this.state=='1'){
@@ -835,21 +840,20 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
         this.map.on('zoomend', () => {
-          //this.getCornerCoordinates();
+          this.getDevices('0');
+        });
+        this.map.on('moveend', () => {
           this.getDevices('0');
         });
       }
-      /*this.map.on('moveend', () => {
-        this.getCornerCoordinates();
-      });
-      this.map.on('zoom', () => {
-          this.getCornerCoordinates();
-      });      
-      this.map.on('zoom', () => {
-          this.getCornerCoordinates();
-      });*/
 
-      /*this.map.on('move', () => {
+      /*this.map.on('zoom', () => {
+        this.getDevices('0');
+      });    
+      this.map.on('zoom', () => {
+          this.getCornerCoordinates();
+      });
+      this.map.on('move', () => {
         this.getCornerCoordinates();
       });*/
 
