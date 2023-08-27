@@ -60,6 +60,8 @@ con.connect(function(err) {
     let xx2= parseInt(x2);
     let yy1= parseInt(y1);
     let yy2= parseInt(y2);
+    console.log("---")
+
 
       if(search_text=='Buscar'){
         if(array_sensors!=-1 || devices_act!=2){
@@ -83,27 +85,51 @@ con.connect(function(err) {
             }
           }
           else{
+            var variable= '';
+            variable+= "SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations"
+            if(devices_act!=2 && array_sensors==-1){
+              console.log("ZONA 2-3")
+              variable+= ` WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+              con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
+                if (err) throw err;
+                  res.send(result)
+              }); 
+            }
+            //
+            else{
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("ZONA 2")
-                con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where id IN ${consulta} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) { /////////////////////////////////////////////////////////
+                variable+= ` where id IN ${consulta}`
+                if(devices_act!=2){
+                  variable+= ` AND enable=${devices_act}`
+                }
+                variable+= ` order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+                con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
                 }); 
               }
               if(array_sensors==-2){
                 console.log("ZONA 3")
-                con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) { /////////////////////////////////////////////////////////
+                variable+= ` where id NOT IN (SELECT id_device FROM sensors_devices)`
+                if(devices_act!=2){
+                  variable+= ` AND enable=${devices_act}`
+                }
+                variable+= ` order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+                con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
                 }); 
               }
-            if(devices_act!=2){
+            }
+            //
+            /*if(devices_act!=2){
               console.log("ZONA 4")
               con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations where enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
                 if (err) throw err;
                   res.send(result)
               }); 
-            }
+            }*/
           }
         
         }

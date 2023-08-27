@@ -31,6 +31,7 @@ export class SensorsListComponent  implements OnInit{
   id_sensors: string = 'http://localhost:5172/api/id/sensors_types';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
+  numerito= 1;
   view_can= -1;
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
@@ -77,7 +78,7 @@ export class SensorsListComponent  implements OnInit{
 
   ngOnInit(): void { // Inicialización
     this.sensors.sensors= [];
-    this.getDevices('id');//setTimeout
+    this.getDevices('id');
     setTimeout(() => {
       this.updatesharedList();
     }, 100);
@@ -85,6 +86,22 @@ export class SensorsListComponent  implements OnInit{
     setInterval(() => {
       this.dataSharingService.sharedAmp$.subscribe(data => {
         this.show_large= data;
+      });
+      this.dataSharingService.sharedList$.subscribe(data => {
+        if(data==this.numerito){
+          fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search_1}`)
+          .then(response => response.json())
+          .then(data => {
+            this.sensors.sensors= data;
+          })
+          .catch(error => {
+            console.error(error); 
+          });
+          setTimeout(() => {
+            this.updatesharedList();
+          }, 10);
+          this.numerito= data+1;
+        }
       });
       this.readStorage()
     }, 10);

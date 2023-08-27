@@ -15,6 +15,7 @@ export class DevicesNewEditComponent implements OnInit{
   sharedLat: any = '';
   sharedLon: any = '';
   sharedCota: any = '';
+  numerito= 0;
 
   date: any;
   state= 0; //0 new //1 duplicate // 2 edit
@@ -417,12 +418,16 @@ newDevice(form: any) { // Guardar Dispositivos
     .catch(error => {
       console.error(error); 
     }); 
+    this.changed= false;
   }
 
   recharge(){ // Recargar
     this.ngOnInit()
     this.changed= false;
     this.dataSharingService.updatesharedAct(false);
+    this.numerito++;
+    this.dataSharingService.updatesharedList(this.numerito);
+    //this.dataSharingService.updatesharedList(true);
   }
 
   showForm(){ // Expandir formulario
