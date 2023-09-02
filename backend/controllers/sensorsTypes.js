@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 let { con }= require('../middleware/mysql');
+let cors= require('cors')
+router.use(cors());
+router.use(express.json())
 
   /* SENSORS_TYPES //////////////////////////////////////////*/
   router.get("/get/:type/:type1/:type2", (req,res)=>{  /*/ GET  /*/

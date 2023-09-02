@@ -273,6 +273,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.devices.updatedAt= this.date;
     this.getShsareSensors();
     if (form.valid) {
+      console.log(this.devices)
       fetch(this.update_device, {
         method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
       })

@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 let { con }= require('../middleware/mysql');
+let cors= require('cors')
+router.use(cors());
+router.use(express.json())
 
   /* device_configurations /////////////////////////////////////////////////*/
   router.get("/max/", (req,res)=>{ /*/ MAX /*/
@@ -232,6 +235,7 @@ let { con }= require('../middleware/mysql');
   });
 
   router.post("/update/", (req,res)=>{  /*/ UPDATE  /*/
+    console.log(req.body)
     let uid='';
     if(!req.body.uid){return res.status(400).json({ error: 'El campo uid es requerido.' });}else{uid= req.body.uid;}
     let alias= req.body.alias;
