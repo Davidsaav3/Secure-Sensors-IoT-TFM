@@ -53,7 +53,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
-  id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id_device';
+  id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
   totalPages = 5;
   currentPage = 1;

@@ -4,14 +4,6 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
-
-  /* device_configurations /////////////////////////////////////////////////*/
-  router.get("/max/", (req,res)=>{ /*/ MAX /*/
-    con.query("SELECT id FROM device_configurations WHERE id=(SELECT max(id) FROM device_configurations)", function (err, result) {
-      if (err) throw err;
-        res.send(result)
-    });
-  });
   
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
@@ -200,10 +192,9 @@ router.use(express.json())
     });
   });
 
-  router.post("/enable", (req,res)=>{  /*/ ENABLE  /*/
-    let id= req.body.id;
-    let enable= req.body.enable;
-    con.query("UPDATE device_configurations SET enable= ? WHERE id= ?",[id,enable], function (err, result) {
+  /* device_configurations /////////////////////////////////////////////////*/
+  router.get("/max/", (req,res)=>{ /*/ MAX /*/
+    con.query("SELECT id FROM device_configurations WHERE id=(SELECT max(id) FROM device_configurations)", function (err, result) {
       if (err) throw err;
         res.send(result)
     });

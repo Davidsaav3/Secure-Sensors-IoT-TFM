@@ -13,15 +13,7 @@ router.use(express.json())
     });
   });
 
-  router.get("/id/:id", (req,res)=>{  /*/ ID  /*/
-    let id= parseInt(req.params.id);
-    con.query("SELECT * FROM sensors_devices WHERE id= ?", id, function (err, result) {
-      if (err) throw err;
-        res.send(result)
-    });
-  });
-
-  router.get("/id_device/:id/:type", (req,res)=>{  /*/ GET ID_DEVICES  /*/
+  router.get("/id/:id/:type", (req,res)=>{  /*/ ID  /*/
     let id_device= parseInt(req.params.id);
     con.query(`SELECT orden, enable, id_device, id_type_sensor, id, datafield, nodata, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,correction_specific,correction_time_specific FROM sensors_devices as s WHERE id_device= '${id_device}' order by orden`, function (err, result) {
       if (err) throw err;
@@ -53,26 +45,9 @@ router.use(express.json())
     });
   });
 
-  router.get("/duplicate/:id1/:id2", (req,res)=>{  /*/ DUPLICATE  /*/
-    let id1= parseInt(req.params.id1);
-    let id2= parseInt(req.params.id2);
-    con.query("INSERT INTO sensors_devices (orden, enable, id_device, id_type_sensor, datafield, nodata,correction_specific,correction_time_specific) SELECT orden, enable, ?, id_type_sensor, datafield, nodata,correction_specific,correction_time_specific FROM sensors_devices WHERE id_device= ?",[id2,id1], function (err, result) {
-      if (err) throw err;
-        res.send(result)
-    });
-  });
-
-  router.post("/delete_all", (req,res)=>{  /*/ DELETE ALL /*/
+  router.post("/delete", (req,res)=>{  /*/ DELETE /*/
     let id= req.body.id;
     con.query("DELETE FROM sensors_devices WHERE id_device= ?", id, function (err, result) {
-      if (err) throw err;
-        res.send(result)
-    });
-  });
-
-  router.post("/delete", (req,res)=>{  /*/ DELETE  /*/
-  let id= req.body.id;
-    con.query("DELETE FROM sensors_devices WHERE id= ?", id, function (err, result) {
       if (err) throw err;
         res.send(result)
     });
