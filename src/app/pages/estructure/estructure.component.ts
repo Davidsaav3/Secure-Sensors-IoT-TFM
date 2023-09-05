@@ -20,12 +20,10 @@ export class EstructureComponent implements OnInit{
     this.resize();
   }
 
-  max_estructure: string = 'http://localhost:5172/api/data_estructure/max';
   get_estructure: string = 'http://localhost:5172/api/data_estructure/get';
   post_estructure: string = 'http://localhost:5172/api/data_estructure/post';
   delete_estructure: string = 'http://localhost:5172/api/data_estructure/delete';
   update_estructure: string = 'http://localhost:5172/api/data_estructure/update';
-  id_estructure: string = 'http://localhost:5172/api/data_estructure/id';
 
   totalPages = 5;
   currentPage = 1;
@@ -120,21 +118,14 @@ export class EstructureComponent implements OnInit{
       this.search_1= this.search.value;
     }
     this.charging= true;
-    //console.log(this.currentPage)
-    //console.log(this.quantPage)
-
-    fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/1/1000`)
-    .then((response) => response.json())
-    .then(data => {
-      this.charging= false
-      this.totalPages= Math.ceil(data.length/this.quantPage);
-      this.total= data.length;
-    });
     
     setTimeout(() => {
       fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
+        this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
+        this.total= quotesData[0].total;
+        //
         this.charging= false
         this.data = quotesData
         if(this.data.length<this.quantPage){
@@ -174,7 +165,7 @@ export class EstructureComponent implements OnInit{
   editEstructure(form: any) { // Guardar datos de estructuras editado
     if (form.valid) {
       fetch(this.update_estructure, {
-        method: "POST",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
+        method: "PUT",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
       this.data = this.data.filter((data: { id_estructure: string; }) => data.id_estructure !== this.estructure.id_estructure);
@@ -206,17 +197,22 @@ export class EstructureComponent implements OnInit{
       fetch(this.post_estructure, {
         method: "POST",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
-      .then(response => response.json()) 
-      this.alert_new= true;
-      setTimeout(() => {
-        this.alert_new= false;
-      }, 2000);
-      this.openClouse();
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud");
+        }
+        return response.json(); // Parsear la respuesta JSON
+      })
+      .then((data) => {
+        this.id= data.id; // Obtener el ID autogenerado
+        console.log(this.id)
 
-      fetch(this.max_estructure)
-      .then(response => response.json())
-      .then(data => {
-        this.id= parseInt(data[0].id_estructure+1);
+        this.alert_new= true;
+        setTimeout(() => {
+          this.alert_new= false;
+        }, 2000);
+        this.openClouse();
+
         let estructure = {
           id_estructure: this.id.toString(), 
           description: this.estructure.description,    
@@ -230,6 +226,9 @@ export class EstructureComponent implements OnInit{
         this.openEdit();
         this.state=2;
       })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
       this.change=false;
     }
   }
@@ -260,23 +259,8 @@ export class EstructureComponent implements OnInit{
           contador++;
         }
         this.openNew();
-        fetch(`${this.id_estructure}/${num}`)
-        .then(response => response.json())
-        .then(data => {
-          this.estructure= data[0];
-        })
-        .catch(error => {
-          console.error(error); 
-        });
+        this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
-        
-        fetch(this.max_estructure)
-        .then(response => response.json())
-        .then(data => {
-          this.id= parseInt(data[0].id);
-          this.estructure.id_estructure= data[0].id_estructure;
-          this.estructure.description= description_2;
-        })
         this.state= 0;
       })
     }
@@ -288,7 +272,7 @@ export class EstructureComponent implements OnInit{
       id_estructure: this.act_id,    
     }
     fetch(this.delete_estructure, {
-      method: "POST",body: JSON.stringify(estructure2),headers: {"Content-type": "application/json; charset=UTF-8"}
+      method: "DELETE",body: JSON.stringify(estructure2),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
     this.alert_delete= true;
@@ -324,19 +308,10 @@ export class EstructureComponent implements OnInit{
     this.show= true;
     if(!this.change && !this.change && id_actual!=this.act_id){
       this.act_id= id_actual;
-       this.openEdit();
+      this.openEdit();
       this.state=2;
-      fetch(`${this.id_estructure}/${id_actual}`)
-      .then(response => response.json())
-      .then(data => {
-        this.estructure= data[0];
-        this.estructure_copy.id_estructure= data[0].id_estructure;
-        this.estructure_copy.description= data[0].description;
-        this.estructure_copy.configuration= data[0].configuration;
-      })
-      .catch(error => {
-        console.error(error); 
-      });
+      this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == id_actual);
+      this.estructure_copy= this.estructure;
       this.openClouse();
     }
   }

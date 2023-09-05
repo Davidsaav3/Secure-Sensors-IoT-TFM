@@ -21,7 +21,7 @@ router.use(express.json())
     });
   });
 
-  router.post("/post/", (req,res)=>{  /*/ PUT  /*/
+  router.post("/post/", (req,res)=>{  /*/ POST  /*/
     let orden= req.body.orden;
     let enable= req.body.enable;
     let id_device= req.body.id_device;
@@ -45,11 +45,19 @@ router.use(express.json())
     });
   });
 
-  router.post("/delete", (req,res)=>{  /*/ DELETE /*/
-    let id= req.body.id;
-    con.query("DELETE FROM sensors_devices WHERE id_device= ?", id, function (err, result) {
-      if (err) throw err;
-        res.send(result)
+  router.delete("/delete", (req, res) => {  /*/ DELETE  /*/
+    const id = req.body.id;
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'ID no válido' });
+    }
+    con.query("DELETE FROM sensors_devices WHERE id_device = ?", id, function (err, result) {
+      if (err) {
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Dispositivo no encontrado' });
+      }
+      res.json({ message: 'Dispositivo eliminado con éxito' });
     });
   });
 

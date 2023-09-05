@@ -200,7 +200,7 @@ router.use(express.json())
     });
   });
 
-  router.post("/post", (req,res)=>{  /*/ PUT  /*/
+  router.post("/post", (req,res)=>{  /*/ POST  /*/
     let uid='';
     if(!req.body.uid){return res.status(400).json({ error: 'El campo uid es requerido.' });}else{uid= req.body.uid;}
     let alias= req.body.alias;
@@ -225,7 +225,7 @@ router.use(express.json())
     });
   });
 
-  router.post("/update/", (req,res)=>{  /*/ UPDATE  /*/
+  router.put("/update/", (req,res)=>{  /*/ UPDATE  /*/
     console.log(req.body)
     let uid='';
     if(!req.body.uid){return res.status(400).json({ error: 'El campo uid es requerido.' });}else{uid= req.body.uid;}
@@ -251,11 +251,19 @@ router.use(express.json())
     });
   });
 
-  router.post("/delete", (req,res)=>{  /*/ DELETE  /*/
-    let id09= req.body.id;
-    con.query("DELETE FROM device_configurations WHERE id= ?", id09, function (err, result) {
-      if (err) throw err;
-        res.send(result)
+  router.delete("/delete", (req, res) => {  /*/ DELETE  /*/
+    const id = req.body.id;
+    if (isNaN(id)) {
+      return res.status(400).json({ error: 'ID no válido' });
+    }
+    con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
+      if (err) {
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
+      }
+      res.json({ message: 'Configuración de dispositivo eliminada con éxito' });
     });
   });
 

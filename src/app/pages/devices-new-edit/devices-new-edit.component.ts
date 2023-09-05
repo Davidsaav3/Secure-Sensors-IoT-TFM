@@ -275,7 +275,7 @@ export class DevicesNewEditComponent implements OnInit{
     if (form.valid) {
       //console.log(this.devices)
       fetch(this.update_device, {
-        method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+        method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
       this.act_ok= true;
@@ -295,7 +295,7 @@ export class DevicesNewEditComponent implements OnInit{
     }
 
     fetch(this.deleteDevice_all_sensors_devices, {
-      method: "POST",body: JSON.stringify(devices4),headers: {"Content-type": "application/json; charset=UTF-8"}
+      method: "DELETE",body: JSON.stringify(devices4),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
     for(let quote of this.sensors.sensors) {
@@ -316,7 +316,7 @@ export class DevicesNewEditComponent implements OnInit{
 
     if(this.state==0){
       fetch(this.delete_sensors_devices, {
-        method: "POST",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
+        method: "DELETE",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
       for(let quote of this.sensors.sensors) {
@@ -375,7 +375,7 @@ export class DevicesNewEditComponent implements OnInit{
       id: id_actual,    
     }
     fetch(this.deleteDevice_device, {
-      method: "POST",body: JSON.stringify(devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+      method: "DELETE",body: JSON.stringify(devices),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
     this.router.navigate(['/devices']);

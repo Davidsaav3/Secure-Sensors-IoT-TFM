@@ -217,7 +217,7 @@ export class SensorsComponent implements OnInit{
   editSensor(form: any) { // Guardar datos de sensores editado
     if (form.valid) {
       fetch(this.update_sensors, {
-        method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
+        method: "PUT",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json())
       this.data = this.data.filter((data: { id: string; }) => data.id !== this.sensors.id);
@@ -340,7 +340,7 @@ export class SensorsComponent implements OnInit{
       id: id_actual,    
     }
     fetch(this.delete_sensors, {
-      method: "POST",body: JSON.stringify(sensors2),headers: {"Content-type": "application/json; charset=UTF-8"}
+      method: "DELETE",body: JSON.stringify(sensors2),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
     this.alert_delete= true;

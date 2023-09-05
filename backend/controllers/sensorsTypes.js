@@ -43,7 +43,7 @@ router.use(express.json())
     });
   });
   
-  router.post("/post/", (req,res)=>{  /*/ PUT  /*/
+  router.post("/post/", (req,res)=>{  /*/ POST  /*/
   if(!req.body.type){return res.status(400).json({ error: 'El campo type es requerido.' });}else{type= req.body.type;}
   if(!req.body.metric){return res.status(400).json({ error: 'El campo metric es requerido.' });}else{metric= req.body.metric;}
     let description= req.body.description;
@@ -59,7 +59,7 @@ router.use(express.json())
     });
   });
   
-  router.post("/update/", (req,res)=>{  /*/ UPDATE  /*/
+  router.put("/update/", (req,res)=>{  /*/ UPDATE  /*/
     if(!req.body.type){return res.status(400).json({ error: 'El campo type es requerido.' });}else{type= req.body.type;}
     if(!req.body.metric){return res.status(400).json({ error: 'El campo metric es requerido.' });}else{metric= req.body.metric;}
     description= req.body.description;
@@ -76,11 +76,19 @@ router.use(express.json())
     });
   });
 
-  router.post("/delete/", (req,res)=>{  /*/ DELETE  /*/
-    let id= req.body.id;
-    con.query("DELETE FROM sensors_types WHERE id= ?", id, function (err, result) {
-      if (err) throw err;
-        res.send(result)
+  router.delete("/delete/", (req, res) => {  /*/ DELETE  /*/
+    const id = req.body.id;
+      if (isNaN(id)) {
+      return res.status(400).json({ error: 'ID no válido' });
+    }
+    con.query("DELETE FROM sensors_types WHERE id = ?", id, function (err, result) {
+      if (err) {
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Elemento no encontrado' });
+      }
+      res.json({ message: 'Elemento eliminado con éxito' });
     });
   });
 
