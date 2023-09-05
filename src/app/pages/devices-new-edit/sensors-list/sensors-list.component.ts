@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { DataSharingService } from '../../../services/data_sharing.service';
-import { environment } from "../../../../../environments/environment"
+import { environment } from "../../../environments/environment"
 
 @Injectable({
   providedIn: 'root'

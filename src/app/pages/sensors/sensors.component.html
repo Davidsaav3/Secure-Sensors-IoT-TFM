@@ -95,7 +95,7 @@
 
 							<td class="d-table-cell" [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.type }}</td>
 							<td class="d-table-cell" [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.metric }}</td>
-							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" class="d-none d-md-none d-lg-d-table-cell" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
+							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
 		
 							<td class="d-table-cell" [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.correction_general }}</td>
 							<td class="d-table-cell" [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.correction_time_general }}</td>

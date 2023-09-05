@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { DataSharingService } from '../../services/data_sharing.service';
 import { DevicesMapComponent } from './devices-map/devices-map.component';
-import { environment } from "../../../../environments/environment"
+import { environment } from "../../environments/environment"
 
 @Component({
   selector: 'app-devices-new-edit',
@@ -273,7 +273,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.devices.updatedAt= this.date;
     this.getShsareSensors();
     if (form.valid) {
-      console.log(this.devices)
+      //console.log(this.devices)
       fetch(this.update_device, {
         method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
       })

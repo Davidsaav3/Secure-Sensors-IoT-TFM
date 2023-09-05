@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild,OnInit } fro
 import { Router } from '@angular/router';
 import * as mapboxgl from 'mapbox-gl';
 import { TranslateService } from '@ngx-translate/core';
-import { environment } from "environments/environment"
+import { environment } from "src/app/environments/environment"
 
 interface MarkerAndColor {
   color: string;
@@ -622,7 +622,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
     let search_text= 'Buscar';
     let ord_asc= 'ASC';
-    console.log(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
+    //console.log(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     fetch(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     .then((response) => response.json())
     .then(data => {

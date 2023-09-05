@@ -6,6 +6,6 @@ export const environment = {
     dbmysql: 'sensors',
     usermysql:'root',
     passwordmysql: '',
-    lenguaje_name: ['Español','English','Italiano'],
-    lenguaje_lang: ['es','en','it']
+    lenguaje_name: ['Español','English'],
+    lenguaje_lang: ['es','en']
 };

@@ -1,6 +1,6 @@
 import { Component ,ElementRef, OnInit, HostListener} from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from "../../../../environments/environment"
+import { environment } from "../../environments/environment"
 
 @Component({
   selector: 'app-sensors',
