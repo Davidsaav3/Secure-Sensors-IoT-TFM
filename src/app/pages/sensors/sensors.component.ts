@@ -144,18 +144,21 @@ export class SensorsComponent implements OnInit{
       this.totalPages= Math.ceil(data.length/this.quantPage);
       this.total= data.length;
     });
-    fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
-    .then((response) => response.json())
-    .then(quotesData => {
-      this.charging= false
-      this.data = quotesData
-      if(this.data.length<this.quantPage){
-        this.cosa= this.total;
-      }
-      else{
-        this.cosa= this.quantPage*this.currentPage;
-      }
-    });      
+
+    setTimeout(() => {
+      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
+      .then((response) => response.json())
+      .then(quotesData => {
+        this.charging= false
+        this.data = quotesData
+        if(this.data.length<this.quantPage){
+          this.cosa= this.total;
+        }
+        else{
+          this.cosa= this.quantPage*this.currentPage;
+        }
+      });      
+    }, 100);
 
     const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
     if (sectionElement) {
