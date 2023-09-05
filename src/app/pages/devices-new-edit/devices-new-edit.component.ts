@@ -38,12 +38,12 @@ export class DevicesNewEditComponent implements OnInit{
   update_device: string = 'http://localhost:5172/api/device_configurations/update';
   id_device: string = 'http://localhost:5172/api/device_configurations/id';
   deleteDevice_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete';
-  post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
+   post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
   post_device: string = 'http://localhost:5172/api/device_configurations/post';
   delete_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete';
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
-  get_estructure: string = 'http://localhost:5172/api/data_estructure/get/Buscar/id_estructure/ASC';
+  get_estructure_list: string = 'http://localhost:5172/api/data_estructure/get_list';
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
@@ -452,7 +452,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   getEstructures(){ // optener estructuras de datos
-    fetch(`${this.get_estructure}`)
+    fetch(`${this.get_estructure_list}`)
       .then((response) => response.json())
       .then(quotesData => {
         this.estructures.estructure = quotesData;

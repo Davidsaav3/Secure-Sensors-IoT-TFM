@@ -28,6 +28,16 @@ router.use(express.json())
     });
   });
 
+  router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
+    let query = `SELECT id_estructure, description FROM data_estructure ORDER BY description ASC`;
+    con.query(query, (err, result) => {
+      if (err) {
+        console.error(err);
+      }
+      res.send(result);
+    });
+  });
+
   router.post("/post", (req, res) => {  /*/ POST  /*/
     const { description, configuration } = req.body;
     if (!description || !configuration) {

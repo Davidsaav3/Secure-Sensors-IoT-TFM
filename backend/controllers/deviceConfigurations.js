@@ -4,7 +4,8 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
-  
+
+  /* device_configurations /////////////////////////////////////////////////*/
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
     let search_text= req.params.search_text;
@@ -69,7 +70,7 @@ router.use(express.json())
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';
-            variable+= "SELECT  id, uid, topic_name, application_id, enable, id_data_estructure, updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations"
+            variable+= "SELECT  id, uid, topic_name, application_id, enable, id_data_estructure, updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
               variable+= ` WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
@@ -109,7 +110,7 @@ router.use(express.json())
           }
           else{
             var variable= '';
-            variable+= `SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure,updatedAt, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device`
+            variable+= `SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure,updatedAt, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device`
             if(devices_act!=2 && array_sensors==-1){
               console.log("MAPA ACT")
               variable+= ` WHERE d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
@@ -151,14 +152,14 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(`SELECT id, uid, topic_name, application_id, enable, id_data_estructure,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+            con.query(`SELECT id, uid, topic_name, application_id, enable, id_data_estructure,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
           }
           else{
             console.log("MAPA SIMPLE")
-            con.query(`SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure,updatedAt, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(`SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure,updatedAt, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
@@ -168,14 +169,14 @@ router.use(express.json())
       else{
         if(state=='0'){
           console.log("LISTA BUSQUEDA POR TEXTO")
-            con.query(`SELECT id, uid, topic_name, application_id, enable, id_data_estructure,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
+            con.query(`SELECT id, uid, topic_name, application_id, enable, id_data_estructure,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
             if (err) throw err;
               res.send(result)
           });
         }
         else{
           console.log("MAPA BUSQUEDA POR TEXTO")
-            con.query(`SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure, d.updatedAt, s.ordene as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR d.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(`SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure, d.updatedAt, s.ordene as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR d.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
             if (err) throw err;
               res.send(result)
           });
@@ -184,71 +185,84 @@ router.use(express.json())
     
   });
 
-  router.get("/id/:id", (req,res)=>{ /*/ ID  /*/
-  let id= parseInt(req.params.id);
-    con.query("SELECT *, (SELECT description FROM data_estructure WHERE id_estructure= id_data_Estructure) As estructure_name FROM device_configurations WHERE id= ?", id, function (err, result) {
-      if (err) throw err;
-        res.send(result)
+  router.get("/id/:id", (req, res) => {  /*/ ID /*/
+    const id = parseInt(req.params.id);
+    const query = `
+      SELECT dc.*, de.description AS estructure_name
+      FROM device_configurations dc
+      INNER JOIN data_estructure de ON dc.id_data_Estructure = de.id_estructure
+      WHERE dc.id = ?
+    `;
+    con.query(query, [id], (err, result) => {
+      if (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      res.send(result);
     });
   });
 
-  /* device_configurations /////////////////////////////////////////////////*/
-  router.get("/max/", (req,res)=>{ /*/ MAX /*/
-    con.query("SELECT id FROM device_configurations WHERE id=(SELECT max(id) FROM device_configurations)", function (err, result) {
-      if (err) throw err;
-        res.send(result)
+  router.get("/max/", (req, res) => {  /*/ MAX  /*/
+    const query = "SELECT MAX(id) AS max_id FROM device_configurations";
+    con.query(query, (err, result) => {
+      if (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      const id = result[0].max_id;
+      res.json({ id });
     });
   });
 
-  router.post("/post", (req,res)=>{  /*/ POST  /*/
-    let uid='';
-    if(!req.body.uid){return res.status(400).json({ error: 'El campo uid es requerido.' });}else{uid= req.body.uid;}
-    let alias= req.body.alias;
-    let origin= req.body.origin;
-    let description_origin= req.body.description_origin;
-    let application_id= req.body.application_id;
-    let topic_name='';
-    if(!req.body.topic_name){return res.status(400).json({ error: 'El campo topic_name es requerido.' });}else{topic_name= req.body.topic_name;}
-    let typemeter= req.body.typemeter;
-    let lat= req.body.lat;
-    let lon= req.body.lon;
-    let cota= req.body.cota;
-    let timezone= req.body.timezone;
-    let enable= req.body.enable;
-    let organizationid= req.body.organizationid;
-    let createdAt= req.body.createdAt;
-    let updatedAt= req.body.updatedAt;
-    let id_data_estructure= req.body.id_data_estructure;
-    con.query("INSERT INTO device_configurations (uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,createdAt,updatedAt,id_data_estructure) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,createdAt,updatedAt,id_data_estructure], function (err, result) {
-      if (err) throw err;
-        res.send(result)
-    });
+  router.post("/post", (req, res) => {  /*/ UPDATE  /*/
+    const { 
+      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure,
+    } = req.body;
+    if (!uid) {
+      return res.status(400).json({ error: 'El campo uid es requerido.' });
+    }
+    if (!topic_name) {
+      return res.status(400).json({ error: 'El campo topic_name es requerido.' });
+    }
+    const query = `
+      INSERT INTO device_configurations (
+      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    con.query( query,
+      [
+        uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error("Error:", err);
+          return res.status(500).json({ error: 'Error en la base de datos' });
+        }
+        res.send(result);
+      }
+    );
   });
 
   router.put("/update/", (req,res)=>{  /*/ UPDATE  /*/
-    console.log(req.body)
-    let uid='';
-    if(!req.body.uid){return res.status(400).json({ error: 'El campo uid es requerido.' });}else{uid= req.body.uid;}
-    let alias= req.body.alias;
-    let origin= req.body.origin;
-    let description_origin= req.body.description_origin;
-    let application_id= req.body.application_id;
-    let topic_name='';
-    if(!req.body.topic_name){return res.status(400).json({ error: 'El campo topic_name es requerido.' });}else{topic_name= req.body.topic_name;}
-    let typemeter= req.body.typemeter;
-    let lat= req.body.lat;
-    let lon= req.body.lon;
-    let cota= req.body.cota;
-    let timezone= req.body.timezone;
-    let enable= req.body.enable;
-    let organizationid= req.body.organizationid;
-    let id7= req.body.id;
-    let updatedAt= req.body.updatedAt;
-    let id_data_estructure= req.body.id_data_estructure;
-    con.query("UPDATE device_configurations SET uid=?,alias=?,origin=?,description_origin=?,application_id=?,topic_name=?,typemeter=?,lat=?,lon=?,cota=?,timezone=?,enable=?,organizationid=?, updatedAt=?, id_data_estructure=? WHERE id= ?",[uid,alias,origin,description_origin,application_id,topic_name,typemeter,lat,lon,cota,timezone,enable,organizationid,updatedAt,id_data_estructure,id7], function (err, result) {
-      if (err) throw err;
-        res.send(result)
-    });
+    const {
+      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, id: id7, updatedAt,id_data_estructure,
+    } = req.body;
+    if (!uid || !topic_name) {
+      return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos.' });
+    }
+    const query = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ? WHERE id = ?`;
+    con.query(
+      query,
+      [
+        uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, id7,
+      ],
+      (err, result) => {
+        if (err) {
+          console.error("Error:", err);
+          return res.status(500).json({ error: 'Error en la base de datos' });
+        }
+        res.send(result);
+      }
+    );
   });
 
   router.delete("/delete", (req, res) => {  /*/ DELETE  /*/

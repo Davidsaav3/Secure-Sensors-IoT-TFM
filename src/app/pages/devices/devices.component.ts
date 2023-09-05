@@ -55,7 +55,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
-  get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
+  get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;
@@ -349,20 +349,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       }
       
       if(this.open_map_list==true){ // LIST //
-        //console.log("LIST")
         this.charging= true;
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
-        .then((response) => response.json())
-        .then(data => {
-          this.charging= false;
-          this.totalPages= Math.ceil(data.length/this.quantPage);
-          this.total= data.length;
-        })
-        this.charging= true;
-
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          this.totalPages= Math.ceil(data[0].total/this.quantPage);
+          this.total= data[0].total;
+          //
           this.charging= false;
           this.data= data;
           for (let quote of this.data) {
@@ -618,13 +611,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
-      this.id= parseInt(data[0].id)+1;
+      this.id= parseInt(data.id)+1;
     })
 
     let search_text= 'Buscar';
     let ord_asc= 'ASC';
     //console.log(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
-    fetch(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
+    fetch(`${this.get_sensors_list}`)
     .then((response) => response.json())
     .then(data => {
       data.unshift({

@@ -23,7 +23,6 @@ export class SensorsComponent implements OnInit{
     this.resize();
   }
 
-  max_sensors: string = 'http://localhost:5172/api/sensors_types/max';
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
   post_sensors: string = 'http://localhost:5172/api/sensors_types/post';
   delete_sensors: string = 'http://localhost:5172/api/sensors_types/delete';
@@ -137,18 +136,14 @@ export class SensorsComponent implements OnInit{
       this.search_1= this.search.value;
     }
     this.charging= true;
-    fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/1/1000`)
-    .then((response) => response.json())
-    .then(data => {
-      this.charging= false
-      this.totalPages= Math.ceil(data.length/this.quantPage);
-      this.total= data.length;
-    });
 
     setTimeout(() => {
       fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
+        this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
+        this.total= quotesData[0].total;
+        //
         this.charging= false
         this.data = quotesData
         if(this.data.length<this.quantPage){
@@ -254,35 +249,41 @@ export class SensorsComponent implements OnInit{
       fetch(this.post_sensors, {
         method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
-      .then(response => response.json()) 
-      this.alert_new= true;
-      setTimeout(() => {
-        this.alert_new= false;
-      }, 2000);
-      this.openClouse();
-  
-      fetch(this.max_sensors)
-      .then(response => response.json())
-      .then(data => {
-        this.id= parseInt(data[0].id+1);
-        let sensors = {
-          id: this.id, 
-          type: this.sensors.type,    
-          metric: this.sensors.metric, 
-          description: this.sensors.description,
-          errorvalue: this.sensors.errorvalue,
-          valuemax: this.sensors.valuemax,
-          valuemin: this.sensors.valuemin,
-          position: this.sensors.position,
-          correction_general: this.sensors.correction_general,
-          correction_time_general: this.sensors.correction_time_general,
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud");
         }
-        this.data.push(sensors)
-        this.data.sort((a:any,b:any) => {return a.position-b.position;});
+        return response.json(); // Parsear la respuesta JSON
+      })
+      .then((data) => {
+        this.id= data.id; // Obtener el ID autogenerado
+        console.log(this.id)
 
-        this.act_id= this.id.toString();
-        this.openEdit();
-        this.state=2;
+        this.alert_new= true;
+        setTimeout(() => {
+          this.alert_new= false;
+        }, 2000);
+        this.openClouse();
+ 
+          this.id= parseInt(data[0].id+1);
+          let sensors = {
+            id: this.id, 
+            type: this.sensors.type,    
+            metric: this.sensors.metric, 
+            description: this.sensors.description,
+            errorvalue: this.sensors.errorvalue,
+            valuemax: this.sensors.valuemax,
+            valuemin: this.sensors.valuemin,
+            position: this.sensors.position,
+            correction_general: this.sensors.correction_general,
+            correction_time_general: this.sensors.correction_time_general,
+          }
+          this.data.push(sensors)
+          this.data.sort((a:any,b:any) => {return a.position-b.position;});
+
+          this.act_id= this.id.toString();
+          this.openEdit();
+          this.state=2;
       })
     }
     this.change=false;
@@ -313,23 +314,8 @@ export class SensorsComponent implements OnInit{
           contador++;
         }
         this.openNew();
-        fetch(`${this.id_sensors}/${num}`)
-        .then(response => response.json())
-        .then(data => {
-          this.sensors= data[0];
-        })
-        .catch(error => {
-          console.error(error); 
-        });
+        this.sensors= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
-       
-        fetch(this.max_sensors)
-        .then(response => response.json())
-        .then(data => {
-          this.id= parseInt(data[0].id);
-          this.sensors.id= data[0].id;
-          this.sensors.type= type_2;
-        })
         this.state= 0;
       })
     }
@@ -382,16 +368,7 @@ export class SensorsComponent implements OnInit{
       .then(response => response.json())
       .then(data => {
         this.sensors= data[0];
-        this.sensors_copy.id= data[0].id;
-        this.sensors_copy.type= data[0].type; 
-        this.sensors_copy.metric= data[0].metric;
-        this.sensors_copy.description= data[0].description;
-        this.sensors_copy.errorvalue= data[0].errorvalue;
-        this.sensors_copy.valuemax= data[0].valuemax;
-        this.sensors_copy.valuemin= data[0].valuein;
-        this.sensors_copy.position= data[0].position;
-        this.sensors_copy.correction_general= data[0].correction_general;
-        this.sensors_copy.correction_time_general= data[0].correction_time_general;
+        this.sensors_copy.id= data[0]
       })
       .catch(error => {
         console.error(error); 
