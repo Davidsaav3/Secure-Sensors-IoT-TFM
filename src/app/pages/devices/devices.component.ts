@@ -24,6 +24,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   @ViewChild('map') divMap?: ElementRef;
   constructor(private router: Router,private translate: TranslateService) { }
 
+  results_per_pag= environment.results_per_pag;
   activeLang = environment.lenguaje_lang[0];
   zoom: number = 7;
   map?: mapboxgl.Map;
@@ -57,7 +58,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
   totalPages = 5;
   currentPage = 1;
-  quantPage = 10;
+  quantPage = 15;
   page= 1;
   total= 0;
   cosa= 0;

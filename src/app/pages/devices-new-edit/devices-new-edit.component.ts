@@ -37,10 +37,10 @@ export class DevicesNewEditComponent implements OnInit{
   deleteDevice_device: string = 'http://localhost:5172/api/device_configurations/delete';
   update_device: string = 'http://localhost:5172/api/device_configurations/update';
   id_device: string = 'http://localhost:5172/api/device_configurations/id';
-  deleteDevice_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete_all';
+  deleteDevice_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete';
   post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
   post_device: string = 'http://localhost:5172/api/device_configurations/post';
-  delete_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete_all';
+  delete_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete';
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   get_estructure: string = 'http://localhost:5172/api/data_estructure/get/Buscar/id_estructure/ASC';
@@ -315,7 +315,7 @@ export class DevicesNewEditComponent implements OnInit{
     }
 
     if(this.state==0){
-      fetch(this.delete_all_sensors_devices, {
+      fetch(this.delete_sensors_devices, {
         method: "POST",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
@@ -470,8 +470,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   createDate(){ // Genera fecha
-    const currentDate = new Date();
-    this.date= currentDate.toISOString();
+    this.date= this.formatDateTime(new Date());
   }
 
   resize(): void{ // Redimensionar pantalla

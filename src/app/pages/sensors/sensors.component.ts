@@ -9,6 +9,7 @@ import { environment } from "../../environments/environment"
 })
 
 export class SensorsComponent implements OnInit{
+  results_per_pag= environment.results_per_pag;
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
   public activeLang = environment.lenguaje_lang[0];
@@ -28,6 +29,13 @@ export class SensorsComponent implements OnInit{
   delete_sensors: string = 'http://localhost:5172/api/sensors_types/delete';
   update_sensors: string = 'http://localhost:5172/api/sensors_types/update';
   id_sensors: string = 'http://localhost:5172/api/sensors_types/id';
+
+  totalPages = 5;
+  currentPage = 1;
+  quantPage = 15;
+  page= 1;
+  total= 0;
+  cosa= 0;
 
   alt_1_a=true;
   alt_1_b=false;
@@ -112,6 +120,10 @@ export class SensorsComponent implements OnInit{
     this.openClouse();
   }
 
+  getEstructureVoid(){
+    this.getSensors(this.mark,this.ord_asc);
+  }
+
   getSensors(id: any,ord: any){ // Obtener todos los sensores
     this.mark= id;
     this.rute= this.rutaActiva.routerState.snapshot.url;
@@ -125,7 +137,7 @@ export class SensorsComponent implements OnInit{
       this.search_1= this.search.value;
     }
     this.charging= true;
-    fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}`)
+    fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
     .then((response) => response.json())
     .then(quotesData => {
       this.charging= false
@@ -270,7 +282,7 @@ export class SensorsComponent implements OnInit{
       }   
       this.search_1= 'Buscar';
       let ord= 'ASC';
-      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}`)
+      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(data => {
         let contador = 1;
@@ -372,6 +384,7 @@ export class SensorsComponent implements OnInit{
   }
   
   textSearch(event: any) { // Busqueda por texto
+    this.currentPage= 1;
     clearTimeout(this.timeout);
     var $this = this;
     this.timeout = setTimeout( () => {
@@ -433,4 +446,62 @@ export class SensorsComponent implements OnInit{
     this.change=false;
   }
 
+  /**/
+
+  firstPage(): void { // Primera pagina
+    if(this.currentPage!=1){
+      this.currentPage= 1;
+      this.getEstructureVoid();
+    }
+  }
+
+  previousPage10(): void { // 10 paginas mas
+    if (this.currentPage-10 > 1) {
+      this.currentPage= this.currentPage-10;
+      this.getEstructureVoid();
+    }
+    else{
+      this.currentPage= 1;
+      this.getEstructureVoid();
+    }
+  }
+
+  previousPage(): void { // Pagina anterior
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.getEstructureVoid();
+    }
+  }
+
+  Page(num: any): void { // Pagina actual
+    this.currentPage= num;
+    this.getEstructureVoid();
+  }
+
+  nextPage(): void { // Pagina siguiente
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.getEstructureVoid();
+    }
+  }
+
+  nextPage10(): void { // 10 paginas menos
+    if (this.currentPage+10 < this.totalPages) {
+      this.currentPage= this.currentPage+10;
+      this.getEstructureVoid();
+    }
+    else{
+      this.currentPage= this.totalPages;
+      this.getEstructureVoid();
+    }
+  }
+
+  lastPage(): void { // Ultima pagina
+    if(this.currentPage!=this.totalPages){
+      this.currentPage= this.totalPages;
+      this.getEstructureVoid();
+    }
+  }
+
+  /**/
 }

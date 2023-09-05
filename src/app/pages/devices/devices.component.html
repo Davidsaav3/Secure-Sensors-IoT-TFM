@@ -216,10 +216,7 @@
           </div>
           <div>
             <select (ngModelChange)="orderDevices('uid','ASC');this.currentPage=1"  class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
-              <option [ngValue]="1">1 {{ 'res' | translate }}</option>
-              <option selected [ngValue]="10">10 {{ 'res' | translate }}</option>
-              <option [ngValue]="50">50 {{ 'res' | translate }}</option>
-              <option [ngValue]="100">100 {{ 'res' | translate }}</option>
+              <option *ngFor="let opcion of this.results_per_pag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
             </select>
           </div>
         </div>

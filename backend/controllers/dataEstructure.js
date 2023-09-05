@@ -6,18 +6,22 @@ router.use(cors());
 router.use(express.json())
 
   /* ESTRUCTURE //////////////////////////////////////////*/
-  router.get("/get/:type/:type1/:type2", (req,res)=>{  /*/ GET  /*/
+  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req,res)=>{  /*/ GET  /*/
   let type0= req.params.type;
   let type1= req.params.type1;
   let type2= req.params.type2;
+
+  let tam= parseInt(req.params.pag_pag);
+  let act= (req.params.pag_tam-1)*parseInt(req.params.pag_pag);
+
   if(type0=='Buscar'){
-    con.query(`SELECT * FROM data_estructure order by ${type1} ${type2}`,function (err, result) {
+    con.query(`SELECT * FROM data_estructure order by ${type1} ${type2} LIMIT ${tam} OFFSET ${act}`,function (err, result) {
       if (err) throw err;
         res.send(result)
     }); 
   }
   else{
-      con.query(`SELECT * FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' order by ${type1} ${type2}`, function (err, result) {
+      con.query(`SELECT * FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' order by ${type1} ${type2} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
       if (err) throw err;
         res.send(result)
     }); 
