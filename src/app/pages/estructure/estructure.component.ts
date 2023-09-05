@@ -120,11 +120,26 @@ export class EstructureComponent implements OnInit{
       this.search_1= this.search.value;
     }
     this.charging= true;
+    console.log(this.currentPage)
+    console.log(this.quantPage)
+    fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/1/1000`)
+    .then((response) => response.json())
+    .then(data => {
+      this.charging= false
+      this.totalPages= Math.ceil(data.length/this.quantPage);
+      this.total= data.length;
+    });
     fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
     .then((response) => response.json())
     .then(quotesData => {
       this.charging= false
       this.data = quotesData
+      if(this.data.length<this.quantPage){
+        this.cosa= this.total;
+      }
+      else{
+        this.cosa= this.quantPage*this.currentPage;
+      }
     });
   }
 
@@ -227,7 +242,7 @@ export class EstructureComponent implements OnInit{
       }   
       this.search_1= 'Buscar';
       let ord= 'ASC';
-      fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
+      fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/1/1000`)
       .then((response) => response.json())
       .then(data => {
         let contador = 1;
