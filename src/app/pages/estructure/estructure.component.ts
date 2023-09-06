@@ -108,9 +108,6 @@ export class EstructureComponent implements OnInit{
   getEstructure(id: any,ord: any){ // Obtener todos los estructuras
     this.mark= id;
     this.rute= this.rutaActiva.routerState.snapshot.url;
-    if(id!='id'){
-      this.search_2= id;
-    }
     if(this.search.value==''){
       this.search_1= 'Buscar';
     }
@@ -120,7 +117,7 @@ export class EstructureComponent implements OnInit{
     this.charging= true;
     
     setTimeout(() => {
-      fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
+      fetch(`${this.get_estructure}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
         this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
@@ -279,8 +276,7 @@ export class EstructureComponent implements OnInit{
     setTimeout(() => {
       this.alert_delete= false;
     }, 2000);
-    this.getEstructure(this.mark,this.ord_asc);
-    this.getEstructure(this.mark,this.ord_asc);
+    this.data= this.data.filter((objeto: { id_estructure: any; }) => objeto.id_estructure != id_actual)
     this.openClouse();
   }
 

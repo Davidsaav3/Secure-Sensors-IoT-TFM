@@ -137,7 +137,7 @@ export class SensorsListComponent  implements OnInit{
     });
     let search_1= 'Buscar';
     let order= 'ASC';
-    fetch(`${this.get_sensors}/${search_1}/${this.search_2}/${order}`)
+    fetch(`${this.get_sensors}/${search_1}/${this.search_2}/${order}/1/1000`)
     .then((response) => response.json())
     .then(data => {
       this.select_sensors.sensors= data;

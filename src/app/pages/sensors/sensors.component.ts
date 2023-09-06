@@ -126,9 +126,6 @@ export class SensorsComponent implements OnInit{
   getSensors(id: any,ord: any){ // Obtener todos los sensores
     this.mark= id;
     this.rute= this.rutaActiva.routerState.snapshot.url;
-    if(id!='id'){
-      this.search_2= id;
-    }
     if(this.search.value==''){
       this.search_1= 'Buscar';
     }
@@ -138,7 +135,7 @@ export class SensorsComponent implements OnInit{
     this.charging= true;
 
     setTimeout(() => {
-      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/${this.currentPage}/${this.quantPage}`)
+      fetch(`${this.get_sensors}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
         this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
@@ -146,6 +143,7 @@ export class SensorsComponent implements OnInit{
         //
         this.charging= false
         this.data = quotesData
+        console.log(this.data)
         if(this.data.length<this.quantPage){
           this.cosa= this.total;
         }
@@ -265,7 +263,6 @@ export class SensorsComponent implements OnInit{
         }, 2000);
         this.openClouse();
  
-          this.id= parseInt(data[0].id+1);
           let sensors = {
             id: this.id, 
             type: this.sensors.type,    
@@ -279,14 +276,18 @@ export class SensorsComponent implements OnInit{
             correction_time_general: this.sensors.correction_time_general,
           }
           this.data.push(sensors)
-          this.data.sort((a:any,b:any) => {return a.position-b.position;});
-
+          this.data.sort((a: { position: string; }, b: { position: any; }) => {
+            return a.position.localeCompare(b.position);
+          });
           this.act_id= this.id.toString();
           this.openEdit();
           this.state=2;
       })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+      this.change=false;
     }
-    this.change=false;
   }
   
   resize(): void{ // Redimensionar pantalla
@@ -300,7 +301,7 @@ export class SensorsComponent implements OnInit{
       }   
       this.search_1= 'Buscar';
       let ord= 'ASC';
-      fetch(`${this.get_sensors}/${this.search_1}/${this.search_2}/${ord}/1/1000`)
+      fetch(`${this.get_sensors}/${this.search_1}/${this.mark}/${ord}/1/1000`)
       .then((response) => response.json())
       .then(data => {
         let contador = 1;
@@ -333,7 +334,7 @@ export class SensorsComponent implements OnInit{
     setTimeout(() => {
       this.alert_delete= false;
     }, 2000);
-    this.getSensors(this.mark,this.ord_asc);
+    this.data= this.data.filter((objeto: { id: any; }) => objeto.id != id_actual)
     this.clouse();
   }
 
@@ -362,17 +363,10 @@ export class SensorsComponent implements OnInit{
   orderColumn(id_actual: any){ // Ordenar columnas (Peticion API)
     if(!this.change && !this.change && id_actual!=this.act_id){
       this.act_id= id_actual;
-       this.openEdit();
+      this.openEdit();
       this.state=2;
-      fetch(`${this.id_sensors}/${id_actual}`)
-      .then(response => response.json())
-      .then(data => {
-        this.sensors= data[0];
-        this.sensors_copy.id= data[0]
-      })
-      .catch(error => {
-        console.error(error); 
-      });
+      this.sensors= this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
+      this.sensors_copy= this.sensors;
       this.openClouse();
     }
   }
