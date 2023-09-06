@@ -37,10 +37,8 @@ export class DevicesNewEditComponent implements OnInit{
   deleteDevice_device: string = 'http://localhost:5172/api/device_configurations/delete';
   update_device: string = 'http://localhost:5172/api/device_configurations/update';
   id_device: string = 'http://localhost:5172/api/device_configurations/id';
-  deleteDevice_all_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete';
-   post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
+  post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
   post_device: string = 'http://localhost:5172/api/device_configurations/post';
-  delete_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/delete';
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   get_estructure_list: string = 'http://localhost:5172/api/data_estructure/get_list';
@@ -293,20 +291,36 @@ export class DevicesNewEditComponent implements OnInit{
     var devices4 = {
       id: this.id,   
     }
+    this.post();
+    this.changed= false;
+    return;
+  }
 
-    fetch(this.deleteDevice_all_sensors_devices, {
-      method: "DELETE",body: JSON.stringify(devices4),headers: {"Content-type": "application/json; charset=UTF-8"}
-    })
-    .then(response => response.json()) 
-    for(let quote of this.sensors.sensors) {
+  post(){
+    if(this.sensors.sensors.length==0){
+      let sensors_aux = {
+        sensors : [{
+            id: -1, 
+            enable: 0, 
+            id_device: this.id,
+            id_type_sensor: 0,
+            datafield: '',
+            nodata: true,
+            orden: 0,
+            type_name: 0,
+          }]
+      }
       fetch(this.post_sensors_devices, {
-        method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
+        method: "POST",body: JSON.stringify(sensors_aux),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
     }
-    this.changed= false;
-
-    return;
+    else{
+      fetch(this.post_sensors_devices, {
+        method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
+      })    
+      .then(response => response.json()) 
+    }
   }
 
   newSensor() { // Guardar nuevos sensores de los dispositivos
@@ -315,29 +329,16 @@ export class DevicesNewEditComponent implements OnInit{
     }
 
     if(this.state==0){
-      fetch(this.delete_sensors_devices, {
-        method: "DELETE",body: JSON.stringify(select_sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
-      })
-      .then(response => response.json()) 
-      for(let quote of this.sensors.sensors) {
-        fetch(this.post_sensors_devices, {
-          method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(response => response.json()) 
-      }
+      this.post();
+      this.changed= false;
       this.router.navigate([`/devices/edit/${this.id}`]);
     }
     
     if(this.state==1){
       this.getShsareSensors();
       this.devices.createdAt= this.data;
-      for(let quote of this.sensors.sensors) {
-        quote.id_device= this.id_max;
-        fetch(this.post_sensors_devices, {
-          method: "POST",body: JSON.stringify(quote),headers: {"Content-type": "application/json; charset=UTF-8"}
-        })
-        .then(response => response.json()) 
-      }
+      this.post();
+      this.changed= false;
       this.router.navigate([`/devices/edit/${this.id_max}`]);
     }
     return;
