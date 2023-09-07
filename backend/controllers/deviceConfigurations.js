@@ -70,7 +70,7 @@ router.use(express.json())
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';
-            variable+= "SELECT  id, uid, topic_name, application_id, enable, id_data_estructure, updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
+            variable+= "SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations"
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
               variable+= ` WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
@@ -100,7 +100,7 @@ router.use(express.json())
                   variable+= ` AND enable=${devices_act}`
                 }
                 variable+= ` order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
-                //console.log(variable)
+                console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
@@ -110,7 +110,7 @@ router.use(express.json())
           }
           else{
             var variable= '';
-            variable+= `SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure,updatedAt, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device`
+            variable+= `SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device`
             if(devices_act!=2 && array_sensors==-1){
               console.log("MAPA ACT")
               variable+= ` WHERE d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
@@ -140,7 +140,7 @@ router.use(express.json())
                   variable+= ` AND d.enable=${devices_act}`
                 }
                 variable+= ` AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
-                //console.log(variable)
+                console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
@@ -152,38 +152,14 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(`SELECT DISTINCT 
-            dc.id AS device_id,
-            dc.uid AS device_uid,
-            dc.topic_name AS device_topic_name,
-            dc.application_id AS device_application_id,
-            dc.enable AS device_enable,
-            dc.id_data_estructure AS device_data_estructure_id,
-            de.description AS data_estructure_description,
-            de.configuration AS data_estructure_configuration,
-            dc.updatedAt AS device_updatedAt,
-            s.id AS sensor_id,
-            s.orden AS sensor_orden,
-            s.enable AS sensor_enable,
-            s.id_device AS sensor_id_device,
-            s.id_type_sensor AS sensor_id_type_sensor,
-            (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name
-        FROM
-            device_configurations AS dc
-        LEFT JOIN
-            sensors_devices AS s ON dc.id = s.id_device
-        LEFT JOIN
-            data_estructure AS de ON dc.id_data_estructure = de.id_estructure
-        LEFT JOIN
-            sensors_types AS t ON s.id_type_sensor = t.id
-            order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+            con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
           }
           else{
             console.log("MAPA SIMPLE")
-            con.query(`SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure,updatedAt, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(`SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
@@ -193,14 +169,14 @@ router.use(express.json())
       else{
         if(state=='0'){
           console.log("LISTA BUSQUEDA POR TEXTO")
-            con.query(`SELECT id, uid, topic_name, application_id, enable, id_data_estructure,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
+            con.query(`SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
             if (err) throw err;
               res.send(result)
           });
         }
         else{
           console.log("MAPA BUSQUEDA POR TEXTO")
-            con.query(`SELECT d.id, d.uid, d.topic_name, d.application_id, d.enable, d.id_data_estructure, d.updatedAt, s.ordene as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR d.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(`SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR d.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
             if (err) throw err;
               res.send(result)
           });

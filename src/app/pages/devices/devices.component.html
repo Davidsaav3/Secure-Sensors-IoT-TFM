@@ -1,4 +1,3 @@
-
 <app-navbar></app-navbar>
 
 <div class="m-0 p-0 row d-flex">
@@ -157,33 +156,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let quote of dispositivos | keyvalue; let i = index" style="cursor: pointer;">
+                  <tr *ngFor="let quote of data; let i = index" style="cursor: pointer;">
 
-                    <th class="rounded-0" [routerLink]="['/devices/edit/', quote.value.id]" scope="col">{{ quote.value.uid }}</th>
-                    <td class="d-none d-md-none d-lg-table-cell" [routerLink]="['/devices/edit/', quote.value.id]" scope="col">{{ quote.value.topicName }}</td>
-                    <td [routerLink]="['/devices/edit/', quote.value.id]" scope="col">{{ quote.value.applicationId }}</td>
+                    <th class="rounded-0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.uid }}</th>
+                    <td class="d-none d-md-none d-lg-table-cell" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.topic_name }}</td>
+                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.application_id }}</td>
 
-                    <td [routerLink]="['/devices/edit/', quote.value.id]" scope="col">
-                      <span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.value.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
-                      <span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.value.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
+                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">
+                      <span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
+                      <span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
                     </td>
 
-                    <td scope="col" [routerLink]="['/devices/edit/', quote.value.id]" class="d-none d-lg-none d-xl-table-cell d-flex">
-                      <div *ngFor="let sensor of quote.value.sensores" style="display: inline-block; height: min-content;">
-                        <span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': sensor.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{  sensor.type_name }}</p></span>
-                        <span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': sensor.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{  sensor.type_name }}</p></span>
+                    <td scope="col" [routerLink]="['/devices/edit/', quote.id]" class="d-none d-lg-none d-xl-table-cell d-flex">
+                      <div *ngFor="let quote2 of quote.sensor" style="display: inline-block; height: min-content;">
+                        <span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': quote2.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
+                        <span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': quote2.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
                       </div>
-                      <ng-container *ngIf="quote.value.sensores!=undefined">
-                        <div *ngIf="quote.value.sensores.length==0" style="display: inline-block; height: min-content;">
+                      <ng-container *ngIf="quote.sensor!=undefined">
+                        <div *ngIf="quote.sensor.length==0" style="display: inline-block; height: min-content;">
                           <p class="m-0">{{ 'sensors.sin_sensores' | translate }}</p>
                         </div>
                       </ng-container>
                     </td>
 
-                    <td [routerLink]="['/devices/edit/', quote.value.id]" scope="col">{{ quote.value.dataEstructure.description }}</td>
-                    <td [routerLink]="['/devices/edit/', quote.value.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.value.updatedAt) }}</td>
+                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
+                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
 
-                    <td (mouseout)="view_dup= 1000" (mouseover)="view_dup=i" style="text-align: center;" routerLink="/devices/new/{{quote.value.id}}">                      
+                    <td (mouseout)="view_dup= 1000" (mouseover)="view_dup=i" style="text-align: center;" routerLink="/devices/new/{{quote.id}}">                      
                       <svg *ngIf="view_dup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
                         <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -195,7 +194,7 @@
                       </svg>
                     </td>
 
-                    <td (mouseover)="pencil_dup=i" (mouseout)="pencil_dup=10000" [routerLink]="['/devices/edit/', quote.value.id]" style="text-align: center;">
+                    <td (mouseover)="pencil_dup=i" (mouseout)="pencil_dup=10000" [routerLink]="['/devices/edit/', quote.id]" style="text-align: center;">
                       <svg *ngIf="pencil_dup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                         <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                       </svg>
@@ -313,6 +312,3 @@
 
 </div>
 </div>
-
-
-
