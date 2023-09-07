@@ -415,41 +415,42 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          if(this.state=='0'){
-            if (JSON.stringify(this.data.map(item => item.id)) !== JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+          if (JSON.stringify(this.data.map(item => item.id)) !== JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+
+            if(this.state=='0'){
               console.log(data)
               this.data= [];
               this.data= data;
               this.newMap();
             }
-          }
-          //
-          if(this.state=='1'){
-            if (JSON.stringify(this.data.map(item => item.id)) !== JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+            //
+            if(this.state=='1'){
               console.log(data)
               this.newMap();
               this.data= [];
               this.data= data;
             }
-          }
           
+            setTimeout( () => { 
+              this.data2= [];
+              for (let quote of this.data) {
+                fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
+                .then(response => response.json())
+                .then(data => {
+                  this.data2.push(data);
+                  this.charging= false;
+                  resolve(data); 
+                })
+                .catch(error => {
+                  console.error(error); 
+                  reject(error); 
+                });  
+              }
+            }, 1000)
+
+          }
         })
         
-        setTimeout( () => { 
-          for (let quote of this.data) {
-            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-            .then(response => response.json())
-            .then(data => {
-              this.data2.push(data);
-              this.charging= false;
-              resolve(data); 
-            })
-            .catch(error => {
-              console.error(error); 
-              reject(error); 
-            });  
-          }
-        }, 500)
     });
   }
   
