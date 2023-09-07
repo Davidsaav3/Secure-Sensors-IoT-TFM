@@ -165,7 +165,7 @@ export class DevicesNewEditComponent implements OnInit{
             .then(response => response.json())
             .then(data => {
               this.devices= data[0];
-              console.log(this.devices.lat)
+              //console.log(this.devices.lat)
               this.lat= this.devices.lat;
               this.lon= this.devices.lon;
               this.cota= this.devices.cota;

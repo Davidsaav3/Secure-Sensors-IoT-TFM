@@ -60,8 +60,6 @@ router.use(express.json())
         description_2 = `${description}_${contador}`;
         contador++;
       }
-
-      console.log(description_2);
       res.send(description_2);
     });
   });

@@ -100,7 +100,7 @@ router.use(express.json())
                   variable+= ` AND enable=${devices_act}`
                 }
                 variable+= ` order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
@@ -140,7 +140,7 @@ router.use(express.json())
                   variable+= ` AND d.enable=${devices_act}`
                 }
                 variable+= ` AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
@@ -152,7 +152,7 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(`SELECT
+            con.query(`SELECT DISTINCT 
             dc.id AS device_id,
             dc.uid AS device_uid,
             dc.topic_name AS device_topic_name,
@@ -294,14 +294,39 @@ router.use(express.json())
     if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });
     }
-    con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
+
+    con.beginTransaction(function (err) {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
-      }
-      res.json({ message: 'Configuración de dispositivo eliminada con éxito' });
+      con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
+        if (err) {
+          con.rollback(function () {
+            return res.status(500).json({ error: 'Error en la base de datos' });
+          });
+        }
+        if (result.affectedRows === 0) {
+          con.rollback(function () {
+            return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
+          });
+        }
+        
+        con.query("DELETE FROM sensors_devices WHERE id_device = ?", id, function (err, result) {
+          if (err) {
+            con.rollback(function () {
+              return res.status(500).json({ error: 'Error en la base de datos' });
+            });
+          }
+          con.commit(function (err) {
+            if (err) {
+              con.rollback(function () {
+                return res.status(500).json({ error: 'Error en la base de datos' });
+              });
+            }
+            res.json({ message: 'Configuración de dispositivo eliminada con éxito' });
+          });
+        });
+      });
     });
   });
 

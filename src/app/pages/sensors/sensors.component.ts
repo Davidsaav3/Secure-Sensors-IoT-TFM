@@ -144,7 +144,7 @@ export class SensorsComponent implements OnInit{
         //
         this.charging= false
         this.data = quotesData
-        console.log(this.data)
+        //console.log(this.data)
         if(this.data.length<this.quantPage){
           this.cosa= this.total;
         }
@@ -256,7 +256,7 @@ export class SensorsComponent implements OnInit{
       })
       .then((data) => {
         this.id= data.id; // Obtener el ID autogenerado
-        console.log(this.id)
+        //console.log(this.id)
 
         this.alert_new= true;
         setTimeout(() => {
@@ -278,7 +278,11 @@ export class SensorsComponent implements OnInit{
           }
           this.data.push(sensors)
           this.data.sort((a: { position: string; }, b: { position: any; }) => {
-            return a.position.localeCompare(b.position);
+            if (typeof a.position === 'string' && typeof b.position === 'string') {
+              return a.position.localeCompare(b.position);
+            } else {
+              return 1;
+            }
           });
           this.act_id= this.id.toString();
           this.openEdit();

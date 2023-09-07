@@ -65,7 +65,7 @@ export class SensorsListComponent  implements OnInit{
         id: 1, 
         enable: 0, 
         id_device: this.id,
-        id_type_sensor: 1,
+        id_type_sensor: this.select_sensors.sensors[0].id,
         datafield: '',
         nodata: true,
         orden: 1,
@@ -126,8 +126,8 @@ export class SensorsListComponent  implements OnInit{
       }
     }, 100);
 
-    console.log(num2)
-    console.log(this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2))
+    //console.log(num2)
+    //console.log(this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2))
   }
 
   getDevices(id: any){ // Obtener datos del dispositivo
@@ -138,17 +138,16 @@ export class SensorsListComponent  implements OnInit{
     .then(response => response.json())
     .then(data => {
       this.sensors.sensors= data;
-      console.log(data)
+      //console.log(data)
     })
     .catch(error => {
       console.error(error); 
     });
     let search_1= 'Buscar';
-    let order= 'ASC';
     fetch(`${this.get_sensors}/${search_1}/'position'/'ASC'/1/1000`)
     .then((response) => response.json())
     .then(data => {
-      console.log(data)
+      //console.log(data)
       this.select_sensors.sensors= data;
     })
   }
@@ -158,7 +157,7 @@ export class SensorsListComponent  implements OnInit{
       id: this.sensors.sensors.length, 
       enable: 0, 
       id_device: this.id,
-      id_type_sensor: 1,
+      id_type_sensor: this.select_sensors.sensors[0].id,
       datafield: '',
       nodata: true,
       orden: 1,

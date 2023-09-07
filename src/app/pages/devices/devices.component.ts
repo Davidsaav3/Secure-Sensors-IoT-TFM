@@ -388,7 +388,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           
             this.dispositivos[deviceID].sensores.push(sensor);
           });
-          console.log(this.dispositivos);
+          //console.log(this.dispositivos);
           if(this.data.length<this.quantPage){
             this.cosa= this.total;
           }
@@ -455,7 +455,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               
                 this.dispositivos[deviceID].sensores.push(sensor);
               });
-              console.log(this.dispositivos);
+              //console.log(this.dispositivos);
               this.newMap();
             }
            
@@ -493,7 +493,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               
                 this.dispositivos[deviceID].sensores.push(sensor);
               });
-              console.log(this.dispositivos);
+              //console.log(this.dispositivos);
             }
           }
          

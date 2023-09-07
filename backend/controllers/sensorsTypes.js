@@ -66,7 +66,6 @@ router.use(express.json())
       contador++;
     }
 
-    console.log(type_2);
     res.send(type_2);
   });
 });

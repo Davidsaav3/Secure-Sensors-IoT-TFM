@@ -203,7 +203,7 @@ export class EstructureComponent implements OnInit{
       })
       .then((data) => {
         this.id= data.id; // Obtener el ID autogenerado
-        console.log(this.id)
+        //console.log(this.id)
 
         this.alert_new= true;
         setTimeout(() => {
