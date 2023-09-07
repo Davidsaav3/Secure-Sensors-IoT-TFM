@@ -43,6 +43,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   lat: any;
   lon: any;
   state= '0';
+  idsParam: any;
 
   pos_x_1= '0';
   pos_x_2= '0';
@@ -55,6 +56,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
+  ids_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/ids';
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get_list';
   totalPages = 5;
   currentPage = 1;
@@ -349,32 +351,20 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       }
       
       if(this.open_map_list==true){ // LIST //
-        //console.log("LIST")
-        this.charging= true;
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
-        .then((response) => response.json())
-        .then(data => {
-          this.charging= false;
-          this.totalPages= Math.ceil(data.length/this.quantPage);
-          this.total= data.length;
-        })
         this.charging= true;
 
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          //console.log(data)
+          this.totalPages= Math.ceil(data[0].total/this.quantPage);
+          this.total= data[0].total;
+          //
           this.charging= false;
           this.data= data;
-          for (let quote of this.data) {
-            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-            .then(response => response.json())
-            .then(data => {
-              quote.sensor= data;
-            })
-            .catch(error => {
-              console.error(error); 
-            });  
-          }
+          const deviceIds = this.data.map(device => device.id);
+          this.idsParam = deviceIds.join(',');
+
           if(this.data.length<this.quantPage){
             this.cosa= this.total;
           }
@@ -382,6 +372,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.cosa= this.quantPage*this.currentPage;
           }
         })
+
+        setTimeout(() => {
+          //console.log(this.idsParam)
+
+          fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
+          .then(response => response.json())
+          .then(data => {
+            //console.log(data)
+            for (let index = 0; index < this.data.length; index++) {
+              this.data[index].sensor= data[index];
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        }, 100);
       }
     }, 1);
   }

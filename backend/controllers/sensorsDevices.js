@@ -20,6 +20,50 @@ router.use(express.json())
     });
   });
 
+  router.get("/ids/:id", (req, res) => {  /*/ IDS  /*/
+  let id_devices = req.params.id.split(',').map(id => parseInt(id));
+  const id_deviceList = id_devices.map(id => `'${id}'`).join(',');
+
+  const query = `
+      SELECT 
+        id_device, enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) As type_name
+      FROM sensors_devices as s 
+      WHERE id_device IN (${id_deviceList}) 
+      ORDER BY FIELD(id_device, ${id_deviceList}), orden`;  // Utiliza FIELD para mantener el orden original
+
+    con.query(query, (err, result) => {
+      if (err) {
+          console.error("Error:", err);
+          return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+
+      const devicesMap = new Map(); // Usaremos un mapa para agrupar sensores por id_device
+
+      // Inicializamos el mapa con valores vacíos para todos los id_device
+      id_devices.forEach(id => {
+          devicesMap.set(id, []);
+      });
+
+      result.forEach(device => {
+          const id_device = device.id_device;
+
+          // Verificamos si el id_device tiene resultados antes de agregarlos
+          if (devicesMap.has(id_device)) {
+              devicesMap.get(id_device).push({
+                  enable: device.enable,
+                  type_name: device.type_name,
+              });
+          }
+      });
+
+      // Convertimos el mapa en un array y reemplazamos resultados vacíos por cadenas vacías
+      const devicesArray = Array.from(devicesMap, ([id_device, sensors]) => ({ id_device, sensors }));
+
+      res.send(devicesArray);
+    });
+  });
+
+
   router.post("/post", (req, res) => {  /*/ POST Y DELETE  /*/
     const newRecords = req.body.sensors;
     const deleteIdDevice = req.body.sensors;
