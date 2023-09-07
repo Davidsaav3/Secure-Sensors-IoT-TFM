@@ -416,85 +416,25 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then((response) => response.json())
         .then(data => {
           if(this.state=='0'){
-            if (this.data.length!=data.length /*&& this.data!=data*/) {
+            if (JSON.stringify(this.data.map(item => item.id)) !== JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+              console.log(data)
+              this.data= [];
               this.data= data;
-              this.newMap();
-            }
-            //let entrar= false;
-            //console.log(data)
-            //comp longitud y despues objetos (NO ACUMULAR)
-            /*for (const obj of data) {
-              if (!this.data.some(f => f.id === obj.id)) {
-                entrar= true;
-                this.data.push(obj);
-              }
-              let aux= [];
-              let cont= 0;
-              let ult_id;
-              if(data.id==ult_id){
-                let sensor2 ={ id: cont, enable: this.data.enable_sensor, type_name: this.data.type_name;}
-                aux.push(sensor2);
-                cont++;
-              }
-              this.data2.push(data);
-            }
-            if(entrar){
-              this.newMap();
-            }*/
-          }
-          //
-          if(this.state=='1'){
-            if(this.data.length!=data.length){
-              this.newMap();
-              this.data= data;
-            }
-          }
-          /*if(this.state=='0'){
-            let entrar= false;
-            //console.log(data)
-            for (const obj of data) {
-              if (!this.data.some(f => f.id === obj.id)) {
-                entrar= true;
-                this.data.push(obj);
-              }
-            }
-            if(entrar){
               this.newMap();
             }
           }
           //
           if(this.state=='1'){
-            if(this.data.length!=data.length){
+            if (JSON.stringify(this.data.map(item => item.id)) !== JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+              console.log(data)
               this.newMap();
+              this.data= [];
               this.data= data;
             }
-          }*/
+          }
+          
         })
-        /*setTimeout( () => { 
-          this.data2= [];
-          let aux: { [id: number]: any[] } = {};
-          let array= [];
-          let id = 2;
-          let cont= 0;
-          //console.log(this.data[0])
-          for (let index = 0; index < this.data[0].length; index++) {
-            if(this.data[0][index].id!=id){
-              this.data2.push(aux);
-              cont= 0;
-              aux= [];
-            }
-              //console.log(this.data[0][index])
-              if (!aux[cont]) {
-                aux[cont] = [];
-              }
-              id= this.data[0][index].id; // Si el array para ese id aún no existe, lo creamos
-              aux[cont].push(this.data[0][index]);
-              //console.log(aux)
-              cont++;
-            }
-          //console.log(this.data2);            
-        }, 1000)*/
-        //this.data2= [];
+        
         setTimeout( () => { 
           for (let quote of this.data) {
             fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
