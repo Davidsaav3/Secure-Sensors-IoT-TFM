@@ -8,8 +8,8 @@ router.use(express.json())
   /* SENSORS_DEVICES /////////////////////////////////////////////////////*/
   router.get("/id/:id/:type", (req,res)=>{  /*/ ID  /*/
     let id_device= parseInt(req.params.id);
-    const query = `SELECT orden, enable, id_device, id_type_sensor, id, datafield, nodata, 
-    (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,correction_specific,correction_time_specific 
+    const query = `SELECT orden, enable, id_device, id_type_sensor, s.id, datafield, nodata, 
+    (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,correction_specific,correction_time_specific, (SELECT position from sensors_types as t WHERE s.id_type_sensor= t.id) AS position 
     FROM sensors_devices as s WHERE id_device= '${id_device}' order by orden`;
     con.query(query, (err, result) => {
       if (err) {

@@ -39,7 +39,7 @@
             </td>
 
             <td class="rounded-0" scope="col"class="pb-0 input-1"> 
-              <select type="number" min="0" maxlength="11" (ngModelChange)="this.getOrden(i);this.dataSharingService.updatesharedAct(true);" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor" >
+              <select type="number" min="0" maxlength="11" (ngModelChange)="this.getOrden(i,item.id_type_sensor);this.dataSharingService.updatesharedAct(true);" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor" >
                 <ng-container *ngFor="let id of select_sensors.sensors;let j=index">
                   <option [selected]="id.id==item.id_type_sensor" value="{{id.id}}">{{id.type}}</option>
                 </ng-container>

@@ -38,6 +38,34 @@ router.use(express.json())
     });
   });
 
+  
+  /* ESTRUCTURE //////////////////////////////////////////*/
+  router.get("/duplicate/:description", (req, res) => {  /*/ DUPLICATE  /*/
+    const description = req.params.description;
+    let query = `SELECT description FROM data_estructure`;
+    con.query(query, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error en la base de datos");
+      }
+
+      let contador = 1;
+      let nombresExistentes = new Set(); // Tipo explícito para el conjunto
+      for (let index = 0; index < result.length; index++) {
+        nombresExistentes.add(result[index].description);
+      }
+      
+      let description_2 = description;
+      while (nombresExistentes.has(description_2)) {
+        description_2 = `${description}_${contador}`;
+        contador++;
+      }
+
+      console.log(description_2);
+      res.send(description_2);
+    });
+  });
+
   router.post("/post", (req, res) => {  /*/ POST  /*/
     const { description, configuration } = req.body;
     if (!description || !configuration) {

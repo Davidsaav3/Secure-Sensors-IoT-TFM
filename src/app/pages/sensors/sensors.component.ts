@@ -28,6 +28,7 @@ export class SensorsComponent implements OnInit{
   delete_sensors: string = 'http://localhost:5172/api/sensors_types/delete';
   update_sensors: string = 'http://localhost:5172/api/sensors_types/update';
   id_sensors: string = 'http://localhost:5172/api/sensors_types/id';
+  duplicate_sensor: string = 'http://localhost:5172/api/sensors_types/duplicate';
 
   totalPages = 5;
   currentPage = 1;
@@ -296,29 +297,23 @@ export class SensorsComponent implements OnInit{
 
   duplicateSensor(num: any, type: any){ // Duplicar sensor
     if(!this.change && !this.change){
-      this.aux_1 = {
-        id: num,    
-      }   
-      this.search_1= 'Buscar';
-      let ord= 'ASC';
-      fetch(`${this.get_sensors}/${this.search_1}/${this.mark}/${ord}/1/1000`)
-      .then((response) => response.json())
-      .then(data => {
-        let contador = 1;
-        let nombresExistentes = new Set();
-        for (let index = 0; index < data.length; index++) {
-          nombresExistentes.add(data[index].type);
+      fetch(`${this.duplicate_sensor}/${type}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-        let type_2= type;
-        while(nombresExistentes.has(type_2)) {
-          type_2 = `${type}_${contador}`;
-          contador++;
-        }
-        this.openNew();
-        this.sensors= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
+        return response.text();
+      })
+      .then((data) => {
+        this.sensors= this.data.find((objeto: { id: any; }) => objeto.id == num);
         this.openClouse();
         this.state= 0;
+        this.openNew('', data, this.sensors.metric, this.sensors.description, this.sensors.errorvalue, this.sensors.valuemax, this.sensors.valuemin, this.sensors.position, this.sensors.correction_general, this.sensors.correction_time_general);
+        this.change= true;
       })
+      .catch((error) => {
+        console.error('Error al verificar la descripción duplicada:', error);
+      });
     }
   }
 
@@ -397,18 +392,18 @@ export class SensorsComponent implements OnInit{
     this.getSensors(this.mark,this.ord_asc);
   }
 
-  openNew(){ // Abrir Nuevo sensor
+  openNew(id: any, type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any){ // Abrir Nuevo sensor
     this.sensors = {
-      id: '', 
-      type: '',    
-      metric: '', 
-      description: '',
-      errorvalue: null,
-      valuemax: null,
-      valuemin: null,
-      position: 0,
-      correction_general: '',
-      correction_time_general: '',
+      id: id, 
+      type: type,    
+      metric: metric, 
+      description: description,
+      errorvalue: errorvalue,
+      valuemax: valuemax,
+      valuemin: valuemin,
+      position: position,
+      correction_general: correction_general,
+      correction_time_general: correction_time_general,
     }
     this.show= true;
     this.openClouse();

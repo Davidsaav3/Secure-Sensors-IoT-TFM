@@ -152,7 +152,31 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(`SELECT id, uid, topic_name, application_id, enable, id_data_estructure,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+            con.query(`SELECT
+            dc.id AS device_id,
+            dc.uid AS device_uid,
+            dc.topic_name AS device_topic_name,
+            dc.application_id AS device_application_id,
+            dc.enable AS device_enable,
+            dc.id_data_estructure AS device_data_estructure_id,
+            de.description AS data_estructure_description,
+            de.configuration AS data_estructure_configuration,
+            dc.updatedAt AS device_updatedAt,
+            s.id AS sensor_id,
+            s.orden AS sensor_orden,
+            s.enable AS sensor_enable,
+            s.id_device AS sensor_id_device,
+            s.id_type_sensor AS sensor_id_type_sensor,
+            (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name
+        FROM
+            device_configurations AS dc
+        LEFT JOIN
+            sensors_devices AS s ON dc.id = s.id_device
+        LEFT JOIN
+            data_estructure AS de ON dc.id_data_estructure = de.id_estructure
+        LEFT JOIN
+            sensors_types AS t ON s.id_type_sensor = t.id
+            order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 

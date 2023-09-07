@@ -51,7 +51,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   start= true;
 
   /**/
-  
+  dispositivos: Record<string, any> = {};
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
@@ -349,7 +349,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       }
       
       if(this.open_map_list==true){ // LIST //
+        this.dispositivos= [];
         this.charging= true;
+
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
@@ -358,16 +360,35 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           //
           this.charging= false;
           this.data= data;
-          for (let quote of this.data) {
-            fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
-            .then(response => response.json())
-            .then(data => {
-              quote.sensor= data;
-            })
-            .catch(error => {
-              console.error(error); 
-            });  
-          }
+
+          data.forEach((fila: any) => {
+            const deviceID = fila.device_id;
+          
+            // Si el dispositivo aún no existe en dispositivos, créalo
+            if (!this.dispositivos[deviceID]) {
+              this.dispositivos[deviceID] = {
+                id: fila.device_id,
+                uid: fila.device_uid,
+                topicName: fila.device_topic_name,
+                applicationId: fila.device_application_id,
+                enable: fila.device_enable,
+                dataEstructure: {
+                  description: fila.data_estructure_description,
+                },
+                updatedAt: fila.device_updatedAt,
+                sensores: [],
+              };
+            }
+          
+            // Añade el sensor actual al array de sensores del dispositivo
+            const sensor = {
+              enable: fila.sensor_enable,
+              type_name: fila.type_name,
+            };
+          
+            this.dispositivos[deviceID].sensores.push(sensor);
+          });
+          console.log(this.dispositivos);
           if(this.data.length<this.quantPage){
             this.cosa= this.total;
           }
@@ -375,6 +396,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.cosa= this.quantPage*this.currentPage;
           }
         })
+        
       }
     }, 1);
   }
@@ -405,84 +427,79 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           if(this.state=='0'){
             if (this.data.length!=data.length /*&& this.data!=data*/) {
               this.data= data;
+
+              data.forEach((fila: any) => {
+                const deviceID = fila.device_id;
+              
+                // Si el dispositivo aún no existe en dispositivos, créalo
+                if (!this.dispositivos[deviceID]) {
+                  this.dispositivos[deviceID] = {
+                    id: fila.device_id,
+                    uid: fila.device_uid,
+                    topicName: fila.device_topic_name,
+                    applicationId: fila.device_application_id,
+                    enable: fila.device_enable,
+                    dataEstructure: {
+                      description: fila.data_estructure_description,
+                    },
+                    updatedAt: fila.device_updatedAt,
+                    sensores: [],
+                  };
+                }
+              
+                // Añade el sensor actual al array de sensores del dispositivo
+                const sensor = {
+                  enable: fila.sensor_enable,
+                  type_name: fila.type_name,
+                };
+              
+                this.dispositivos[deviceID].sensores.push(sensor);
+              });
+              console.log(this.dispositivos);
               this.newMap();
             }
-            //let entrar= false;
-            //console.log(data)
-            //comp longitud y despues objetos (NO ACUMULAR)
-            /*for (const obj of data) {
-              if (!this.data.some(f => f.id === obj.id)) {
-                entrar= true;
-                this.data.push(obj);
-              }
-              let aux= [];
-              let cont= 0;
-              let ult_id;
-              if(data.id==ult_id){
-                let sensor2 ={ id: cont, enable: this.data.enable_sensor, type_name: this.data.type_name;}
-                aux.push(sensor2);
-                cont++;
-              }
-              this.data2.push(data);
-            }
-            if(entrar){
-              this.newMap();
-            }*/
+           
           }
           //
           if(this.state=='1'){
             if(this.data.length!=data.length){
               this.newMap();
               this.data= data;
+
+              data.forEach((fila: any) => {
+                const deviceID = fila.device_id;
+              
+                // Si el dispositivo aún no existe en dispositivos, créalo
+                if (!this.dispositivos[deviceID]) {
+                  this.dispositivos[deviceID] = {
+                    id: fila.device_id,
+                    uid: fila.device_uid,
+                    topicName: fila.device_topic_name,
+                    applicationId: fila.device_application_id,
+                    enable: fila.device_enable,
+                    dataEstructure: {
+                      description: fila.data_estructure_description,
+                    },
+                    updatedAt: fila.device_updatedAt,
+                    sensores: [],
+                  };
+                }
+              
+                // Añade el sensor actual al array de sensores del dispositivo
+                const sensor = {
+                  enable: fila.sensor_enable,
+                  type_name: fila.type_name,
+                };
+              
+                this.dispositivos[deviceID].sensores.push(sensor);
+              });
+              console.log(this.dispositivos);
             }
           }
-          /*if(this.state=='0'){
-            let entrar= false;
-            //console.log(data)
-            for (const obj of data) {
-              if (!this.data.some(f => f.id === obj.id)) {
-                entrar= true;
-                this.data.push(obj);
-              }
-            }
-            if(entrar){
-              this.newMap();
-            }
-          }
-          //
-          if(this.state=='1'){
-            if(this.data.length!=data.length){
-              this.newMap();
-              this.data= data;
-            }
-          }*/
+         
         })
+        
         /*setTimeout( () => { 
-          this.data2= [];
-          let aux: { [id: number]: any[] } = {};
-          let array= [];
-          let id = 2;
-          let cont= 0;
-          //console.log(this.data[0])
-          for (let index = 0; index < this.data[0].length; index++) {
-            if(this.data[0][index].id!=id){
-              this.data2.push(aux);
-              cont= 0;
-              aux= [];
-            }
-              //console.log(this.data[0][index])
-              if (!aux[cont]) {
-                aux[cont] = [];
-              }
-              id= this.data[0][index].id; // Si el array para ese id aún no existe, lo creamos
-              aux[cont].push(this.data[0][index]);
-              //console.log(aux)
-              cont++;
-            }
-          //console.log(this.data2);            
-        }, 1000)*/
-        //this.data2= [];
-        setTimeout( () => { 
           for (let quote of this.data) {
             fetch(`${this.id_device_sensors_devices}/${quote.id}/${this.id_1}`)
             .then(response => response.json())
@@ -496,7 +513,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               reject(error); 
             });  
           }
-        }, 500)
+        }, 500)*/
     });
   }
   

@@ -24,6 +24,7 @@ export class EstructureComponent implements OnInit{
   post_estructure: string = 'http://localhost:5172/api/data_estructure/post';
   delete_estructure: string = 'http://localhost:5172/api/data_estructure/delete';
   update_estructure: string = 'http://localhost:5172/api/data_estructure/update';
+  duplicate_estructure: string = 'http://localhost:5172/api/data_estructure/duplicate';
 
   totalPages = 5;
   currentPage = 1;
@@ -235,33 +236,25 @@ export class EstructureComponent implements OnInit{
   }
 
   duplicateEstructure(num: any, description: any){ // Duplicar sensor
-    this.act_id= '1';
     if(!this.change && !this.change){
-      this.aux_1 = {
-        id_estructure: num,    
-      }   
-      this.search_1= 'Buscar';
-      let ord= 'ASC';
-      fetch(`${this.get_estructure}/${this.search_1}/${this.search_2}/${ord}/1/1000`)
-      .then((response) => response.json())
-      .then(data => {
-        let contador = 1;
-        let nombresExistentes = new Set();
-        for (let index = 0; index < data.length; index++) {
-          nombresExistentes.add(data[index].description);
+      fetch(`${this.duplicate_estructure}/${description}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
         }
-        let description_2= description;
-        while(nombresExistentes.has(description_2)) {
-          description_2 = `${description}_${contador}`;
-          contador++;
-        }
-        this.openNew();
+        return response.text();
+      })
+      .then((data) => {
         this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
         this.state= 0;
+        this.openNew('',data,this.estructure.configuration);
+        this.change= true;
       })
+      .catch((error) => {
+        console.error('Error al verificar la descripción duplicada:', error);
+      });
     }
-    
   }
 
   deleteEstructure(id_actual: any){ // Eliminar sensor
@@ -338,11 +331,11 @@ export class EstructureComponent implements OnInit{
     this.getEstructure(this.mark,this.ord_asc);
   }
 
-  openNew(){ // Abrir Nuevo sensor
+  openNew(d1: any,d2:any,d3:any){ // Abrir Nuevo sensor
     this.estructure = {
-      id_estructure: '', 
-      description: '',    
-      configuration: '', 
+      id_estructure: d1, 
+      description: d2,    
+      configuration: d3, 
     }
     this.act_id= '1';
     this.show= true;

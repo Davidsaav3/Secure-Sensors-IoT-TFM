@@ -44,11 +44,37 @@ router.use(express.json())
       res.send(result);
     });
   });
+
+  router.get("/duplicate/:type", (req, res) => {  /*/ DUPLICATE  /*/
+  const type = req.params.type;
+  let query = `SELECT type FROM sensors_types`;
+  con.query(query, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error en la base de datos");
+    }
+
+    let contador = 1;
+    let nombresExistentes = new Set(); // Tipo explícito para el conjunto
+    for (let index = 0; index < result.length; index++) {
+      nombresExistentes.add(result[index].type);
+    }
+    
+    let type_2 = type;
+    while (nombresExistentes.has(type_2)) {
+      type_2 = `${type}_${contador}`;
+      contador++;
+    }
+
+    console.log(type_2);
+    res.send(type_2);
+  });
+});
   
   router.get("/id/:id", (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
     const query = "SELECT * FROM sensors_types WHERE id = ?";
-    con.query(query, [id], (err, result) => {
+    con.query(query, [id,id], (err, result) => {
       if (err) {
         console.error("Error:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });

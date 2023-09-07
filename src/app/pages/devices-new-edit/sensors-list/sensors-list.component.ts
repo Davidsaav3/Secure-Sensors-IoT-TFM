@@ -28,7 +28,6 @@ export class SensorsListComponent  implements OnInit{
   
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
-  id_sensors: string = 'http://localhost:5172/api/sensors_types/id';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
   numerito= 1;
@@ -70,9 +69,10 @@ export class SensorsListComponent  implements OnInit{
         datafield: '',
         nodata: true,
         orden: 1,
-        type_name: 1,
+        type_name: '',
         correction_specific: '',
         correction_time_specific: '',
+        position: 0,
       }]
   }
 
@@ -115,12 +115,19 @@ export class SensorsListComponent  implements OnInit{
     this.width = window.innerWidth;
   }
 
-  getOrden(num: any){ // Asocia un order al sensor segun su type
-    fetch(`${this.id_sensors}/${this.sensors.sensors[num].id_type_sensor}`)
-    .then(response => response.json())
-    .then(data => {
-      this.sensors.sensors[num].orden= data[0].position;
-    })
+  getOrden(num: any, num2: any){ // Asocia un order al sensor segun su type
+    let cosita: any;
+    setTimeout(() => {
+      cosita= this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2);
+    }, 100);
+    setTimeout(() => {
+      if(cosita!=undefined){
+        this.sensors.sensors[num].orden= cosita.position;
+      }
+    }, 100);
+
+    console.log(num2)
+    console.log(this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2))
   }
 
   getDevices(id: any){ // Obtener datos del dispositivo
@@ -131,15 +138,17 @@ export class SensorsListComponent  implements OnInit{
     .then(response => response.json())
     .then(data => {
       this.sensors.sensors= data;
+      console.log(data)
     })
     .catch(error => {
       console.error(error); 
     });
     let search_1= 'Buscar';
     let order= 'ASC';
-    fetch(`${this.get_sensors}/${search_1}/${this.search_2}/${order}/1/1000`)
+    fetch(`${this.get_sensors}/${search_1}/'position'/'ASC'/1/1000`)
     .then((response) => response.json())
     .then(data => {
+      console.log(data)
       this.select_sensors.sensors= data;
     })
   }
@@ -153,9 +162,10 @@ export class SensorsListComponent  implements OnInit{
       datafield: '',
       nodata: true,
       orden: 1,
-      type_name: 1,
+      type_name: '',
       correction_specific: '',
       correction_time_specific: '',
+      position: 0,
     }
     this.sensors.sensors.push(sensors_aux);
     this.show_map= true;
