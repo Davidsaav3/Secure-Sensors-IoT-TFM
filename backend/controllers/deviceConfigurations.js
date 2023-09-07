@@ -214,7 +214,7 @@ router.use(express.json())
     });
   });
 
-  router.post("/post", (req, res) => {  /*/ UPDATE  /*/
+  router.post("/post", (req, res) => {  /*/ POST  /*/
     const { 
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure,
     } = req.body;
