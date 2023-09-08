@@ -571,7 +571,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
-      this.id= parseInt(data[0].id)+1;
+      this.id= parseInt(data.id)+1;
     })
 
     let search_text= 'Buscar';

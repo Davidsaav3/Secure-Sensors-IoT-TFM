@@ -214,6 +214,32 @@ router.use(express.json())
     });
   });
 
+  router.get("/duplicate/:uid", (req, res) => {  /*/ DUPLICATE  /*/
+    const uid = req.params.uid;
+    let query = `SELECT uid FROM device_configurations`;
+    con.query(query, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Error en la base de datos");
+      }
+
+      let contador = 1;
+      let nombresExistentes = new Set(); // Tipo explícito para el conjunto
+      for (let index = 0; index < result.length; index++) {
+        nombresExistentes.add(result[index].uid);
+      }
+      
+      let uid_2 = uid;
+      while (nombresExistentes.has(uid_2)) {
+        uid_2 = `${uid}_${contador}`;
+        contador++;
+      }
+
+      res.send(uid_2);
+    });
+  });
+
+
   router.post("/post", (req, res) => {  /*/ POST  /*/
     const { 
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure,

@@ -65,7 +65,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
-      this.id_max= parseInt(data[0].id);
+      this.id_max= parseInt(data.id);
       if(this.id<=this.id_max){
         this.state= 1;
       }

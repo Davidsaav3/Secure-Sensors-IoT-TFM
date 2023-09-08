@@ -42,6 +42,7 @@ export class DevicesNewEditComponent implements OnInit{
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   get_estructure_list: string = 'http://localhost:5172/api/data_estructure/get_list';
+  duplicate_device: string = 'http://localhost:5172/api/device_configurations/duplicate';
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
@@ -147,19 +148,21 @@ export class DevicesNewEditComponent implements OnInit{
         this.updatesharedCota();
     }
     //    
+
     if(this.rute2[2]=='new'){
         fetch(this.max_device)
         .then(response => response.json())
         .then(data => {
-          this.id_max= parseInt(data[0].id)+1;    
+          this.id_max= parseInt(data.id)+1;  
           if(this.id<this.id_max){
             this.state= 1;
           }
           if(this.id>=this.id_max){
             this.state= 0;
           }
-    
-          if(this.state==1){
+          console.log('hola')
+
+          if(this.state==1){ // Duplicate
             this.getShsareSensors();
             fetch(`${this.id_device}/${this.id}`)
             .then(response => response.json())
@@ -180,23 +183,21 @@ export class DevicesNewEditComponent implements OnInit{
             }); 
             this.changed= true;
             //
-            fetch(`${this.get_device}/0/Buscar/uid/ASC/-1/2/2/1/100000/0/0/0/0`)
-            .then((response) => response.json())
-            .then(data => {
-              let contador = 1;
-              let nombresExistentes = new Set();
-              for (let index = 0; index < data.length; index++) {
-                nombresExistentes.add(data[index].uid);
-              }
-      
-              let uid_2= this.devices['uid'];
-              while(nombresExistentes.has(uid_2)) {
-                uid_2 = `${this.devices['uid']}_${contador}`;
-                contador++;
-              }
-              this.devices.uid= uid_2;
-            })
-
+            setTimeout(() => {
+              fetch(`${this.duplicate_device}/${this.devices.uid}`)
+              .then((response) => {
+                if (!response.ok) {
+                  throw new Error('Network response was not ok');
+                }
+                return response.text();
+              })
+              .then((data) => {
+                this.devices.uid= data;
+              })
+              .catch((error) => {
+                console.error('Error al verificar la descripción duplicada:', error);
+              });
+            }, 100);
           }
           if(this.state==0){
             this.devices.lat= 0;
