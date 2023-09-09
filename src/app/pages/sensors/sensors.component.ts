@@ -56,12 +56,12 @@ export class SensorsComponent implements OnInit{
   data: any;
   width= 0;
   rute='';
-  view_dup= 1000;
-  pencil_dup= 1000;
+  view_dup= -1;
+  pencil_dup= -1;
   timeout: any = null;
   state= 0;
   show=false;
-  show_3= true;
+  show_2= true;
   alert_delete: any= false;
   alert_new: any= false;
   not_delete: any= false;
@@ -109,7 +109,6 @@ export class SensorsComponent implements OnInit{
 
   ngOnInit(): void { // Inicializador
     this.getSensors(this.order,this.order_asc);
-    this.openClouse();
   }
 
   getEstructureVoid(){ // Obtener estructura sin parámetros
@@ -298,14 +297,13 @@ export class SensorsComponent implements OnInit{
     this.state=-1;
     this.openClouse();
     this.change=false;
-    this.change=false;
   }
 
   resize(): void{ // Redimensionar pantalla
     this.width = window.innerWidth;
   }
 
-  orderColumn(id_actual: any){ // Ordenar columnas (Peticion API)
+  orderColumn(id_actual: any){ // Ordenar columnas
     if(!this.change && !this.change && id_actual!=this.act_id){
       this.act_id= id_actual;
       this.openEdit();
@@ -330,10 +328,10 @@ export class SensorsComponent implements OnInit{
 
   openClouse(){  // Logica abrir y cerrar tarjetas
     if (this.show==true) {
-      this.show_3= false;
+      this.show_2= false;
     }
     else{
-      this.show_3= true;
+      this.show_2= true;
     }
   }
 
@@ -363,7 +361,7 @@ export class SensorsComponent implements OnInit{
   openEdit(){ // Abrir Editar sensor
     this.show= true;
     this.state= 2;
-    this.show_3= false;
+    this.show_2= false;
   }
 
   recharge(){ // recargar sensores
@@ -372,7 +370,7 @@ export class SensorsComponent implements OnInit{
   }
 
   clouseAll(){ // Cerrar todas las pestañas
-    this.show_3= false;
+    this.show_2= false;
     this.show= false;
     this.openClouse();
     this.change=false;

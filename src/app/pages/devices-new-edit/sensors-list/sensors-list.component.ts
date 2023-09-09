@@ -26,7 +26,7 @@ export class SensorsListComponent  implements OnInit{
     this.resize();
   }
   
-  get_sensors: string = 'http://localhost:5172/api/sensors_types/get_list';
+  get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
@@ -79,20 +79,24 @@ export class SensorsListComponent  implements OnInit{
       });
       this.dataSharingService.sharedList$.subscribe(data => {
         if(data==this.cont){
-          fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search}`)
-          .then(response => response.json())
-          .then(data => {
-            this.sensors.sensors= data;
-          })
-          .catch(error => {
-            console.error(error); 
-          });
+          this.auxGetDevices();
           this.updatesharedList();
           this.cont= data+1;
         }
       });
       this.readStorage()
     }, 100);
+  }
+
+  auxGetDevices(){
+    fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search}`)
+    .then(response => response.json())
+    .then(data => {
+      this.sensors.sensors= data;
+    })
+    .catch(error => {
+      console.error(error); 
+    });
   }
 
   readStorage() { // Recupera datos
@@ -115,16 +119,9 @@ export class SensorsListComponent  implements OnInit{
     if(id!='id'){
       this.search= id;
     }
-    fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search}`)
-    .then(response => response.json())
-    .then(data => {
-      this.sensors.sensors= data;
-    })
-    .catch(error => {
-      console.error(error); 
-    });
+    this.auxGetDevices();
     //
-    fetch(`${this.get_sensors}`)
+    fetch(`${this.get_sensors_list}`)
     .then((response) => response.json())
     .then(data => {
       this.select_sensors.sensors= data;

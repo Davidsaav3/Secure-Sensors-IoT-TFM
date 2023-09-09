@@ -53,8 +53,8 @@ export class EstructureComponent implements OnInit{
   data: any;
   width= 0;
   rute='';
-  view_dup= 1000;
-  pencil_dup= 1000;
+  view_dup= -1;
+  pencil_dup= -1;
   timeout: any = null;
   state= 1;
   show=false;
@@ -126,7 +126,7 @@ export class EstructureComponent implements OnInit{
     });
   }
 
-  getEstructureButton(id: any,ord: any){ // Ordenar columnas (Peticion API)
+  getEstructureButton(id: any,ord: any){ // Ordenar columnas
     this.mark= id;
     if (ord == 'ASC') {
       if (id == 'description') {
@@ -165,8 +165,8 @@ export class EstructureComponent implements OnInit{
       this.act_id= this.estructure.id_estructure.toString();
       this.openEdit();
       this.state=2;
+      
       this.save_ok= true;
-
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
