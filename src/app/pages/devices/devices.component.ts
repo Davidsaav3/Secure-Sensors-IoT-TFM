@@ -44,12 +44,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   lon: any;
   state= '0';
   idsParam: any;
+  start= true;
 
   pos_x_1= '0';
   pos_x_2= '0';
   pos_y_1= '0';
   pos_y_2= '0';
-  start= true;
 
   /**/
   
@@ -57,19 +57,18 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   ids_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/ids';
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get_list';
+
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;
   page= 1;
   total= 0;
   cosa= 0;
-  color_map= 'streets-v12';
 
+  color_map= 'streets-v12';
   charging= false;
   mark= 'uid';
   data: any[]= [];
-  data2: any[]= [];
-  data3: any[]= [];
   rute='';
   id_1= 'orden';
   id= 1;
@@ -227,9 +226,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               for (let index = 0; index < this.markers.length; index++) {
                 cont2='';
                 //console.log(this.data[index].sensor.sensors.length)
-                //if(this.data2[index].sensor.sensors[0].id_device==this.markers[index].data.id){
                   for (let index3 = 0; index3 < this.data[index].sensor.sensors.length; index3++) {
-                    //console.log(this.data[index].sensor.sensors[index3].type_name)
                     if(this.data[index].sensor.sensors[index3].enable==0){
                       cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
                       <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensor.sensors[index3].type_name}</p>
@@ -356,7 +353,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          //console.log(data)
           this.totalPages= Math.ceil(data[0].total/this.quantPage);
           this.total= data[0].total;
           //
@@ -374,12 +370,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         })
 
         setTimeout(() => {
-          //console.log(this.idsParam)
-          //console.log('lista')
           fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
           .then(response => response.json())
           .then(data => {
-            //console.log(data)
             for (let index = 0; index < this.data.length; index++) {
               this.data[index].sensor= data[index];
             }
@@ -412,51 +405,44 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
     this.charging= true;
     return new Promise((resolve, reject) => {
-        fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
-        .then((response) => response.json())
-        .then(data => {
-          if (JSON.stringify(this.data.map(item => item.id)) != JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+      fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+      .then((response) => response.json())
+      .then(data => {
+        if (JSON.stringify(this.data.map(item => item.id)) != JSON.stringify(data.map((item: { id: any; }) => item.id))) {
+          this.data= [];
+          this.data= data;
+          const deviceIds = this.data.map(device => device.id);
+          this.idsParam = deviceIds.join(',');
+
+          if(this.state=='0'){
             this.data= [];
-            //console.log('dif')
             this.data= data;
-            const deviceIds = this.data.map(device => device.id);
-            this.idsParam = deviceIds.join(',');
-            
-            if(this.state=='0'){
-              this.data= [];
-              this.data= data;
-              this.newMap();
-            }
-            //
-            if(this.state=='1'){
-              this.newMap();
-              this.data= [];
-              this.data= data;
-            }
-          
-            //
-     
-            setTimeout(() => {    
-              //console.log('mapa')
-              fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
-              .then(response => response.json())
-              .then(data => {
-                //console.log(data)
-                for (let index = 0; index < this.data.length; index++) {
-                  this.data[index].sensor= data[index];
-                }
-                this.charging= false;
-                resolve(this.data); 
-              })
-              .catch(error => {
-                console.error(error);
-                reject(error); 
-              });
-            }, 100);
-            //
+            this.newMap();
           }
-        })
-        
+          //
+          if(this.state=='1'){
+            this.newMap();
+            this.data= [];
+            this.data= data;
+          }
+          
+          setTimeout(() => {    
+            fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
+            .then(response => response.json())
+            .then(data => {
+              for (let index = 0; index < this.data.length; index++) {
+                this.data[index].sensor= data[index];
+              }
+              this.charging= false;
+              resolve(this.data); 
+            })
+            .catch(error => {
+              console.error(error);
+              reject(error); 
+            });
+          }, 100);
+        }
+      })
     });
   }
   
@@ -503,7 +489,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     });
     this.Page(1);
   }
-
 
   filterDevices(){ // Filtra por devices
     this.newMap();
@@ -571,9 +556,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.id= parseInt(data.id)+1;
     })
 
-    let search_text= 'Buscar';
-    let ord_asc= 'ASC';
-    //console.log(`${this.get_sensors}/${search_text}/${this.search_2}/${ord_asc}`)
     fetch(`${this.get_sensors}`)
     .then((response) => response.json())
     .then(data => {
@@ -622,7 +604,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.search.value= '';
   }
 
-  /**/
+  /* PAGINACIÓN */
 
   firstPage(): void { // Primera pagina
     if(this.currentPage!=1){
@@ -679,7 +661,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  /**/
+  /* MAPA */
 
   ngAfterViewInit(): void { // Después de ngOnInit
     this.newMap();
@@ -746,8 +728,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   auxInit(){ // Auxiliar de Init
-    console.log('---')
-
     if(this.map!=undefined){
       this.map.addControl(
         new mapboxgl.GeolocateControl({
@@ -768,33 +748,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.getDevices('0');
         });
       }
-      /*this.map.on('zoom', () => {
-        this.getDevices('0');
-      });    
-      this.map.on('zoom', () => {
-          this.getCornerCoordinates();
-      });
-      this.map.on('move', () => {
-        this.getCornerCoordinates();
-      });*/
-
 
       let layerList = document.getElementById('menu');
       if (layerList != null) {
         let inputs = layerList.getElementsByTagName('input');
         if (inputs != null) {
-          const inputArray = Array.from(inputs); // Convertir a array
+          const inputArray = Array.from(inputs);
           
           for (const input of inputArray) {
             input.onclick = (layer: any) => {
               const layerId = layer.target.id;
               if (this.map != null) {
-                //console.log(layerId)
                 console.log(this.color_map)
                 this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
               }
             };
-            
+      
           }
         }
       }
@@ -892,7 +861,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       el.style.backgroundSize = '100%';
       el.style.marginTop = '10px';
       el.innerHTML= `<p class="p-0 m-0" style="font-size:large; color:white; -webkit-text-stroke: 0.5px black">${marker.properties.name}</p>`;
-      
       el.addEventListener('click', () => {
         const url = `/devices/edit/${marker.properties.id}`; 
         window.open(url, '_blank');
@@ -916,9 +884,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     for (let i = 0; i < contenidoSuperpuesto.length; i++) {
       contenidoSuperpuesto[i].remove();
     }
-    if(this.map!=undefined){
-      //this.map.removeSource('places');
-    }
   }
 
   saveStorage() { // Guarda datos
@@ -930,7 +895,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
     this.color_map = localStorage.getItem('color_map') ?? '0';
     console.log(this.color_map)
-
   }
 
   formatDateTime(date2: any) { // Formato fecha

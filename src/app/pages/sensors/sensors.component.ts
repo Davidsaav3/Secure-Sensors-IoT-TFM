@@ -27,7 +27,6 @@ export class SensorsComponent implements OnInit{
   post_sensors: string = 'http://localhost:5172/api/sensors_types/post';
   delete_sensors: string = 'http://localhost:5172/api/sensors_types/delete';
   update_sensors: string = 'http://localhost:5172/api/sensors_types/update';
-  id_sensors: string = 'http://localhost:5172/api/sensors_types/id';
   duplicate_sensor: string = 'http://localhost:5172/api/sensors_types/duplicate';
 
   totalPages = 5;
@@ -74,10 +73,7 @@ export class SensorsComponent implements OnInit{
   dup_ok=false;
   dup_not=false;
   id= 0;
-  type_2='';
-
   search_1='Buscar';
-  search_2='type';
   mark= 'position';
   ord_asc= 'ASC';
 
@@ -107,10 +103,6 @@ export class SensorsComponent implements OnInit{
     correction_time_general: '',
   }
 
-  aux_1 = {
-    id: '',
-  }
-
   search = {
     value: '', 
   }
@@ -120,7 +112,7 @@ export class SensorsComponent implements OnInit{
     this.openClouse();
   }
 
-  getEstructureVoid(){
+  getEstructureVoid(){ // Obtener estructura sin parámetros
     this.getSensors(this.mark,this.ord_asc);
   }
 
@@ -206,25 +198,14 @@ export class SensorsComponent implements OnInit{
       })
       .then(response => response.json())
       this.data = this.data.filter((data: { id: string; }) => data.id !== this.sensors.id);
-      let sensors = {
-        id: this.sensors.id, 
-        type: this.sensors.type,    
-        metric: this.sensors.metric, 
-        description: this.sensors.description,
-        errorvalue: this.sensors.errorvalue,
-        valuemax: this.sensors.valuemax,
-        valuemin: this.sensors.valuemin,
-        position: this.sensors.position,
-        correction_general: this.sensors.correction_general,
-        correction_time_general: this.sensors.correction_time_general,
-      }
+      let sensors = this.sensors;
       this.data.push(sensors)
       this.data.sort((a:any,b:any) => {return a.position-b.position;});
       this.act_id= this.sensors.id.toString();
       this.openEdit();
       this.state=2;
-
       this.save_ok= true;
+      
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
@@ -243,41 +224,29 @@ export class SensorsComponent implements OnInit{
         if (!response.ok) {
           throw new Error("Error en la solicitud");
         }
-        return response.json(); // Parsear la respuesta JSON
+        return response.json();
       })
       .then((data) => {
-        this.id= data.id; // Obtener el ID autogenerado
-        //console.log(this.id)
-
+        this.id= data.id;
         this.alert_new= true;
+
         setTimeout(() => {
           this.alert_new= false;
         }, 2000);
+
         this.openClouse();
- 
-          let sensors = {
-            id: this.id, 
-            type: this.sensors.type,    
-            metric: this.sensors.metric, 
-            description: this.sensors.description,
-            errorvalue: this.sensors.errorvalue,
-            valuemax: this.sensors.valuemax,
-            valuemin: this.sensors.valuemin,
-            position: this.sensors.position,
-            correction_general: this.sensors.correction_general,
-            correction_time_general: this.sensors.correction_time_general,
+        let sensors =this.sensors;
+        this.data.push(sensors)
+        this.data.sort((a: { position: string; }, b: { position: any; }) => {
+          if (typeof a.position === 'string' && typeof b.position === 'string') {
+            return a.position.localeCompare(b.position);
+          } else {
+            return 1;
           }
-          this.data.push(sensors)
-          this.data.sort((a: { position: string; }, b: { position: any; }) => {
-            if (typeof a.position === 'string' && typeof b.position === 'string') {
-              return a.position.localeCompare(b.position);
-            } else {
-              return 1;
-            }
-          });
-          this.act_id= this.id.toString();
-          this.openEdit();
-          this.state=2;
+        });
+        this.act_id= this.id.toString();
+        this.openEdit();
+        this.state=2;
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -295,7 +264,7 @@ export class SensorsComponent implements OnInit{
       fetch(`${this.duplicate_sensor}/${type}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Error de la red');
         }
         return response.text();
       })
@@ -328,7 +297,7 @@ export class SensorsComponent implements OnInit{
     this.clouse();
   }
 
-  hide(){  // Ocultar tarjeta lateral
+  hide(){ // Ocultar tarjeta lateral
     this.alert_delete= false;
     this.alert_new= false;
   }
@@ -342,7 +311,7 @@ export class SensorsComponent implements OnInit{
    }
   }
 
-  clouse(){  // Cerrar panel lateral
+  clouse(){ // Cerrar panel lateral
     this.show= false;
     this.state=-1;
     this.openClouse();
@@ -424,7 +393,7 @@ export class SensorsComponent implements OnInit{
     this.change=false;
   }
 
-  /**/
+  /* PAGINACIÓN */
 
   firstPage(): void { // Primera pagina
     if(this.currentPage!=1){
@@ -482,4 +451,5 @@ export class SensorsComponent implements OnInit{
   }
 
   /**/
+
 }

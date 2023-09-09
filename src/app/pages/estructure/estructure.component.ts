@@ -70,10 +70,7 @@ export class EstructureComponent implements OnInit{
   dup_ok=false;
   dup_not=false;
   id= 0;
-  type_2='';
-
   search_1='Buscar';
-  search_2='type';
   mark= 'description';
   ord_asc= 'ASC';
 
@@ -89,10 +86,6 @@ export class EstructureComponent implements OnInit{
     configuration: '', 
   }
 
-  aux_1 = {
-    id_estructure: '',
-  }
-
   search = {
     value: '', 
   }
@@ -102,7 +95,7 @@ export class EstructureComponent implements OnInit{
     this.openClouse();
   }
 
-  getEstructureVoid(){
+  getEstructureVoid(){ // Obtener sin parámetros
     this.getEstructure(this.mark,this.ord_asc);
   }
 
@@ -115,14 +108,13 @@ export class EstructureComponent implements OnInit{
     else{
       this.search_1= this.search.value;
     }
+
     this.charging= true;
-    
     fetch(`${this.get_estructure}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
     .then((response) => response.json())
     .then(quotesData => {
       this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
       this.total= quotesData[0].total;
-      //
       this.charging= false
       this.data = quotesData
       if(this.data.length<this.quantPage){
@@ -165,11 +157,7 @@ export class EstructureComponent implements OnInit{
       })
       .then(response => response.json()) 
       this.data = this.data.filter((data: { id_estructure: string; }) => data.id_estructure !== this.estructure.id_estructure);
-      let estructure = {
-        id_estructure: this.estructure.id_estructure, 
-        description: this.estructure.description,    
-        configuration: this.estructure.configuration, 
-      }
+      let estructure= this.estructure;
       this.data.push(estructure)
       this.data.sort((a: { description: string; }, b: { description: any; }) => {
         return a.description.localeCompare(b.description);
@@ -177,11 +165,12 @@ export class EstructureComponent implements OnInit{
       this.act_id= this.estructure.id_estructure.toString();
       this.openEdit();
       this.state=2;
-
       this.save_ok= true;
+
       setTimeout(() => {
         this.save_ok= false;
       }, 2000);
+
       this.saved= true;
       this.change=false;
     }
@@ -201,14 +190,13 @@ export class EstructureComponent implements OnInit{
       })
       .then((data) => {
         this.id= data.id; // Obtener el ID autogenerado
-        //console.log(this.id)
-
         this.alert_new= true;
+
         setTimeout(() => {
           this.alert_new= false;
         }, 2000);
-        this.openClouse();
 
+        this.openClouse();
         let estructure = {
           id_estructure: this.id.toString(), 
           description: this.estructure.description,    
@@ -238,7 +226,7 @@ export class EstructureComponent implements OnInit{
       fetch(`${this.duplicate_estructure}/${description}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Error de la red');
         }
         return response.text();
       })
@@ -329,11 +317,11 @@ export class EstructureComponent implements OnInit{
     this.getEstructure(this.mark,this.ord_asc);
   }
 
-  openNew(d1: any,d2:any,d3:any){ // Abrir Nuevo sensor
+  openNew(id_estructure: any,description:any,configuration:any){ // Abrir Nuevo sensor
     this.estructure = {
-      id_estructure: d1, 
-      description: d2,    
-      configuration: d3, 
+      id_estructure: id_estructure, 
+      description: description,    
+      configuration: configuration, 
     }
     this.act_id= '1';
     this.show= true;
@@ -359,7 +347,7 @@ export class EstructureComponent implements OnInit{
     this.change=false;
   }
 
-  /**/
+  /* PAGINACIÓN */
 
   firstPage(): void { // Primera pagina
     if(this.currentPage!=1){

@@ -93,7 +93,7 @@ export class SensorsListComponent  implements OnInit{
         }
       });
       this.readStorage()
-    }, 10);
+    }, 100);
   }
 
   readStorage() { // Recupera datos
@@ -124,6 +124,7 @@ export class SensorsListComponent  implements OnInit{
     .catch(error => {
       console.error(error); 
     });
+    //
     fetch(`${this.get_sensors}`)
     .then((response) => response.json())
     .then(data => {

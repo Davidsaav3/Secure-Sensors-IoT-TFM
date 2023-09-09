@@ -9,11 +9,6 @@ interface MarkerAndColor {
   marker: mapboxgl.Marker;
 }
 
-interface PlainMarker {
-  color: string;
-  lngLat: number[]
-}
-
 (mapboxgl as any).accessToken= 'pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ';
 
 @Component({
@@ -61,51 +56,54 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   id_max= 1;
   state= -1;
   
-  async ngOnInit(): Promise<void> {
-    try {
-      const maxDeviceResponse = await fetch(this.max_device);
-      const maxDeviceData = await maxDeviceResponse.json();
-      this.id_max = parseInt(maxDeviceData.id);
-  
-      if (this.id <= this.id_max) {
-        this.state = 1;
+  ngOnInit(): void { // Inicializador
+    fetch(this.max_device)
+    .then(response => response.json())
+    .then(data => {
+      this.id_max= parseInt(data.id);
+      if(this.id<=this.id_max){
+        this.state= 1;
       }
-      if (this.id > this.id_max) {
-        this.state = 0;
+      if(this.id>this.id_max){
+        this.state= 0;
       }
-  
-      // Resto del código después de obtener el máximo dispositivo
+    })
+    //
+    setTimeout(() => {
       this.readStorage();
-      this.rute = this.rute1.routerState.snapshot.url;
+      this.rute= this.rute1.routerState.snapshot.url;
       this.rute2 = this.rute.split('/');
-  
-      if (this.rute2[2] == 'new' && this.state == 0) {
-        this.dataSharingService.sharedLat$.subscribe(data => {
-          this.sharedLat = data;
-        });
-        this.dataSharingService.sharedLon$.subscribe(data => {
-          this.sharedLon = data;
-        });
+
+      if(this.rute2[2]=='new' && this.state==0){
+          this.dataSharingService.sharedLat$.subscribe(data => {
+            this.sharedLat = data;
+          });
+          this.dataSharingService.sharedLon$.subscribe(data => {
+            this.sharedLon = data;
+          });
       }
-  
-      if (this.rute2[2] == 'edit' || (this.rute2[2] == 'new' && this.state == 1)) {
-        this.dataSharingService.sharedLat$.subscribe(data => {
-          this.sharedLat = data;
-        });
-        this.dataSharingService.sharedLon$.subscribe(data => {
-          this.sharedLon = data;
-        });
-        this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
+      
+      if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
+          this.dataSharingService.sharedLat$.subscribe(data => {
+            this.sharedLat = data;
+          });
+          this.dataSharingService.sharedLon$.subscribe(data => {
+            this.sharedLon = data;
+          });
+          this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
       }
-  
-      setInterval(() => {
-        if (this.map && this.map != undefined) {
-          this.map.resize();
-        }
-      }, 100);
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    }, 100);
+    //
+    setInterval(() => {
+      if (this.map && this.map!=undefined){
+        //this.map.on('load', () => {
+          if (this.map && this.map!=undefined){
+            this.map.resize();
+          }
+        //})
+      }    
+    }, 10);
+
   }
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
@@ -157,15 +155,9 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.map.addControl(new mapboxgl.NavigationControl());
 
       this.map.on('click', (e) => {
-        //console.log(e);
-        //const originalLatLng = e.point;
-        //originalLatLng.y= originalLatLng.y-30;
-        //console.log(originalLatLng.y)
-        //const newLngLat = new mapboxgl.LngLat(modifiedLng, modifiedLat);
         this.deleteMarker();
         this.createMarker(e.lngLat.wrap());
         this.updatesharedAct();
-        //this.ngAfterViewInit();
       });
   
       let layerList = document.getElementById('menu');
@@ -248,12 +240,10 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.dataSharingService.sharedLon$.subscribe(data => {
         this.sharedLon = data;
       });
-      //console.log(this.sharedLat, this.currentLngLat.lat, this.sharedLon, this.currentLngLat.lng)
       if(this.sharedLat!=this.currentLngLat.lat || this.sharedLon!=this.currentLngLat.lng){
         this.deleteMarker();
         this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
         this.createMarker(this.currentLngLat);
-        //this.auxInit();
       }
     }, 50);
   }
@@ -336,9 +326,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     let contenidoSuperpuesto = document.getElementsByClassName('marker_text');
     for (let i = 0; i < contenidoSuperpuesto.length; i++) {
       contenidoSuperpuesto[i].remove();
-    }
-    if(this.map!=undefined){
-      //this.map.removeSource('places');
     }
   }
 
