@@ -7,19 +7,19 @@
                     <div class="col-12">
                         <div class="row pb-3">
                             <div class="col-8 d-flex"> 
-                                <h2 class="pe-3" *ngIf="state==0 && this.rute2[2]=='new'">{{ 'devices.edit.new_device' | translate }}</h2>
-                                <!----><h2 class="pe-3" *ngIf="state==1 && this.rute2[2]=='new'">{{ 'sensors.duplicate' | translate }} {{ devices['uid'] }}</h2>
-                                <!----><h2 class="pe-3" *ngIf="this.rute2[2]=='edit'">{{ 'device' | translate }} {{devices.uid}}</h2>
+                                <h2 class="pe-3" *ngIf="state==0 && this.rute_2[2]=='new'">{{ 'devices.edit.new_device' | translate }}</h2>
+                                <!----><h2 class="pe-3" *ngIf="state==1 && this.rute_2[2]=='new'">{{ 'sensors.duplicate' | translate }} {{ devices['uid'] }}</h2>
+                                <!----><h2 class="pe-3" *ngIf="this.rute_2[2]=='edit'">{{ 'device' | translate }} {{devices.uid}}</h2>
                             </div>
                             <div class="col-3 d-flex justify-content-end">
                                 <div class="form-check form-switch">
                                     <label class="toggle tt1 t1">
                                   <input maxlength="4" type="checkbox" (change)="changed=true" name="enable" [(ngModel)]="devices.enable">
                                         <span class="slider"></span>
-                                        <ng-container *ngIf="this.activeLang==this.leng_lang[0]">
+                                        <ng-container *ngIf="this.active_lang==this.leng_lang[0]">
                                             <span class="labels t1" data-on="Activado" data-off="Desactivado"></span>
                                         </ng-container>
-                                        <ng-container *ngIf="this.activeLang==this.leng_lang[1]">
+                                        <ng-container *ngIf="this.active_lang==this.leng_lang[1]">
                                             <span class="labels t1" data-on="Enable" data-off="Disable"></span>
                                         </ng-container>
                                     </label>
@@ -146,7 +146,7 @@
         <div *ngIf="show_map" class="p-0" [ngClass]="{'c200': !this.show_form || this.width<965, 'c20': this.show_form || this.width>=965}">
             <div class="cont2 ms-lg-3 ms-0 ms-md-0" [ngClass]="{'alt': this.width>=965}" >
                 
-                <div *ngIf="this.rute2[2]=='edit'" class="c4 d-flex justify-content-between">
+                <div *ngIf="this.rute_2[2]=='edit'" class="c4 d-flex justify-content-between">
                     <div class="col-6" >
                         <h5 class="">{{devices.alias}}</h5>
                     </div>
@@ -159,7 +159,7 @@
                         </svg>
                     </div>  
                 </div>	
-                <div *ngIf="this.rute2[2]=='new'" class="c4 d-flex justify-content-between">
+                <div *ngIf="this.rute_2[2]=='new'" class="c4 d-flex justify-content-between">
                     <div class="col-9" > 
                         <h5 class="">{{devices.alias}}</h5>
                     </div>
@@ -179,7 +179,7 @@
                 </div>
 
                 <div class="row c6">
-                    <div *ngIf="(this.rute2[2]=='edit' || state==1) && (this.width>965)" class="col-1 pt-4" (click)="recharge_map()" style="cursor: pointer;">
+                    <div *ngIf="(this.rute_2[2]=='edit' || state==1) && (this.width>965)" class="col-1 pt-4" (click)="recharge_map()" style="cursor: pointer;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
                             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
@@ -210,7 +210,7 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="(this.rute2[2]=='edit' || state==1) && (this.width<=965)" class="col-1 pt-4" (click)="recharge_map()" style="cursor: pointer;">
+                    <div *ngIf="(this.rute_2[2]=='edit' || state==1) && (this.width<=965)" class="col-1 pt-4" (click)="recharge_map()" style="cursor: pointer;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
                             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
@@ -282,7 +282,7 @@
 
     <div class="row p-0 m-0">
         <div class="col-12 p-0">
-            <div *ngIf="this.rute2[2]=='edit'" class="">
+            <div *ngIf="this.rute_2[2]=='edit'" class="">
                 <div class="">
                     <div class="row">
                         <div class="col-md-6 col-12">
@@ -304,7 +304,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="this.rute2[2]=='new'" class="row">
+            <div *ngIf="this.rute_2[2]=='new'" class="row">
                 <div class="col-md-6 col-12">
                     <div class="row">
                         <div class="col-md-6 col-12 mt-1 pb-3">

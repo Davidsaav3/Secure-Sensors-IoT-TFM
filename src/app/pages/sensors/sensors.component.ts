@@ -34,7 +34,7 @@ export class SensorsComponent implements OnInit{
   quantPage = 15;
   page= 1;
   total= 0;
-  cosa= 0;
+  total_page= 0;
 
   alt_1_a=true;
   alt_1_b=false;
@@ -73,9 +73,9 @@ export class SensorsComponent implements OnInit{
   dup_ok=false;
   dup_not=false;
   id= 0;
-  search_1='Buscar';
-  mark= 'position';
-  ord_asc= 'ASC';
+  search='Buscar';
+  order= 'position';
+  order_asc= 'ASC';
 
   sensors = {
     id: '', 
@@ -103,26 +103,26 @@ export class SensorsComponent implements OnInit{
     correction_time_general: '',
   }
 
-  search = {
+  search_array = {
     value: '', 
   }
 
   ngOnInit(): void { // Inicializador
-    this.getSensors(this.mark,this.ord_asc);
+    this.getSensors(this.order,this.order_asc);
     this.openClouse();
   }
 
   getEstructureVoid(){ // Obtener estructura sin parámetros
-    this.getSensors(this.mark,this.ord_asc);
+    this.getSensors(this.order,this.order_asc);
   }
 
   getSensors(id: any, ord: any) { // Obtiene los sesnores
-    this.mark = id;
+    this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
-    this.search_1 = this.search.value || 'Buscar';
+    this.search = this.search_array.value || 'Buscar';
     this.charging = true;
   
-    fetch(`${this.get_sensors}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
+    fetch(`${this.get_sensors}/${this.search}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
         this.totalPages = Math.ceil(quotesData[0].total / this.quantPage);
@@ -131,9 +131,9 @@ export class SensorsComponent implements OnInit{
         this.data = quotesData;
 
         if (this.data.length < this.quantPage) {
-          this.cosa = this.total;
+          this.total_page = this.total;
         } else {
-          this.cosa = this.quantPage * this.currentPage;
+          this.total_page = this.quantPage * this.currentPage;
         }
       });
   
@@ -144,7 +144,7 @@ export class SensorsComponent implements OnInit{
   }
 
   getEstructureButton(id: any,ord: any){ // Ordenar columnas
-    this.mark= id;
+    this.order= id;
     if (ord == 'ASC') {
       if (id == 'position') {
         this.data.sort((a: any, b: any) => {return a.position - b.position;});
@@ -254,17 +254,13 @@ export class SensorsComponent implements OnInit{
       this.change=false;
     }
   }
-  
-  resize(): void{ // Redimensionar pantalla
-    this.width = window.innerWidth;
-  }
 
   duplicateSensor(num: any, type: any){ // Duplicar sensor
     if(!this.change && !this.change){
       fetch(`${this.duplicate_sensor}/${type}`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Error de la red');
+          throw new Error('Error en la red');
         }
         return response.text();
       })
@@ -297,26 +293,16 @@ export class SensorsComponent implements OnInit{
     this.clouse();
   }
 
-  hide(){ // Ocultar tarjeta lateral
-    this.alert_delete= false;
-    this.alert_new= false;
-  }
-
-  update(){ // Guardar sensores en el popup de salir sin guardar
-   if(this.show==true && this.state==1){
-    this.newSensor(this.sensors);
-   }
-   if(this.show==false && this.state==2){
-    this.editSensor(this.sensors);
-   }
-  }
-
   clouse(){ // Cerrar panel lateral
     this.show= false;
     this.state=-1;
     this.openClouse();
     this.change=false;
     this.change=false;
+  }
+
+  resize(): void{ // Redimensionar pantalla
+    this.width = window.innerWidth;
   }
 
   orderColumn(id_actual: any){ // Ordenar columnas (Peticion API)
@@ -336,7 +322,7 @@ export class SensorsComponent implements OnInit{
     var $this = this;
     this.timeout = setTimeout( () => {
       if (event.keyCode != 13) {
-        $this.getSensors(this.mark,this.ord_asc);
+        $this.getSensors(this.order,this.order_asc);
         $this.openClouse();
       }
     }, 500);
@@ -352,8 +338,8 @@ export class SensorsComponent implements OnInit{
   }
 
   deleteSearch(){ // Borrar busqueda
-    this.search.value= '';
-    this.getSensors(this.mark,this.ord_asc);
+    this.search_array.value= '';
+    this.getSensors(this.order,this.order_asc);
   }
 
   openNew(id: any, type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any){ // Abrir Nuevo sensor

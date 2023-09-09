@@ -2,7 +2,7 @@
 Este repositorio contiene el proyecto de Trabajo Fin de Grado (TFG) de Ingeniería Multimedia titulado "Diseño y desarrollo de un servicio de gestión IoT". El proyecto es desarrollado por el equipo de Smart University de la Universidad de Alicante.
 
 ## Descripción del proyecto
-El objetivo principal de este proyecto es diseñar y desarrollar un servicio de gestión basado en IoT (Internet de las cosas) y redes LORA para un sistema de sensorización inteligente. Actualmente, la gestión y configuración de este sistema se realiza a través de PHPMyAdmin utilizando una base de datos. Sin embargo, se plantea la creación de una aplicación web propia que facilite la gestión de la información relacionada con el sistema de sensorización.
+El objetivo principal de este proyecto es diseñar y desarrollar un servicio de gestión basado en IoT (Internet de las total_pages) y redes LORA para un sistema de sensorización inteligente. Actualmente, la gestión y configuración de este sistema se realiza a través de PHPMyAdmin utilizando una base de datos. Sin embargo, se plantea la creación de una aplicación web propia que facilite la gestión de la información relacionada con el sistema de sensorización.
 
 ## Datos a gestionar
 El proyecto maneja una base de datos que consta de las siguientes 3 tablas:

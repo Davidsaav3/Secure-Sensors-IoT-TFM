@@ -24,60 +24,50 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   @ViewChild('map') divMap?: ElementRef;
   constructor(private router: Router,private translate: TranslateService) { }
 
-  results_per_pag= environment.results_per_pag;
-  activeLang = environment.lenguaje_lang[0];
-  zoom: number = 7;
-  map?: mapboxgl.Map;
-  currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
-  markers: MarkerAndColor[] = [];
-  topLeftCoordinates: string= '';
-  topRightCoordinates: string= '';
-  bottomLeftCoordinates: string= '';
-  bottomRightCoordinates: string= '';
-  date_show: any;
-  geojson: any;
-  geojson2: any;
-  array_sensors: any;
-  pag_tam:any;
-  pag_pag: any;
-  lat: any;
-  lon: any;
-  state= '0';
-  idsParam: any;
-  start= true;
-
-  pos_x_1= '0';
-  pos_x_2= '0';
-  pos_y_1= '0';
-  pos_y_2= '0';
-
-  /**/
-  
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
   ids_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/ids';
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get_list';
 
+  results_per_pag= environment.results_per_pag;
+  active_lang = environment.lenguaje_lang[0];
+  zoom: number = 7;
+  map?: mapboxgl.Map;
+  currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
+  markers: MarkerAndColor[] = [];
+  geojson: any;
+  geojson_2: any;
+  array_sensors: any;
+  lat: any;
+  lon: any;
+  state= '0';
+  idsParam: any;
+  first_time= true;
+  pag_tam:any;
+  pag_pag: any;
+  pos_x_1= '0';
+  pos_x_2= '0';
+  pos_y_1= '0';
+  pos_y_2= '0';
+  
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;
   page= 1;
   total= 0;
-  cosa= 0;
+  total_page= 0;
 
   color_map= 'streets-v12';
   charging= false;
   mark= 'uid';
   data: any[]= [];
   rute='';
-  id_1= 'orden';
   id= 1;
   timeout: any = null;
   dup_ok=false;
   dup_not=false;
   search_text='Buscar';
   ord_asc= 'ASC';
-  search_2= 'id';
   open_map_list= true;
   view_dup= 10000;
   pencil_dup= 10000;
@@ -149,10 +139,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       correction_time_general: null,
       id_data_estructure: 1,
     }]
-  }
-
-  aux1 = {
-    id: '',
   }
 
   search = {
@@ -264,15 +250,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     
               }            
               //console.log(cont)
-              this.geojson2 = { 
+              this.geojson_2 = { 
                 'features': 
                 cont
               };
-              //console.log(this.geojson2.features[0])
+              //console.log(this.geojson_2.features[0])
               this.map.addSource('places', {'type': 'geojson',
               'data': {
                 'type': 'FeatureCollection',
-                'features': this.geojson2.features
+                'features': this.geojson_2.features
               }
               });
             } 
@@ -362,10 +348,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.idsParam = deviceIds.join(',');
 
           if(this.data.length<this.quantPage){
-            this.cosa= this.total;
+            this.total_page= this.total;
           }
           else{
-            this.cosa= this.quantPage*this.currentPage;
+            this.total_page= this.quantPage*this.currentPage;
           }
         })
 
@@ -665,11 +651,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   ngAfterViewInit(): void { // Después de ngOnInit
     this.newMap();
-    this.start= false;
+    this.first_time= false;
   }
 
   newMap(){
-    if(this.start==false){
+    if(this.first_time==false){
         this.map = new mapboxgl.Map({
           container: this.divMap?.nativeElement, 
           style: 'mapbox://styles/mapbox/'+this.color_map,

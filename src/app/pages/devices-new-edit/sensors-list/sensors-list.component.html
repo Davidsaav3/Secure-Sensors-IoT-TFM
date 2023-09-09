@@ -81,10 +81,10 @@
                 <label style="display: none" [for]="'enable'+i">{{ 'devices.sensors.enable' | translate }}</label>
                 <input maxlength="4" (change)="updatesharedList();this.dataSharingService.updatesharedAct(true);" type="checkbox" [id]="'enable'+i" [name]="'enable'+i" checked [(ngModel)]="item.enable">
                 <span class="slider"></span>
-                <ng-container *ngIf="this.activeLang==this.leng_lang[0]">
+                <ng-container *ngIf="this.active_lang==this.leng_lang[0]">
                   <span class="labels t2" data-on="Activado" data-off="Desactivado"></span>
                 </ng-container>
-                <ng-container *ngIf="this.activeLang==this.leng_lang[1]">
+                <ng-container *ngIf="this.active_lang==this.leng_lang[1]">
                   <span class="labels t2" data-on="Enable" data-off="Disable"></span>
                 </ng-container>     						
               </label>

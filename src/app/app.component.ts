@@ -9,13 +9,13 @@ import { environment } from "./environments/environment"
 })
 export class AppComponent {
 
-  activeLang = environment.lenguaje_lang;
+  active_lang = environment.lenguaje_lang;
   constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang(this.activeLang[0]);
+    this.translate.setDefaultLang(this.active_lang[0]);
   }
 
   changeLenguaje(lang: any) {
-    this.activeLang = lang;
+    this.active_lang = lang;
     this.translate.use(lang);
   }
   

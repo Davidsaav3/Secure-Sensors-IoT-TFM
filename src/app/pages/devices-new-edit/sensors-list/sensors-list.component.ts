@@ -30,13 +30,12 @@ export class SensorsListComponent  implements OnInit{
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
-  numerito= 1;
+  cont= 1;
   view_can= -1;
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
-  activeLang = environment.lenguaje_lang[0];
-  search_1='orden';
-  search_2='id';
+  active_lang = environment.lenguaje_lang[0];
+  search='orden';
   show_map= true;
   delete_it: any;
   show_large= true;
@@ -79,8 +78,8 @@ export class SensorsListComponent  implements OnInit{
         this.show_large= data;
       });
       this.dataSharingService.sharedList$.subscribe(data => {
-        if(data==this.numerito){
-          fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search_1}`)
+        if(data==this.cont){
+          fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search}`)
           .then(response => response.json())
           .then(data => {
             this.sensors.sensors= data;
@@ -89,7 +88,7 @@ export class SensorsListComponent  implements OnInit{
             console.error(error); 
           });
           this.updatesharedList();
-          this.numerito= data+1;
+          this.cont= data+1;
         }
       });
       this.readStorage()
@@ -97,7 +96,7 @@ export class SensorsListComponent  implements OnInit{
   }
 
   readStorage() { // Recupera datos
-    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
+    this.active_lang = localStorage.getItem('active_lang') ?? 'es';
   }
 
   resize(): void{ // Redimensionar pantalla
@@ -114,9 +113,9 @@ export class SensorsListComponent  implements OnInit{
 
   getDevices(id: any){ // Obtener datos del dispositivo
     if(id!='id'){
-      this.search_1= id;
+      this.search= id;
     }
-    fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search_1}`)
+    fetch(`${this.id_device_sensors_devices}/${this.id}/${this.search}`)
     .then(response => response.json())
     .then(data => {
       this.sensors.sensors= data;

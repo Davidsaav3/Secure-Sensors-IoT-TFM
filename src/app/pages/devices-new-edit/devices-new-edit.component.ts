@@ -14,12 +14,11 @@ export class DevicesNewEditComponent implements OnInit{
 
   sharedLat: any = '';
   sharedLon: any = '';
-  numerito= 0;
-
+  cont= 0;
   date: any;
   state= 0; // 0 new // 1 duplicate // 2 edit //
   rute='';
-  rute2: any;
+  rute_2: any;
 
   @HostListener('window:resize', ['$event'])
     onResize(event: any) {
@@ -29,7 +28,7 @@ export class DevicesNewEditComponent implements OnInit{
 
   constructor(private router: Router, private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,private DevicesMapComponent: DevicesMapComponent) { 
     this.rute= this.router.routerState.snapshot.url;
-    this.rute2 = this.rute.split('/');
+    this.rute_2 = this.rute.split('/');
     this.createDate();
   }
 
@@ -48,11 +47,10 @@ export class DevicesNewEditComponent implements OnInit{
   lat: any;
   cota: any;
   timezone: any;
-
   view_can= false;
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
-  activeLang = environment.lenguaje_lang[0];
+  active_lang = environment.lenguaje_lang[0];
   show_map=true;
   show_form= true;
   view_rec= false;
@@ -106,28 +104,12 @@ export class DevicesNewEditComponent implements OnInit{
       }]
   }
 
-  select_sensors = { // [NEW]
-    sensors : [
-      {
-        id: -1, 
-        name: 'Todos los Sensores',    
-        metric: '', 
-        description: '',
-        errorvalue: 1,
-        valuemax: 1,
-        valuemin: 1,
-        position: 0,
-        correction_specific: '',
-        correction_time_specific: '',
-      }]
-  }
-
   ngOnInit(): void { // Inicializador
     this.rute= this.router.routerState.snapshot.url;
-    this.rute2 = this.rute.split('/');
+    this.rute_2 = this.rute.split('/');
     this.getEstructures();
 
-    if(this.rute2[2]=='edit'){
+    if(this.rute_2[2]=='edit'){
         this.dataSharingService.updatesharedAmp(false);
         this.getDevices()
         this.getShsareSensors();
@@ -142,7 +124,7 @@ export class DevicesNewEditComponent implements OnInit{
         this.updatesharedLon();
     }
     //    
-    if(this.rute2[2]=='new'){
+    if(this.rute_2[2]=='new'){
       this.getShsareSensors();
       fetch(this.max_device)
       .then(response => response.json())
@@ -200,7 +182,7 @@ export class DevicesNewEditComponent implements OnInit{
           this.dataSharingService.updatesharedLat(0);
         }
       })
-      this.update()
+      this.getShared()
       this.createDate();
     }
     setInterval(() => {
@@ -213,10 +195,6 @@ export class DevicesNewEditComponent implements OnInit{
     }, 10);
     this.onResize(0);
     this.dataSharingService.updatesharedAmp(false);
-  }
-
-  readStorage() { // Recupera datos de local storage
-    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
 
   getDevices(){ // Obtener Dispositivos
@@ -234,7 +212,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   editDevices(form: any) { // Guardar Dispositivo
-    this.update()
+    this.getShared()
     this.createDate();
     this.devices.updatedAt= this.date;
     this.getShsareSensors();
@@ -324,7 +302,7 @@ export class DevicesNewEditComponent implements OnInit{
   newDevice(form: any) { // Guardar Dispositivos
     this.createDate();
     this.devices.createdAt= this.date;
-    this.update()
+    this.getShared()
 
     if (form.valid) {
       fetch(this.post_device, {
@@ -335,7 +313,7 @@ export class DevicesNewEditComponent implements OnInit{
     }
   }
 
-  update(){
+  getShared(){ // Aux recupera datos compartidos
     this.dataSharingService.sharedLat$.subscribe(data => {
       this.devices.lat = data;
     });
@@ -394,20 +372,20 @@ export class DevicesNewEditComponent implements OnInit{
     this.ngOnInit()
     this.changed= false;
     this.dataSharingService.updatesharedAct(false);
-    this.numerito++;
-    this.dataSharingService.updatesharedList(this.numerito);
+    this.cont++;
+    this.dataSharingService.updatesharedList(this.cont);
   }
 
   showForm(){ // Expandir formulario
     this.show_form=true;
-    if(this.rute2[2]=='edit'){
+    if(this.rute_2[2]=='edit'){
       this.onResize(0);
     }  
   }
 
   hideForm(){ // Contrarer formulario
     this.show_form=false;
-    if(this.rute2[2]=='edit'){
+    if(this.rute_2[2]=='edit'){
       this.onResize(0);
     }
   }
@@ -426,6 +404,10 @@ export class DevicesNewEditComponent implements OnInit{
     this.dataSharingService.sharedList$.subscribe(data => {
       this.sensors.sensors= data;
     });
+  }
+
+  readStorage() { // Recupera datos de local storage
+    this.active_lang = localStorage.getItem('active_lang') ?? 'es';
   }
 
   getEstructures(){ // optener estructuras de datos

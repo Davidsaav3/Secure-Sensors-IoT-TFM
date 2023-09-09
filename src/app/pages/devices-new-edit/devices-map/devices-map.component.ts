@@ -73,24 +73,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       this.readStorage();
       this.rute= this.rute1.routerState.snapshot.url;
       this.rute2 = this.rute.split('/');
-
-      if(this.rute2[2]=='new' && this.state==0){
-          this.dataSharingService.sharedLat$.subscribe(data => {
-            this.sharedLat = data;
-          });
-          this.dataSharingService.sharedLon$.subscribe(data => {
-            this.sharedLon = data;
-          });
-      }
-      
+      this.dataSharingService.sharedLat$.subscribe(data => {
+        this.sharedLat = data;
+      });
+      this.dataSharingService.sharedLon$.subscribe(data => {
+        this.sharedLon = data;
+      });
       if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
-          this.dataSharingService.sharedLat$.subscribe(data => {
-            this.sharedLat = data;
-          });
-          this.dataSharingService.sharedLon$.subscribe(data => {
-            this.sharedLon = data;
-          });
-          this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
+        this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
       }
     }, 100);
     //
@@ -151,7 +141,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
         showUserHeading: true
         })
       );
-      
       this.map.addControl(new mapboxgl.NavigationControl());
 
       this.map.on('click', (e) => {
@@ -168,7 +157,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           
           for (const input of inputArray) {
             input.onclick = (layer: any) => {
-              const layerId = layer.target.id;
               if (this.map != null) {
                 this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
               }
@@ -250,15 +238,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
   createMap(pos: any){ // crea el mapa
     if ( !this.divMap ) throw 'No hay mapa';
-      this.ngOnDestroy();
-      this.map = new mapboxgl.Map({
-        container: this.divMap.nativeElement,
-        style: 'mapbox://styles/mapbox/'+this.color_map, 
-        center: this.currentLngLat,
-        zoom: this.zoom,
-      });
-      return this.map;
-    
+    this.ngOnDestroy();
+    this.map = new mapboxgl.Map({
+      container: this.divMap.nativeElement,
+      style: 'mapbox://styles/mapbox/'+this.color_map, 
+      center: pos,
+      zoom: this.zoom,
+    });
+    return this.map;
   }
   
   ngOnDestroy(): void { // Destructor del mapa

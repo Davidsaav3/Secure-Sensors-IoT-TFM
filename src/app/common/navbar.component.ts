@@ -11,7 +11,7 @@ import { environment } from "../environments/environment"
 export class NavbarComponent {
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
-  activeLang = environment.lenguaje_lang[0];
+  active_lang = environment.lenguaje_lang[0];
   dup_ok=false;
   dup_not=false;
   rute='';
@@ -24,19 +24,19 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.readStorage();
-    this.translate.use(this.activeLang);
+    this.translate.use(this.active_lang);
   }
 
   changeLenguaje() {
     this.saveStorage();
-    this.translate.use(this.activeLang);
+    this.translate.use(this.active_lang);
   }
 
   saveStorage() { // Guarda datos
-    localStorage.setItem('activeLang', this.activeLang);
+    localStorage.setItem('active_lang', this.active_lang);
   }
   readStorage() { // Recupera datos
-    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
+    this.active_lang = localStorage.getItem('active_lang') ?? 'es';
   }
   
 }

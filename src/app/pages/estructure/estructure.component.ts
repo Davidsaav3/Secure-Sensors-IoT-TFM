@@ -13,7 +13,7 @@ export class EstructureComponent implements OnInit{
   @HostListener('window:resize')
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
-  public activeLang = environment.lenguaje_lang[0];
+  public active_lang = environment.lenguaje_lang[0];
   results_per_pag= environment.results_per_pag;
 
   constructor(public rutaActiva: Router, private elementRef: ElementRef) {
@@ -31,7 +31,7 @@ export class EstructureComponent implements OnInit{
   quantPage = 15;
   page= 1;
   total= 0;
-  cosa= 0;
+  total_page= 0;
 
   alt_1_a=true;
   alt_1_b=false;
@@ -118,10 +118,10 @@ export class EstructureComponent implements OnInit{
       this.charging= false
       this.data = quotesData
       if(this.data.length<this.quantPage){
-        this.cosa= this.total;
+        this.total_page= this.total;
       }
       else{
-        this.cosa= this.quantPage*this.currentPage;
+        this.total_page= this.quantPage*this.currentPage;
       }
     });
   }
@@ -216,10 +216,6 @@ export class EstructureComponent implements OnInit{
       this.change=false;
     }
   }
-  
-  resize(): void{ // Redimensionar pantalla
-    this.width = window.innerWidth;
-  }
 
   duplicateEstructure(num: any, description: any){ // Duplicar sensor
     if(!this.change && !this.change){
@@ -273,6 +269,10 @@ export class EstructureComponent implements OnInit{
    }
   }
 
+  resize(): void{ // Redimensionar pantalla
+    this.width = window.innerWidth;
+  }
+  
   clouse(){ // Cerrar tarjeta 
     this.show= false;
     this.openClouse();
