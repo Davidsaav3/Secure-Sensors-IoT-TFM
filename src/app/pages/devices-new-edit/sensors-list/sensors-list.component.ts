@@ -26,7 +26,7 @@ export class SensorsListComponent  implements OnInit{
     this.resize();
   }
   
-  get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
+  get_sensors: string = 'http://localhost:5172/api/sensors_types/get_list';
   id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
@@ -48,14 +48,7 @@ export class SensorsListComponent  implements OnInit{
       {
         id: 1, 
         type: '',    
-        metric: '', 
-        description: '',
-        errorvalue: 1,
-        valuemax: 1,
-        valuemin: 1,
         position: 0,
-        correction_general: '',
-        correction_time_general: '',
       }]
   }
 
@@ -79,6 +72,7 @@ export class SensorsListComponent  implements OnInit{
   ngOnInit(): void { // Inicialización
     this.sensors.sensors= [];
     this.getDevices('id');
+
     setTimeout(() => {
       this.updatesharedList();
     }, 100);
@@ -117,17 +111,10 @@ export class SensorsListComponent  implements OnInit{
 
   getOrden(num: any, num2: any){ // Asocia un order al sensor segun su type
     let cosita: any;
-    setTimeout(() => {
-      cosita= this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2);
-    }, 100);
-    setTimeout(() => {
-      if(cosita!=undefined){
-        this.sensors.sensors[num].orden= cosita.position;
-      }
-    }, 100);
-
-    //console.log(num2)
-    //console.log(this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2))
+    cosita= this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2);
+    if(cosita!=undefined){
+      this.sensors.sensors[num].orden= cosita.position;
+    }
   }
 
   getDevices(id: any){ // Obtener datos del dispositivo
@@ -138,16 +125,13 @@ export class SensorsListComponent  implements OnInit{
     .then(response => response.json())
     .then(data => {
       this.sensors.sensors= data;
-      //console.log(data)
     })
     .catch(error => {
       console.error(error); 
     });
-    let search_1= 'Buscar';
-    fetch(`${this.get_sensors}/${search_1}/'position'/'ASC'/1/1000`)
+    fetch(`${this.get_sensors}`)
     .then((response) => response.json())
     .then(data => {
-      //console.log(data)
       this.select_sensors.sensors= data;
     })
   }

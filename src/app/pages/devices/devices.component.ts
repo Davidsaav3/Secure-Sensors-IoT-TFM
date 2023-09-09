@@ -749,6 +749,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   auxInit(){ // Auxiliar de Init
+    console.log('---')
+
     if(this.map!=undefined){
       this.map.addControl(
         new mapboxgl.GeolocateControl({
@@ -791,7 +793,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               const layerId = layer.target.id;
               if (this.map != null) {
                 //console.log(layerId)
-                //console.log(this.color_map)
+                console.log(this.color_map)
                 this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
               }
             };
@@ -923,12 +925,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   saveStorage() { // Guarda datos
+    console.log(this.color_map)
     localStorage.setItem('open_map_list', this.open_map_list.toString());
     localStorage.setItem('color_map', this.color_map);
   }
   readStorage() { // Recupera datos
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
     this.color_map = localStorage.getItem('color_map') ?? '0';
+    console.log(this.color_map)
+
   }
 
   formatDateTime(date2: any) { // Formato fecha

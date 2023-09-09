@@ -124,36 +124,27 @@ export class SensorsComponent implements OnInit{
     this.getSensors(this.mark,this.ord_asc);
   }
 
-  getSensors(id: any,ord: any){ // Obtener todos los sensores
-    this.mark= id;
-    this.rute= this.rutaActiva.routerState.snapshot.url;
-    if(this.search.value==''){
-      this.search_1= 'Buscar';
-    }
-    else{
-      this.search_1= this.search.value;
-    }
-    this.charging= true;
-
-    setTimeout(() => {
-      fetch(`${this.get_sensors}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
+  getSensors(id: any, ord: any) { // Obtiene los sesnores
+    this.mark = id;
+    this.rute = this.rutaActiva.routerState.snapshot.url;
+    this.search_1 = this.search.value || 'Buscar';
+    this.charging = true;
+  
+    fetch(`${this.get_sensors}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
-        this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
-        this.total= quotesData[0].total;
-        //
-        this.charging= false
-        this.data = quotesData
-        //console.log(this.data)
-        if(this.data.length<this.quantPage){
-          this.cosa= this.total;
-        }
-        else{
-          this.cosa= this.quantPage*this.currentPage;
-        }
-      });      
-    }, 100);
+        this.totalPages = Math.ceil(quotesData[0].total / this.quantPage);
+        this.total = quotesData[0].total;
+        this.charging = false;
+        this.data = quotesData;
 
+        if (this.data.length < this.quantPage) {
+          this.cosa = this.total;
+        } else {
+          this.cosa = this.quantPage * this.currentPage;
+        }
+      });
+  
     const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
     if (sectionElement) {
       sectionElement.scrollIntoView({ behavior: 'smooth' });

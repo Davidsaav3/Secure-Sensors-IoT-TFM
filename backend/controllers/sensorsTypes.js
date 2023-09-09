@@ -36,7 +36,7 @@ router.use(express.json())
   });
 
   router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
-    let query = `SELECT id, type FROM sensors_types ORDER BY type ASC`;
+    let query = `SELECT id, type, position FROM sensors_types ORDER BY type ASC`;
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);

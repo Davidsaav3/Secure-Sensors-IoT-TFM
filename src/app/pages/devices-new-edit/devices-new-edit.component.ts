@@ -150,6 +150,8 @@ export class DevicesNewEditComponent implements OnInit{
     //    
 
     if(this.rute2[2]=='new'){
+      this.getShsareSensors();
+
         fetch(this.max_device)
         .then(response => response.json())
         .then(data => {
@@ -160,7 +162,6 @@ export class DevicesNewEditComponent implements OnInit{
           if(this.id>=this.id_max){
             this.state= 0;
           }
-          console.log('hola')
 
           if(this.state==1){ // Duplicate
             this.getShsareSensors();
@@ -198,8 +199,10 @@ export class DevicesNewEditComponent implements OnInit{
                 console.error('Error al verificar la descripción duplicada:', error);
               });
             }, 100);
+            this.getShsareSensors();
           }
           if(this.state==0){
+            this.getShsareSensors();
             this.devices.lat= 0;
             this.devices.lon= 0;
             this.dataSharingService.updatesharedLon(0);
@@ -289,15 +292,17 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   editSensor() { // Guardar nuevos sensores de los dispositivos
-    var devices4 = {
-      id: this.id,   
-    }
     this.post();
     this.changed= false;
     return;
   }
 
   post(){
+    this.dataSharingService.sharedList$.subscribe(data => {
+      this.sensors.sensors= data;
+      //console.log(this.sensors.sensors)
+    });
+
     if(this.sensors.sensors.length==0){
       let sensors_aux = {
         sensors : [{
@@ -311,36 +316,44 @@ export class DevicesNewEditComponent implements OnInit{
             type_name: 0,
           }]
       }
+      //console.log(this.sensors)
+
       fetch(this.post_sensors_devices, {
         method: "POST",body: JSON.stringify(sensors_aux),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
     }
     else{
-      fetch(this.post_sensors_devices, {
-        method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
-      })    
-      .then(response => response.json()) 
+      this.getShsareSensors();
+      setTimeout(() => {
+        //console.log(this.sensors)
+        fetch(this.post_sensors_devices, {
+          method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
+        })    
+        .then(response => response.json()) 
+      }, 100);
     }
   }
 
   newSensor() { // Guardar nuevos sensores de los dispositivos
-    var select_sensors = {
-      id: this.id,   
-    }
-
     if(this.state==0){
       this.post();
       this.changed= false;
-      this.router.navigate([`/devices/edit/${this.id}`]);
+      setTimeout(() => {
+        this.router.navigate([`/devices/edit/${this.id}`]);
+      }, 100);
     }
-    
     if(this.state==1){
-      this.getShsareSensors();
+      this.sensors.sensors.forEach((sensor: { id_device: number; }) => {
+        sensor.id_device = this.id_max;
+      });
+      //console.log(this.sensors)
       this.devices.createdAt= this.data;
       this.post();
       this.changed= false;
-      this.router.navigate([`/devices/edit/${this.id_max}`]);
+      setTimeout(() => {
+        this.router.navigate([`/devices/edit/${this.id_max}`]);
+      }, 100);
     }
     return;
   }

@@ -75,14 +75,14 @@
 									
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
-										<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required>
+										<input maxlength="45" (change)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required>
 										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="configuration">{{ 'estructure.configuration' | translate }}</label>
-										<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
+										<input type="text" (change)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
 										<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
 											<div *ngIf="form.controls['configuration'].errors['required']">{{ 'estructure.configuration' | translate }} {{ 'required' | translate }}</div>
 										</div>
@@ -133,18 +133,18 @@
 						<tr [ngClass]="{'mark_select': act_id == quote.id_estructure.toString()}" *ngIf="quote.id_estructure==act_id && (state==2)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
 								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
-									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
+									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (change)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
 									
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
-										<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required>
+										<input maxlength="45" (change)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']" required>
 										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="configuration">{{ 'estructure.configuration' | translate }}</label>
-										<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
+										<input type="text" (change)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
 										<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
 											<div *ngIf="form.controls['configuration'].errors['required']">{{ 'estructure.configuration' | translate }} {{ 'required' | translate }}</div>
 										</div>
@@ -183,7 +183,7 @@
 			  </div>
 			  <div>
 				<!-- -->
-				<select (ngModelChange)="getEstructure('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+				<select (change)="getEstructure('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
 					<option *ngFor="let opcion of this.results_per_pag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 			  </div>

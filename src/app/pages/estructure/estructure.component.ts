@@ -117,23 +117,21 @@ export class EstructureComponent implements OnInit{
     }
     this.charging= true;
     
-    setTimeout(() => {
-      fetch(`${this.get_estructure}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
-      .then((response) => response.json())
-      .then(quotesData => {
-        this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
-        this.total= quotesData[0].total;
-        //
-        this.charging= false
-        this.data = quotesData
-        if(this.data.length<this.quantPage){
-          this.cosa= this.total;
-        }
-        else{
-          this.cosa= this.quantPage*this.currentPage;
-        }
-      });
-    }, 100);
+    fetch(`${this.get_estructure}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
+    .then((response) => response.json())
+    .then(quotesData => {
+      this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
+      this.total= quotesData[0].total;
+      //
+      this.charging= false
+      this.data = quotesData
+      if(this.data.length<this.quantPage){
+        this.cosa= this.total;
+      }
+      else{
+        this.cosa= this.quantPage*this.currentPage;
+      }
+    });
   }
 
   getEstructureButton(id: any,ord: any){ // Ordenar columnas (Peticion API)

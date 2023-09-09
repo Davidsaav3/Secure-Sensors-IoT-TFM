@@ -28,10 +28,8 @@ export class NavbarComponent {
   }
 
   changeLenguaje() {
-    setTimeout(() =>{ 
-      this.saveStorage();
-      this.translate.use(this.activeLang);
-    }, 1);
+    this.saveStorage();
+    this.translate.use(this.activeLang);
   }
 
   saveStorage() { // Guarda datos
