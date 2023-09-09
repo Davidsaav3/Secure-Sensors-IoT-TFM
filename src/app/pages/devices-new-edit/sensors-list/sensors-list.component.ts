@@ -72,10 +72,7 @@ export class SensorsListComponent  implements OnInit{
   ngOnInit(): void { // Inicialización
     this.sensors.sensors= [];
     this.getDevices('id');
-
-    setTimeout(() => {
-      this.updatesharedList();
-    }, 100);
+    this.updatesharedList();
 
     setInterval(() => {
       this.dataSharingService.sharedAmp$.subscribe(data => {
@@ -91,9 +88,7 @@ export class SensorsListComponent  implements OnInit{
           .catch(error => {
             console.error(error); 
           });
-          setTimeout(() => {
-            this.updatesharedList();
-          }, 10);
+          this.updatesharedList();
           this.numerito= data+1;
         }
       });
@@ -164,7 +159,9 @@ export class SensorsListComponent  implements OnInit{
   }
   
   updatesharedList() { // Enviar sensores a device-edit
-    this.dataSharingService.updatesharedList(this.sensors.sensors);
+    setTimeout(() => {
+      this.dataSharingService.updatesharedList(this.sensors.sensors);
+    }, 100);
   }
 
 }

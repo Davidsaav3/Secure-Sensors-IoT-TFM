@@ -61,53 +61,51 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   id_max= 1;
   state= -1;
   
-  ngOnInit(): void { // Inicializador
-    fetch(this.max_device)
-    .then(response => response.json())
-    .then(data => {
-      this.id_max= parseInt(data.id);
-      if(this.id<=this.id_max){
-        this.state= 1;
+  async ngOnInit(): Promise<void> {
+    try {
+      const maxDeviceResponse = await fetch(this.max_device);
+      const maxDeviceData = await maxDeviceResponse.json();
+      this.id_max = parseInt(maxDeviceData.id);
+  
+      if (this.id <= this.id_max) {
+        this.state = 1;
       }
-      if(this.id>this.id_max){
-        this.state= 0;
+      if (this.id > this.id_max) {
+        this.state = 0;
       }
-    })
-    //
-    setTimeout(() => {
+  
+      // Resto del código después de obtener el máximo dispositivo
       this.readStorage();
-      this.rute= this.rute1.routerState.snapshot.url;
+      this.rute = this.rute1.routerState.snapshot.url;
       this.rute2 = this.rute.split('/');
-
-      if(this.rute2[2]=='new' && this.state==0){
-          this.dataSharingService.sharedLat$.subscribe(data => {
-            this.sharedLat = data;
-          });
-          this.dataSharingService.sharedLon$.subscribe(data => {
-            this.sharedLon = data;
-          });
+  
+      if (this.rute2[2] == 'new' && this.state == 0) {
+        this.dataSharingService.sharedLat$.subscribe(data => {
+          this.sharedLat = data;
+        });
+        this.dataSharingService.sharedLon$.subscribe(data => {
+          this.sharedLon = data;
+        });
       }
-      
-      if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
-          this.dataSharingService.sharedLat$.subscribe(data => {
-            this.sharedLat = data;
-          });
-          this.dataSharingService.sharedLon$.subscribe(data => {
-            this.sharedLon = data;
-          });
-          this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
+  
+      if (this.rute2[2] == 'edit' || (this.rute2[2] == 'new' && this.state == 1)) {
+        this.dataSharingService.sharedLat$.subscribe(data => {
+          this.sharedLat = data;
+        });
+        this.dataSharingService.sharedLon$.subscribe(data => {
+          this.sharedLon = data;
+        });
+        this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
       }
-    }, 100);
-    //
-    setInterval(() => {
-      if (this.map && this.map!=undefined){
-        //this.map.on('load', () => {
-          if (this.map && this.map!=undefined){
-            this.map.resize();
-          }
-        //})
-      }
-    }, 100);
+  
+      setInterval(() => {
+        if (this.map && this.map != undefined) {
+          this.map.resize();
+        }
+      }, 100);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit

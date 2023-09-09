@@ -407,7 +407,10 @@ export class DevicesNewEditComponent implements OnInit{
     }, 100);
   }
   updatesharedCota() { // Actualizar Cota
-    this.dataSharingService.updatesharedCota(this.devices.cota);
+    setTimeout(() => {
+      this.dataSharingService.updatesharedCota(this.devices.cota);
+    }, 100);
+
   }
 
   recharge_map(){ // Recargar mapa

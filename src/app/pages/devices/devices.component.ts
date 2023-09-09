@@ -507,62 +507,59 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   filterDevices(){ // Filtra por devices
     this.newMap();
-    this.timeout = setTimeout( () => {
+    this.select_sensors_3.sensors= [];
+    if(this.select_sensors_2.sensors.length==0){
+      this.select_sensors_3.sensors.push({
+        id: -1, 
+        name: '',    
+        metric: '', 
+        description: '',
+        errorvalue: 1,
+        valuemax: 1,
+        valuemin: 1,
+        position: '',
+        correction_general: null,
+        correction_time_general: null,
+        id_data_estructure: 1,
+      });
+      this.getDevices('1');    
+    }
+    else{
       this.select_sensors_3.sensors= [];
-      if(this.select_sensors_2.sensors.length==0){
-        this.select_sensors_3.sensors.push({
-          id: -1, 
-          name: '',    
-          metric: '', 
-          description: '',
-          errorvalue: 1,
-          valuemax: 1,
-          valuemin: 1,
-          position: '',
-          correction_general: null,
-          correction_time_general: null,
-          id_data_estructure: 1,
-        });
-        this.getDevices('1');    
-      }
-      else{
-        this.select_sensors_3.sensors= [];
-        for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
-          if(this.select_sensors_2.sensors[index].id>=0){
-            this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
-            this.getDevices('1');    
-          }
-          if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
-            this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
-            this.select_sensors_2.sensors= [];
-            this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
-            this.getDevices('1');    
-          }
-          if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
-            this.select_sensors_2.sensors= [];
-            this.select_sensors_2.sensors= this.select_sensors_3.sensors;
-          }
-          if(this.select_sensors_2.sensors.length==0){
-            this.select_sensors_2.sensors= [];
-            this.select_sensors_3.sensors.push({
-              id: -1, 
-              name: '',    
-              metric: '', 
-              description: '',
-              errorvalue: 1,
-              valuemax: 1,
-              valuemin: 1,
-              position: '',
-              correction_general: null,
-              correction_time_general: null,
-              id_data_estructure: 1,
-            });            
-            this.getDevices('1');
-          }
+      for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
+        if(this.select_sensors_2.sensors[index].id>=0){
+          this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
+          this.getDevices('1');    
+        }
+        if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
+          this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
+          this.select_sensors_2.sensors= [];
+          this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
+          this.getDevices('1');    
+        }
+        if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
+          this.select_sensors_2.sensors= [];
+          this.select_sensors_2.sensors= this.select_sensors_3.sensors;
+        }
+        if(this.select_sensors_2.sensors.length==0){
+          this.select_sensors_2.sensors= [];
+          this.select_sensors_3.sensors.push({
+            id: -1, 
+            name: '',    
+            metric: '', 
+            description: '',
+            errorvalue: 1,
+            valuemax: 1,
+            valuemin: 1,
+            position: '',
+            correction_general: null,
+            correction_time_general: null,
+            id_data_estructure: 1,
+          });            
+          this.getDevices('1');
         }
       }
-      
-    }, 1);
+    }
   }
 
   initFilters(){ // Inicializa filtros
