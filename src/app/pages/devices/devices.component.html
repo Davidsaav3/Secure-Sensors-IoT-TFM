@@ -78,7 +78,6 @@
       <!---->
 
   </div>
-
   <div class="p-4 pt-0 mb-5" *ngIf="open_map_list==true" style="position: fixed; z-index: 1000; width: 97vw" >
     <div class="row">
       <div class="over p-0 " style="height: 71vh; background-color: #fff;"> 
@@ -168,13 +167,17 @@
                     </td>
 
                     <td scope="col" [routerLink]="['/devices/edit/', quote.id]" class="d-none d-lg-none d-xl-table-cell d-flex">
-                      <div *ngFor="let quote2 of quote.sensor.sensors" style="display: inline-block; height: min-content;">
-                        <span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': quote2.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
-                        <span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': quote2.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
-                      </div>
-                        <div *ngIf="quote.sensor.sensors.length==0" style="display: inline-block; height: min-content;">
+                      <div *ngIf="quote.sensor!=null">
+                        <div *ngIf="quote.sensor.sensors.length>0">
+                          <div *ngFor="let quote2 of quote.sensor.sensors" style="display: inline-block; height: min-content;">
+                            <span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': quote2.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
+                            <span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': quote2.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
+                          </div>
+                        </div>
+                        <div *ngIf="quote.sensor.sensors.length<=0" style="display: inline-block; height: min-content;">
                           <p class="m-0">{{ 'sensors.sin_sensores' | translate }}</p>
                         </div>
+                      </div>
                     </td>
 
                     <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>

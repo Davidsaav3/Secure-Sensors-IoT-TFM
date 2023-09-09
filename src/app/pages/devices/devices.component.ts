@@ -186,8 +186,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.pag_pag= 100000;
 
       if(this.open_map_list==false){ // MAP //
+        this.data= [];
+
         this.getMapDevices('1')
         .then(data => {
+          console.log('map')
+          console.log(data)
+
           for(let quote of this.data) {
             let color= '#198754';
             if(quote.enable==0){
@@ -331,6 +336,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           console.error('Error al obtener los datos:', error);
         });
       }
+
+      ///////////////////////////////////////////////////////
       
       if(this.open_map_list==true){ // LIST //
         this.data= [];
@@ -339,6 +346,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          console.log('list')
+          console.log(data)
           this.charging= false;
           this.totalPages= Math.ceil(data[0].total/this.quantPage);
           this.total= data[0].total;
@@ -361,7 +370,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           .then(data => {
             for (let index = 0; index < this.data.length; index++) {
               this.data[index].sensor= data[index];
-            }
+            }            
           })
           .catch(error => {
             console.error(error);
@@ -404,10 +413,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           if(this.state=='0'){
             this.data= [];
             this.data= data;
+            this.ngOnDestroy();
             this.newMap();
           }
           //
           if(this.state=='1'){
+            this.ngOnDestroy();
             this.newMap();
             this.data= [];
             this.data= data;
@@ -457,26 +468,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.Page(1);
   }
 
-  deleteSensors(){ // Elimina todos los sensores
-    this.select_sensors_2.sensors= [];
-    this.select_sensors_3.sensors= [];
-    this.select_sensors_3.sensors.push({
-      id: -1, 
-      name: '',    
-      metric: '', 
-      description: '',
-      errorvalue: 1,
-      valuemax: 1,
-      valuemin: 1,
-      position: '',
-      correction_general: null,
-      correction_time_general: null,
-      id_data_estructure: 1,
-    });
-    this.Page(1);
-  }
-
   filterDevices(){ // Filtra por devices
+    this.ngOnDestroy();
     this.newMap();
     this.select_sensors_3.sensors= [];
     if(this.select_sensors_2.sensors.length==0){
@@ -565,7 +558,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   openMap(){ // Abrir mapa
     this.open_map_list= false;
-    this.getDevices('0');  
+    this.getDevices('1');  
     this.saveStorage();
   }
   openList(){ // Abrir lista
@@ -650,6 +643,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   /* MAPA */
 
   ngAfterViewInit(): void { // Después de ngOnInit
+    this.ngOnDestroy();
     this.newMap();
     this.first_time= false;
   }
@@ -728,10 +722,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
         this.map.on('zoomend', () => {
-          this.getDevices('0');
+          if(this.open_map_list==false)
+            this.getDevices('0');
         });
         this.map.on('moveend', () => {
-          this.getDevices('0');
+          if(this.open_map_list==false)
+            this.getDevices('0');
         });
       }
 
@@ -808,8 +804,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  /* */
-
+  
   addMarker( lngLat: mapboxgl.LngLat, color: string , name: string, enable: number, data: any) { // Añadir chincheta
     if ( !this.map ) return;
     const marker = new mapboxgl.Marker({
@@ -872,6 +867,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
+  /* */
+
   saveStorage() { // Guarda datos
     console.log(this.color_map)
     localStorage.setItem('open_map_list', this.open_map_list.toString());
@@ -898,5 +895,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
     return dat;
   }
+
 
 }

@@ -49,13 +49,13 @@ router.use(express.json())
     }
     else{
       if(sensors_act==0){
-        consulta= array.join(" OR d.id IN ")
+        consulta= array.join(" OR id IN ")
       }
       if(sensors_act==1){
-        consulta= array.join(" AND d.id IN ")
+        consulta= array.join(" AND id IN ")
       }
       if(sensors_act==2){
-        consulta= array.join(" AND d.id IN ")
+        consulta= array.join(" AND id IN ")
       }
     }
 
@@ -110,10 +110,10 @@ router.use(express.json())
           }
           else{
             var variable= '';
-            variable+= `SELECT d.*, s.orden, s.enable as enable_sensor, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations d INNER JOIN sensors_devices s ON d.id = s.id_device`
+            variable+= "SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
             if(devices_act!=2 && array_sensors==-1){
               console.log("MAPA ACT")
-              variable+= ` WHERE d.enable=${devices_act} AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
+              variable+= ` WHERE enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                   res.send(result)
@@ -123,11 +123,11 @@ router.use(express.json())
             else{
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("MAPA FILTRO TODOS Y ACT")
-                variable+= ` where d.id IN ${consulta}`
+                variable+= ` where id IN ${consulta}`
                 if(devices_act!=2){
-                  variable+= ` AND d.enable=${devices_act}`
+                  variable+= ` AND enable=${devices_act}`
                 }
-                variable+= ` AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
+                variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                     res.send(result)
@@ -135,11 +135,11 @@ router.use(express.json())
               }
               if(array_sensors==-2){
                 console.log("MAPA FILTRO NINGUNO Y ACT")
-                variable+= ` where s.id NOT IN (SELECT id_device FROM sensors_devices)`
+                variable+= ` where id NOT IN (SELECT id_device FROM sensors_devices)`
                 if(devices_act!=2){
-                  variable+= ` AND d.enable=${devices_act}`
+                  variable+= ` AND enable=${devices_act}`
                 }
-                variable+= ` AND d.lon BETWEEN ${xx1} AND ${xx2} AND d.lat BETWEEN ${yy1} AND ${yy2}`
+                variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
                 console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
