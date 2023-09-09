@@ -120,13 +120,14 @@ export class SensorsComponent implements OnInit{
     this.rute = this.rutaActiva.routerState.snapshot.url;
     this.search = this.search_array.value || 'Buscar';
     this.charging = true;
-  
+    this.data= [];
+
     fetch(`${this.get_sensors}/${this.search}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(quotesData => {
+        this.charging = false;
         this.totalPages = Math.ceil(quotesData[0].total / this.quantPage);
         this.total = quotesData[0].total;
-        this.charging = false;
         this.data = quotesData;
 
         if (this.data.length < this.quantPage) {
@@ -254,7 +255,7 @@ export class SensorsComponent implements OnInit{
     }
   }
 
-  duplicateSensor(num: any, type: any){ // Duplicar sensor
+  duplicateSensor(num: any, type: any){ // Duplicar senso
     if(!this.change && !this.change){
       fetch(`${this.duplicate_sensor}/${type}`)
       .then((response) => {
@@ -355,7 +356,6 @@ export class SensorsComponent implements OnInit{
     }
     this.show= true;
     this.openClouse();
-    this.state= 1;
   }
 
   openEdit(){ // Abrir Editar sensor

@@ -13,24 +13,24 @@
 					</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','','',null,null,null,0,'','')" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew('','','','',null,null,null,0,'','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
 					</div>
 				</div>
 			</div>	
 		</div>
 
 		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
-			<div *ngIf="charging" class="col-12 pe-0 over d-flex" style="justify-content: center; align-content: center;align-items: center; max-height: 71vh;"> 
+			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
 				<div class="spinner-border text-secondary" role="status">
 					<span class="visually-hidden">{{ 'loading' | translate }}</span>
 				</div>
 			</div>
-			<div *ngIf="data!=null && data.length<=0" class="col-12 pe-0 over d-flex" style="justify-content: center; align-content: center;align-items: center; max-height: 71vh;"> 
+			<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
 				<div style="height: min-content;">
 				  <p style="font-size: x-large;">{{ 'no_sensors' | translate }}</p>
 				</div>
 			</div>
-			<div *ngIf="data!=null && data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;"> 
+			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;"> 
 				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
 						<tr style="background-color: #fff;">

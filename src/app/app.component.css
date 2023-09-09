@@ -396,3 +396,7 @@
  ::ng-deep .ng-value-label{
   padding-right: 1em;
 }
+
+.mapbox-popup-anchor-bottom{
+  max-width: 400px;
+}

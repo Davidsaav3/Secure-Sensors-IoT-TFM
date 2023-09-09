@@ -226,12 +226,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                   }
                 //} 
                 
-                contenido= `<p style="font-size: x-large;" class="m-0 p-0 pb-2"><strong>${this.markers[index].name}</strong></p>`
+                contenido= ``
                 if(this.markers[index].data.uid!=''){
-                  contenido+= `<p style="font-size: medium;" class="p-0 m-0" ><strong>Uid </strong> ${this.markers[index].data.uid}</p>`
-                } 
+                  contenido+= `<p style="font-size: large;" class="p-0 m-0" ><strong>${this.markers[index].data.uid}</strong> (Uid)</p>`
+                }
                 if(this.markers[index].data.alias!=''){
-                  contenido+= `<p style="font-size: medium;" class="p-0 m-0"><strong>Alias </strong> ${this.markers[index].data.alias}</p>`
+                  contenido+= `<p style="font-size: medium;" class="p-0 m-0" ><strong>${this.markers[index].data.alias}</strong> (Alias)</p>`
                 }   
                 if(cont2.length>0){
                   contenido+= `<div style="display: inline-block; height: min-content;" class="pt-3">${cont2}</div>`
@@ -334,15 +334,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       
       if(this.open_map_list==true){ // LIST //
         this.data= [];
-        this.charging= true;
 
+        this.charging= true;
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
+          this.charging= false;
           this.totalPages= Math.ceil(data[0].total/this.quantPage);
           this.total= data[0].total;
           //
-          this.charging= false;
           this.data= data;
           const deviceIds = this.data.map(device => device.id);
           this.idsParam = deviceIds.join(',');
@@ -394,6 +394,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
       .then((response) => response.json())
       .then(data => {
+        this.charging= false;
         if (JSON.stringify(this.data.map(item => item.id)) != JSON.stringify(data.map((item: { id: any; }) => item.id))) {
           this.data= [];
           this.data= data;
@@ -419,7 +420,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               for (let index = 0; index < this.data.length; index++) {
                 this.data[index].sensor= data[index];
               }
-              this.charging= false;
               resolve(this.data); 
             })
             .catch(error => {
@@ -435,7 +435,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   deleteSearch(){ // Eliminar filtros
     this.totalPages = 5;
     this.currentPage = 1;
-    this.quantPage = 10;
+    this.quantPage = 15;
     this.page= 1;
     this.select_sensors_2.sensors= [];
     this.select_sensors_3.sensors= [];

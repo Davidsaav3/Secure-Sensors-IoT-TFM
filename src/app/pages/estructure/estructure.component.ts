@@ -71,7 +71,7 @@ export class EstructureComponent implements OnInit{
   dup_not=false;
   id= 0;
   search_1='Buscar';
-  mark= 'description';
+  order= 'description';
   ord_asc= 'ASC';
 
   estructure = {
@@ -91,16 +91,16 @@ export class EstructureComponent implements OnInit{
   }
 
   ngOnInit(): void { // Inicializador
-    this.getEstructure(this.mark,this.ord_asc);
+    this.getEstructure(this.order,this.ord_asc);
     this.openClouse();
   }
 
   getEstructureVoid(){ // Obtener sin parámetros
-    this.getEstructure(this.mark,this.ord_asc);
+    this.getEstructure(this.order,this.ord_asc);
   }
 
   getEstructure(id: any,ord: any){ // Obtener todos los estructuras
-    this.mark= id;
+    this.order= id;
     this.rute= this.rutaActiva.routerState.snapshot.url;
     if(this.search.value==''){
       this.search_1= 'Buscar';
@@ -110,12 +110,13 @@ export class EstructureComponent implements OnInit{
     }
 
     this.charging= true;
-    fetch(`${this.get_estructure}/${this.search_1}/${this.mark}/${ord}/${this.currentPage}/${this.quantPage}`)
+    this.data= [];
+    fetch(`${this.get_estructure}/${this.search_1}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
     .then((response) => response.json())
     .then(quotesData => {
+      this.charging= false
       this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
       this.total= quotesData[0].total;
-      this.charging= false
       this.data = quotesData
       if(this.data.length<this.quantPage){
         this.total_page= this.total;
@@ -127,7 +128,7 @@ export class EstructureComponent implements OnInit{
   }
 
   getEstructureButton(id: any,ord: any){ // Ordenar columnas
-    this.mark= id;
+    this.order= id;
     if (ord == 'ASC') {
       if (id == 'description') {
         this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
@@ -297,7 +298,7 @@ export class EstructureComponent implements OnInit{
     var $this = this;
     this.timeout = setTimeout( () => {
       if (event.keyCode != 13) {
-        $this.getEstructure(this.mark,this.ord_asc);
+        $this.getEstructure(this.order,this.ord_asc);
         $this.openClouse();
       }
     }, 500);
@@ -314,7 +315,7 @@ export class EstructureComponent implements OnInit{
 
   deleteSearch(){ // Borrar busqueda textual
     this.search.value= '';
-    this.getEstructure(this.mark,this.ord_asc);
+    this.getEstructure(this.order,this.ord_asc);
   }
 
   openNew(id_estructure: any,description:any,configuration:any){ // Abrir Nuevo sensor

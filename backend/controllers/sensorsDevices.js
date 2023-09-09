@@ -29,7 +29,7 @@ router.use(express.json())
         id_device, enable, (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) As type_name
       FROM sensors_devices as s 
       WHERE id_device IN (${id_deviceList}) 
-      ORDER BY FIELD(id_device, ${id_deviceList}), orden`;  // Utiliza FIELD para mantener el orden original
+      ORDER BY FIELD(id_device, ${id_deviceList}), orden`;
 
     con.query(query, (err, result) => {
       if (err) {
@@ -37,9 +37,8 @@ router.use(express.json())
           return res.status(500).json({ error: 'Error en la base de datos' });
       }
 
-      const devicesMap = new Map(); // Usaremos un mapa para agrupar sensores por id_device
+      const devicesMap = new Map();
 
-      // Inicializamos el mapa con valores vacíos para todos los id_device
       id_devices.forEach(id => {
           devicesMap.set(id, []);
       });
@@ -47,7 +46,6 @@ router.use(express.json())
       result.forEach(device => {
           const id_device = device.id_device;
 
-          // Verificamos si el id_device tiene resultados antes de agregarlos
           if (devicesMap.has(id_device)) {
               devicesMap.get(id_device).push({
                   enable: device.enable,
@@ -56,9 +54,7 @@ router.use(express.json())
           }
       });
 
-      // Convertimos el mapa en un array y reemplazamos resultados vacíos por cadenas vacías
       const devicesArray = Array.from(devicesMap, ([id_device, sensors]) => ({ id_device, sensors }));
-
       res.send(devicesArray);
     });
   });

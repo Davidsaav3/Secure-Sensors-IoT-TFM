@@ -12,11 +12,12 @@ router.use(express.json())
     const type2 = req.params.type2;
     const tam = parseInt(req.params.pag_pag);
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
-  
-    let query = `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
+    let query = ``;
     if (type0 === 'Buscar') {
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
       query += ` ORDER BY ${type1} ${type2}`;
     } else {
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') as total FROM data_estructure`;
       query += ` WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -50,7 +51,7 @@ router.use(express.json())
       }
 
       let contador = 1;
-      let nombresExistentes = new Set(); // Tipo explícito para el conjunto
+      let nombresExistentes = new Set();
       for (let index = 0; index < result.length; index++) {
         nombresExistentes.add(result[index].description);
       }

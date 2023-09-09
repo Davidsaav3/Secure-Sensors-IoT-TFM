@@ -20,7 +20,7 @@ router.use(express.json())
       query = `SELECT id, type, metric, description, position, correction_general, correction_time_general,(SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?`;
     } else {
       query = `
-        SELECT * FROM sensors_types
+        SELECT id, type, metric, description, position, correction_general, correction_time_general,(SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%') as total FROM sensors_types
         WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%'
         ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?
       `;
@@ -55,7 +55,7 @@ router.use(express.json())
       }
 
       let contador = 1;
-      let nombresExistentes = new Set(); // Tipo explícito para el conjunto
+      let nombresExistentes = new Set();
       for (let index = 0; index < result.length; index++) {
         nombresExistentes.add(result[index].type);
       }

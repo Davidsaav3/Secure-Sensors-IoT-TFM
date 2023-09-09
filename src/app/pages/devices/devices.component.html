@@ -83,7 +83,7 @@
     <div class="row">
       <div class="over p-0 " style="height: 71vh; background-color: #fff;"> 
       
-        <div *ngIf="data.length<=0" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
+        <div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
           <div style="height: min-content;">
             <p style="font-size: x-large;">{{ 'no_devices' | translate }}</p>
           </div>
