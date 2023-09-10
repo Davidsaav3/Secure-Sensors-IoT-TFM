@@ -67,14 +67,13 @@ router.use(express.json())
 
 
       if(search_text=='Buscar'){ // BUSQUEDA POR TEXTO ?
-        var variable2= '';
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';
-            variable+= `SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations ${variable2}) as total FROM device_configurations`
+            variable+= `SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,`
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
-              variable+= ` WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+              variable+= `(SELECT COUNT(*) AS total FROM device_configurations WHERE enable=${devices_act}) as total FROM device_configurations WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                   res.send(result)
@@ -84,6 +83,13 @@ router.use(express.json())
             else{
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("LISTA FILTRO TODOS Y ACT")
+                if(devices_act!=2){
+                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta} AND enable=${devices_act}) as total FROM device_configurations `
+                }
+                else{
+                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta}) as total FROM device_configurations `
+                }
+                //
                 variable+= ` where id IN ${consulta}`
                 if(devices_act!=2){
                   variable+= ` AND enable=${devices_act}`
@@ -96,6 +102,13 @@ router.use(express.json())
               }
               if(array_sensors==-2){
                 console.log("LISTA FILTRO NINGUNO Y ACT")
+                if(devices_act!=2){
+                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) AND enable=${devices_act}) as total FROM device_configurations `
+                }
+                else{
+                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) ) as total FROM device_configurations `
+                }
+                //
                 variable+= ` where id NOT IN (SELECT id_device FROM sensors_devices)`
                 if(devices_act!=2){
                   variable+= ` AND enable=${devices_act}`

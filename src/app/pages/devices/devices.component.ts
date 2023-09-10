@@ -22,6 +22,7 @@ interface MarkerAndColor {
 export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   @ViewChild('map') divMap?: ElementRef;
+  styleSelector: mapboxgl.Map | undefined;
   constructor(private router: Router,private translate: TranslateService) { }
 
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
@@ -49,6 +50,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   pos_x_2= '0';
   pos_y_1= '0';
   pos_y_2= '0';
+  layerList: any;
   
   totalPages = 5;
   currentPage = 1;
@@ -659,7 +661,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           center: [this.currentLngLat.lng, this.currentLngLat.lat],
           zoom: this.zoom, 
         });
-        this.auxInit();
     }
     else{
       if (navigator.geolocation) {
@@ -670,7 +671,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               center: [position.coords.longitude, position.coords.latitude],
               zoom: this.zoom, 
             });
-            this.auxInit();
           },
           (error) => {
             this.map = new mapboxgl.Map({
@@ -680,7 +680,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               zoom: this.zoom, 
           });
             console.log("Error geo", error);
-            this.auxInit()
           }
         );
       } 
@@ -692,9 +691,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           zoom: this.zoom, 
         });      
         console.log("Geo no compatible");
-        this.auxInit();
       }
     }
+    this.auxInit();
   }
 
   getCornerCoordinates() { // Obtener cordenadas
@@ -734,25 +733,31 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         });
       }
 
-      let layerList = document.getElementById('menu');
-      if (layerList != null) {
+      /*if (layerList != null) {
         let inputs = layerList.getElementsByTagName('input');
+        console.log(inputs)
         if (inputs != null) {
           const inputArray = Array.from(inputs);
-          
           for (const input of inputArray) {
             input.onclick = (layer: any) => {
               const layerId = layer.target.id;
               if (this.map != null) {
-                console.log(this.color_map)
-                this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
+                this.map.setStyle('mapbox://styles/mapbox/' + layerId);
               }
             };
       
           }
         }
-      }
+      }*/
       this.mapListeners();
+    }
+  }
+
+  changeMapStyle(event: any): void {
+    if (this.map) {
+      this.color_map= event;
+      this.saveStorage();
+      this.map.setStyle('mapbox://styles/mapbox/' + event);
     }
   }
 
@@ -873,7 +878,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   /* */
 
   saveStorage() { // Guarda datos
-    console.log(this.color_map)
     localStorage.setItem('open_map_list', this.open_map_list.toString());
     localStorage.setItem('color_map', this.color_map);
   }
