@@ -194,7 +194,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then(data => {
           //this.deleteMarker();
           this.markers= [];
-          
+
           for(let quote of this.data) {
             let color= '#198754';
             if(quote.enable==0){
@@ -541,7 +541,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
-      this.id= parseInt(data.id)+1;
+      this.id= parseInt(data.id);
     })
 
     fetch(`${this.get_sensors_list}`)
@@ -757,7 +757,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  changeMapStyle(event: any): void {
+  changeMapStyle(event: any): void { // Cambiar apariencia del mapa
     if (this.map) {
       this.color_map= event;
       this.saveStorage();

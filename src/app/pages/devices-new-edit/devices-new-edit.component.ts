@@ -129,7 +129,7 @@ export class DevicesNewEditComponent implements OnInit{
       fetch(this.max_device)
       .then(response => response.json())
       .then(data => {
-        this.id_max= parseInt(data.id)+1;  
+        this.id_max= parseInt(data.id);  
         if(this.id<this.id_max){
           this.state= 1;
         }

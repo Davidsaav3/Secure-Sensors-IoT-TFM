@@ -217,13 +217,14 @@ router.use(express.json())
   });
 
   router.get("/max/", (req, res) => {  /*/ MAX  /*/
-    const query = "SELECT MAX(id) AS max_id FROM device_configurations";
+    const query = "SHOW TABLE STATUS LIKE 'device_configurations'";
     con.query(query, (err, result) => {
       if (err) {
         console.error("Error:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      const id = result[0].max_id;
+      console.log(result[0].Auto_increment)
+      const id = result[0].Auto_increment;
       res.json({ id });
     });
   });

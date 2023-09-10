@@ -2,24 +2,24 @@
 <div id="map" #map>
   
 	<div id="menu">
-		<input *ngIf="color_map=='streets-v12'" id="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
-		<input (click)="color_map='streets-v12';saveStorage()" *ngIf="color_map!='streets-v12'" id="streets-v12" type="radio" name="rtoggle" value="streets">
+		<input *ngIf="color_map=='streets-v12'" id="streets-v12"  name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
+		<input *ngIf="color_map!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()" id="streets-v12" type="radio" name="rtoggle" value="streets">
 		<label for="streets-v12">{{ 'predeterminado' | translate }}</label>
 
-		<input *ngIf="color_map=='satellite-streets-v12'" id="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite" checked="checked">
-		<input (click)="color_map='satellite-streets-v12';saveStorage()" *ngIf="color_map!='satellite-streets-v12'" id="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite">
+		<input *ngIf="color_map=='satellite-streets-v12'" id="satellite-streets-v12" name="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite" checked="checked">
+		<input *ngIf="color_map!='satellite-streets-v12'" (click)="changeMapStyle('satellite-streets-v12');saveStorage()" id="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite">
 		<label for="satellite-streets-v12">{{ 'satelite' | translate }}</label>
 
-		<input *ngIf="color_map=='outdoors-v12'" id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3" checked="checked">
-		<input (click)="color_map='outdoors-v12';saveStorage()" *ngIf="color_map!='outdoors-v12'" id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3">
+		<input *ngIf="color_map=='outdoors-v12'" id="outdoors-v12" name="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3" checked="checked">
+		<input *ngIf="color_map!='outdoors-v12'" (click)="changeMapStyle('outdoors-v12');saveStorage()" id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3">
 		<label for="outdoors-v12">{{ 'relieve' | translate }}</label>
 
-		<input *ngIf="color_map=='light-v11'" id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3" checked="checked">
-		<input (click)="color_map='light-v11';saveStorage()" *ngIf="color_map!='light-v11'" id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3">
+		<input *ngIf="color_map=='light-v11'" id="light-v11" name="light-v11" type="radio" name="rtoggle" value="light" class="ms-3" checked="checked">
+		<input *ngIf="color_map!='light-v11'" (click)="changeMapStyle('light-v11');saveStorage()" id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3">
 		<label for="light-v11">{{ 'claro' | translate }}</label>
 
-		<input *ngIf="color_map=='dark-v11'" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
-		<input (click)="color_map='dark-v11';saveStorage()" *ngIf="color_map!='dark-v11'" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
+		<input *ngIf="color_map=='dark-v11'" id="dark-v11" name="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
+		<input  *ngIf="color_map!='dark-v11'" (click)="changeMapStyle('dark-v11');saveStorage()" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
 		<label for="dark-v11">{{ 'oscuro' | translate }}</label>
 	</div>
 

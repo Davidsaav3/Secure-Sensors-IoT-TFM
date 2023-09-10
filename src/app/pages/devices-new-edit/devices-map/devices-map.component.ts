@@ -59,7 +59,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     fetch(this.max_device)
     .then(response => response.json())
     .then(data => {
-      this.id_max= parseInt(data.id);
+      this.id_max= parseInt(data.id)-1;
       if(this.id<=this.id_max){
         this.state= 1;
       }
@@ -96,14 +96,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
                 this.auxInit();
               },
               (error) => {
-                this.map= this.createMap([0,0]);
+                this.map= this.createMap([-3.7036360462944913,40.41686882952129]);
                 console.log("Error geo", error);
                 this.auxInit()
               }
             );
           } 
           else {
-            this.map= this.createMap([0,0]);
+            this.map= this.createMap([-3.7036360462944913,40.41686882952129]);
             console.log("Geo no compatible");
             this.auxInit();
           }
@@ -251,6 +251,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       zoom: this.zoom,
     });
     return this.map;
+  }
+
+  changeMapStyle(event: any): void { // Cambiar apariencia del mapa
+    if (this.map) {
+      this.color_map= event;
+      this.saveStorage();
+      this.map.setStyle('mapbox://styles/mapbox/' + event);
+    }
   }
   
   ngOnDestroy() {
