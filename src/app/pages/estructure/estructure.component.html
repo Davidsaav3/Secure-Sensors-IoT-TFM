@@ -19,7 +19,7 @@
 			</div>	
 		</div>
 
-		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
+		<div class="row flex-row-reverse pe-3" style="height: 72vh;">
 			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
 				<div class="spinner-border text-secondary" role="status">
 					<span class="visually-hidden">{{ 'loading' | translate }}</span>
@@ -176,9 +176,9 @@
 			</div>		
 		</div> 
 
-		<div  class="row" style="background-color: #fff;"><!--*ngIf="open_map_list"-->
+		<div  class="row" style="background-color: #fff; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" ><!--*ngIf="open_map_list"-->
 			<div class="col-12 col-lg-6 d-flex mt-3">
-			  <div>totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}}
+			  <div><!--totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}}-->
 				<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{total_page}} de {{total}}</p>
 			  </div>
 			  <div>

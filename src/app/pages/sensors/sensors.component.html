@@ -19,7 +19,7 @@
 			</div>	
 		</div>
 
-		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
+		<div class="row flex-row-reverse pe-3" style="height: 72vh;">
 			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
 				<div class="spinner-border text-secondary" role="status">
 					<span class="visually-hidden">{{ 'loading' | translate }}</span>
@@ -33,7 +33,7 @@
 			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;"> 
 				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
-						<tr style="background-color: #fff;">
+						<tr style="background-color: #fff;" >
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'position'}">
 								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructureButton('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
@@ -125,7 +125,7 @@
 			</div>		
 		</div> 
 
-		<div  class="row" style="background-color: #fff;"><!--*ngIf="open_map_list"-->
+		<div  class="row" style="background-color: #fff;border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;"><!--*ngIf="open_map_list"-->
 			<div class="col-12 col-lg-6 d-flex mt-3">
 			  <div><!-- totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}} -->
 				<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{total_page}} de {{total}}</p>
