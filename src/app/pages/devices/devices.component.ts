@@ -192,7 +192,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
         this.getMapDevices('1')
         .then(data => {
-
+          //this.deleteMarker();
+          this.markers= [];
+          
           for(let quote of this.data) {
             let color= '#198754';
             if(quote.enable==0){
@@ -213,11 +215,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               let contenido;
               let cont= [];
               let cont2='';
-              
+
+              console.log(this.markers)
               for (let index = 0; index < this.markers.length; index++) {
                 cont2='';
                 //console.log(this.data[index].sensor.sensors.length)
-                if(this.data[index]!=undefined){
+                if(this.data!=undefined && this.data!=null && this.data[index]!=undefined && this.data[index]!=null){
+                  //console.log('hola '+this.data[index].sensor.sensors[0].type_name)
                   for (let index3 = 0; index3 < this.data[index].sensor.sensors.length; index3++) {
                     if(this.data[index].sensor.sensors[index3].enable==0){
                       cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
