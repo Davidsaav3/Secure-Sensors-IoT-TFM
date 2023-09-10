@@ -223,7 +223,7 @@ router.use(express.json())
         console.error("Error:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      console.log(result[0].Auto_increment)
+      //console.log(result[0].Auto_increment)
       const id = result[0].Auto_increment;
       res.json({ id });
     });
