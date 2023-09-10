@@ -67,10 +67,11 @@ router.use(express.json())
 
 
       if(search_text=='Buscar'){ // BUSQUEDA POR TEXTO ?
+        var variable2= '';
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';
-            variable+= "SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
+            variable+= `SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations ${variable2}) as total FROM device_configurations`
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
               variable+= ` WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`

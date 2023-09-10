@@ -190,8 +190,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
         this.getMapDevices('1')
         .then(data => {
-          console.log('map')
-          console.log(data)
 
           for(let quote of this.data) {
             let color= '#198754';
@@ -217,6 +215,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               for (let index = 0; index < this.markers.length; index++) {
                 cont2='';
                 //console.log(this.data[index].sensor.sensors.length)
+                if(this.data[index]!=undefined){
                   for (let index3 = 0; index3 < this.data[index].sensor.sensors.length; index3++) {
                     if(this.data[index].sensor.sensors[index3].enable==0){
                       cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
@@ -229,6 +228,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                     </span>`
                     }
                   }
+                }
                 //} 
                 
                 contenido= ``
@@ -346,8 +346,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-          console.log('list')
-          console.log(data)
+  
           this.charging= false;
           this.totalPages= Math.ceil(data[0].total/this.quantPage);
           this.total= data[0].total;
@@ -368,6 +367,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
           .then(response => response.json())
           .then(data => {
+            console.log('list')
+            console.log(data)
             for (let index = 0; index < this.data.length; index++) {
               this.data[index].sensor= data[index];
             }            
@@ -428,6 +429,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
             .then(response => response.json())
             .then(data => {
+              console.log('map')
+              console.log(data)
               for (let index = 0; index < this.data.length; index++) {
                 this.data[index].sensor= data[index];
               }

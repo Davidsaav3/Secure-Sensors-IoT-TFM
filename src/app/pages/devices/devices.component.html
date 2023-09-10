@@ -29,7 +29,7 @@
             </button>
           </div>
           <div class="ps-2 w-100" style="position: relative;">
-              <input style="height: 40px;" (keyup)="onKeySearch($event)" [(ngModel)]="search.value" type="text" class="form-control" placeholder="{{ 'sensors.buscar_dispositivos' | translate }}" aria-label="Recipient's username" aria-DESCcribedby="basic-addon2">
+              <input style="height: 40px;" id="search_1" name="search_1" (keyup)="onKeySearch($event)" [(ngModel)]="search.value" type="text" class="form-control" placeholder="{{ 'sensors.buscar_dispositivos' | translate }}" aria-label="Recipient's username" aria-DESCcribedby="basic-addon2">
               <p style="position: absolute; cursor: pointer; top: 7px; right: 7px;" class="" type="" (click)="deleteText()" class="btn-close" aria-label="Close"></p>
           </div>
         </div>
@@ -37,18 +37,18 @@
         <div class="col-12 col-lg-4">
           <div class="row d-flex px-3">
             <div class="col-8 col-lg-9 p-0 m-0 mb-3" style="position: relative; border-radius: 6px; border: 1px solid #d8d8d8 ; border-top-right-radius: 0em; border-bottom-right-radius: 0em;">
-              <ng-select [items]="select_sensors_1.sensors" (change)="filterDevices();this.search.value= '';" bindLabel="name" appendTo="ng-select" [multiple]="true" [(ngModel)]="select_sensors_2.sensors" style="background-color: #E3E3E3;" class="selectpicker" aria-label="Default select example" id="sel_type" name="sel_type" style="height:fit-content;"></ng-select>
+              <ng-select [items]="select_sensors_1.sensors" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" bindLabel="name" appendTo="ng-select" [multiple]="true" [(ngModel)]="select_sensors_2.sensors" style="background-color: #E3E3E3;" class="selectpicker" aria-label="Default select example" id="sensors_1" name="sensors_1" style="height:fit-content;"></ng-select>
               <svg style="position: absolute; top:10px; right:40px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
               </svg>
             </div>
             <div class="col-4 col-lg-3 p-0 m-0 pb-3">
-              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select *ngIf="select_sensors_2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
               </select>
-              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select disabled *ngIf="select_sensors_2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_3" name="sensors_3" [(ngModel)]="search.sensors_act">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -58,7 +58,7 @@
         </div>
         <!---->
         <div class="col-12 col-lg-2 p-0 m-0 pb-3 px-3">
-          <select  (change)="filterDevices();this.search.value= '';" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
+          <select  (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
             <option selected [ngValue]="2">{{ 'sensors.all_devices' | translate }}</option>
             <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
             <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -262,23 +262,23 @@
     <div class="row" style="height: 76vh;">
       <div id="map" #map style="height: 76vh;">
         <div id="menu">
-          <input *ngIf="color_map=='streets-v12'" id="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
+          <input *ngIf="color_map=='streets-v12'" id="streets-v12"  ="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
           <input (click)="color_map='streets-v12';saveStorage()" *ngIf="color_map!='streets-v12'" id="streets-v12" type="radio" name="rtoggle" value="streets">
           <label for="streets-v12">{{ 'predeterminado' | translate }}</label>
 
-          <input *ngIf="color_map=='satellite-streets-v12'" id="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite" checked="checked">
+          <input *ngIf="color_map=='satellite-streets-v12'" id="satellite-streets-v12" name="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite" checked="checked">
           <input (click)="color_map='satellite-streets-v12';saveStorage()" *ngIf="color_map!='satellite-streets-v12'" id="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite">
           <label for="satellite-streets-v12">{{ 'satelite' | translate }}</label>
 
-          <input *ngIf="color_map=='outdoors-v12'" id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3" checked="checked">
+          <input *ngIf="color_map=='outdoors-v12'" id="outdoors-v12" name="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3" checked="checked">
           <input (click)="color_map='outdoors-v12';saveStorage()" *ngIf="color_map!='outdoors-v12'" id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3">
           <label for="outdoors-v12">{{ 'relieve' | translate }}</label>
 
-          <input *ngIf="color_map=='light-v11'" id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3" checked="checked">
+          <input *ngIf="color_map=='light-v11'" id="light-v11" name="light-v11" type="radio" name="rtoggle" value="light" class="ms-3" checked="checked">
           <input (click)="color_map='light-v11';saveStorage()" *ngIf="color_map!='light-v11'" id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3">
           <label for="light-v11">{{ 'claro' | translate }}</label>
 
-          <input *ngIf="color_map=='dark-v11'" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
+          <input *ngIf="color_map=='dark-v11'" id="dark-v11" name="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
           <input (click)="color_map='dark-v11';saveStorage()" *ngIf="color_map!='dark-v11'" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
           <label for="dark-v11">{{ 'oscuro' | translate }}</label>
         </div>

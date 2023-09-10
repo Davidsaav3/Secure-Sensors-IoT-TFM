@@ -83,15 +83,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
       }
     }, 100);
     //
-    setInterval(() => {
-      if (this.map && this.map!=undefined){
-        //this.map.on('load', () => {
-          if (this.map && this.map!=undefined){
-            this.map.resize();
-          }
-        //})
-      }    
-    }, 10);
 
   }
 
@@ -221,18 +212,33 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     }
 
     setInterval(() => {
-      this.dataSharingService.sharedLat$.subscribe(data => {
-        this.sharedLat = data;
-      });
-      this.dataSharingService.sharedLon$.subscribe(data => {
-        this.sharedLon = data;
-      });
-      if(this.sharedLat!=this.currentLngLat.lat || this.sharedLon!=this.currentLngLat.lng){
-        this.deleteMarker();
-        this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
-        this.createMarker(this.currentLngLat);
+      try {
+        this.dataSharingService.sharedLat$.subscribe(data => {
+          this.sharedLat = data;
+        });
+        this.dataSharingService.sharedLon$.subscribe(data => {
+          this.sharedLon = data;
+        });
+        if(this.sharedLat!=this.currentLngLat.lat || this.sharedLon!=this.currentLngLat.lng){
+          this.deleteMarker();
+          this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
+          this.createMarker(this.currentLngLat);
+        }
+      } catch (error) {
+        //this.ngOnDestroy();
       }
     }, 50);
+    //
+    setInterval(() => {
+      try {
+        if (this.map) {
+          this.map.resize();
+        }
+      } catch (error) {
+        //this.ngOnDestroy();
+      }
+    }, 10);
+
   }
 
   createMap(pos: any){ // crea el mapa
@@ -247,17 +253,23 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     return this.map;
   }
   
-  ngOnDestroy(): void { // Destructor del mapa
-    this.map?.remove();
+  ngOnDestroy() {
+    try {
+      if (this.map) {
+          this.map.remove();
+      }
+    } catch (error) {
+        console.error('Error al eliminar el mapa:', error);
+    }
   }
 
   showMap(){ // Redimesiona mapa
-    if (this.map && this.map!=undefined){
-      //this.map.on('load', () => {
-        if (this.map && this.map!=undefined){
-          this.map.resize();
-        }
-      //})
+    try {
+      if (this.map) {
+        this.map.resize();
+      }
+    } catch (error) {
+      this.ngOnDestroy();
     }
   }
   

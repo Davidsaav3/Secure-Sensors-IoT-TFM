@@ -14,7 +14,7 @@
                             <div class="col-3 d-flex justify-content-end">
                                 <div class="form-check form-switch">
                                     <label class="toggle tt1 t1">
-                                  <input maxlength="4" type="checkbox" (change)="changed=true" name="enable" [(ngModel)]="devices.enable">
+                                  <input maxlength="4" type="checkbox" (change)="changed=true" id="check" name="check" [(ngModel)]="devices.enable">
                                         <span class="slider"></span>
                                         <ng-container *ngIf="this.active_lang==this.leng_lang[0]">
                                             <span class="labels t1" data-on="Activado" data-off="Desactivado"></span>
@@ -37,7 +37,7 @@
 
                         <div class="row">
                             <div class="col-md-3">
-                                <input [value]="devices['createdAt']" type="text" id="createdAt" class="form-control d-none" name="createdAt" [(ngModel)]="devices['createdAt']" type>
+                                <input [value]="devices['createdAt']" type="text" id="createdAt_2" class="form-control d-none" name="createdAt_2" [(ngModel)]="devices['createdAt']" type>
 
                                 <label for="uid">{{ 'devices.edit.uid' | translate }}</label>
                                 <input maxlength="45" (change)="changed=true" [value]="devices['uid']" type="text" id="uid" class="form-control" name="uid" [(ngModel)]="devices['uid']" required type>
