@@ -1,7 +1,7 @@
 {
     "sensors.t1" : "Dispositivos",
     "sensors.t2" : "Tipos de sensores",
-    "sensors.t3" : "Estructura de datos",
+    "sensors.t3" : "Estructura de datos fija",
     "sensors.e1" : "Error al guardar el sensor",
     "sensors.e2" : "¡Sensor guardado!",
     "sensors.e3" : "¡Sensor eliminado!",

@@ -240,7 +240,7 @@ export class VariableStructureComponent implements OnInit{
         this.structure= this.data.find((objeto: { id: any; }) => objeto.id == num);
         this.openClouse();
         this.state= 0;
-        this.openNew('',this.structure.description,this.structure.structure,this.structure.initial_byte);
+        this.openNew('',data,this.structure.structure,this.structure.initial_byte);
         this.change= true;
       })
       .catch((error) => {

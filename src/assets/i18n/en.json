@@ -1,7 +1,7 @@
 {
     "sensors.t1" : "Devices",
     "sensors.t2" : "Types of sensors",
-    "sensors.t3" : "Data structure",
+    "sensors.t3" : "Fixed data structure",
     "sensors.e1" : "Error saving sensor",
     "sensors.e2" : "Sensor saved!",
     "sensors.e3" : "Sensor removed!",

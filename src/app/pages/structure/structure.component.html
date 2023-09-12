@@ -6,8 +6,8 @@
 				<div class="row d-flex">
 					<div class="col-6 col-sm-6 col-lg-3 mb-3">
 						<div class="w-100 d-flex" style="position: relative;">
-							<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'structure.buscar_estructure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
-							<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'structure.buscar_estructure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+							<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'structure.buscar_structure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+							<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'structure.buscar_structure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
 							<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;" class="" type="" (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 						</div>
 					</div>
@@ -27,7 +27,7 @@
 			</div>
 			<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
 				<div style="height: min-content;">
-				  <p style="font-size: x-large;">{{ 'no_estructure' | translate }}</p>
+				  <p style="font-size: x-large;">{{ 'no_structure' | translate }}</p>
 				</div>
 			</div>
 			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;"> 
@@ -105,14 +105,14 @@
 											<div *ngIf="form.controls['configuration'].errors['required']">{{ 'structure.configuration' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-1 pe-3">
+									<div class="col-12 col-lg-2 pe-3">
 										<label for="identifier_code">{{ 'structure.identifier_code' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ estructure.identifier_code }}" id="identifier_code" class="form-control" name="identifier_code" [(ngModel)]="estructure['identifier_code']" required>
 										<div *ngIf="form.submitted && form.controls['identifier_code'].errors" class="text-danger">
 											<div *ngIf="form.controls['identifier_code'].errors['required']">{{ 'structure.identifier_code' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-4 pe-3">
 										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ estructure.id_variable_data_structure }}" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']" required>
 										<div *ngIf="form.submitted && form.controls['id_variable_data_structure'].errors" class="text-danger">
@@ -176,18 +176,25 @@
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-1 pe-3">
+									<div class="col-12 col-lg-3 pe-3">
 										<label for="configuration">{{ 'structure.configuration' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
 										<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
 											<div *ngIf="form.controls['configuration'].errors['required']">{{ 'structure.configuration' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-3 pe-3">
-										<label for="configuration">{{ 'structure.configuration' | translate }}</label>
-										<input type="text" (change)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']" required>
-										<div *ngIf="form.submitted && form.controls['configuration'].errors" class="text-danger">
-											<div *ngIf="form.controls['configuration'].errors['required']">{{ 'structure.configuration' | translate }} {{ 'required' | translate }}</div>
+									<div class="col-12 col-lg-2 pe-3">
+										<label for="identifier_code">{{ 'structure.identifier_code' | translate }}</label>
+										<input type="text" (change)="change=true" value="{{ estructure.identifier_code }}" id="identifier_code" class="form-control" name="identifier_code" [(ngModel)]="estructure['identifier_code']" required>
+										<div *ngIf="form.submitted && form.controls['identifier_code'].errors" class="text-danger">
+											<div *ngIf="form.controls['identifier_code'].errors['required']">{{ 'structure.identifier_code' | translate }} {{ 'required' | translate }}</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-4 pe-3">
+										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
+										<input type="text" (change)="change=true" value="{{ estructure.id_variable_data_structure }}" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']" required>
+										<div *ngIf="form.submitted && form.controls['id_variable_data_structure'].errors" class="text-danger">
+											<div *ngIf="form.controls['id_variable_data_structure'].errors['required']">{{ 'structure.id_variable_data_structure' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 			

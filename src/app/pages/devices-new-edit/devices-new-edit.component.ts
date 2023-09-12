@@ -98,7 +98,7 @@ export class DevicesNewEditComponent implements OnInit{
 
   structures = {
     structure : [{
-        id_structure: 1, 
+        id_estructure: 1, 
        description: '',
        configuration: ''
       }]

@@ -70,10 +70,10 @@ router.use(express.json())
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';
-            variable+= `SELECT *,(select description from data_estructure where id_structure=id_data_estructure) as data_estructure,`
+            variable+= ` SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,`
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
-              variable+= `(SELECT COUNT(*) AS total FROM device_configurations WHERE enable=${devices_act}) as total FROM device_configurations WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE enable=${devices_act}) as total FROM device_configurations WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                   res.send(result)
@@ -84,10 +84,10 @@ router.use(express.json())
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("LISTA FILTRO TODOS Y ACT")
                 if(devices_act!=2){
-                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta} AND enable=${devices_act}) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta} AND enable=${devices_act}) as total FROM device_configurations `
                 }
                 else{
-                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta}) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta}) as total FROM device_configurations `
                 }
                 //
                 variable+= ` where id IN ${consulta}`
@@ -103,10 +103,10 @@ router.use(express.json())
               if(array_sensors==-2){
                 console.log("LISTA FILTRO NINGUNO Y ACT")
                 if(devices_act!=2){
-                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) AND enable=${devices_act}) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) AND enable=${devices_act}) as total FROM device_configurations `
                 }
                 else{
-                  variable+= `(SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) ) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) ) as total FROM device_configurations `
                 }
                 //
                 variable+= ` where id NOT IN (SELECT id_device FROM sensors_devices)`
@@ -124,7 +124,7 @@ router.use(express.json())
           }
           else{
             var variable= '';
-            variable+= "SELECT *,(select description from data_estructure where id_structure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
+            variable+= " SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
             if(devices_act!=2 && array_sensors==-1){
               console.log("MAPA ACT")
               variable+= ` WHERE enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
@@ -166,14 +166,14 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(`SELECT *,(select description from data_estructure where id_structure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+            con.query(` SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
           }
           else{
             console.log("MAPA SIMPLE")
-            con.query(`SELECT *  FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(` SELECT *  FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               if (err) throw err;
                 res.send(result)
             }); 
@@ -183,14 +183,14 @@ router.use(express.json())
       else{
         if(state=='0'){
           console.log("LISTA BUSQUEDA POR TEXTO")
-            con.query(`SELECT *,(select description from data_estructure where id_structure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
+            con.query(` SELECT *,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
             if (err) throw err;
               res.send(result)
           });
         }
         else{
           console.log("MAPA BUSQUEDA POR TEXTO")
-            con.query(`SELECT * FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(` SELECT * FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
             if (err) throw err;
               res.send(result)
           });
@@ -204,7 +204,7 @@ router.use(express.json())
     const query = `
       SELECT dc.*, de.description AS structure_name
       FROM device_configurations dc
-      INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_structure
+      INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
       WHERE dc.id = ?
     `;
     con.query(query, [id], (err, result) => {

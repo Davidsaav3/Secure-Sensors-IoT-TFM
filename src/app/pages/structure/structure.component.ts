@@ -250,7 +250,7 @@ export class StructureComponent implements OnInit{
         this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
         this.state= 0;
-        this.openNew('',this.estructure.description,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure);
+        this.openNew('',data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure);
         this.change= true;
       })
       .catch((error) => {
