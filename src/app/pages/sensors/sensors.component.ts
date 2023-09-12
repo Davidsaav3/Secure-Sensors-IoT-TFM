@@ -111,7 +111,7 @@ export class SensorsComponent implements OnInit{
     this.getSensors(this.order,this.order_asc);
   }
 
-  getEstructureVoid(){ // Obtener estructura sin parámetros
+  getstructureVoid(){ // Obtener estructura sin parámetros
     this.getSensors(this.order,this.order_asc);
   }
 
@@ -143,7 +143,7 @@ export class SensorsComponent implements OnInit{
     }
   }
 
-  getEstructureButton(id: any,ord: any){ // Ordenar columnas
+  getstructureButton(id: any,ord: any){ // Ordenar columnas
     this.order= id;
     if (ord == 'ASC') {
       if (id == 'position') {
@@ -382,55 +382,55 @@ export class SensorsComponent implements OnInit{
   firstPage(): void { // Primera pagina
     if(this.currentPage!=1){
       this.currentPage= 1;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage-10 > 1) {
       this.currentPage= this.currentPage-10;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
     else{
       this.currentPage= 1;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage= num;
-    this.getEstructureVoid();
+    this.getstructureVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage+10 < this.totalPages) {
       this.currentPage= this.currentPage+10;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
     else{
       this.currentPage= this.totalPages;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
   }
 
   lastPage(): void { // Ultima pagina
     if(this.currentPage!=this.totalPages){
       this.currentPage= this.totalPages;
-      this.getEstructureVoid();
+      this.getstructureVoid();
     }
   }
 

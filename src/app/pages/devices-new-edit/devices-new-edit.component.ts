@@ -38,7 +38,7 @@ export class DevicesNewEditComponent implements OnInit{
   post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/post';
   post_device: string = 'http://localhost:5172/api/device_configurations/post';
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
-  get_estructure_list: string = 'http://localhost:5172/api/data_estructure/get_list';
+  get_structure_list: string = 'http://localhost:5172/api/data_structure/get_list';
   duplicate_device: string = 'http://localhost:5172/api/device_configurations/duplicate';
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
@@ -79,8 +79,8 @@ export class DevicesNewEditComponent implements OnInit{
     enable: 0,
     createdAt: '',
     updatedAt: '',
-    id_data_estructure: 1,
-    estructure_name: ''
+    id_data_structure: 1,
+    structure_name: ''
   }
 
   sensors = {
@@ -96,9 +96,9 @@ export class DevicesNewEditComponent implements OnInit{
       }]
   }
 
-  estructures = {
-    estructure : [{
-        id_estructure: 1, 
+  structures = {
+    structure : [{
+        id_structure: 1, 
        description: '',
        configuration: ''
       }]
@@ -107,7 +107,7 @@ export class DevicesNewEditComponent implements OnInit{
   ngOnInit(): void { // Inicializador
     this.rute= this.router.routerState.snapshot.url;
     this.rute_2 = this.rute.split('/');
-    this.getEstructures();
+    this.getstructures();
 
     if(this.rute_2[2]=='edit'){
         this.dataSharingService.updatesharedAmp(false);
@@ -410,11 +410,11 @@ export class DevicesNewEditComponent implements OnInit{
     this.active_lang = localStorage.getItem('active_lang') ?? 'es';
   }
 
-  getEstructures(){ // optener estructuras de datos
-    fetch(`${this.get_estructure_list}`)
+  getstructures(){ // optener estructuras de datos
+    fetch(`${this.get_structure_list}`)
       .then((response) => response.json())
       .then(quotesData => {
-        this.estructures.estructure = quotesData;
+        this.structures.structure = quotesData;
       });   
   }
 

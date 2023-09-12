@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DeviceComponent } from './pages/device.component';
 import { SensorsComponent } from './pages/sensors/sensors.component';
-import { EstructureComponent } from './pages/estructure/estructure.component';
-import { VariableEstructureComponent } from './pages/variable-structure/variable-estructure.component';
+import { StructureComponent } from './pages/structure/structure.component';
+import { VariableStructureComponent } from './pages/variable-structure/variable-structure.component';
 
 const routes: Routes = [
   {
@@ -13,10 +13,10 @@ const routes: Routes = [
     path:'sensors', component: SensorsComponent
   },
   { 
-    path:'estructure', component: EstructureComponent
+    path:'structure', component: StructureComponent
   },
   { 
-    path:'variable-estructure', component: VariableEstructureComponent
+    path:'variable-structure', component: VariableStructureComponent
   },
   {
     path:'**',

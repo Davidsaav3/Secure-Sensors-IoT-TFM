@@ -5,7 +5,7 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 
-  /* ESTRUCTURE //////////////////////////////////////////*/
+  /* structure //////////////////////////////////////////*/
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
@@ -30,7 +30,7 @@ router.use(express.json())
   });
 
   router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
-    let query = `SELECT id_estructure, description FROM data_estructure ORDER BY description ASC`;
+    let query = `SELECT id_structure, description FROM data_estructure ORDER BY description ASC`;
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
@@ -40,7 +40,7 @@ router.use(express.json())
   });
 
   
-  /* ESTRUCTURE //////////////////////////////////////////*/
+  /* structure //////////////////////////////////////////*/
   router.get("/duplicate/:description", (req, res) => {  /*/ DUPLICATE  /*/
     const description = req.params.description;
     let query = `SELECT description FROM data_estructure`;
@@ -84,8 +84,8 @@ router.use(express.json())
   });
   
   router.put("/update", (req, res) => {  /*/ UPDATE  /*/
-    const { id_estructure, description, configuration } = req.body;
-    if (!id_estructure || (!description && !configuration)) {
+    const { id_structure, description, configuration } = req.body;
+    if (!id_structure || (!description && !configuration)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
     let query = "UPDATE data_estructure SET";
@@ -101,8 +101,8 @@ router.use(express.json())
       query += " configuration=?";
       values.push(configuration);
     }
-    query += " WHERE id_estructure=?";
-    values.push(id_estructure);
+    query += " WHERE id_structure=?";
+    values.push(id_structure);
     con.query(query, values, (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
@@ -115,11 +115,11 @@ router.use(express.json())
   });
 
   router.delete("/delete", (req, res) => {  /*/ DELETE  /*/
-    const id_estructure = parseInt(req.body.id_estructure);
-      if (isNaN(id_estructure)) {
+    const id_structure = parseInt(req.body.id_structure);
+      if (isNaN(id_structure)) {
       return res.status(400).json({ error: 'ID no válido' });
     }
-    con.query("DELETE FROM data_estructure WHERE id_estructure = ?", id_estructure, function (err, result) {
+    con.query("DELETE FROM data_estructure WHERE id_structure = ?", id_structure, function (err, result) {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }

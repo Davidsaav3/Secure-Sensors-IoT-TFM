@@ -100,8 +100,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
-      id_data_estructure: 1,
-      data_estructure: '',
+      id_data_structure: 1,
+      data_structure: '',
     }]
   }
 
@@ -123,7 +123,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
-      id_data_estructure: 1,
+      id_data_structure: 1,
     }]
   }
 
@@ -139,7 +139,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
-      id_data_estructure: 1,
+      id_data_structure: 1,
     }]
   }
 
@@ -470,7 +470,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       position: '',
       correction_general: null,
       correction_time_general: null,
-      id_data_estructure: 1,
+      id_data_structure: 1,
     });
     this.search.devices_act= 2;
     this.search.sensors_act= 2;
@@ -493,7 +493,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         position: '',
         correction_general: null,
         correction_time_general: null,
-        id_data_estructure: 1,
+        id_data_structure: 1,
       });
       this.getDevices('1');    
     }
@@ -527,7 +527,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             position: '',
             correction_general: null,
             correction_time_general: null,
-            id_data_estructure: 1,
+            id_data_structure: 1,
           });            
           this.getDevices('1');
         }
