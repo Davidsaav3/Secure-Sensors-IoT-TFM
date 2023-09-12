@@ -80,7 +80,8 @@ export class DevicesNewEditComponent implements OnInit{
     createdAt: '',
     updatedAt: '',
     id_data_structure: 1,
-    structure_name: ''
+    structure_name: '',
+    variable_configuration: ''
   }
 
   sensors = {

@@ -117,19 +117,37 @@
                             </div>
 
                             <div style="position: relative;" class="col-md-12">
-                                <label for="id_data_structure">{{ 'structure' | translate }}</label>
-                                <select type="select" (change)="changed=true" [value]="devices['id_data_structure']" type="text" id="id_data_structure" class="form-control" name="id_data_structure" [(ngModel)]="devices['id_data_structure']">
-                                    <ng-container *ngFor="let id of structures.structure;let j=index">
-                                        <option [selected]="id.id_estructure==devices['id_data_structure']" value="{{id.id_estructure}}">{{id.description}}</option>
-                                    </ng-container>
-                                </select>
-                                <div>
-                                    <svg style="position: absolute; top:35px; right:20px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                    </svg>
-                                </div>
-                                <div *ngIf="form.submitted && form.controls['id_data_structure'].errors" class="text-danger">
-                                    <div *ngIf="form.controls['id_data_structure'].errors['required']">{{ 'structure' | translate }} {{ 'required' | translate }}</div>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <label for="id_data_structure">{{ 'structure' | translate }}</label>
+                                        <select type="select" (change)="changed=true" [value]="devices['id_data_structure']" type="text" id="id_data_structure" class="form-control" name="id_data_structure" [(ngModel)]="devices['id_data_structure']">
+                                            <ng-container *ngFor="let id of structures.structure;let j=index">
+                                                <option [selected]="id.id_estructure==devices['id_data_structure']" value="{{id.id_estructure}}">{{id.description}}</option>
+                                            </ng-container>
+                                        </select>
+                                        <div>
+                                            <svg style="position: absolute; top:35px; right:210px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                        </div>
+                                        <div *ngIf="form.submitted && form.controls['id_data_structure'].errors" class="text-danger">
+                                            <div *ngIf="form.controls['id_data_structure'].errors['required']">{{ 'structure' | translate }} {{ 'required' | translate }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-check form-switch pt-4">
+                                            <label class="toggle tt2 t2">
+                                                <input maxlength="4" type="checkbox" (change)="changed=true" id="check" name="check" [(ngModel)]="devices.variable_configuration">
+                                                <span class="slider"></span>
+                                                <ng-container *ngIf="this.active_lang==this.leng_lang[0]">
+                                                    <span class="labels t2" data-on="Fijo" data-off="Variable"></span>
+                                                </ng-container>
+                                                <ng-container *ngIf="this.active_lang==this.leng_lang[1]">
+                                                    <span class="labels t2" data-on="Fijo" data-off="Variable"></span>
+                                                </ng-container>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
