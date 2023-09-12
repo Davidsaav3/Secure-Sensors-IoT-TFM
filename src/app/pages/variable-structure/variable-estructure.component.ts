@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { environment } from "../../environments/environment"
 
 @Component({
-  selector: 'app-estructure-specific',
-  templateUrl: './estructure-specific.component.html',
+  selector: 'app-variable-estructure',
+  templateUrl: './variable-estructure.component.html',
   styleUrls: ['../../app.component.css']
 })
 
-export class EstructureSpecificComponent implements OnInit{
+export class VariableEstructureComponent implements OnInit{
 
   @HostListener('window:resize')
   leng_name= environment.lenguaje_name;

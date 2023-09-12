@@ -20,11 +20,11 @@ export class EstructureComponent implements OnInit{
     this.resize();
   }
 
-  get_estructure: string = 'http://localhost:5172/api/data_estructure/get';
-  post_estructure: string = 'http://localhost:5172/api/data_estructure/post';
-  delete_estructure: string = 'http://localhost:5172/api/data_estructure/delete';
-  update_estructure: string = 'http://localhost:5172/api/data_estructure/update';
-  duplicate_estructure: string = 'http://localhost:5172/api/data_estructure/duplicate';
+  get_estructure: string = 'http://localhost:5172/api/specific_data_estructure/get';
+  post_estructure: string = 'http://localhost:5172/api/specific_data_estructure/post';
+  delete_estructure: string = 'http://localhost:5172/api/specific_data_estructure/delete';
+  update_estructure: string = 'http://localhost:5172/api/specific_data_estructure/update';
+  duplicate_estructure: string = 'http://localhost:5172/api/specific_data_estructure/duplicate';
 
   totalPages = 5;
   currentPage = 1;

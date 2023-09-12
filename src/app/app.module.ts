@@ -13,7 +13,7 @@ import { DevicesComponent } from './pages/devices/devices.component';
 import { DevicesMapComponent } from './pages/devices-new-edit/devices-map/devices-map.component';
 import { DeviceComponent } from './pages/device.component';
 import { EstructureComponent } from './pages/estructure/estructure.component';
-import { EstructureSpecificComponent } from './pages/estructure-specific/estructure-specific.component';
+import { VariableEstructureComponent } from './pages/variable-structure/variable-estructure.component';
 import { DevicesNewEditComponent } from './pages/devices-new-edit/devices-new-edit.component';
 import { SensorsComponent } from './pages/sensors/sensors.component';
 import { SensorsListComponent } from './pages/devices-new-edit/sensors-list/sensors-list.component';
@@ -30,7 +30,7 @@ import { DataSharingService } from './services/data_sharing.service';
     DevicesNewEditComponent,
     DeviceComponent,
     EstructureComponent,
-    EstructureSpecificComponent,
+    VariableEstructureComponent,
   ],
   imports: [
     NgSelectModule,

@@ -138,5 +138,9 @@
     "no_estructure" : "Data structures not found, disable filters",
 
     "text_1" : "All sensors",
-    "text_2" : "without sensors"
+    "text_2" : "without sensors",
+    "specific_data_structure" : "Specific data structure",
+    "new_specific_data_structure" : "New specific data structure",
+    "search_specific_data_structure" : "Search specific data structure..."
+
 }

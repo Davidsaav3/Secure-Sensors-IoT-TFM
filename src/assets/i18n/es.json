@@ -120,7 +120,7 @@
     "res" : "Resultado por página",
     "sin" : "Sin sensores",
 
-    "estructure.buscar_estructure" : "Buscar estructuras...",
+    "estructure.buscar_estructure" : "Buscar estructuras de datos...",
     "estructure.configuration" : "Configuración",
     "estructure.new" : "Nueva estructura de datos",
     "estructure" : "Estructura de datos",
@@ -139,6 +139,10 @@
     "no_estructure" : "Estructura de datos no encontradas, desactive filtros",
 
     "text_1" : "Todos los sensores",
-    "text_2" : "Sin sensores"
+    "text_2" : "Sin sensores",
+    "specific_data_structure" : "Estructura de datos específica",
+    "new_specific_data_structure" : "Nueva Estructura de datos específica",
+    "search_specific_data_structure" : "Buscar estructuras de datos específica..."
+
 
 }
