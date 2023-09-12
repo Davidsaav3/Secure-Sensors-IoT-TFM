@@ -227,7 +227,7 @@ export class VariableStructureComponent implements OnInit{
     }
   }
 
-  duplicatestructure(num: any, description: any){ // Duplicar sensor
+  duplicatstructure(num: any, description: any){ // Duplicar sensor
     if(!this.change && !this.change){
       fetch(`${this.duplicate_structure}/${description}`)
       .then((response) => {
@@ -240,7 +240,7 @@ export class VariableStructureComponent implements OnInit{
         this.structure= this.data.find((objeto: { id: any; }) => objeto.id == num);
         this.openClouse();
         this.state= 0;
-        this.openNew('',data,this.structure.structure,this.structure.initial_byte);
+        this.openNew('',this.structure.description,this.structure.structure,this.structure.initial_byte);
         this.change= true;
       })
       .catch((error) => {
@@ -249,7 +249,7 @@ export class VariableStructureComponent implements OnInit{
     }
   }
 
-  deletestructure(id_actual: any){ // Eliminar sensor
+  deletstructure(id_actual: any){ // Eliminar sensor
     var structure2 = {
       id: this.act_id,    
     }

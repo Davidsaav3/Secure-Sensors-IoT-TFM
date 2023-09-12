@@ -20,11 +20,11 @@ export class StructureComponent implements OnInit{
     this.resize();
   }
 
-  get_structure: string = 'http://localhost:5172/api/data_structure/get';
-  post_structure: string = 'http://localhost:5172/api/data_structure/post';
-  delete_structure: string = 'http://localhost:5172/api/data_structure/delete';
-  update_structure: string = 'http://localhost:5172/api/data_structure/update';
-  duplicate_structure: string = 'http://localhost:5172/api/data_structure/duplicate';
+  get_estructure: string = 'http://localhost:5172/api/data_structure/get';
+  post_estructure: string = 'http://localhost:5172/api/data_structure/post';
+  delete_estructure: string = 'http://localhost:5172/api/data_structure/delete';
+  update_estructure: string = 'http://localhost:5172/api/data_structure/update';
+  duplicate_estructure: string = 'http://localhost:5172/api/data_structure/duplicate';
 
   totalPages = 5;
   currentPage = 1;
@@ -74,20 +74,21 @@ export class StructureComponent implements OnInit{
   order= 'description';
   ord_asc= 'ASC';
 
-  structure = {
-    id_structure: '', 
+  estructure = {
+    id_estructure: '', 
     description: '',    
     configuration: '', 
     identifier_code: '', 
-    id_variable_data_structure: ''
+    id_variable_data_structure: '', 
+
   }
 
-  structure_copy = {
-    id_structure: '', 
+  estructure_copy = {
+    id_estructure: '', 
     description: '',    
     configuration: '', 
     identifier_code: '', 
-    id_variable_data_structure: ''
+    id_variable_data_structure: '', 
   }
 
   search = {
@@ -95,15 +96,15 @@ export class StructureComponent implements OnInit{
   }
 
   ngOnInit(): void { // Inicializador
-    this.getstructure(this.order,this.ord_asc);
+    this.getEstructure(this.order,this.ord_asc);
     this.openClouse();
   }
 
-  getstructureVoid(){ // Obtener sin parámetros
-    this.getstructure(this.order,this.ord_asc);
+  getEstructureVoid(){ // Obtener sin parámetros
+    this.getEstructure(this.order,this.ord_asc);
   }
 
-  getstructure(id: any,ord: any){ // Obtener todos los estructuras
+  getEstructure(id: any,ord: any){ // Obtener todos los estructuras
     this.order= id;
     this.rute= this.rutaActiva.routerState.snapshot.url;
     if(this.search.value==''){
@@ -115,7 +116,7 @@ export class StructureComponent implements OnInit{
 
     this.charging= true;
     this.data= [];
-    fetch(`${this.get_structure}/${this.search_1}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+    fetch(`${this.get_estructure}/${this.search_1}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
     .then((response) => response.json())
     .then(quotesData => {
       this.charging= false
@@ -131,7 +132,7 @@ export class StructureComponent implements OnInit{
     });
   }
 
-  getstructureButton(id: any,ord: any){ // Ordenar columnas
+  getEstructureButton(id: any,ord: any){ // Ordenar columnas
     this.order= id;
     if (ord == 'ASC') {
       if (id == 'description') {
@@ -139,6 +140,12 @@ export class StructureComponent implements OnInit{
       }
       if (id == 'configuration') {
         this.data.sort((a: any, b: any) => a.configuration.localeCompare(b.configuration));
+      }
+      if (id == 'identifier_code') {
+        this.data.sort((a: any, b: any) => a.identifier_code.localeCompare(b.identifier_code));
+      }
+      if (id == 'id_variable_data_structure') {
+        this.data.sort((a: any, b: any) => a.id_variable_data_structure.localeCompare(b.id_variable_data_structure));
       }
     }
     if (ord == 'DESC') {
@@ -148,6 +155,12 @@ export class StructureComponent implements OnInit{
       if (id == 'configuration') {
         this.data.sort((a: any, b: any) => b.configuration.localeCompare(a.configuration));
       }
+      if (id == 'identifier_code') {
+        this.data.sort((a: any, b: any) => b.identifier_code.localeCompare(a.identifier_code));
+      }
+      if (id == 'id_variable_data_structure') {
+        this.data.sort((a: any, b: any) => b.id_variable_data_structure.localeCompare(a.id_variable_data_structure));
+      }
     }
     const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
     if (sectionElement) {
@@ -155,19 +168,19 @@ export class StructureComponent implements OnInit{
     }
   }
 
-  editstructure(form: any) { // Guardar datos de estructuras editado
+  editEstructure(form: any) { // Guardar datos de estructuras editado
     if (form.valid) {
-      fetch(this.update_structure, {
-        method: "PUT",body: JSON.stringify(this.structure),headers: {"Content-type": "application/json; charset=UTF-8"}
+      fetch(this.update_estructure, {
+        method: "PUT",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
-      this.data = this.data.filter((data: { id_structure: string; }) => data.id_structure !== this.structure.id_structure);
-      let structure= this.structure;
-      this.data.push(structure)
+      this.data = this.data.filter((data: { id_estructure: string; }) => data.id_estructure !== this.estructure.id_estructure);
+      let estructure= this.estructure;
+      this.data.push(estructure)
       this.data.sort((a: { description: string; }, b: { description: any; }) => {
         return a.description.localeCompare(b.description);
       });
-      this.act_id= this.structure.id_structure.toString();
+      this.act_id= this.estructure.id_estructure.toString();
       this.openEdit();
       this.state=2;
       
@@ -181,11 +194,11 @@ export class StructureComponent implements OnInit{
     }
   }
 
-  newstructure(form: any) { // Guardar datos de estructura nueva
+  newEstructure(form: any) { // Guardar datos de estructura nueva
     this.state= 1;
     if (form.valid) {
-      fetch(this.post_structure, {
-        method: "POST",body: JSON.stringify(this.structure),headers: {"Content-type": "application/json; charset=UTF-8"}
+      fetch(this.post_estructure, {
+        method: "POST",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then((response) => {
         if (!response.ok) {
@@ -202,14 +215,14 @@ export class StructureComponent implements OnInit{
         }, 2000);
 
         this.openClouse();
-        let structure = {
-          id_structure: this.id.toString(), 
-          description: this.structure.description,    
-          configuration: this.structure.configuration, 
-          identifier_code: this.structure.identifier_code, 
-          id_variable_data_structure: this.structure.id_variable_data_structure, 
+        let estructure = {
+          id_estructure: this.id.toString(), 
+          description: this.estructure.description,    
+          configuration: this.estructure.configuration, 
+          identifier_code: this.estructure.identifier_code, 
+          id_variable_data_structure: this.estructure.id_variable_data_structure, 
         }
-        this.data.push(structure)
+        this.data.push(estructure)
         this.data.sort((a: { description: string; }, b: { description: any; }) => {
           return a.description.localeCompare(b.description);
         });
@@ -224,9 +237,9 @@ export class StructureComponent implements OnInit{
     }
   }
 
-  duplicatestructure(num: any, description: any){ // Duplicar sensor
+  duplicateEstructure(num: any, description: any){ // Duplicar sensor
     if(!this.change && !this.change){
-      fetch(`${this.duplicate_structure}/${description}`)
+      fetch(`${this.duplicate_estructure}/${description}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error de la red');
@@ -234,10 +247,10 @@ export class StructureComponent implements OnInit{
         return response.text();
       })
       .then((data) => {
-        this.structure= this.data.find((objeto: { id_structure: any; }) => objeto.id_structure == num);
+        this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
         this.state= 0;
-        this.openNew('',data,this.structure.configuration);
+        this.openNew('',this.estructure.description,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure);
         this.change= true;
       })
       .catch((error) => {
@@ -246,19 +259,19 @@ export class StructureComponent implements OnInit{
     }
   }
 
-  deletestructure(id_actual: any){ // Eliminar sensor
-    var structure2 = {
-      id_structure: this.act_id,    
+  deleteEstructure(id_actual: any){ // Eliminar sensor
+    var estructure2 = {
+      id_estructure: this.act_id,    
     }
-    fetch(this.delete_structure, {
-      method: "DELETE",body: JSON.stringify(structure2),headers: {"Content-type": "application/json; charset=UTF-8"}
+    fetch(this.delete_estructure, {
+      method: "DELETE",body: JSON.stringify(estructure2),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
     this.alert_delete= true;
     setTimeout(() => {
       this.alert_delete= false;
     }, 2000);
-    this.data= this.data.filter((objeto: { id_structure: any; }) => objeto.id_structure != id_actual)
+    this.data= this.data.filter((objeto: { id_estructure: any; }) => objeto.id_estructure != id_actual)
     this.openClouse();
   }
 
@@ -269,10 +282,10 @@ export class StructureComponent implements OnInit{
 
   update(){ // Guardar estructuras en el popup de salir sin guardar
    if(this.show==true && (this.state==0 || this.state==1)){
-    this.newstructure(this.structure);
+    this.newEstructure(this.estructure);
    }
    if(this.show==false && this.state==2){
-    this.editstructure(this.structure);
+    this.editEstructure(this.estructure);
    }
   }
 
@@ -292,8 +305,8 @@ export class StructureComponent implements OnInit{
       this.act_id= id_actual;
       this.openEdit();
       this.state=2;
-      this.structure= this.data.find((objeto: { id_structure: any; }) => objeto.id_structure == id_actual);
-      this.structure_copy= this.structure;
+      this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == id_actual);
+      this.estructure_copy= this.estructure;
       this.openClouse();
     }
   }
@@ -304,7 +317,7 @@ export class StructureComponent implements OnInit{
     var $this = this;
     this.timeout = setTimeout( () => {
       if (event.keyCode != 13) {
-        $this.getstructure(this.order,this.ord_asc);
+        $this.getEstructure(this.order,this.ord_asc);
         $this.openClouse();
       }
     }, 500);
@@ -321,16 +334,16 @@ export class StructureComponent implements OnInit{
 
   deleteSearch(){ // Borrar busqueda textual
     this.search.value= '';
-    this.getstructure(this.order,this.ord_asc);
+    this.getEstructure(this.order,this.ord_asc);
   }
 
-  openNew(id_structure: any,description:any,configuration:any){ // Abrir Nuevo sensor
-    this.structure = {
-      id_structure: id_structure, 
+  openNew(id_estructure: any,description:any,configuration:any,identifier_code:any,id_variable_data_structure:any){ // Abrir Nuevo sensor
+    this.estructure = {
+      id_estructure: id_estructure, 
       description: description,    
       configuration: configuration, 
-      identifier_code: this.structure.identifier_code, 
-      id_variable_data_structure: this.structure.id_variable_data_structure, 
+      identifier_code: identifier_code, 
+      id_variable_data_structure: id_variable_data_structure, 
     }
     this.act_id= '1';
     this.show= true;
@@ -346,7 +359,7 @@ export class StructureComponent implements OnInit{
 
   recharge(){ // Recargar campos a sus valores originales
     this.change= false;
-    this.structure= this.structure_copy;
+    this.estructure= this.estructure_copy;
   }
 
   clouseAll(){ // Cerrar todas las pestañas
@@ -361,55 +374,55 @@ export class StructureComponent implements OnInit{
   firstPage(): void { // Primera pagina
     if(this.currentPage!=1){
       this.currentPage= 1;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage-10 > 1) {
       this.currentPage= this.currentPage-10;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
     else{
       this.currentPage= 1;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage= num;
-    this.getstructureVoid()
+    this.getEstructureVoid()
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage+10 < this.totalPages) {
       this.currentPage= this.currentPage+10;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
     else{
       this.currentPage= this.totalPages;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
   }
 
   lastPage(): void { // Ultima pagina
     if(this.currentPage!=this.totalPages){
       this.currentPage= this.totalPages;
-      this.getstructureVoid()
+      this.getEstructureVoid()
     }
   }
 

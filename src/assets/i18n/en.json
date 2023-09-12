@@ -139,8 +139,11 @@
 
     "text_1" : "All sensors",
     "text_2" : "without sensors",
-    "variable_data_structure" : "Specific data structure",
-    "new_variable_data_structure" : "New specific data structure",
-    "search_variable_data_structure" : "Search specific data structure..."
-
+    "variable_data_structure" : "Variable data structure",
+    "new_variable_data_structure" : "New variable data structure",
+    "search_variable_data_structure" : "Search variable data structure...",
+    "structure.identifier_code" : "Identifier code",
+    "structure.id_variable_data_structure" : "Variable data structure",
+    "structure.structure": "Structure",
+    "structure.initial_byte": "Initial byte"
 }

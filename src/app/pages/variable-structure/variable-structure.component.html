@@ -45,28 +45,28 @@
 								{{ 'sensors.id' | translate }}
 							</th>-->
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'description'}">
-								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getstructureButton('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getstructureButton('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getstructureButton('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getstructureButton('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.description' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'structure'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getstructureButton('structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getstructureButton('structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getstructureButton('structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getstructureButton('structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.structure' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'initial_byte'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getstructureButton('initial_byte','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getstructureButton('initial_byte','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getstructureButton('initial_byte','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getstructureButton('initial_byte','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.initial_byte' | translate }}
@@ -82,21 +82,21 @@
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
 								<form style="display: flex;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 row w-100"> 
 									
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-5 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
 										<input maxlength="45" (change)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
 										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-5 pe-3">
 										<label for="structure">{{ 'structure.structure' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
 										<div *ngIf="form.submitted && form.controls['structure'].errors" class="text-danger">
 											<div *ngIf="form.controls['structure'].errors['required']">{{ 'structure.structure' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-2 pe-3">
 										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
 										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
@@ -126,7 +126,7 @@
 							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.structure }}</td>
 							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (click)="orderColumn(quote.id)">{{ quote.initial_byte }}</td>
 
-							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (mouseout)="view_dup= -1" (mouseover)="view_dup= i" style="text-align: center;" (click)="duplicatestructure(quote.id,quote.description)">                      
+							<td [ngClass]="{'mark': act_id == quote.id.toString() && state==2}" (mouseout)="view_dup= -1" (mouseover)="view_dup= i" style="text-align: center;" (click)="duplicatstructure(quote.id,quote.description)">                      
 							<svg *ngIf="view_dup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">5
 								<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 								<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -152,21 +152,21 @@
 								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
 									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (change)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ structure.id }}" [(ngModel)]="structure.id">
 									
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-5 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
 										<input maxlength="45" (change)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
 										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-5 pe-3">
 										<label for="structure">{{ 'structure.structure' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
 										<div *ngIf="form.submitted && form.controls['structure'].errors" class="text-danger">
 											<div *ngIf="form.controls['structure'].errors['required']">{{ 'structure.structure' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-3 pe-3">
+									<div class="col-12 col-lg-2 pe-3">
 										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
 										<input type="text" (change)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
 										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
@@ -267,8 +267,8 @@
 						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deletestructure(structure.id)" disabled *ngIf="change || change">{{ 'sensors.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deletestructure(structure.id)" *ngIf="!change && !change">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deletstructure(structure.id)" disabled *ngIf="change || change">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deletstructure(structure.id)" *ngIf="!change && !change">{{ 'sensors.delete' | translate }}</button>
                 	</div>
             	</div>
           	</div>

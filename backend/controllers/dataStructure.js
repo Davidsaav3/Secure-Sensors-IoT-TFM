@@ -17,8 +17,8 @@ router.use(express.json())
       query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
       query += ` ORDER BY ${type1} ${type2}`;
     } else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') as total FROM data_estructure`;
-      query += ` WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' as total FROM data_estructure`;
+      query += ` WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
     con.query(query, [ tam, act], (err, result) => {
@@ -66,11 +66,11 @@ router.use(express.json())
   });
 
   router.post("/post", (req, res) => {  /*/ POST  /*/
-    const { description, configuration } = req.body;
-    if (!description || !configuration) {
+    const { description, configuration, identifier_code, id_variable_data_structure } = req.body;
+    if (!description || !configuration || !identifier_code || !id_variable_data_structure) {
       return res.status(400).json({ error: 'Descripción y configuración son requeridas' });
     }
-    const query = "INSERT INTO data_estructure (description, configuration) VALUES (?, ?)";
+    const query = "INSERT INTO data_estructure (description, configuration, identifier_code, id_variable_data_structure) VALUES (?, ?)";
     con.query(query, [description, configuration], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
@@ -84,8 +84,8 @@ router.use(express.json())
   });
   
   router.put("/update", (req, res) => {  /*/ UPDATE  /*/
-    const { id_structure, description, configuration } = req.body;
-    if (!id_structure || (!description && !configuration)) {
+  const { description, configuration, identifier_code, id_variable_data_structure } = req.body;
+  if (!id_structure || (!description && !configuration && ! identifier_code && ! id_variable_data_structure)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
     let query = "UPDATE data_estructure SET";
@@ -100,6 +100,20 @@ router.use(express.json())
       }
       query += " configuration=?";
       values.push(configuration);
+    }
+    if (identifier_code) {
+      if (description) {
+        query += ",";
+      }
+      query += " identifier_code=?";
+      values.push(identifier_code);
+    }
+    if (id_variable_data_structure) {
+      if (description) {
+        query += ",";
+      }
+      query += " id_variable_data_structure=?";
+      values.push(id_variable_data_structure);
     }
     query += " WHERE id_structure=?";
     values.push(id_structure);
