@@ -284,8 +284,9 @@ router.use(express.json())
   });
 
   router.put("/update/", (req,res)=>{  /*/ UPDATE  /*/
+  console.log(req.body)
     const {
-      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, id: id7, updatedAt,id_data_estructure,variable_configuration,
+      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt,id_data_estructure,variable_configuration, id: id7,
     } = req.body;
     if (!uid || !topic_name) {
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos.' });

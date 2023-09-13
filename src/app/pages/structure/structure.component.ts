@@ -25,6 +25,7 @@ export class StructureComponent implements OnInit{
   delete_estructure: string = 'http://localhost:5172/api/data_structure/delete';
   update_estructure: string = 'http://localhost:5172/api/data_structure/update';
   duplicate_estructure: string = 'http://localhost:5172/api/data_structure/duplicate';
+  get_variable_structure_list: string = 'http://localhost:5172/api/variable_data_structure/get_list';
 
   totalPages = 5;
   currentPage = 1;
@@ -79,8 +80,8 @@ export class StructureComponent implements OnInit{
     description: '',    
     configuration: '', 
     identifier_code: '', 
-    id_variable_data_structure: '', 
-
+    id_variable_data_structure: 0, 
+    variable_description: '',
   }
 
   estructure_copy = {
@@ -88,7 +89,17 @@ export class StructureComponent implements OnInit{
     description: '',    
     configuration: '', 
     identifier_code: '', 
-    id_variable_data_structure: '', 
+    id_variable_data_structure: 0, 
+    variable_description: '',
+  }
+
+  estructure_variable = {
+    structure : [{
+      id: 1, 
+      description: '',
+      structure: '',
+      initial_byte: 0
+      }]
   }
 
   search = {
@@ -130,6 +141,16 @@ export class StructureComponent implements OnInit{
         this.total_page= this.quantPage*this.currentPage;
       }
     });
+    this.getstructuresList();
+  }
+
+  getstructuresList(){ // optener estructuras de datos
+    fetch(`${this.get_variable_structure_list}`)
+      .then((response) => response.json())
+      .then(quotesData => {
+        console.log(quotesData)
+        this.estructure_variable.structure = quotesData;
+      });   
   }
 
   getEstructureButton(id: any,ord: any){ // Ordenar columnas
@@ -168,7 +189,8 @@ export class StructureComponent implements OnInit{
     }
   }
 
-  editEstructure(form: any) { // Guardar datos de estructuras editado
+  editEstructure(form: any, num: any) { // Guardar datos de estructuras editado
+    console.log(num)
     if (form.valid) {
       fetch(this.update_estructure, {
         method: "PUT",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -184,6 +206,11 @@ export class StructureComponent implements OnInit{
       this.openEdit();
       this.state=2;
       
+      if(num>=0){
+        this.data[num].variable_description= this.estructure.variable_description;
+        //console.log(this.data[num].variable_description)
+      }
+
       this.save_ok= true;
       setTimeout(() => {
         this.save_ok= false;
@@ -250,7 +277,7 @@ export class StructureComponent implements OnInit{
         this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
         this.state= 0;
-        this.openNew('',data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure);
+        this.openNew('',data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure,this.estructure.variable_description);
         this.change= true;
       })
       .catch((error) => {
@@ -285,7 +312,7 @@ export class StructureComponent implements OnInit{
     this.newEstructure(this.estructure);
    }
    if(this.show==false && this.state==2){
-    this.editEstructure(this.estructure);
+    this.editEstructure(this.estructure,-1);
    }
   }
 
@@ -337,13 +364,14 @@ export class StructureComponent implements OnInit{
     this.getEstructure(this.order,this.ord_asc);
   }
 
-  openNew(id_estructure: any,description:any,configuration:any,identifier_code:any,id_variable_data_structure:any){ // Abrir Nuevo sensor
+  openNew(id_estructure: any,description:any,configuration:any,identifier_code:any,id_variable_data_structure:any,variable_description:any){ // Abrir Nuevo sensor
     this.estructure = {
       id_estructure: id_estructure, 
       description: description,    
       configuration: configuration, 
       identifier_code: identifier_code, 
       id_variable_data_structure: id_variable_data_structure, 
+      variable_description: variable_description,
     }
     this.act_id= '1';
     this.show= true;

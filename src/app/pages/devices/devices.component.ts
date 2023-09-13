@@ -888,7 +888,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   readStorage() { // Recupera datos
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
     this.color_map = localStorage.getItem('color_map') ?? '0';
-    console.log(this.color_map)
+    //console.log(this.color_map)
   }
 
   formatDateTime(date2: any) { // Formato fecha

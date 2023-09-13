@@ -14,10 +14,10 @@ router.use(express.json())
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'Buscar') {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
+      query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
       query += ` ORDER BY ${type1} ${type2}`;
     } else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' as total FROM data_estructure`;
+      query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' as total FROM data_estructure`;
       query += ` WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -29,14 +29,37 @@ router.use(express.json())
     });
   });
 
-  router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
+  router.get("/get_list", (req, res) => { /*/ GET LIST /*/
     let query = `SELECT id_estructure, description FROM data_estructure ORDER BY description ASC`;
-    con.query(query, (err, result) => {
-      if (err) {
+    let query_2 = `SELECT id as id_estructure, description FROM variable_data_structure ORDER BY description ASC`;
+
+    function queryDatabase(query) {
+      return new Promise((resolve, reject) => {
+        con.query(query, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    }
+
+    Promise.all([queryDatabase(query), queryDatabase(query_2)])
+      .then((results) => {
+        const [result1, result2] = results;
+        
+        const responseObj = {
+          data_estructure: result1,
+          variable_data_structure: result2,
+        };
+
+        res.send(responseObj);
+      })
+      .catch((err) => {
         console.error(err);
-      }
-      res.send(result);
-    });
+        res.status(500).json({ error: 'Error en la base de datos' });
+      });
   });
 
   

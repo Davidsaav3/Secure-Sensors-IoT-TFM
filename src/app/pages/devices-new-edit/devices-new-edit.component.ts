@@ -79,9 +79,9 @@ export class DevicesNewEditComponent implements OnInit{
     enable: 0,
     createdAt: '',
     updatedAt: '',
-    id_data_structure: 1,
+    id_data_estructure: 1,
     structure_name: '',
-    variable_configuration: ''
+    variable_configuration: 0
   }
 
   sensors = {
@@ -100,15 +100,15 @@ export class DevicesNewEditComponent implements OnInit{
   structures = {
     structure : [{
         id_estructure: 1, 
-       description: '',
-       configuration: ''
+      description: '',
+      configuration: ''
       }]
   }
 
   ngOnInit(): void { // Inicializador
     this.rute= this.router.routerState.snapshot.url;
     this.rute_2 = this.rute.split('/');
-    this.getstructures();
+    this.getstructures(0);
 
     if(this.rute_2[2]=='edit'){
         this.dataSharingService.updatesharedAmp(false);
@@ -151,7 +151,6 @@ export class DevicesNewEditComponent implements OnInit{
 
             this.createDate();
             this.devices.createdAt= this.formatDateTime(this.date);
-            this.devices.updatedAt= '';
           })
           .catch(error => {
             console.error(error); 
@@ -206,6 +205,13 @@ export class DevicesNewEditComponent implements OnInit{
       this.createDate();
       this.devices.createdAt= this.formatDateTime(data[0].createdAt);
       this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
+      this.getstructures(data[0].variable_configuration);
+      if(data[0].id_data_estructure==undefined || data[0].id_data_estructure==null){
+        this.devices.id_data_estructure= 1;
+      }
+      if(data[0].variable_configuration==undefined || data[0].variable_configuration==null){
+        this.devices.variable_configuration= 0;
+      }
     })
     .catch(error => {
       console.error(error); 
@@ -303,6 +309,7 @@ export class DevicesNewEditComponent implements OnInit{
   newDevice(form: any) { // Guardar Dispositivos
     this.createDate();
     this.devices.createdAt= this.date;
+    this.devices.updatedAt= this.date;
     this.getShared()
 
     if (form.valid) {
@@ -411,11 +418,23 @@ export class DevicesNewEditComponent implements OnInit{
     this.active_lang = localStorage.getItem('active_lang') ?? 'es';
   }
 
-  getstructures(){ // optener estructuras de datos
+  getStructureaux(event: any){
+    this.getstructures(event.target.checked ? 1 : 0);
+    let num= event.target.checked ? 1 : 0;
+    this.devices.variable_configuration= num;
+    this.devices.id_data_estructure= 1;
+  }
+
+  getstructures(num: any){ // optener estructuras de datos
     fetch(`${this.get_structure_list}`)
       .then((response) => response.json())
       .then(quotesData => {
-        this.structures.structure = quotesData;
+        if(num==1){
+          this.structures.structure = quotesData.variable_data_structure;
+        }     
+        else{
+          this.structures.structure = quotesData.data_estructure;
+        }   
       });   
   }
 
