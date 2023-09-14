@@ -10,7 +10,6 @@ import { environment } from "../../environments/environment"
 
 export class StructureComponent implements OnInit{
 
-  @HostListener('window:resize')
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
   public active_lang = environment.lenguaje_lang[0];
@@ -155,33 +154,39 @@ export class StructureComponent implements OnInit{
 
   getEstructureButton(id: any,ord: any){ // Ordenar columnas
     this.order= id;
-    if (ord == 'ASC') {
-      if (id == 'description') {
-        this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+
+    if(this.totalPages<=1){
+      if (ord == 'ASC') {
+        if (id == 'description') {
+          this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+        }
+        if (id == 'configuration') {
+          this.data.sort((a: any, b: any) => a.configuration.localeCompare(b.configuration));
+        }
+        if (id == 'identifier_code') {
+          this.data.sort((a: any, b: any) => a.identifier_code.localeCompare(b.identifier_code));
+        }
+        if (id == 'id_variable_data_structure') {
+          this.data.sort((a: any, b: any) => a.id_variable_data_structure.localeCompare(b.id_variable_data_structure));
+        }
       }
-      if (id == 'configuration') {
-        this.data.sort((a: any, b: any) => a.configuration.localeCompare(b.configuration));
-      }
-      if (id == 'identifier_code') {
-        this.data.sort((a: any, b: any) => a.identifier_code.localeCompare(b.identifier_code));
-      }
-      if (id == 'id_variable_data_structure') {
-        this.data.sort((a: any, b: any) => a.id_variable_data_structure.localeCompare(b.id_variable_data_structure));
+      if (ord == 'DESC') {
+        if (id == 'description') {
+          this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
+        }
+        if (id == 'configuration') {
+          this.data.sort((a: any, b: any) => b.configuration.localeCompare(a.configuration));
+        }
+        if (id == 'identifier_code') {
+          this.data.sort((a: any, b: any) => b.identifier_code.localeCompare(a.identifier_code));
+        }
+        if (id == 'id_variable_data_structure') {
+          this.data.sort((a: any, b: any) => b.id_variable_data_structure.localeCompare(a.id_variable_data_structure));
+        }
       }
     }
-    if (ord == 'DESC') {
-      if (id == 'description') {
-        this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
-      }
-      if (id == 'configuration') {
-        this.data.sort((a: any, b: any) => b.configuration.localeCompare(a.configuration));
-      }
-      if (id == 'identifier_code') {
-        this.data.sort((a: any, b: any) => b.identifier_code.localeCompare(a.identifier_code));
-      }
-      if (id == 'id_variable_data_structure') {
-        this.data.sort((a: any, b: any) => b.id_variable_data_structure.localeCompare(a.id_variable_data_structure));
-      }
+    else{
+      this.getEstructure(id,ord);
     }
     const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
     if (sectionElement) {

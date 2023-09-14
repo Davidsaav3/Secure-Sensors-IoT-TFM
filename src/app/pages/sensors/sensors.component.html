@@ -35,51 +35,51 @@
 					<thead>
 						<tr style="background-color: #fff;" >
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'position'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getSensors('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getsensorsButton('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getSensors('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getsensorsButton('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'sensors.order' | translate }}</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'type'}">
-								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getSensors('type','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getsensorsButton('type','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getSensors('type','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getsensorsButton('type','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.type' | translate }}</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'metric'}">
-								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getSensors('metric','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getsensorsButton('metric','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getSensors('metric','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getsensorsButton('metric','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.metric' | translate }}</th>
 							<th class="d-none d-md-none d-lg-table-cell rounded-0"  scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'description'}">
-								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getSensors('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getsensorsButton('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getSensors('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getsensorsButton('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.description' | translate }}
 							</th>
 							<th *ngIf="show==false" scope="col"style="cursor: pointer; text-align: center;" [ngClass]="{'mark': order == 'correction_general'}">
-								<svg *ngIf="alt_6_a" (click)="alt_6_a=false;getSensors('correction_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_6_a" (click)="alt_6_a=false;getsensorsButton('correction_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_6_a" (click)="alt_6_a=true;getSensors('correction_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_6_a" (click)="alt_6_a=true;getsensorsButton('correction_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								  {{ 'sensors.general' | translate }}</th>
 							<th *ngIf="show==false" style="cursor: pointer;" scope="col" [ngClass]="{'mark': order == 'correction_time_general'}">
-								<svg *ngIf="alt_7_a" (click)="alt_7_a=false;getSensors('correction_time_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_7_a" (click)="alt_7_a=false;getsensorsButton('correction_time_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_7_a" (click)="alt_7_a=true;getSensors('correction_time_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_7_a" (click)="alt_7_a=true;getsensorsButton('correction_time_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								  {{ 'sensors.time_general' | translate }}
@@ -132,7 +132,7 @@
 			  </div>
 			  <div>
 				<!-- -->
-				<select (change)="getSensors('position','ASC'); this.currentPage=1"class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+				<select (change)="getsensorsButton('position','ASC'); this.currentPage=1"class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
 					<option *ngFor="let opcion of this.results_per_pag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 			  </div>

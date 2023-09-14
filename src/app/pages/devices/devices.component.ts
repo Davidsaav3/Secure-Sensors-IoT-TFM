@@ -101,7 +101,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       correction_general: null,
       correction_time_general: null,
       id_data_structure: 1,
-      data_structure: '',
+      data_estructure: '',
     }]
   }
 
@@ -188,7 +188,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.pag_pag= 100000;
 
       if(this.open_map_list==false){ // MAP //
-        this.data= [];
 
         this.getMapDevices('1')
         .then(data => {
@@ -352,7 +351,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
         .then((response) => response.json())
         .then(data => {
-  
+          console.log(data)
+
           this.charging= false;
           this.totalPages= Math.ceil(data[0].total/this.quantPage);
           this.total= data[0].total;
@@ -370,18 +370,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         })
 
         setTimeout(() => {
-          fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
-          .then(response => response.json())
-          .then(data => {
-            console.log('list')
-            console.log(data)
-            for (let index = 0; index < this.data.length; index++) {
-              this.data[index].sensor= data[index];
-            }            
-          })
-          .catch(error => {
-            console.error(error);
-          });
+          if(this.data.length>0){
+            fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
+            .then(response => response.json())
+            .then(data => {
+              console.log('list')
+              console.log(data)
+              for (let index = 0; index < this.data.length; index++) {
+                this.data[index].sensor= data[index];
+              }            
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+          
         }, 100);
       }
     }, 1);
@@ -410,7 +413,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
       .then((response) => response.json())
       .then(data => {
+        console.log(data)
         this.charging= false;
+        console.log(JSON.stringify(this.data.map(item => item.id)))
+        console.log(JSON.stringify(data.map((item: { id: any; }) => item.id)))
+
         if (JSON.stringify(this.data.map(item => item.id)) != JSON.stringify(data.map((item: { id: any; }) => item.id))) {
           this.data= [];
           this.data= data;
@@ -418,8 +425,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.idsParam = deviceIds.join(',');
 
           if(this.state=='0'){
-            this.data= [];
-            this.data= data;
             this.ngOnDestroy();
             this.newMap();
           }
@@ -427,25 +432,25 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           if(this.state=='1'){
             this.ngOnDestroy();
             this.newMap();
-            this.data= [];
-            this.data= data;
           }
           
-          setTimeout(() => {    
-            fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
-            .then(response => response.json())
-            .then(data => {
-              console.log('map')
-              console.log(data)
-              for (let index = 0; index < this.data.length; index++) {
-                this.data[index].sensor= data[index];
-              }
-              resolve(this.data); 
-            })
-            .catch(error => {
-              console.error(error);
-              reject(error); 
-            });
+          setTimeout(() => {  
+            if(this.data.length>0){
+              fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
+              .then(response => response.json())
+              .then(data => {
+                console.log('map')
+                console.log(data)
+                for (let index = 0; index < this.data.length; index++) {
+                  this.data[index].sensor= data[index];
+                }
+                resolve(this.data); 
+              })
+              .catch(error => {
+                console.error(error);
+                reject(error); 
+              });
+            }
           }, 100);
         }
       })
@@ -727,10 +732,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.map.addControl(new mapboxgl.NavigationControl());
 
       if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
-        this.map.on('zoomend', () => {
-          if(this.open_map_list==false)
-            this.getDevices('0');
-        });
         this.map.on('moveend', () => {
           if(this.open_map_list==false)
             this.getDevices('0');

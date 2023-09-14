@@ -1,5 +1,5 @@
 <div class="mb-0 d-flex">
-  <div class="col-lg-6 col-10 p-0">
+  <div class="col-lg-8 col-10 p-0">
     <div class="nav nav-tabs mb-0 p-0" *ngIf="rute2[2]!='edit' && rute2[2]!='new'">
       <li class="nav-item" >
         <a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
@@ -20,7 +20,7 @@
       </li>
     </div>
   </div>
-	<div class="col-lg-6 col-2 p-0 pt-2">
+	<div class="col-lg-4 col-2 p-0 pt-2">
     <div class="d-flex" style="justify-content: flex-end;">
       <div class="pe-3">
         <select  (change)="changeLenguaje()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="active_lang">
@@ -29,7 +29,7 @@
           </ng-container>
         </select>
       </div>
-      <div class="d-none d-xl-inline pe-3">
+      <div class="d-none d-xxl-inline pe-3">
         <div class="d-flex justify-content-end">
           <img src="../../assets/logo.png" width="350px">
         </div>

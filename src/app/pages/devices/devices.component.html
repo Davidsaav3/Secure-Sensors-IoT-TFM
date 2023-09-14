@@ -131,11 +131,11 @@
                     <th class="d-none d-md-none d-lg-block" style="" class="single-line" >{{ 'sensors.sensors' | translate }}
                     </th>
 
-                    <th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'data_structure'}">
-                      <svg *ngIf="alt_4_a" (click)="alt_4_a=false;orderDevices('data_structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                    <th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'data_estructure'}">
+                      <svg *ngIf="alt_4_a" (click)="alt_4_a=false;orderDevices('data_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;orderDevices('data_structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;orderDevices('data_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'structure' | translate }}
                     </th>
@@ -180,7 +180,7 @@
                       </div>
                     </td>
 
-                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_structure }}</td>
+                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
                     <td [routerLink]="['/devices/edit/', quote.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
 
                     <td (mouseout)="view_dup= -1" (mouseover)="view_dup=i" style="text-align: center;" routerLink="/devices/new/{{quote.id}}">                      
@@ -260,8 +260,8 @@
 
   <div class="p-4 pt-0" style="z-index: -10000;" >
     <div class="row" style="height: 76vh;">
-      <div id="map" #map style="height: 76vh;">
-        <div id="menu">
+      <div id="map" style="position: relative;" #map style="height: 76vh;">
+        <div id="menu" style="position: absolute;">
           <input *ngIf="color_map=='streets-v12'" id="streets-v12"  name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
           <input *ngIf="color_map!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()" id="streets-v12" type="radio" name="rtoggle" value="streets">
           <label for="streets-v12">{{ 'predeterminado' | translate }}</label>

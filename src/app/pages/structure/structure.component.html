@@ -36,46 +36,46 @@
 					<thead>
 						<tr> 
 							<!--<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'id_estructure'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructure('id_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructureButton('id_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructure('id_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructureButton('id_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'sensors.id' | translate }}
 							</th>-->
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'description'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructure('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructureButton('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructure('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructureButton('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.description' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'configuration'}">
-								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getEstructure('configuration','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getEstructureButton('configuration','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getEstructure('configuration','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getEstructureButton('configuration','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.configuration' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'identifier_code'}">
-								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getEstructure('identifier_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getEstructureButton('identifier_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getEstructure('identifier_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getEstructureButton('identifier_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.identifier_code' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'id_variable_data_structure'}">
-								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getEstructure('id_variable_data_structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getEstructureButton('id_variable_data_structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getEstructure('id_variable_data_structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getEstructureButton('id_variable_data_structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.id_variable_data_structure' | translate }}
@@ -249,7 +249,7 @@
 			  </div>
 			  <div>
 				<!-- -->
-				<select (change)="getEstructure('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+				<select (change)="getEstructureButton('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
 					<option *ngFor="let opcion of this.results_per_pag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 			  </div>

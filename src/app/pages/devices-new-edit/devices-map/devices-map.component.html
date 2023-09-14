@@ -1,7 +1,7 @@
 
-<div id="map" #map>
+<div id="map" #map style="position: relative;">
   
-	<div id="menu">
+	<div id="menu" style="position: absolute;">
 		<input *ngIf="color_map=='streets-v12'" id="streets-v12"  name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
 		<input *ngIf="color_map!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()" id="streets-v12" type="radio" name="rtoggle" value="streets">
 		<label for="streets-v12">{{ 'predeterminado' | translate }}</label>
@@ -23,5 +23,4 @@
 		<label for="dark-v11">{{ 'oscuro' | translate }}</label>
 	</div>
 
-	
 </div>

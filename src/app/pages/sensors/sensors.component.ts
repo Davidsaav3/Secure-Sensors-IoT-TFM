@@ -143,48 +143,55 @@ export class SensorsComponent implements OnInit{
     }
   }
 
-  getstructureButton(id: any,ord: any){ // Ordenar columnas
+  getsensorsButton(id: any,ord: any){ // Ordenar columnas
     this.order= id;
-    if (ord == 'ASC') {
-      if (id == 'position') {
-        this.data.sort((a: any, b: any) => {return a.position - b.position;});
+
+    if(this.totalPages<=1){
+      if (ord == 'ASC') {
+        if (id == 'position') {
+          this.data.sort((a: any, b: any) => {return a.position - b.position;});
+        }
+        if (id == 'type') {
+          this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
+        }
+        if (id == 'metric') {
+          this.data.sort((a: any, b: any) => a.metric.localeCompare(b.metric));
+        }
+        if (id == 'description') {
+          this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+        }
+        if (id == 'correction_general') {
+          this.data.sort((a: any, b: any) => {const valorA = a.correction_general || "";const valorB = b.correction_general || "";return valorA.localeCompare(valorB);});
+        }
+        if (id == 'correction_time_general') {
+          this.data.sort((a: any, b: any) => {const valorA = a.correction_time_general || "";const valorB = b.correction_time_general || "";return valorA.localeCompare(valorB);});
+        }
       }
-      if (id == 'type') {
-        this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
-      }
-      if (id == 'metric') {
-        this.data.sort((a: any, b: any) => a.metric.localeCompare(b.metric));
-      }
-      if (id == 'description') {
-        this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
-      }
-      if (id == 'correction_general') {
-        this.data.sort((a: any, b: any) => {const valorA = a.correction_general || "";const valorB = b.correction_general || "";return valorA.localeCompare(valorB);});
-      }
-      if (id == 'correction_time_general') {
-        this.data.sort((a: any, b: any) => {const valorA = a.correction_time_general || "";const valorB = b.correction_time_general || "";return valorA.localeCompare(valorB);});
+      if (ord == 'DESC') {
+        if (id == 'position') {
+          this.data.sort((a: any, b: any) => {return b.position - a.position;});
+        }
+        if (id == 'type') {
+          this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
+        }
+        if (id == 'metric') {
+          this.data.sort((a: any, b: any) => b.metric.localeCompare(a.metric));
+        }
+        if (id == 'description') {
+          this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
+        }
+        if (id == 'correction_general') {
+          this.data.sort((a: any, b: any) => {const valorA = b.correction_general || "";const valorB = a.correction_general || "";return valorA.localeCompare(valorB);});
+        }
+        if (id == 'correction_time_general') {
+          this.data.sort((a: any, b: any) => {const valorA = b.correction_time_general || "";const valorB = a.correction_time_general || "";return valorA.localeCompare(valorB);});
+        }
       }
     }
-    if (ord == 'DESC') {
-      if (id == 'position') {
-        this.data.sort((a: any, b: any) => {return b.position - a.position;});
-      }
-      if (id == 'type') {
-        this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
-      }
-      if (id == 'metric') {
-        this.data.sort((a: any, b: any) => b.metric.localeCompare(a.metric));
-      }
-      if (id == 'description') {
-        this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
-      }
-      if (id == 'correction_general') {
-        this.data.sort((a: any, b: any) => {const valorA = b.correction_general || "";const valorB = a.correction_general || "";return valorA.localeCompare(valorB);});
-      }
-      if (id == 'correction_time_general') {
-        this.data.sort((a: any, b: any) => {const valorA = b.correction_time_general || "";const valorB = a.correction_time_general || "";return valorA.localeCompare(valorB);});
-      }
+    else{
+      this.getSensors(id,ord);
     }
+    
     const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
     if (sectionElement) {
       sectionElement.scrollIntoView({ behavior: 'smooth' });

@@ -10,7 +10,6 @@ import { environment } from "../../environments/environment"
 
 export class VariableStructureComponent implements OnInit{
 
-  @HostListener('window:resize')
   leng_name= environment.lenguaje_name;
   leng_lang= environment.lenguaje_lang;
   public active_lang = environment.lenguaje_lang[0];
@@ -131,27 +130,32 @@ export class VariableStructureComponent implements OnInit{
 
   getstructureButton(id: any,ord: any){ // Ordenar columnas
     this.order= id;
-    if (ord == 'ASC') {
-      if (id == 'description') {
-        this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+    if(this.totalPages<=1){
+      if (ord == 'ASC') {
+        if (id == 'description') {
+          this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
+        }
+        if (id == 'structure') {
+          this.data.sort((a: any, b: any) => a.structure.localeCompare(b.structure));
+        }
+        if (id == 'initial_byte') {
+          this.data.sort((a: any, b: any) => a.initial_byte.localeCompare(b.initial_byte));
+        }
       }
-      if (id == 'structure') {
-        this.data.sort((a: any, b: any) => a.structure.localeCompare(b.structure));
-      }
-      if (id == 'initial_byte') {
-        this.data.sort((a: any, b: any) => a.initial_byte.localeCompare(b.initial_byte));
+      if (ord == 'DESC') {
+        if (id == 'description') {
+          this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
+        }
+        if (id == 'structure') {
+          this.data.sort((a: any, b: any) => b.structure.localeCompare(a.structure));
+        }
+        if (id == 'initial_byte') {
+          this.data.sort((a: any, b: any) => b.initial_byte.localeCompare(a.initial_byte));
+        }
       }
     }
-    if (ord == 'DESC') {
-      if (id == 'description') {
-        this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
-      }
-      if (id == 'structure') {
-        this.data.sort((a: any, b: any) => b.structure.localeCompare(a.structure));
-      }
-      if (id == 'initial_byte') {
-        this.data.sort((a: any, b: any) => b.initial_byte.localeCompare(a.initial_byte));
-      }
+    else{
+      this.getstructure(id,ord);
     }
     const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
     if (sectionElement) {
