@@ -120,7 +120,7 @@
                                 <div class="d-flex" style="justify-content: space-between;">
                                     <div style="width: -webkit-fill-available;">
                                         <label for="id_data_estructure">{{ 'structure' | translate }}</label>
-                                        <select type="select" (change)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
+                                        <select style="position: relative" type="select" (change)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
                                             <ng-container *ngFor="let id of structures.structure;let j=index">
                                                 <option [selected]="id.id_estructure==devices['id_data_estructure']" value="{{id.id_estructure}}">{{id.description}}</option>
                                             </ng-container>

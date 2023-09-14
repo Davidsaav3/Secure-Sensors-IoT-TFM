@@ -88,8 +88,8 @@
 					<!---->
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr *ngIf="(i+1).toString()==act_id && (state==0 || state==1)" id="primera">
-							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 row w-100"> 
+							<td colspan="6" *ngIf="show" style="cursor: pointer;" class="mark">
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 row w-100"> 
 									
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
@@ -112,15 +112,15 @@
 											<div *ngIf="form.controls['identifier_code'].errors['required']">{{ 'structure.identifier_code' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-4 pe-3">
+									<div class="col-12 col-lg-4 pe-3" style="position: relative">
 										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
 										<select (change)="change=true"  type="select" [value]="estructure['id_variable_data_structure']" type="text" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']">
                                             <ng-container *ngFor="let obj of estructure_variable.structure;let j=index">
                                                 <option [selected]="obj.id==estructure['id_variable_data_structure']" value="{{obj.id}}">{{obj.description}}</option>
                                             </ng-container>
                                         </select>
-										<div>
-                                            <svg style="position: absolute; top:35px; right:170px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+										<div style="position: absolute; top:29px; right:29px">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                                 <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                                             </svg>
                                         </div>
@@ -174,8 +174,8 @@
 						</tr>
 						<!---->
 						<tr [ngClass]="{'mark_select': act_id == quote.id_estructure.toString()}" *ngIf="quote.id_estructure==act_id && (state==2)" id="primera">
-							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
+							<td colspan="6" *ngIf="show" style="cursor: pointer;" class="mark">
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
 									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (change)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
 									
 									<div class="col-12 col-lg-3 pe-3">
@@ -199,15 +199,15 @@
 											<div *ngIf="form.controls['identifier_code'].errors['required']">{{ 'structure.identifier_code' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-									<div class="col-12 col-lg-4 pe-3">
+									<div class="col-12 col-lg-4 pe-3" style="position: relative">
 										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
 										<select type="select" (change)="change=true" [value]="estructure['id_variable_data_structure']" type="text" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']">
                                             <ng-container *ngFor="let obj of estructure_variable.structure;let j=index">
                                                 <option [selected]="obj.id==estructure['id_variable_data_structure']" value="{{obj.id}}">{{obj.description}}</option>
                                             </ng-container>
                                         </select>
-										<div>
-                                            <svg style="position: absolute; top:35px; right:170px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+										<div style="position: absolute; top:29px; right:29px">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                                 <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                                             </svg>
                                         </div>
