@@ -273,10 +273,15 @@ router.use(express.json())
   router.get("/id/:id", (req, res) => {  /*/ ID /*/
     const id = parseInt(req.params.id);
     const query = `
-      SELECT dc.*, de.description AS structure_name
-      FROM device_configurations dc
-      INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
-      WHERE dc.id = ?
+    SELECT dc.*, de.description AS structure_name,
+    s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
+    (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
+    s.correction_specific, s.correction_time_specific,
+    (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
+    FROM device_configurations dc
+    INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
+    LEFT JOIN sensors_devices s ON dc.id = s.id_device
+    WHERE dc.id = ?
     `;
     con.query(query, [id], (err, result) => {
       if (err) {
@@ -308,14 +313,23 @@ router.use(express.json())
             updatedAt: row.updatedAt,
             id_data_estructure: row.id_data_estructure, 
             variable_configuration: row.variable_configuration,
-            //sensors: [],
+            sensors: [],
           };
         }
     
         if (row.sensor_id) {
           devicesWithSensors[deviceId].sensors.push({
+            orden: row.orden,
+            enable: row.sensor_enable, 
+            id_device: row.id_device, 
+            id_type_sensor: row.id_type_sensor, 
+            id: row.sensor_id,
+            datafield: row.datafield, 
+            nodata: row.nodata, 
             type_name: row.type_name,
-            enable: row.sensor_enable,
+            correction_specific: row.correction_specific,
+            correction_time_specific: row.correction_time_specific, 
+            position: row.position,
           });
         }
       });

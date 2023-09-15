@@ -40,7 +40,6 @@ export class DevicesNewEditComponent implements OnInit{
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_structure_list: string = 'http://localhost:5172/api/data_structure/get_list';
   duplicate_device: string = 'http://localhost:5172/api/device_configurations/duplicate';
-  id_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/id';
   get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
@@ -216,6 +215,9 @@ export class DevicesNewEditComponent implements OnInit{
     .then(data => {
       console.log(data)
       this.devices= data[0];
+      this.sensors.sensors= data[0].sensors;
+
+
       this.createDate();
       this.devices.createdAt= this.formatDateTime(data[0].createdAt);
       this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
@@ -230,16 +232,6 @@ export class DevicesNewEditComponent implements OnInit{
     .catch(error => {
       console.error(error); 
     });
-    setTimeout(() => {
-      fetch(`${this.id_device_sensors_devices}/${this.id}`)
-      .then(response => response.json())
-      .then(data => {
-        this.sensors.sensors= data;
-      })
-      .catch(error => {
-        console.error(error); 
-      });    
-    }, 100);
   }
 
   editDevices(form: any) { // Guardar Dispositivo
