@@ -180,7 +180,8 @@
                       </div>
                     </td>
 
-                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
+                    <td *ngIf="quote.variable_configuration==0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
+                    <td *ngIf="quote.variable_configuration==1" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.variable_data_structure }}</td>
                     <td [routerLink]="['/devices/edit/', quote.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
 
                     <td (mouseout)="view_dup= -1" (mouseover)="view_dup=i" style="text-align: center;" routerLink="/devices/new/{{quote.id}}">                      

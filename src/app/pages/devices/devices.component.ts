@@ -102,6 +102,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       correction_time_general: null,
       id_data_structure: 1,
       data_estructure: '',
+      variable_data_structure: '',
     }]
   }
 
