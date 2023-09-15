@@ -84,21 +84,21 @@
 									
 									<div class="col-12 col-lg-5 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
-										<input maxlength="45" (change)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
+										<input maxlength="45" (ngModelChange)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
 										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-5 pe-3">
 										<label for="structure">{{ 'structure.structure' | translate }}</label>
-										<input type="text" (change)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
+										<input type="text" (ngModelChange)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
 										<div *ngIf="form.submitted && form.controls['structure'].errors" class="text-danger">
 											<div *ngIf="form.controls['structure'].errors['required']">{{ 'structure.structure' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-2 pe-3">
 										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
-										<input type="text" (change)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
+										<input type="text" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
 										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
 											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
 										</div>
@@ -150,25 +150,25 @@
 						<tr [ngClass]="{'mark_select': act_id == quote.id.toString()}" *ngIf="quote.id==act_id && (state==2)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
 								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation p-3 pt-2 pb-0 m-0 row w-100"> 
-									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (change)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ structure.id }}" [(ngModel)]="structure.id">
+									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ structure.id }}" [(ngModel)]="structure.id">
 									
 									<div class="col-12 col-lg-5 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
-										<input maxlength="45" (change)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
+										<input maxlength="45" (ngModelChange)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
 										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-5 pe-3">
 										<label for="structure">{{ 'structure.structure' | translate }}</label>
-										<input type="text" (change)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
+										<input type="text" (ngModelChange)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
 										<div *ngIf="form.submitted && form.controls['structure'].errors" class="text-danger">
 											<div *ngIf="form.controls['structure'].errors['required']">{{ 'structure.structure' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
 									<div class="col-12 col-lg-2 pe-3">
 										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
-										<input type="text" (change)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
+										<input type="text" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
 										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
 											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
 										</div>

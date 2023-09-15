@@ -120,6 +120,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   ngOnInit(): void { // Inicializador
+    this.devices.sensors= [];
     this.rute= this.router.routerState.snapshot.url;
     this.rute_2 = this.rute.split('/');
     this.getstructures(0);
@@ -160,7 +161,7 @@ export class DevicesNewEditComponent implements OnInit{
           fetch(`${this.id_device}/${this.id}`)
           .then(response => response.json())
           .then(data => {
-            console.log(data)
+            //console.log(data)
             this.devices= data[0];
             this.lat= this.devices.lat;
             this.lon= this.devices.lon;
@@ -201,6 +202,14 @@ export class DevicesNewEditComponent implements OnInit{
       this.getShared()
       this.createDate();
     }
+    setInterval(() => {
+      this.dataSharingService.sharedAct$.subscribe(data => {
+        if(data!=false){
+          this.changed= data;
+        }
+      });
+      this.readStorage();
+    }, 10);
     this.onResize(0);
     this.show_large= false;
   }
@@ -209,7 +218,7 @@ export class DevicesNewEditComponent implements OnInit{
     fetch(`${this.id_device}/${this.id}`)
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      //console.log(data)
       this.devices= data[0];
       this.createDate();
       this.devices.createdAt= this.formatDateTime(data[0].createdAt);
@@ -246,13 +255,19 @@ export class DevicesNewEditComponent implements OnInit{
           correction_time_specific: '',
           position: 0,
         }]
-        this.devices.sensors= [];
         this.devices.sensors= sensors_aux;
+        fetch(this.post_device, {
+          method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        .then(response => response.json()) 
+        this.devices.sensors= [];
       }
-      fetch(this.update_device, {
-        method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
-      })
-      .then(response => response.json()) 
+      else{
+        fetch(this.post_device, {
+          method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        .then(response => response.json()) 
+      }
       this.act_ok= true;
 
       setTimeout(() => {
@@ -261,20 +276,12 @@ export class DevicesNewEditComponent implements OnInit{
 
       this.saved= true;
     }
-    this.editSensor();
     this.changed= false;
     this.devices.updatedAt= this.formatDateTime(this.date);
   }
 
-  editSensor() { // Guardar nuevos sensores de los dispositivos
-    this.post();
-    this.changed= false;
-    return;
-  }
-
-  newSensor() { // Guardar nuevos sensores de los dispositivos
+  auxSensor() { // Guardar nuevos sensores de los dispositivos
     if(this.state==0){
-      this.post();
       this.changed= false;
       setTimeout(() => {
         this.router.navigate([`/devices/edit/${this.id}`]);
@@ -285,7 +292,6 @@ export class DevicesNewEditComponent implements OnInit{
         sensor.id_device = this.id_max;
       });
       this.devices.createdAt= this.data;
-      this.post();
       this.changed= false;
       setTimeout(() => {
         this.router.navigate([`/devices/edit/${this.id_max}`]);
@@ -294,44 +300,13 @@ export class DevicesNewEditComponent implements OnInit{
     return;
   }
 
-  post(){ // Consulta de nuevo dispositivo
-
-    if(this.devices.sensors.length==0){
-      let sensors_aux = {
-        sensors : [{
-            id: -1, 
-            enable: 0, 
-            id_device: this.id,
-            id_type_sensor: 0,
-            datafield: '',
-            nodata: true,
-            orden: 0,
-            type_name: 0,
-          }]
-      }
-      
-      //console.log(this.sensors)
-      /*fetch(this.post_sensors_devices, {
-        method: "POST",body: JSON.stringify(sensors_aux),headers: {"Content-type": "application/json; charset=UTF-8"}
-      })
-      .then(response => response.json()) */
-    }
-    else{
-      /*setTimeout(() => {
-        //console.log(this.sensors)
-        fetch(this.post_sensors_devices, {
-          method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
-        })    
-        .then(response => response.json()) 
-      }, 100);*/
-    }
-  }
 
   newDevice(form: any) { // Guardar Dispositivos
     this.createDate();
     this.devices.createdAt= this.date;
     this.devices.updatedAt= this.date;
     this.getShared()
+    //console.log(this.devices)
 
     if (form.valid) {
       if(this.devices.sensors.length==0){
@@ -348,14 +323,20 @@ export class DevicesNewEditComponent implements OnInit{
           correction_time_specific: '',
           position: 0,
         }]
-        this.devices.sensors= [];
         this.devices.sensors= sensors_aux;
+        fetch(this.post_device, {
+          method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        .then(response => response.json()) 
+        this.devices.sensors= [];
       }
-      fetch(this.post_device, {
-        method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
-      })
-      .then(response => response.json()) 
-      this.newSensor();
+      else{
+        fetch(this.post_device, {
+          method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
+        })
+        .then(response => response.json()) 
+      }
+      this.auxSensor();
     }
   }
 
@@ -366,6 +347,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.dataSharingService.sharedLon$.subscribe(data => {
       this.devices.lon = data;
     });
+    this.dataSharingService.updatesharedAct(false);
   }
 
   deleteDevice(id_actual: any){ // Eliminar Dispositivo
@@ -413,6 +395,7 @@ export class DevicesNewEditComponent implements OnInit{
   recharge(){ // Recargar campos a sus valores originales
     this.ngOnInit()
     this.changed= false;
+    this.dataSharingService.updatesharedAct(false);
     this.cont++;
   }
 
