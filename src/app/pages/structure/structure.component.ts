@@ -20,9 +20,9 @@ export class StructureComponent implements OnInit{
   }
 
   get_estructure: string = 'http://localhost:5172/api/data_structure/get';
-  post_estructure: string = 'http://localhost:5172/api/data_structure/post';
-  delete_estructure: string = 'http://localhost:5172/api/data_structure/delete';
-  update_estructure: string = 'http://localhost:5172/api/data_structure/update';
+  post_estructure: string = 'http://localhost:5172/api/data_structure';
+  delete_estructure: string = 'http://localhost:5172/api/data_structure';
+  update_estructure: string = 'http://localhost:5172/api/data_structure';
   duplicate_estructure: string = 'http://localhost:5172/api/data_structure/duplicate';
   get_variable_structure_list: string = 'http://localhost:5172/api/variable_data_structure/get_list';
 

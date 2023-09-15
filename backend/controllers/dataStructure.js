@@ -88,8 +88,8 @@ router.use(express.json())
     });
   });
 
-  router.post("/post", (req, res) => {  /*/ POST  /*/
-  console.log(req.body)
+  router.post("", (req, res) => {  /*/ POST  /*/
+  //console.log(req.body)
     const { description, configuration, identifier_code, id_variable_data_structure } = req.body;
     if (!description || !configuration || !identifier_code || !id_variable_data_structure) {
       return res.status(400).json({ error: 'Descripción, configuración, identifier_code y id_variable_data_structure son requeridas' });
@@ -107,7 +107,7 @@ router.use(express.json())
     });
   });
   
-  router.put("/update", (req, res) => {  /*/ UPDATE  /*/
+  router.put("", (req, res) => {  /*/ UPDATE  /*/
   const { id_estructure, description, configuration, identifier_code, id_variable_data_structure } = req.body;
   if (!id_estructure || (!description && !configuration && ! identifier_code && ! id_variable_data_structure)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
@@ -152,7 +152,7 @@ router.use(express.json())
     });
   });
 
-  router.delete("/delete", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", (req, res) => {  /*/ DELETE  /*/
     const id_estructure = parseInt(req.body.id_estructure);
     if (isNaN(id_estructure)) {
       return res.status(400).json({ error: 'ID no válido' });

@@ -16,7 +16,6 @@ import { StructureComponent } from './pages/structure/structure.component';
 import { VariableStructureComponent } from './pages/variable-structure/variable-structure.component';
 import { DevicesNewEditComponent } from './pages/devices-new-edit/devices-new-edit.component';
 import { SensorsComponent } from './pages/sensors/sensors.component';
-import { SensorsListComponent } from './pages/devices-new-edit/sensors-list/sensors-list.component';
 import { DataSharingService } from './services/data_sharing.service';
 
 @NgModule({
@@ -25,7 +24,6 @@ import { DataSharingService } from './services/data_sharing.service';
     AppComponent,
     NavbarComponent,
     DevicesComponent,
-    SensorsListComponent,
     SensorsComponent,
     DevicesNewEditComponent,
     DeviceComponent,

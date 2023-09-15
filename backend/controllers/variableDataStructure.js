@@ -65,7 +65,7 @@ router.use(express.json())
     });
   });
 
-  router.post("/post", (req, res) => {  /*/ POST  /*/
+  router.post("", (req, res) => {  /*/ POST  /*/
     const { description, structure, initial_byte } = req.body;
     if (!description || !structure || !initial_byte) {
       return res.status(400).json({ error: 'Descripción y configuración son requeridas' });
@@ -83,7 +83,7 @@ router.use(express.json())
     });
   });
   
-  router.put("/update", (req, res) => {  /*/ UPDATE  /*/
+  router.put("", (req, res) => {  /*/ UPDATE  /*/
     const { id, description, structure, initial_byte } = req.body;
     if (!id || (!description && !structure && !initial_byte)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
@@ -121,7 +121,7 @@ router.use(express.json())
     });
   });
 
-  router.delete("/delete", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", (req, res) => {  /*/ DELETE  /*/
     const id = parseInt(req.body.id);
       if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });

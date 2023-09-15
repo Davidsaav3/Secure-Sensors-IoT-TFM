@@ -20,9 +20,9 @@ export class VariableStructureComponent implements OnInit{
   }
 
   get_structure: string = 'http://localhost:5172/api/variable_data_structure/get';
-  post_structure: string = 'http://localhost:5172/api/variable_data_structure/post';
-  delete_structure: string = 'http://localhost:5172/api/variable_data_structure/delete';
-  update_structure: string = 'http://localhost:5172/api/variable_data_structure/update';
+  post_structure: string = 'http://localhost:5172/api/variable_data_structure';
+  delete_structure: string = 'http://localhost:5172/api/variable_data_structure';
+  update_structure: string = 'http://localhost:5172/api/variable_data_structure';
   duplicate_structure: string = 'http://localhost:5172/api/variable_data_structure/duplicate';
 
   totalPages = 5;

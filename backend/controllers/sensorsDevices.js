@@ -6,7 +6,7 @@ router.use(cors());
 router.use(express.json())
 
   /* SENSORS_DEVICES /////////////////////////////////////////////////////*/
-  router.get("/id/:id/:type", (req,res)=>{  /*/ ID  /*/
+  router.get("/id/:id", (req,res)=>{  /*/ ID  /*/
     let id_device= parseInt(req.params.id);
     const query = `SELECT orden, enable, id_device, id_type_sensor, s.id, datafield, nodata, 
     (SELECT type FROM sensors_types as t WHERE s.id_type_sensor= t.id) As type_name,correction_specific,correction_time_specific, (SELECT position from sensors_types as t WHERE s.id_type_sensor= t.id) AS position 
@@ -60,7 +60,7 @@ router.use(express.json())
   });
 
 
-  router.post("/post", (req, res) => {  /*/ POST Y DELETE  /*/
+  router.post("", (req, res) => {  /*/ POST Y DELETE  /*/
     const newRecords = req.body.sensors;
     const deleteIdDevice = req.body.sensors;
   

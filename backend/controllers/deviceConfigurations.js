@@ -129,7 +129,7 @@ router.use(express.json())
                 }
                 variable+= `
                 order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = processResults(result);
@@ -174,7 +174,7 @@ router.use(express.json())
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = processResults(result);
@@ -267,7 +267,6 @@ router.use(express.json())
         });
       }
     });
-  
     return Object.values(devicesWithSensors);
   }
 
@@ -284,7 +283,44 @@ router.use(express.json())
         console.error("Error:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      res.send(result);
+      const devicesWithSensors = {};
+  
+      result.forEach((row) => {
+        const deviceId = row.id;
+    
+        if (!devicesWithSensors[deviceId]) {
+          devicesWithSensors[deviceId] = {
+            id: deviceId,
+            uid: row.uid, 
+            alias: row.alias, 
+            origin: row.origin,
+            description_origin: row.description_origin, 
+            application_id: row.application_id, 
+            topic_name: row.topic_name,
+            typemeter: row.typemeter, 
+            lat: row.lat, 
+            lon: row.lon, 
+            cota: row.cota,
+            timezone: row.timezone,
+            enable: row.enable,
+            organizationid: row.organizationid, 
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            id_data_estructure: row.id_data_estructure, 
+            variable_configuration: row.variable_configuration,
+            //sensors: [],
+          };
+        }
+    
+        if (row.sensor_id) {
+          devicesWithSensors[deviceId].sensors.push({
+            type_name: row.type_name,
+            enable: row.sensor_enable,
+          });
+        }
+      });
+      const responseArray = Object.values(devicesWithSensors);
+      res.json(responseArray);
     });
   });
 
@@ -327,7 +363,7 @@ router.use(express.json())
   });
 
 
-  router.post("/post", (req, res) => {  /*/ POST  /*/
+  router.post("", (req, res) => {  /*/ POST  /*/
     const { 
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
     } = req.body;
@@ -355,8 +391,8 @@ router.use(express.json())
     );
   });
 
-  router.put("/update/", (req,res)=>{  /*/ UPDATE  /*/
-  console.log(req.body)
+  router.put("", (req,res)=>{  /*/ UPDATE  /*/
+  //console.log(req.body)
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt,id_data_estructure,variable_configuration, id: id7,
     } = req.body;
@@ -379,7 +415,7 @@ router.use(express.json())
     );
   });
 
-  router.delete("/delete", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", (req, res) => {  /*/ DELETE  /*/
     const id = req.body.id;
     if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });

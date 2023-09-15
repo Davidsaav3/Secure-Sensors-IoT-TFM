@@ -82,7 +82,7 @@ router.use(express.json())
     });
   });
   
-  router.post("/post/", (req, res) => {  /*/  POST  /*/
+  router.post("", (req, res) => {  /*/  POST  /*/
     const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general } = req.body;
     if (!type || !metric) {
       return res.status(400).json({ error: 'Los campos type y metric son requeridos.' });
@@ -100,7 +100,7 @@ router.use(express.json())
     });
   });
   
-  router.put("/update/", (req, res) => {  /*/  UPDATE  /*/
+  router.put("", (req, res) => {  /*/  UPDATE  /*/
     const {
       type,metric,description,errorvalue,valuemax,valuemin,id,position,correction_general,correction_time_general,
     } = req.body;
@@ -127,7 +127,7 @@ router.use(express.json())
     });
   });
 
-  router.delete("/delete/", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", (req, res) => {  /*/ DELETE  /*/
     const id = req.body.id;
       if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });

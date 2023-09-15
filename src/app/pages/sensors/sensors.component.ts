@@ -24,9 +24,9 @@ export class SensorsComponent implements OnInit{
   }
 
   get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
-  post_sensors: string = 'http://localhost:5172/api/sensors_types/post';
-  delete_sensors: string = 'http://localhost:5172/api/sensors_types/delete';
-  update_sensors: string = 'http://localhost:5172/api/sensors_types/update';
+  post_sensors: string = 'http://localhost:5172/api/sensors_types';
+  delete_sensors: string = 'http://localhost:5172/api/sensors_types';
+  update_sensors: string = 'http://localhost:5172/api/sensors_types';
   duplicate_sensor: string = 'http://localhost:5172/api/sensors_types/duplicate';
 
   totalPages = 5;
