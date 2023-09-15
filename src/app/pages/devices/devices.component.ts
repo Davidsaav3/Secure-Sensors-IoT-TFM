@@ -27,6 +27,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   max_device: string = 'http://localhost:5172/api/device_configurations/max';
   get_device: string = 'http://localhost:5172/api/device_configurations/get';
+  get_device_xd: string = 'http://localhost:5172/api/device_configurations/gets';
   ids_device_sensors_devices: string = 'http://localhost:5172/api/sensors_devices/ids';
   get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
 
@@ -218,18 +219,18 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               console.log(this.markers)
               for (let index = 0; index < this.markers.length; index++) {
                 cont2='';
-                //console.log(this.data[index].sensor.sensors.length)
+                //console.log(this.data[index].sensors.length)
                 if(this.data!=undefined && this.data!=null && this.data[index]!=undefined && this.data[index]!=null){
-                  //console.log('hola '+this.data[index].sensor.sensors[0].type_name)
-                  for (let index3 = 0; index3 < this.data[index].sensor.sensors.length; index3++) {
-                    if(this.data[index].sensor.sensors[index3].enable==0){
+                  //console.log('hola '+this.data[index].sensors[0].type_name)
+                  for (let index3 = 0; index3 < this.data[index].sensors.length; index3++) {
+                    if(this.data[index].sensors[index3].enable==0){
                       cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
-                      <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensor.sensors[index3].type_name}</p>
+                      <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensors[index3].type_name}</p>
                     </span>`
                     }
-                    if(this.data[index].sensor.sensors[index3].enable==1){
+                    if(this.data[index].sensors[index3].enable==1){
                       cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2 mb-1">
-                      <p style="font-size: small; font-weight: 500;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensor.sensors[index3].type_name}</p>
+                      <p style="font-size: small; font-weight: 500;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensors[index3].type_name}</p>
                     </span>`
                     }
                   }
@@ -368,24 +369,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.total_page= this.quantPage*this.currentPage;
           }
         })
-
-        setTimeout(() => {
-          if(this.data.length>0){
-            fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
-            .then(response => response.json())
-            .then(data => {
-              console.log('list')
-              console.log(data)
-              for (let index = 0; index < this.data.length; index++) {
-                this.data[index].sensor= data[index];
-              }            
-            })
-            .catch(error => {
-              console.error(error);
-            });
-          }
-          
-        }, 100);
       }
     }, 1);
   }
@@ -413,17 +396,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
       .then((response) => response.json())
       .then(data => {
-        console.log(data)
+        //console.log(data)
         this.charging= false;
-        console.log(JSON.stringify(this.data.map(item => item.id)))
-        console.log(JSON.stringify(data.map((item: { id: any; }) => item.id)))
+        //console.log(JSON.stringify(this.data.map(item => item.id)))
+        //console.log(JSON.stringify(data.map((item: { id: any; }) => item.id)))
 
         if (JSON.stringify(this.data.map(item => item.id)) != JSON.stringify(data.map((item: { id: any; }) => item.id))) {
           this.data= [];
           this.data= data;
           const deviceIds = this.data.map(device => device.id);
           this.idsParam = deviceIds.join(',');
-
           if(this.state=='0'){
             this.ngOnDestroy();
             this.newMap();
@@ -433,27 +415,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.ngOnDestroy();
             this.newMap();
           }
-          
-          setTimeout(() => {  
-            if(this.data.length>0){
-              fetch(`${this.ids_device_sensors_devices}/${this.idsParam}`)
-              .then(response => response.json())
-              .then(data => {
-                console.log('map')
-                console.log(data)
-                for (let index = 0; index < this.data.length; index++) {
-                  this.data[index].sensor= data[index];
-                }
-                resolve(this.data); 
-              })
-              .catch(error => {
-                console.error(error);
-                reject(error); 
-              });
-            }
-          }, 100);
+          resolve(this.data); 
         }
-      })
+      }).catch(error => {
+        console.error(error);
+        reject(error); 
+      });
     });
   }
   

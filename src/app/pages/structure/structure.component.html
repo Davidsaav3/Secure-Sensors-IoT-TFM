@@ -89,7 +89,7 @@
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr *ngIf="(i+1).toString()==act_id && (state==0 || state==1)" id="primera">
 							<td colspan="6" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 row w-100"> 
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 pb-0 row w-100"> 
 									
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
@@ -175,7 +175,7 @@
 						<!---->
 						<tr [ngClass]="{'mark_select': act_id == quote.id_estructure.toString()}" *ngIf="quote.id_estructure==act_id && (state==2)" id="primera">
 							<td colspan="6" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation p-3 pt-2 m-0 row w-100"> 
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation p-3 pt-2 pb-0 m-0 row w-100"> 
 									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (change)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id_estructure" name="id_estructure" value="{{ estructure.id_estructure }}" [(ngModel)]="estructure.id_estructure">
 									
 									<div class="col-12 col-lg-3 pe-3">

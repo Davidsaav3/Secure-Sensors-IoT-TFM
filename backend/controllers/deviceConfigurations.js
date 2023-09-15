@@ -25,10 +25,10 @@ router.use(express.json())
 
     for (let i= 0; i < array2.length; i++) {
       if(sensors_act==0){
-        array.push(`(SELECT id_device FROM sensors_devices Where id_type_sensor=${array2[i]} AND enable=0)`);
+        array.push(`(SELECT id_device FROM sensors_devices Where id_type_sensor=${array2[i]} AND sensors_devices.enable=0)`);
       }
       if(sensors_act==1){
-        array.push(`(SELECT id_device FROM sensors_devices Where id_type_sensor=${array2[i]} AND enable=1)`);
+        array.push(`(SELECT id_device FROM sensors_devices Where id_type_sensor=${array2[i]} AND sensors_devices.enable=1)`);
       }
       if(sensors_act==2){
         array.push(`(SELECT id_device FROM sensors_devices Where id_type_sensor=${array2[i]})`);
@@ -38,24 +38,24 @@ router.use(express.json())
     let consulta= '';
     if(state=='0'){
       if(sensors_act==0){
-        consulta= array.join(" OR id IN ")
+        consulta= array.join(" OR device_configurations.id IN ")
       }
       if(sensors_act==1){
-        consulta= array.join(" AND id IN ")
+        consulta= array.join(" AND device_configurations.id IN ")
       }
       if(sensors_act==2){
-        consulta= array.join(" AND id IN ")
+        consulta= array.join(" AND device_configurations.id IN ")
       }
     }
     else{
       if(sensors_act==0){
-        consulta= array.join(" OR id IN ")
+        consulta= array.join(" OR device_configurations.id IN ")
       }
       if(sensors_act==1){
-        consulta= array.join(" AND id IN ")
+        consulta= array.join(" AND device_configurations.id IN ")
       }
       if(sensors_act==2){
-        consulta= array.join(" AND id IN ")
+        consulta= array.join(" AND device_configurations.id IN ")
       }
     }
 
@@ -70,13 +70,17 @@ router.use(express.json())
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';
-            variable+= ` SELECT id,topic_name,organizationid,uid,application_id,alias,enable,updatedAt, (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,`
+            variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, `
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
-              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE enable=${devices_act}) as total FROM device_configurations WHERE enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM device_configurations 
+              LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+              LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id
+              WHERE device_configurations.enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
-                  res.send(result)
+                const responseArray = processResults(result);
+                res.json(responseArray);
               }); 
             }
             //
@@ -84,80 +88,97 @@ router.use(express.json())
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("LISTA FILTRO TODOS Y ACT")
                 if(devices_act!=2){
-                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta} AND enable=${devices_act}) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta} AND enable=${devices_act}) as total FROM device_configurations 
+                  LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+                  LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id`
                 }
                 else{
-                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id IN ${consulta}) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta}) as total FROM device_configurations 
+                  LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+                  LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id`
                 }
                 //
-                variable+= ` where id IN ${consulta}`
+                variable+= ` where device_configurations.id IN ${consulta}`
                 if(devices_act!=2){
-                  variable+= ` AND enable=${devices_act}`
+                  variable+= ` AND device_configurations.enable=${devices_act}`
                 }
-                variable+= ` order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+                variable+= `
+                order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                    res.send(result)
+                  const responseArray = processResults(result);
+                  res.json(responseArray);
                 }); 
               }
               if(array_sensors==-2){
                 console.log("LISTA FILTRO NINGUNO Y ACT")
                 if(devices_act!=2){
-                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) AND enable=${devices_act}) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) AND device_configurations.enable=${devices_act}) as total FROM device_configurations 
+                  LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+                  LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id`
                 }
                 else{
-                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where id NOT IN (SELECT id_device FROM sensors_devices) ) as total FROM device_configurations `
+                  variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) ) as total FROM device_configurations 
+                  LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+                  LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id`
                 }
                 //
-                variable+= ` where id NOT IN (SELECT id_device FROM sensors_devices)`
+                variable+= ` where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices)`
                 if(devices_act!=2){
-                  variable+= ` AND enable=${devices_act}`
+                  variable+= ` AND device_configurations.enable=${devices_act}`
                 }
-                variable+= ` order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+                variable+= `
+                order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
                 console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                    res.send(result)
+                  const responseArray = processResults(result);
+                  res.json(responseArray);
                 }); 
               }
             }
           }
           else{
             var variable= '';
-            variable+= " SELECT id,uid,alias,enable,lat,lon,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations"
+            variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, `
             if(devices_act!=2 && array_sensors==-1){
               console.log("MAPA ACT")
-              variable+= ` WHERE enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
+              variable+= `LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+              LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
+              WHERE device_configurations.enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
-                  res.send(result)
+                const responseArray = processResults(result);
+                res.json(responseArray);
               }); 
             }
             //
             else{
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("MAPA FILTRO TODOS Y ACT")
-                variable+= ` where id IN ${consulta}`
+                variable+= ` where device_configurations.id IN ${consulta}`
                 if(devices_act!=2){
-                  variable+= ` AND enable=${devices_act}`
+                  variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                    res.send(result)
+                  const responseArray = processResults(result);
+                  res.json(responseArray);
                 }); 
               }
               if(array_sensors==-2){
                 console.log("MAPA FILTRO NINGUNO Y ACT")
-                variable+= ` where id NOT IN (SELECT id_device FROM sensors_devices)`
+                variable+= ` where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices)`
                 if(devices_act!=2){
-                  variable+= ` AND enable=${devices_act}`
+                  variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
                 console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                    res.send(result)
+                  const responseArray = processResults(result);
+                  res.json(responseArray);
                 }); 
               }
             }
@@ -166,16 +187,23 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(` SELECT id,topic_name,organizationid,uid,application_id,alias,enable,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total FROM device_configurations order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
-              if (err) throw err;
-                res.send(result)
+            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total
+            FROM device_configurations
+            LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+            LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id
+            order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+              const responseArray = processResults(result);
+              res.json(responseArray);
             }); 
           }
           else{
             console.log("MAPA SIMPLE")
-            con.query(` SELECT id,uid,alias,enable,lat,lon FROM device_configurations where lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
-              if (err) throw err;
-                res.send(result)
+            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure             FROM device_configurations
+            LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+            LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
+            WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+              const responseArray = processResults(result);
+              res.json(responseArray);
             }); 
           }
         }
@@ -183,21 +211,65 @@ router.use(express.json())
       else{
         if(state=='0'){
           console.log("LISTA BUSQUEDA POR TEXTO")
-            con.query(` SELECT id,topic_name,organizationid,uid,application_id,alias,enable,updatedAt,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
+            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total FROM device_configurations 
+            LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+            LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
+            WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' LIMIT ${tam} OFFSET ${act};`, function (err, result) {
             if (err) throw err;
-              res.send(result)
+            const responseArray = processResults(result);
+            res.json(responseArray);    
           });
         }
         else{
           console.log("MAPA BUSQUEDA POR TEXTO")
-            con.query(` SELECT id,uid,alias,enable,lat,lon FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
+            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure 
+            FROM device_configurations
+            LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+            LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id  
+            WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
             if (err) throw err;
-              res.send(result)
+            const responseArray = processResults(result);
+            res.json(responseArray);
           });
         }
       }
     
   });
+
+  function processResults(result) { //Aux de get
+    const devicesWithSensors = {};
+  
+    result.forEach((row) => {
+      const deviceId = row.id;
+  
+      if (!devicesWithSensors[deviceId]) {
+        devicesWithSensors[deviceId] = {
+          id: deviceId,
+          topic_name: row.topic_name,
+          organizationid: row.organizationid,
+          uid: row.uid,
+          application_id: row.application_id,
+          alias: row.alias,
+          enable: row.enable,
+          updatedAt: row.updatedAt,
+          lat: row.lat,
+          lon: row.lon,
+          topic_name: row.topic_name,
+          total: row.total,
+          sensors: [],
+        };
+      }
+  
+      if (row.sensor_id) {
+        devicesWithSensors[deviceId].sensors.push({
+          type_name: row.type_name,
+          enable: row.sensor_enable,
+        });
+      }
+    });
+  
+    return Object.values(devicesWithSensors);
+  }
 
   router.get("/id/:id", (req, res) => {  /*/ ID /*/
     const id = parseInt(req.params.id);
@@ -348,4 +420,53 @@ router.use(express.json())
     });
   });
 
+
 module.exports = router;
+
+ /*router.get('/gets', (req, res) => {
+    const query = `
+    SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total
+    FROM device_configurations
+    LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+    LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
+    WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}
+    `;
+  
+    con.query(query, (err, results) => {
+      // Organiza los resultados en un formato deseado
+    const devicesWithSensors = {};
+
+    results.forEach((row) => {
+      const deviceId = row.id;
+
+      if (!devicesWithSensors[deviceId]) {
+        devicesWithSensors[deviceId] = {
+          id: deviceId,
+          topic_name: row.topic_name,
+          organizationid: row.organizationid,
+          uid: row.uid,
+          application_id: row.application_id,
+          alias: row.alias,
+          enable: row.enable,
+          updatedAt: row.updatedAt,
+          lat: row.lat,
+          lon: row.lon,
+          topic_name: row.topic_name,
+          total: row.total,
+          sensors: [],
+        };
+      }
+
+      if (row.sensor_id) {
+        devicesWithSensors[deviceId].sensors.push({
+          type_name: row.type_name,
+          enable: row.sensor_enable,
+        });
+      }
+    });
+
+    const responseArray = Object.values(devicesWithSensors);
+    //console.log(devicesWithSensors)
+    res.json(responseArray);
+  });
+  });*/
