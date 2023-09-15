@@ -86,7 +86,20 @@ export class DevicesNewEditComponent implements OnInit{
     updatedAt: '',
     id_data_estructure: 1,
     structure_name: '',
-    variable_configuration: 0
+    variable_configuration: 0,
+    sensors: [{
+      id: 1, 
+      enable: 0, 
+      id_device: 0,
+      id_type_sensor: 0,
+      datafield: '',
+      nodata: true,
+      orden: 1,
+      type_name: '',
+      correction_specific: '',
+      correction_time_specific: '',
+      position: 0,
+    }],
   }
 
   select_sensors = {
@@ -94,23 +107,6 @@ export class DevicesNewEditComponent implements OnInit{
       {
         id: 1, 
         type: '',    
-        position: 0,
-      }]
-  }
-
-  sensors = {
-    sensors : [
-      {
-        id: 1, 
-        enable: 0, 
-        id_device: this.id,
-        id_type_sensor: this.select_sensors.sensors[0].id,
-        datafield: '',
-        nodata: true,
-        orden: 1,
-        type_name: '',
-        correction_specific: '',
-        correction_time_specific: '',
         position: 0,
       }]
   }
@@ -215,9 +211,6 @@ export class DevicesNewEditComponent implements OnInit{
     .then(data => {
       console.log(data)
       this.devices= data[0];
-      this.sensors.sensors= data[0].sensors;
-
-
       this.createDate();
       this.devices.createdAt= this.formatDateTime(data[0].createdAt);
       this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
@@ -239,6 +232,23 @@ export class DevicesNewEditComponent implements OnInit{
     this.createDate();
     this.devices.updatedAt= this.date;
     if (form.valid) {
+      if(this.devices.sensors.length==0){
+        let sensors_aux =  [{
+          id: -1, 
+          enable: 0, 
+          id_device: this.id,
+          id_type_sensor: 0,
+          datafield: '',
+          nodata: true,
+          orden: 1,
+          type_name: '',
+          correction_specific: '',
+          correction_time_specific: '',
+          position: 0,
+        }]
+        this.devices.sensors= [];
+        this.devices.sensors= sensors_aux;
+      }
       fetch(this.update_device, {
         method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
@@ -271,7 +281,7 @@ export class DevicesNewEditComponent implements OnInit{
       }, 100);
     }
     if(this.state==1){
-      this.sensors.sensors.forEach((sensor: { id_device: number; }) => {
+      this.devices.sensors.forEach((sensor: { id_device: number; }) => {
         sensor.id_device = this.id_max;
       });
       this.devices.createdAt= this.data;
@@ -286,7 +296,7 @@ export class DevicesNewEditComponent implements OnInit{
 
   post(){ // Consulta de nuevo dispositivo
 
-    if(this.sensors.sensors.length==0){
+    if(this.devices.sensors.length==0){
       let sensors_aux = {
         sensors : [{
             id: -1, 
@@ -301,19 +311,19 @@ export class DevicesNewEditComponent implements OnInit{
       }
       
       //console.log(this.sensors)
-      fetch(this.post_sensors_devices, {
+      /*fetch(this.post_sensors_devices, {
         method: "POST",body: JSON.stringify(sensors_aux),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
-      .then(response => response.json()) 
+      .then(response => response.json()) */
     }
     else{
-      setTimeout(() => {
+      /*setTimeout(() => {
         //console.log(this.sensors)
         fetch(this.post_sensors_devices, {
           method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
         })    
         .then(response => response.json()) 
-      }, 100);
+      }, 100);*/
     }
   }
 
@@ -324,6 +334,23 @@ export class DevicesNewEditComponent implements OnInit{
     this.getShared()
 
     if (form.valid) {
+      if(this.devices.sensors.length==0){
+        let sensors_aux =  [{
+          id: -1, 
+          enable: 0, 
+          id_device: this.id,
+          id_type_sensor: 0,
+          datafield: '',
+          nodata: true,
+          orden: 1,
+          type_name: '',
+          correction_specific: '',
+          correction_time_specific: '',
+          position: 0,
+        }]
+        this.devices.sensors= [];
+        this.devices.sensors= sensors_aux;
+      }
       fetch(this.post_device, {
         method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
@@ -476,13 +503,13 @@ export class DevicesNewEditComponent implements OnInit{
     let cosita: any;
     cosita= this.select_sensors.sensors.find((objeto: { id: any; }) => objeto.id == num2);
     if(cosita!=undefined){
-      this.sensors.sensors[num].orden= cosita.position;
+      this.devices.sensors[num].orden= cosita.position;
     }
   }
 
   addSensor(){ // Añadir a lista compartida
     let sensors_aux = {
-      id: this.sensors.sensors.length, 
+      id: this.devices.sensors.length, 
       enable: 0, 
       id_device: this.id,
       id_type_sensor: this.select_sensors.sensors[0].id,
@@ -494,14 +521,14 @@ export class DevicesNewEditComponent implements OnInit{
       correction_time_specific: '',
       position: 0,
     }
-    this.sensors.sensors.push(sensors_aux);
+    this.devices.sensors.push(sensors_aux);
     this.show_map= true;
     this.changed= true;
   }
 
   deleteSensor(id: any){ // Añadir a lista compartida
     this.delete_it= id;
-    this.sensors.sensors= this.sensors.sensors.filter((item) => item.id != this.delete_it)
+    this.devices.sensors= this.devices.sensors.filter((item) => item.id != this.delete_it)
     this.changed= true;
   }
 }

@@ -156,7 +156,7 @@
                 <div class="row c2">
                     <div class="col-12 "> 
                         <!---->
-                        <form class="" *ngIf="sensors.sensors.length>0" #form="ngForm" #miDiv>
+                        <form class="" *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
 
                             <div class="row pb-0 pb-1 d-flex">
                                 <div class="col d-flex" style="justify-content: flex-end;">
@@ -181,7 +181,7 @@
                                           </tr>
                                         </thead>
                         
-                                        <tbody style="background-color: rgb(255, 255, 255);" *ngFor="let item of sensors.sensors;let i=index">
+                                        <tbody style="background-color: rgb(255, 255, 255);" *ngFor="let item of devices.sensors;let i=index">
                                   <tr class="pb-0" style="overflow-y: scroll;">
                                     <label style="display: none" [for]="'id'+i">{{ 'devices.sensors.id' | translate }}</label>
                                     <input (change)="this.changed= true;" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
@@ -265,7 +265,7 @@
                             </div>	
                         </form>
                         
-                        <div class="text-center" *ngIf="sensors.sensors.length<=0">
+                        <div class="text-center" *ngIf="devices.sensors.length<=0">
                             <h3 class="mt-5">{{ 'devices.sensors.add' | translate }}</h3>
                             <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
                         </div>

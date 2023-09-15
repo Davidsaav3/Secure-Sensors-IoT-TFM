@@ -381,6 +381,8 @@ router.use(express.json())
     const { 
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
     } = req.body;
+    aux(req.body.sensors)
+
     if (!uid) {
       return res.status(400).json({ error: 'El campo uid es requerido.' });
     }
@@ -405,11 +407,107 @@ router.use(express.json())
     );
   });
 
+  function aux(sensors){
+  //router.post("", (req, res) => {  /*/ POST Y DELETE  /*/
+
+    const newRecords = sensors;
+    const deleteIdDevice = sensors;
+  
+    con.beginTransaction((err) => {
+      if (err) {
+        console.error("Error al iniciar la transacción:", err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+  
+      if (deleteIdDevice[0].id === -1) {
+        con.query("DELETE FROM sensors_devices WHERE id_device = ?", [deleteIdDevice[0].id_device], (err) => {
+          if (err) {
+            console.error("Error al eliminar registros existentes:", err);
+            con.rollback(() => {
+              res.status(500).json({ error: 'Error en la base de datos' });
+            });
+          } else {
+
+            con.commit((err) => {
+              if (err) {
+                console.error("Error al confirmar la transacción:", err);
+                con.rollback(() => {
+                  res.status(500).json({ error: 'Error en la base de datos' });
+                });
+              } else {
+                //res.send({ message: 'Registros eliminados exitosamente.' });
+              }
+            });
+          }
+        });
+      } else {
+        
+        if (Array.isArray(newRecords) && newRecords.length > 0) {
+          con.query("DELETE FROM sensors_devices WHERE id_device = ?", [newRecords[0].id_device], (err) => {
+            if (err) {
+              console.error("Error al eliminar registros existentes:", err);
+              con.rollback(() => {
+                res.status(500).json({ error: 'Error en la base de datos' });
+              });
+            } else {
+              const insertQueries = newRecords.map((record) => {
+                const nodataValue = record.nodata ? 1 : 0;
+                return [
+                  record.orden, record.enable, record.id_device,
+                  record.id_type_sensor, record.datafield, nodataValue,
+                  record.correction_specific, record.correction_time_specific,
+                ];
+              });
+    
+              con.query(`
+                INSERT INTO sensors_devices (orden, enable, id_device, id_type_sensor, datafield, nodata, correction_specific, correction_time_specific)
+                VALUES ?
+              `, [insertQueries], (err, result) => {
+                if (err) {
+                  console.error("Error al insertar los nuevos registros:", err);
+                  con.rollback(() => {
+                    res.status(500).json({ error: 'Error en la base de datos' });
+                  });
+                } else {
+                  con.commit((err) => {
+                    if (err) {
+                      console.error("Error al confirmar la transacción:", err);
+                      con.rollback(() => {
+                        res.status(500).json({ error: 'Error en la base de datos' });
+                      });
+                    } else {
+                      //res.send(result);
+                    }
+                  });
+                }
+              });
+            }
+          });
+        } else {
+          con.commit((err) => {
+            if (err) {
+              console.error("Error al confirmar la transacción:", err);
+              con.rollback(() => {
+                res.status(500).json({ error: 'Error en la base de datos' });
+              });
+            } else {
+              //res.send({ message: 'No se insertaron nuevos registros.' });
+            }
+          });
+        }
+      }
+    });
+  //});
+
+  }
+
   router.put("", (req,res)=>{  /*/ UPDATE  /*/
   //console.log(req.body)
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt,id_data_estructure,variable_configuration, id: id7,
     } = req.body;
+    aux(req.body.sensors)
+
     if (!uid || !topic_name) {
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos.' });
     }
