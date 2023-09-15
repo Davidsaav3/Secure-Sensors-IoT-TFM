@@ -140,7 +140,7 @@ router.use(express.json())
           }
           else{
             var variable= '';
-            variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, `
+            variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations `
             if(devices_act!=2 && array_sensors==-1){
               console.log("MAPA ACT")
               variable+= `LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
@@ -156,7 +156,10 @@ router.use(express.json())
             else{
               if(array_sensors!=-1 && array_sensors!=-2){
                 console.log("MAPA FILTRO TODOS Y ACT")
-                variable+= ` where device_configurations.id IN ${consulta}`
+                variable+= ` 
+                LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+                LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
+                where device_configurations.id IN ${consulta}`
                 if(devices_act!=2){
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
@@ -169,7 +172,10 @@ router.use(express.json())
               }
               if(array_sensors==-2){
                 console.log("MAPA FILTRO NINGUNO Y ACT")
-                variable+= ` where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices)`
+                variable+= ` 
+                LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
+                LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
+                where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices)`
                 if(devices_act!=2){
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
