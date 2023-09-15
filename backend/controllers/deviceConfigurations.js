@@ -22,6 +22,10 @@ router.use(express.json())
     let y2= req.params.pos_y_2;
     let array= [];
     let array2= array_sensors.split(",");
+    let m1= tam;
+    let m2= (act - 1) * tam;
+    console.log(m1)
+    console.log(m2)
 
     for (let i= 0; i < array2.length; i++) {
       if(sensors_act==0){
@@ -73,10 +77,10 @@ router.use(express.json())
             variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, `
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
-              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM device_configurations 
+              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations LIMIT ${tam} OFFSET ${act}) AS dispositivos_paginados device_configurations 
               LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
               LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id
-              WHERE device_configurations.enable=${devices_act} order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`
+              WHERE device_configurations.enable=${devices_act} order by ${order_by} ${ord_asc}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                 const responseArray = processResults(result);
@@ -193,11 +197,25 @@ router.use(express.json())
         else{
           if(state=='0'){
             console.log("LISTA SIMPLE")
-            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total
+            con.query(` SELECT
+            dc.*, -- Aquí puedes seleccionar los campos específicos que necesitas de device_configurations
+            st.id as sensor_id,
+            st.type as type_name,
+            sd.enable as sensor_enable,
+            de.description as data_estructure,
+            (SELECT COUNT(*) FROM device_configurations) as total
+          FROM (
+            SELECT id
             FROM device_configurations
-            LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
-            LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id
-            order by ${order_by} ${ord_asc} LIMIT ${tam} OFFSET ${act}`, function (err, result) {
+            LIMIT ${tam}
+            OFFSET ${act}
+          ) AS subquery
+          LEFT JOIN device_configurations dc ON subquery.id = dc.id
+          LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
+          LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id
+          LEFT JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
+          ORDER BY ${order_by} ${ord_asc};
+          `, function (err, result) {
               const responseArray = processResults(result);
               res.json(responseArray);
             }); 
