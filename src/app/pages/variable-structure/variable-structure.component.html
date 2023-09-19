@@ -98,7 +98,7 @@
 									</div>
 									<div class="col-12 col-lg-2 pe-3">
 										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
-										<input type="text" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
+										<input type="number" maxlength="1" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
 										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
 											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
 										</div>
@@ -168,7 +168,7 @@
 									</div>
 									<div class="col-12 col-lg-2 pe-3">
 										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
-										<input type="text" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
+										<input type="number" maxlength="1" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
 										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
 											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
 										</div>
