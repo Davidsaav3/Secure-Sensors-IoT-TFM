@@ -30,6 +30,17 @@ export class DevicesNewEditComponent implements OnInit{
     this.rute= this.router.routerState.snapshot.url;
     this.rute_2 = this.rute.split('/');
     this.createDate();
+    //console.log(this.rute_2[2])
+    if(this.rute_2[2]=='new'){
+    fetch(`${this.get_structure_list}`)
+      .then((response) => response.json())
+      .then(quotesData => {
+        this.structures.structure = quotesData.data_estructure;
+        this.aux_fixed= quotesData.data_estructure[0].id_estructure;
+        this.devices.id_data_estructure= this.aux_fixed;
+        //console.log(this.aux_fixed)
+      });  
+    }
   }
 
   deleteDevice_device: string = 'http://localhost:5172/api/device_configurations';
@@ -47,6 +58,8 @@ export class DevicesNewEditComponent implements OnInit{
   show_large= true;
   view_can= -1;
   delete_it: any;
+  aux_fixed= 0;
+  aux_variable= 0;
   /* */
   lon: any;
   lat: any;
@@ -84,7 +97,7 @@ export class DevicesNewEditComponent implements OnInit{
     enable: 0,
     createdAt: '',
     updatedAt: '',
-    id_data_estructure: 1,
+    id_data_estructure: this.aux_fixed,
     structure_name: '',
     variable_configuration: 0,
     sensors: [{
@@ -98,6 +111,7 @@ export class DevicesNewEditComponent implements OnInit{
       type_name: '',
       correction_specific: '',
       correction_time_specific: '',
+      topic_specific: '', 
       position: 0,
     }],
   }
@@ -124,7 +138,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.rute= this.router.routerState.snapshot.url;
     this.rute_2 = this.rute.split('/');
     this.getstructures(0);
-
+    
     fetch(`${this.get_sensors_list}`)
     .then((response) => response.json())
     .then(data => {
@@ -225,7 +239,7 @@ export class DevicesNewEditComponent implements OnInit{
       this.devices.updatedAt= this.formatDateTime(data[0].updatedAt);
       this.getstructures(data[0].variable_configuration);
       if(data[0].id_data_estructure==undefined || data[0].id_data_estructure==null){
-        this.devices.id_data_estructure= 1;
+        this.devices.id_data_estructure= this.aux_fixed;
       }
       if(data[0].variable_configuration==undefined || data[0].variable_configuration==null){
         this.devices.variable_configuration= 0;
@@ -253,6 +267,7 @@ export class DevicesNewEditComponent implements OnInit{
           type_name: '',
           correction_specific: '',
           correction_time_specific: '',
+          topic_specific: '',
           position: 0,
         }]
         this.devices.sensors= sensors_aux;
@@ -291,7 +306,7 @@ export class DevicesNewEditComponent implements OnInit{
       this.devices.sensors.forEach((sensor: { id_device: number; }) => {
         sensor.id_device = this.id_max;
       });
-      this.devices.createdAt= this.data;
+      this.devices.createdAt= this.date;
       this.changed= false;
       setTimeout(() => {
         this.router.navigate([`/devices/edit/${this.id_max}`]);
@@ -321,6 +336,7 @@ export class DevicesNewEditComponent implements OnInit{
           type_name: '',
           correction_specific: '',
           correction_time_specific: '',
+          topic_specific: '',
           position: 0,
         }]
         this.devices.sensors= sensors_aux;
@@ -428,10 +444,18 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   getStructureaux(event: any){
-    this.getstructures(event.target.checked ? 1 : 0);
     let num= event.target.checked ? 1 : 0;
-    this.devices.variable_configuration= num;
-    this.devices.id_data_estructure= 1;
+    console.log(num)
+    this.getstructures(num);
+    setTimeout(() => {
+      this.devices.variable_configuration= num;
+      if(num==0){
+        this.devices.id_data_estructure= this.aux_fixed;
+      }
+      if(num==1){
+        this.devices.id_data_estructure= this.aux_variable;
+      }
+    }, 100);
   }
 
   getstructures(num: any){ // optener estructuras de datos
@@ -444,6 +468,10 @@ export class DevicesNewEditComponent implements OnInit{
         else{
           this.structures.structure = quotesData.data_estructure;
         }   
+        this.aux_variable= quotesData.variable_data_structure[0].id_estructure;
+        //console.log(this.aux_variable)
+        this.aux_fixed= quotesData.data_estructure[0].id_estructure;
+        //console.log(this.aux_fixed)
       });   
   }
 
@@ -502,6 +530,7 @@ export class DevicesNewEditComponent implements OnInit{
       type_name: '',
       correction_specific: '',
       correction_time_specific: '',
+      topic_specific: '',
       position: 0,
     }
     this.devices.sensors.push(sensors_aux);

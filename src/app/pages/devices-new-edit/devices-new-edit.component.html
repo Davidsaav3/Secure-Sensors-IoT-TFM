@@ -115,7 +115,8 @@
                                     <div *ngIf="form.controls['updatedAt'].errors['required']">{{ 'mod' | translate }} {{ 'required' | translate }}</div>
                                 </div>
                             </div>
-
+                            <!--{{devices.variable_configuration}}
+                            {{devices.id_data_estructure}}-->
                             <div style="position: relative;" class="col-md-12"><!--{{devices.id_data_estructure}}{{devices.variable_configuration}}-->
                                 <div class="d-flex" style="justify-content: space-between;">
                                     <div style="width: -webkit-fill-available;">
@@ -170,14 +171,15 @@
                                     <table class="table table-hover">
                                         <thead>
                                           <tr>
-                                    <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.order' | translate }}</th>
-                                    <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.type' | translate }}</th>
-                                    <th class="rounded-0" *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">{{ 'devices.sensors.datafield' | translate }}</th>
-                                    <th class="rounded-0" *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">{{ 'devices.sensors.nodate' | translate }}</th>
-                                    <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.specific' | translate }}</th>
-                                    <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.time_specific' | translate }}</th>
-                                    <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'sensors.enable' | translate }}</th>
-                                    <th class="rounded-0"scope="col" style="text-align: center;">{{ 'sensors.delete' | translate }}</th>
+                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.order' | translate }}</th>
+                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.type' | translate }}</th>
+                                            <th class="rounded-0" *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">{{ 'devices.sensors.datafield' | translate }}</th>
+                                            <th class="rounded-0" *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">{{ 'devices.sensors.nodate' | translate }}</th>
+                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.specific' | translate }}</th>
+                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.time_specific' | translate }}</th>
+                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.topic_specific' | translate }}</th>
+                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'sensors.enable' | translate }}</th>
+                                            <th class="rounded-0"scope="col" style="text-align: center;">{{ 'sensors.delete' | translate }}</th>
                                           </tr>
                                         </thead>
                         
@@ -231,6 +233,14 @@
                                       <input (ngModelChange)="this.changed= true;" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'correction_time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
                                       <div *ngIf="form.submitted && form.controls['correction_time_specific'].errors" class="text-danger">
                                           <div *ngIf="form.controls['correction_time_specific'].errors['required']">{{ 'devices.sensors.time_specific' | translate }} {{ 'required' | translate }}</div>
+                                      </div>
+                                    </td>
+
+                                    <td class="pb-0 input-1">
+                                      <label style="display: none" [for]="'topic_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
+                                      <input (ngModelChange)="this.changed= true;" value="{{ item.topic_specific }}" type="text" class="form-control" [id]="'topic_specific'+i" [name]="'topic_specific'+i" [(ngModel)]="item['topic_specific']" type>
+                                      <div *ngIf="form.submitted && form.controls['topic_specific'].errors" class="text-danger">
+                                          <div *ngIf="form.controls['topic_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
                                       </div>
                                     </td>
                         

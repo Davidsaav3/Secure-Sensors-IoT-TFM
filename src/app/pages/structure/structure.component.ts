@@ -76,19 +76,19 @@ export class StructureComponent implements OnInit{
 
   estructure = {
     id_estructure: '', 
-    description: '',    
-    configuration: '', 
-    identifier_code: '', 
-    id_variable_data_structure: 0, 
+    description: null,    
+    configuration: null, 
+    identifier_code: null, 
+    id_variable_data_structure: null, 
     variable_description: '',
   }
 
   estructure_copy = {
     id_estructure: '', 
-    description: '',    
-    configuration: '', 
-    identifier_code: '', 
-    id_variable_data_structure: 0, 
+    description: null,    
+    configuration: null, 
+    identifier_code: null, 
+    id_variable_data_structure: null, 
     variable_description: '',
   }
 
@@ -195,7 +195,7 @@ export class StructureComponent implements OnInit{
   }
 
   editEstructure(form: any, num: any) { // Guardar datos de estructuras editado
-    console.log(num)
+    //console.log(num)
     if (form.valid) {
       fetch(this.update_estructure, {
         method: "PUT",body: JSON.stringify(this.estructure),headers: {"Content-type": "application/json; charset=UTF-8"}

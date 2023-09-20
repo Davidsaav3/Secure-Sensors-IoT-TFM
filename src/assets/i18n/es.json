@@ -146,5 +146,6 @@
     "structure.identifier_code": "Código identificador",
     "structure.id_variable_data_structure": "Estructura de datos variables",
     "structure.structure": "Estructura",
-    "structure.initial_byte": "Byte inicial"
+    "structure.initial_byte": "Byte inicial",
+    "devices.sensors.topic_specific": "Tema específico"
 }

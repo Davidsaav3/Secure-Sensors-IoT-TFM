@@ -344,7 +344,7 @@ router.use(express.json())
     SELECT dc.*, de.description AS structure_name,
     s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
     (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
-    s.correction_specific, s.correction_time_specific,
+    s.correction_specific, s.correction_time_specific, s.topic_specific,
     (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
     FROM device_configurations dc
     INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
@@ -397,6 +397,7 @@ router.use(express.json())
             type_name: row.type_name,
             correction_specific: row.correction_specific,
             correction_time_specific: row.correction_time_specific, 
+            topic_specific: row.topic_specific, 
             position: row.position,
           });
         }
@@ -520,15 +521,18 @@ router.use(express.json())
             } else {
               const insertQueries = newRecords.map((record) => {
                 const nodataValue = record.nodata ? 1 : 0;
+                const correction_specificValue = record.correction_specific === "" ? null : record.correction_specific;
+                const correction_time_specificValue = record.correction_time_specific === "" ? null : record.correction_time_specific;
+                const topic_specificValue = record.topic_specific === "" ? null : record.topic_specific;
                 return [
                   record.orden, record.enable, record.id_device,
                   record.id_type_sensor, record.datafield, nodataValue,
-                  record.correction_specific, record.correction_time_specific,
+                  correction_specificValue, correction_time_specificValue, topic_specificValue,
                 ];
               });
     
               con.query(`
-                INSERT INTO sensors_devices (orden, enable, id_device, id_type_sensor, datafield, nodata, correction_specific, correction_time_specific)
+                INSERT INTO sensors_devices (orden, enable, id_device, id_type_sensor, datafield, nodata, correction_specific, correction_time_specific, topic_specific)
                 VALUES ?
               `, [insertQueries], (err, result) => {
                 if (err) {

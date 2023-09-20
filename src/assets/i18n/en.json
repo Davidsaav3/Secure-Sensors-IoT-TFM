@@ -145,5 +145,7 @@
     "structure.identifier_code" : "Identifier code",
     "structure.id_variable_data_structure" : "Variable data structure",
     "structure.structure": "Structure",
-    "structure.initial_byte": "Initial byte"
+    "structure.initial_byte": "Initial byte",
+    "devices.sensors.topic_specific": "Topic specific"
+
 }

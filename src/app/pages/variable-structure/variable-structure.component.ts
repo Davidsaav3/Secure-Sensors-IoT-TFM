@@ -190,6 +190,7 @@ export class VariableStructureComponent implements OnInit{
   }
 
   newstructure(form: any) { // Guardar datos de estructura nueva
+    console.log(this.structure)
     this.state= 1;
     if (form.valid) {
       fetch(this.post_structure, {

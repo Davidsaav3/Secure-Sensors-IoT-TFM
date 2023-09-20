@@ -14,10 +14,10 @@ router.use(express.json())
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'Buscar') {
-      query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
+      query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure LIMIT 1) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
       query += ` ORDER BY ${type1} ${type2}`;
     } else {
-      query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' as total FROM data_estructure`;
+      query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure LIMIT 1) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' as total FROM data_estructure`;
       query += ` WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -90,9 +90,14 @@ router.use(express.json())
 
   router.post("", (req, res) => {  /*/ POST  /*/
   //console.log(req.body)
-    const { description, configuration, identifier_code, id_variable_data_structure } = req.body;
-    if (!description || !configuration || !identifier_code || !id_variable_data_structure) {
-      return res.status(400).json({ error: 'Descripción, configuración, identifier_code y id_variable_data_structure son requeridas' });
+  const id_estructure = req.body.id_estructure === "" ? null : req.body.id_estructure;
+    const description = req.body.description === "" ? null : req.body.description;
+    const configuration = req.body.configuration === "" ? null : req.body.configuration;
+    const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
+    const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
+
+    if (!id_variable_data_structure) {
+      return res.status(400).json({ error: 'Id_variable_data_structure son requeridas' });
     }
     const query = "INSERT INTO data_estructure (description, configuration, identifier_code, id_variable_data_structure) VALUES (?, ?, ?, ?)";
     con.query(query, [description, configuration,identifier_code, id_variable_data_structure], (err, result) => {
@@ -108,13 +113,19 @@ router.use(express.json())
   });
   
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-  const { id_estructure, description, configuration, identifier_code, id_variable_data_structure } = req.body;
-  if (!id_estructure || (!description && !configuration && ! identifier_code && ! id_variable_data_structure)) {
+  const id_estructure = req.body.id_estructure === "" ? null : req.body.id_estructure;
+    const description = req.body.description === "" ? null : req.body.description;
+    const configuration = req.body.configuration === "" ? null : req.body.configuration;
+    const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
+    const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
+    console.log(description)
+
+    if ((! id_variable_data_structure)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
-    let query = "UPDATE data_estructure SET";
+    let query = "UPDATE data_estructure SET description=?, configuration=?, identifier_code=?, id_variable_data_structure=?";
     const values = [];
-    if (description) {
+    /*if (description) {
       query += " description=?";
       values.push(description);
     }
@@ -132,13 +143,19 @@ router.use(express.json())
       query += " identifier_code=?";
       values.push(identifier_code);
     }
+
     if (id_variable_data_structure) {
       if (description) {
         query += ",";
       }
       query += " id_variable_data_structure=?";
       values.push(id_variable_data_structure);
-    }
+    }*/
+    values.push(description);
+    values.push(configuration);
+    values.push(identifier_code);
+    values.push(id_variable_data_structure);
+
     query += " WHERE id_estructure=?";
     values.push(id_estructure);
     con.query(query, values, (err, result) => {

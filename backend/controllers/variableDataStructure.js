@@ -66,9 +66,10 @@ router.use(express.json())
   });
 
   router.post("", (req, res) => {  /*/ POST  /*/
-    const { description, structure, initial_byte } = req.body;
-    if (!description || !structure || !initial_byte) {
-      return res.status(400).json({ error: 'Descripción y configuración son requeridas' });
+    const { description, structure } = req.body;
+    const initial_byte=  parseInt(req.body.initial_byte);
+    if (!description || !structure) {
+      return res.status(400).json({ error: 'Descripción, structure y initial byte son requeridas' });
     }
     const query = "INSERT INTO variable_data_structure (description, structure, initial_byte) VALUES (?, ?,?)";
     con.query(query, [description, structure, initial_byte], (err, result) => {
