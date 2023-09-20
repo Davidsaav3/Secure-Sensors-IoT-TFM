@@ -90,7 +90,6 @@ router.use(express.json())
 
   router.post("", (req, res) => {  /*/ POST  /*/
   //console.log(req.body)
-  const id_estructure = req.body.id_estructure === "" ? null : req.body.id_estructure;
     const description = req.body.description === "" ? null : req.body.description;
     const configuration = req.body.configuration === "" ? null : req.body.configuration;
     const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
@@ -120,7 +119,7 @@ router.use(express.json())
     const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
     console.log(description)
 
-    if ((! id_variable_data_structure)) {
+    if ((/*! id_variable_data_structure && */!id_estructure)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
     let query = "UPDATE data_estructure SET description=?, configuration=?, identifier_code=?, id_variable_data_structure=?";

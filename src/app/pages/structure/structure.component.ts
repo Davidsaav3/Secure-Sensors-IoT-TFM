@@ -17,6 +17,12 @@ export class StructureComponent implements OnInit{
 
   constructor(public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
+    fetch(`${this.get_variable_structure_list}`)
+    .then((response) => response.json())
+    .then(quotesData => {
+      this.aux = quotesData[0].id;
+      //console.log(quotesData[0].id)
+    }); 
   }
 
   get_estructure: string = 'http://localhost:5172/api/data_structure/get';
@@ -32,6 +38,8 @@ export class StructureComponent implements OnInit{
   page= 1;
   total= 0;
   total_page= 0;
+
+  aux= 1;
 
   alt_1_a=true;
   alt_1_b=false;
@@ -79,7 +87,7 @@ export class StructureComponent implements OnInit{
     description: null,    
     configuration: null, 
     identifier_code: null, 
-    id_variable_data_structure: null, 
+    id_variable_data_structure: 1, 
     variable_description: '',
   }
 
@@ -88,7 +96,7 @@ export class StructureComponent implements OnInit{
     description: null,    
     configuration: null, 
     identifier_code: null, 
-    id_variable_data_structure: null, 
+    id_variable_data_structure: 1, 
     variable_description: '',
   }
 
@@ -147,7 +155,7 @@ export class StructureComponent implements OnInit{
     fetch(`${this.get_variable_structure_list}`)
       .then((response) => response.json())
       .then(quotesData => {
-        console.log(quotesData)
+        //console.log(quotesData)
         this.estructure_variable.structure = quotesData;
       });   
   }
@@ -282,7 +290,7 @@ export class StructureComponent implements OnInit{
         this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == num);
         this.openClouse();
         this.state= 0;
-        this.openNew('',data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure,this.estructure.variable_description);
+        this.openNew('1',data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure,this.estructure.variable_description);
         this.change= true;
       })
       .catch((error) => {
@@ -370,14 +378,31 @@ export class StructureComponent implements OnInit{
   }
 
   openNew(id_estructure: any,description:any,configuration:any,identifier_code:any,id_variable_data_structure:any,variable_description:any){ // Abrir Nuevo sensor
-    this.estructure = {
-      id_estructure: id_estructure, 
-      description: description,    
-      configuration: configuration, 
-      identifier_code: identifier_code, 
-      id_variable_data_structure: id_variable_data_structure, 
-      variable_description: variable_description,
+    if(id_estructure==''){
+      console.log('hola1')
+      this.estructure_copy.id_variable_data_structure = this.aux;
+      this.estructure = {
+        id_estructure: id_estructure, 
+        description: description,    
+        configuration: configuration, 
+        identifier_code: identifier_code, 
+        id_variable_data_structure: this.aux, 
+        variable_description: variable_description,
+      }
     }
+    else{
+      console.log('hola2')
+      this.estructure_copy.id_variable_data_structure = id_variable_data_structure;
+      this.estructure = {
+        id_estructure: id_estructure, 
+        description: description,    
+        configuration: configuration, 
+        identifier_code: identifier_code, 
+        id_variable_data_structure: id_variable_data_structure, 
+        variable_description: variable_description,
+      }
+    }
+    
     this.act_id= '1';
     this.show= true;
     this.openClouse();
