@@ -45,6 +45,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   lon: any;
   state= '0';
   idsParam: any;
+  buscar= false;
   first_time= true;
   pag_tam:any;
   pag_pag: any;
@@ -196,18 +197,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
         console.log(this.data.length)
         console.log(this.data2.length)
-        if(this.data2.length!=this.data.length || this.data.length==0){
+        console.log(this.data)
+
+        if((this.data2.length!=this.data.length && this.data.length!=0) || this.data2.length==0  /* || this.buscar*/){
           this.data2= this.data;
           console.log('hey')
           this.cleanMap();
           if (this.popup) {
             this.popup.remove();
           }
-          this.mapListeners();
+          setTimeout(() => {
+            this.mapListeners();
+          }, 100);          //this.buscar= false;
         }
         
         console.log(this.data)
-        console.log(this.markers)
+        //console.log(this.markers)
 
         this.getMapDevices('1')
         .then(data => {
@@ -229,7 +234,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.addMarker( coords, color , name, enable, quote);
           }
 
-          console.log(this.data)
+          //console.log(this.data)
           console.log(this.markers)
     
           setTimeout(()=>{
@@ -414,7 +419,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.pag_tam= 1;
       this.pag_pag= 10000;
     }
-
+    if(this.buscar){
+      console.log('buscar')
+      this.ngOnDestroy();
+      this.newMap();
+      //this.cleanMap();
+      //this.ngOnDestroy();
+      //this.newMap();
+      //this.mapListeners();
+      this.buscar= false;
+    }
     this.charging= true;
     return new Promise((resolve, reject) => {
       fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
@@ -436,11 +450,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.first= true;
             this.data2= this.data;
           }
-          else{
+          if(this.buscar){
+            console.log('buscar')
+            this.ngOnDestroy();
+            this.newMap();
             //this.cleanMap();
             //this.ngOnDestroy();
             //this.newMap();
             //this.mapListeners();
+            this.buscar= false;
           }
           resolve(this.data); 
         }
@@ -454,12 +472,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   cleanMap(){
     if(this.map!=undefined){
       this.deleteMarker()
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
+      this.deleteMarker()
+      this.deleteMarker()
+      this.deleteMarker()
+      this.deleteMarker()
+      this.deleteMarker()
+      this.deleteMarker()
 
       if (this.map.getLayer('places')) {
         this.map.removeLayer('places');
@@ -467,9 +485,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       if (this.map.getSource('places')) {
         this.map.removeSource('places');
       }
-      if (this.map.getLayer('add-3d-buildings')) {
-        this.map.removeLayer('add-3d-buildings');
-      }
+      
     }
   }
   
@@ -501,6 +517,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   filterDevices(){ // Filtra por devices
     //this.ngOnDestroy();
     //this.newMap();
+    this.buscar= true;
     this.select_sensors_3.sensors= [];
     if(this.select_sensors_2.sensors.length==0){
       this.select_sensors_3.sensors.push({
