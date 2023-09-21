@@ -194,7 +194,7 @@
 									</div>
 									<div class="col-12 col-lg-2 pe-3">
 										<label for="identifier_code">{{ 'structure.identifier_code' | translate }}</label>
-										<input type="text" (ngModelChange)="change=true" value="{{ estructure.identifier_code }}" id="identifier_code" class="form-control" name="identifier_code" [(ngModel)]="estructure['identifier_code']" >
+										<input type="number" maxlength="11" (ngModelChange)="change=true" value="{{ estructure.identifier_code }}" id="identifier_code" class="form-control" name="identifier_code" [(ngModel)]="estructure['identifier_code']" >
 										<!--<div *ngIf="form.submitted && form.controls['identifier_code'].errors" class="text-danger">
 											<div *ngIf="form.controls['identifier_code'].errors['required']">{{ 'structure.identifier_code' | translate }} {{ 'required' | translate }}</div>
 										</div>-->
