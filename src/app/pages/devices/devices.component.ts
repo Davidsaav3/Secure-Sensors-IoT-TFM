@@ -30,6 +30,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   get_device_xd: string = 'http://localhost:5172/api/device_configurations/gets';
   get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
 
+  first= false;
   results_per_pag= environment.results_per_pag;
   active_lang = environment.lenguaje_lang[0];
   zoom: number = 7;
@@ -190,9 +191,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       if(this.open_map_list==false){ // MAP //
 
+        //if(this.first==true){
+          this.cleanMap();
+          this.mapListeners();
+        //}
+
         this.getMapDevices('1')
         .then(data => {
           //this.deleteMarker();
+
           this.markers= [];
 
           for(let quote of this.data) {
@@ -208,6 +215,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             let enable=parseInt(quote.id);
             this.addMarker( coords, color , name, enable, quote);
           }
+
+          console.log(this.data)
+          console.log(this.markers)
     
           setTimeout(()=>{
             if(this.map!=null){
@@ -216,7 +226,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               let cont= [];
               let cont2='';
 
-              console.log(this.markers)
+              //console.log(this.markers)
               for (let index = 0; index < this.markers.length; index++) {
                 cont2='';
                 //console.log(this.data[index].sensors.length)
@@ -374,6 +384,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   getMapDevices(num: any) { // optiene dispositivos
+
     this.getCornerCoordinates();
     let pos_x_1= '0';
     let pos_x_2= '0';
@@ -406,14 +417,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.data= data;
           const deviceIds = this.data.map(device => device.id);
           this.idsParam = deviceIds.join(',');
-          if(this.state=='0'){
+          if(this.first==false){
             this.ngOnDestroy();
             this.newMap();
+            this.first= true;
           }
-          //
-          if(this.state=='1'){
-            this.ngOnDestroy();
-            this.newMap();
+          else{
+            //this.cleanMap();
+            //this.ngOnDestroy();
+            //this.newMap();
+            //this.mapListeners();
           }
           resolve(this.data); 
         }
@@ -422,6 +435,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         reject(error); 
       });
     });
+  }
+
+  cleanMap(){
+    if(this.map!=undefined){
+      this.deleteMarker()
+      if (this.map.getLayer('places')) {
+        this.map.removeLayer('places');
+      }
+      if (this.map.getSource('places')) {
+        this.map.removeSource('places');
+      }
+      if (this.map.getLayer('add-3d-buildings')) {
+        this.map.removeLayer('add-3d-buildings');
+      }
+    }
   }
   
   deleteSearch(){ // Eliminar filtros
@@ -450,8 +478,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   filterDevices(){ // Filtra por devices
-    this.ngOnDestroy();
-    this.newMap();
+    //this.ngOnDestroy();
+    //this.newMap();
     this.select_sensors_3.sensors= [];
     if(this.select_sensors_2.sensors.length==0){
       this.select_sensors_3.sensors.push({
@@ -747,13 +775,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       );
       this.map.addControl(new mapboxgl.NavigationControl());
 
-      if(this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
-        this.map.on('moveend', () => {
-          if(this.open_map_list==false)
-            this.getDevices('0');
-        });
-      }
-
       /*if (layerList != null) {
         let inputs = layerList.getElementsByTagName('input');
         console.log(inputs)
@@ -770,6 +791,25 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           }
         }
       }*/
+      if ( !this.map ) throw 'Mapa no inicializado';
+      this.map.on('zoom', (ev) => {
+      this.zoom = this.map!.getZoom();
+    });
+    this.map.on('zoomend', (ev) => {
+      if ( this.map!.getZoom() < 18 ) return;
+      this.map!.zoomTo(18);
+    });
+    this.map.on('move', () => {
+      this.currentLngLat = this.map!.getCenter();
+    });
+
+    if(this.map!=undefined && this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
+      this.map.on('moveend', () => {
+        if(this.open_map_list==false)
+          this.getDevices('0');
+      });
+    }
+
       this.mapListeners();
     }
   }
@@ -787,17 +827,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   mapListeners() { // Listeners del mapa
-    if ( !this.map ) throw 'Mapa no inicializado';
-      this.map.on('zoom', (ev) => {
-      this.zoom = this.map!.getZoom();
-    });
-    this.map.on('zoomend', (ev) => {
-      if ( this.map!.getZoom() < 18 ) return;
-      this.map!.zoomTo(18);
-    });
-    this.map.on('move', () => {
-      this.currentLngLat = this.map!.getCenter();
-    });
+
     const popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false
