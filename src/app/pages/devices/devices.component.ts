@@ -225,12 +225,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                   for (let index3 = 0; index3 < this.data[index].sensors.length; index3++) {
                     if(this.data[index].sensors[index3].enable==0){
                       cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
-                      <p style="font-size: small;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensors[index3].type_name}</p>
+                      <p style="font-size: small;" class="mb-0">${this.data[index].sensors[index3].type_name}</p>
                     </span>`
                     }
                     if(this.data[index].sensors[index3].enable==1){
                       cont2+= `<span class="badge rounded-pill text-bg-success d-inline-block me-2 mb-1">
-                      <p style="font-size: small; font-weight: 500;" class="mb-0 d-none d-md-none d-lg-block">${this.data[index].sensors[index3].type_name}</p>
+                      <p style="font-size: small; font-weight: 500;" class="mb-0">${this.data[index].sensors[index3].type_name}</p>
                     </span>`
                     }
                   }
