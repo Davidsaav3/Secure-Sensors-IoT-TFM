@@ -507,6 +507,55 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
+  getdevicesButton(id: any,ord: any){ // Ordenar columnas
+    //this.order= id;
+
+    if(this.totalPages<=1){
+      if (ord == 'ASC') {
+        if (id == 'uid') {
+          this.data.sort((a: any, b: any) => a.uid.localeCompare(b.uid));
+        }
+        if (id == 'topic_name') {
+          this.data.sort((a: any, b: any) => a.topic_name.localeCompare(b.topic_name));
+        }
+        if (id == 'application_id') {
+          this.data.sort((a: any, b: any) => a.application_id.localeCompare(b.application_id));
+        }
+        if (id == 'data_estructure') {
+          this.data.sort((a: any, b: any) => a.data_estructure.localeCompare(b.data_estructure));
+        }
+        if (id == 'updatedAt') {
+          this.data.sort((a: any, b: any) => {const valorA = a.updatedAt || "";const valorB = b.updatedAt || "";return valorA.localeCompare(valorB);});
+        }
+      }
+      if (ord == 'DESC') {
+        if (id == 'uid') {
+          this.data.sort((a: any, b: any) => b.uid.localeCompare(a.uid));
+        }
+        if (id == 'topic_name') {
+          this.data.sort((a: any, b: any) => b.topic_name.localeCompare(a.topic_name));
+        }
+        if (id == 'application_id') {
+          this.data.sort((a: any, b: any) => b.application_id.localeCompare(a.application_id));
+        }
+        if (id == 'data_estructure') {
+          this.data.sort((a: any, b: any) => b.data_estructure.localeCompare(a.data_estructure));
+        }
+        if (id == 'updatedAt') {
+          this.data.sort((a: any, b: any) => {const valorA = b.updatedAt || "";const valorB = a.updatedAt || "";return valorA.localeCompare(valorB);});
+        }
+      }
+    }
+    else{
+      this.orderDevices(id,ord);
+    }
+    
+    //const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
+    //if (sectionElement) {
+    //  sectionElement.scrollIntoView({ behavior: 'smooth' });
+    //}
+  }
+
   initFilters(){ // Inicializa filtros
     this.deleteMarker(); 
     this.rute= this.router.routerState.snapshot.url;

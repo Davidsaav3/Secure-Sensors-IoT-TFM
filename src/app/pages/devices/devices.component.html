@@ -100,28 +100,28 @@
                   <tr>
 
                     <th style="cursor: pointer; width: 10%;" class="single-line" [ngClass]="{'mark': mark == 'uid'}" scope="col">
-                      <svg *ngIf="alt_1_a" (click)="alt_1_a=false;orderDevices('uid','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_1_a" (click)="alt_1_a=false;getdevicesButton('uid','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;orderDevices('uid','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getdevicesButton('uid','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'devices.edit.uid' | translate }}
                     </th>
 
                     <th class="d-none d-md-none d-lg-block" [ngClass]="{'mark': mark == 'topic_name'}" style="cursor: pointer;" class="single-line"  scope="col">
-                      <svg *ngIf="alt_2_a" (click)="alt_2_a=false;orderDevices('topic_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_2_a" (click)="alt_2_a=false;getdevicesButton('topic_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;orderDevices('topic_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getdevicesButton('topic_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'devices.edit.topic' | translate }}
                     </th>
 
                     <th style="cursor: pointer; " class="single-line" [ngClass]="{'mark': mark == 'application_id'}" scope="col">
-                      <svg *ngIf="alt_3_a" (click)="alt_3_a=false;orderDevices('application_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_3_a" (click)="alt_3_a=false;getdevicesButton('application_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;orderDevices('application_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getdevicesButton('application_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'devices.edit.aplication' | translate }}
                     </th>
@@ -132,19 +132,19 @@
                     </th>
 
                     <th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'data_estructure'}">
-                      <svg *ngIf="alt_4_a" (click)="alt_4_a=false;orderDevices('data_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_4_a" (click)="alt_4_a=false;getdevicesButton('data_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;orderDevices('data_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getdevicesButton('data_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'structure' | translate }}
                     </th>
 
                     <th class="d-none d-md-none d-lg-block" style="text-align: center; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'updatedAt'}">
-                      <svg *ngIf="alt_5_a" (click)="alt_5_a=false;orderDevices('updatedAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="alt_5_a" (click)="alt_5_a=false;getdevicesButton('updatedAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
-                      <svg *ngIf="!alt_5_a" (click)="alt_5_a=true;orderDevices('updatedAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                      <svg *ngIf="!alt_5_a" (click)="alt_5_a=true;getdevicesButton('updatedAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                       </svg>{{ 'mod' | translate }}
                     </th>
@@ -216,7 +216,7 @@
             <p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{total_page}} de {{total}}</p>
           </div>
           <div>
-            <select (change)="orderDevices('uid','ASC');this.currentPage=1"  class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+            <select (change)="getdevicesButton('uid','ASC');this.currentPage=1"  class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
               <option *ngFor="let opcion of this.results_per_pag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
             </select>
           </div>

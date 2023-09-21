@@ -300,8 +300,14 @@ export class VariableStructureComponent implements OnInit{
       this.act_id= id_actual;
       this.openEdit();
       this.state=2;
-      this.structure= this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
-      this.structure_copy= this.structure;
+      const objetoEnData= this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
+      this.structure = { ...objetoEnData };
+      this.structure_copy = {
+        id: this.structure.id, 
+        description: this.structure.description,    
+        structure: this.structure.structure, 
+        initial_byte: this.structure.initial_byte, 
+      }
       this.openClouse();
     }
   }
@@ -353,7 +359,12 @@ export class VariableStructureComponent implements OnInit{
 
   recharge(){ // Recargar campos a sus valores originales
     this.change= false;
-    this.structure= this.structure_copy;
+    this.structure = {
+      id: this.structure_copy.id, 
+      description: this.structure_copy.description,    
+      structure: this.structure_copy.structure, 
+      initial_byte: this.structure_copy.initial_byte, 
+    }
   }
 
   clouseAll(){ // Cerrar todas las pestañas

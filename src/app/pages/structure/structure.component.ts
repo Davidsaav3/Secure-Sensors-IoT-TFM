@@ -345,8 +345,16 @@ export class StructureComponent implements OnInit{
       this.act_id= id_actual;
       this.openEdit();
       this.state=2;
-      this.estructure= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == id_actual);
-      this.estructure_copy= this.estructure;
+      const objetoEnData= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == id_actual);
+      this.estructure = { ...objetoEnData };
+      this.estructure_copy = {
+        id_estructure: this.estructure.id_estructure, 
+        description: this.estructure.description,    
+        configuration: this.estructure.configuration, 
+        identifier_code: this.estructure.identifier_code, 
+        id_variable_data_structure: this.estructure.id_variable_data_structure, 
+        variable_description: this.estructure.variable_description,
+      }
       this.openClouse();
     }
   }
@@ -379,7 +387,7 @@ export class StructureComponent implements OnInit{
 
   openNew(id_estructure: any,description:any,configuration:any,identifier_code:any,id_variable_data_structure:any,variable_description:any){ // Abrir Nuevo sensor
     if(id_estructure==''){
-      console.log('hola1')
+      //console.log('hola1')
       this.estructure_copy.id_variable_data_structure = this.aux;
       this.estructure = {
         id_estructure: id_estructure, 
@@ -391,7 +399,7 @@ export class StructureComponent implements OnInit{
       }
     }
     else{
-      console.log('hola2')
+      //console.log('hola2')
       this.estructure_copy.id_variable_data_structure = id_variable_data_structure;
       this.estructure = {
         id_estructure: id_estructure, 
@@ -417,7 +425,14 @@ export class StructureComponent implements OnInit{
 
   recharge(){ // Recargar campos a sus valores originales
     this.change= false;
-    this.estructure= this.estructure_copy;
+    this.estructure = {
+      id_estructure: this.estructure_copy.id_estructure, 
+      description: this.estructure_copy.description,    
+      configuration: this.estructure_copy.configuration, 
+      identifier_code: this.estructure_copy.identifier_code, 
+      id_variable_data_structure: this.estructure_copy.id_variable_data_structure, 
+      variable_description: this.estructure_copy.variable_description,
+    }
   }
 
   clouseAll(){ // Cerrar todas las pestañas

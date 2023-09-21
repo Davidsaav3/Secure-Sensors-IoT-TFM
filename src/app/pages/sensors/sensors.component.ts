@@ -316,8 +316,20 @@ export class SensorsComponent implements OnInit{
       this.act_id= id_actual;
       this.openEdit();
       this.state=2;
-      this.sensors= this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
-      this.sensors_copy= this.sensors;
+      const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
+      this.sensors = { ...objetoEnData };
+      this.sensors_copy = {
+        id: this.sensors.id, 
+        type: this.sensors.type,    
+        metric: this.sensors.metric, 
+        description: this.sensors.description,
+        errorvalue: this.sensors.errorvalue,
+        valuemax: this.sensors.valuemax,
+        valuemin: this.sensors.valuemin,
+        position: this.sensors.position,
+        correction_general: this.sensors.correction_general,
+        correction_time_general: this.sensors.correction_time_general,
+      }
       this.openClouse();
     }
   }
@@ -372,8 +384,19 @@ export class SensorsComponent implements OnInit{
   }
 
   recharge(){ // recargar sensores
+    this.sensors = {
+      id: this.sensors_copy.id, 
+      type: this.sensors_copy.type,    
+      metric: this.sensors_copy.metric, 
+      description: this.sensors_copy.description,
+      errorvalue: this.sensors_copy.errorvalue,
+      valuemax: this.sensors_copy.valuemax,
+      valuemin: this.sensors_copy.valuemin,
+      position: this.sensors_copy.position,
+      correction_general: this.sensors_copy.correction_general,
+      correction_time_general: this.sensors_copy.correction_time_general,
+    }
     this.change= false;
-    this.sensors= this.sensors_copy;
   }
 
   clouseAll(){ // Cerrar todas las pestañas
