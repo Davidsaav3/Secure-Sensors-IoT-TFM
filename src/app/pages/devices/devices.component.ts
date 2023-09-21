@@ -30,6 +30,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   get_device_xd: string = 'http://localhost:5172/api/device_configurations/gets';
   get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
 
+  data2: any[]= [];
   first= false;
   results_per_pag= environment.results_per_pag;
   active_lang = environment.lenguaje_lang[0];
@@ -88,6 +89,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   alt_4_b=false;  
   alt_5_a=true;
   alt_5_b=false;
+  popup: any;
 
   select_sensors_1 = {
     sensors : [{
@@ -191,10 +193,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       if(this.open_map_list==false){ // MAP //
 
-        //if(this.first==true){
+
+        console.log(this.data.length)
+        console.log(this.data2.length)
+        if(this.data2.length!=this.data.length || this.data.length==0){
+          this.data2= this.data;
+          console.log('hey')
           this.cleanMap();
+          if (this.popup) {
+            this.popup.remove();
+          }
           this.mapListeners();
-        //}
+        }
+        
+        console.log(this.data)
+        console.log(this.markers)
 
         this.getMapDevices('1')
         .then(data => {
@@ -421,6 +434,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.ngOnDestroy();
             this.newMap();
             this.first= true;
+            this.data2= this.data;
           }
           else{
             //this.cleanMap();
@@ -440,6 +454,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   cleanMap(){
     if(this.map!=undefined){
       this.deleteMarker()
+      this.deleteMarker();
+      this.deleteMarker();
+      this.deleteMarker();
+      this.deleteMarker();
+      this.deleteMarker();
+      this.deleteMarker();
+
       if (this.map.getLayer('places')) {
         this.map.removeLayer('places');
       }
@@ -827,8 +848,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   mapListeners() { // Listeners del mapa
-
-    const popup = new mapboxgl.Popup({
+    this.popup = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false
     });
@@ -849,7 +869,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                 coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
               }
               const [firstNumber, secondNumber] =coordinates;
-              popup.setLngLat([firstNumber, secondNumber]).setHTML(description).addTo(this.map);
+              this.popup.setLngLat([firstNumber, secondNumber]).setHTML(description).addTo(this.map);
             }
           }
         }
@@ -857,7 +877,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.map.on('mouseleave', 'places', () => {
         if(this.map!=undefined){
           this.map.getCanvas().style.cursor = '';
-          popup.remove();
+          this.popup.remove();
         }
       });
     }
