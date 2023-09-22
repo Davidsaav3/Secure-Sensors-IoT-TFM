@@ -60,6 +60,7 @@ export class DevicesNewEditComponent implements OnInit{
   delete_it: any;
   aux_fixed= 0;
   aux_variable= 0;
+  exp= false;
   /* */
   lon: any;
   lat: any;

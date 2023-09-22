@@ -146,6 +146,10 @@
     "structure.id_variable_data_structure" : "Variable data structure",
     "structure.structure": "Structure",
     "structure.initial_byte": "Initial byte",
-    "devices.sensors.topic_specific": "Topic specific"
+    "devices.sensors.topic_specific": "Topic specific",
+    "fixed": "Fixed",
+    "variable": "Variable"
+
+
 
 }
