@@ -154,7 +154,7 @@
 					<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{ this.currentPage-1 }}</a>
 				  </li>
 				  <li class="page-item">
-					<a class="page-link" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
+					<a class="page-link mark" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
 				  </li>
 				  <li class="page-item" *ngIf="this.currentPage!=totalPages">
 					<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1 }}</a>

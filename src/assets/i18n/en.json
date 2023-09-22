@@ -98,7 +98,7 @@
     "sensors.general" : "Correction general",
     "sensors.time_general" : "Correction time general",
     "devices.sensors.specific" : "Correction specific",
-    "devices.sensors.time_specific" : "Correction time Specific",
+    "devices.sensors.time_specific" : "Correction time specific",
 
     "predeterminado" : "Default",
     "satelite" : "satelite",
