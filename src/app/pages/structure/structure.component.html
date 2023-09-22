@@ -228,7 +228,8 @@
 											<div class="col-12 col-lg-6" [ngClass]="{'pb-3': this.width<965}">
 												<div class="row" style="display: flex; justify-content: end;">
 													<div class="col-12 col-lg-6">
-														<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal">{{ 'sensors.delete' | translate }}</button>
+														<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" disabled *ngIf="change">{{ 'sensors.delete' | translate }}</button>
+														<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" *ngIf="!change">{{ 'sensors.delete' | translate }}</button>
 													</div>
 												</div>
 											</div>
