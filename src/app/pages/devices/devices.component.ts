@@ -30,29 +30,29 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   get_device_xd: string = 'http://localhost:5172/api/device_configurations/gets';
   get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
 
-  data2: any[]= [];
+  dataAux: any[]= [];
   first= false;
-  results_per_pag= environment.results_per_pag;
-  active_lang = environment.lenguaje_lang[0];
+  resultsPerPag= environment.resultsPerPag;
+  active_lang = environment.languageLang[0];
   zoom: number = 7;
   map?: mapboxgl.Map;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
   markers: MarkerAndColor[] = [];
   geojson: any;
-  geojson_2: any;
-  array_sensors: any;
+  geojsonAux: any;
+  arraySensors: any;
   lat: any;
   lon: any;
   state= '0';
   idsParam: any;
   buscar= false;
-  first_time= true;
+  firstTime= true;
   pag_tam:any;
-  pag_pag: any;
-  pos_x_1= '0';
-  pos_x_2= '0';
-  pos_y_1= '0';
-  pos_y_2= '0';
+  pag: any;
+  posX1= '0';
+  posX2= '0';
+  posY1= '0';
+  posY2= '0';
   layerList: any;
   
   totalPages = 5;
@@ -60,9 +60,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   quantPage = 15;
   page= 1;
   total= 0;
-  total_page= 0;
+  totalPage= 0;
 
-  color_map= 'streets-v12';
+  colorMap= 'streets-v12';
   charging= false;
   mark= 'uid';
   data: any[]= [];
@@ -71,26 +71,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   timeout: any = null;
   dup_ok=false;
   dup_not=false;
-  search_text='Buscar';
-  ord_asc= 'ASC';
+  searchText='Buscar';
+  ordAux= 'ASC';
   open_map_list= true;
   view_dup= -10;
   pencil_dup= -10;
   pencil_dup1= false;
   view_list=false;
   view_map=false;
-
-  alt_1_a=true;
-  alt_1_b=false;
-  alt_2_a=true;
-  alt_2_b=false;
-  alt_3_a=true;
-  alt_3_b=false;  
-  alt_4_a=true;
-  alt_4_b=false;  
-  alt_5_a=true;
-  alt_5_b=false;
   popup: any;
+
+  alt1=true;
+  alt2=true;
+  alt3=true;
+  alt4=true;
+  alt5=true;
 
   select_sensors_1 = {
     sensors : [{
@@ -161,46 +156,44 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.readStorage();
   }
 
-  orderDevices(id: any, ord_asc: any){ // Ordenar dispositivos
+  orderDevices(id: any, ordAux: any){ // Ordenar dispositivos
     this.deleteMarker();
     this.mark= id;
-    this.ord_asc= ord_asc;
+    this.ordAux= ordAux;
     this.getDevices('0');
   }
 
-  getDevices(num: any){ // Consulta (get dispositivos)
+  getDevices(num: any){ // consulta de los dispositivos
     this.state= num;
     if(this.state=='1'){
       this.deleteMarker();
     }
     setTimeout(() =>{
       if(this.search.value==''){
-        this.search_text= 'Buscar';
+        this.searchText= 'Buscar';
       }
       else{
-        this.search_text= this.search.value;
+        this.searchText= this.search.value;
       }
-      let pos_x_1= '0';
-      let pos_x_2= '0';
-      let pos_y_1= '0';
-      let pos_y_2= '0';
+      let posX1= '0';
+      let posX2= '0';
+      let posY1= '0';
+      let posY2= '0';
       let array= [];
       for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
         array.push(this.select_sensors_3.sensors[index].id);
       }
-      this.array_sensors = array.join(',');
+      this.arraySensors = array.join(',');
       this.pag_tam= 1;
-      this.pag_pag= 100000;
+      this.pag= 100000;
 
-      if(this.open_map_list==false){ // MAP //
-
-
+      if(this.open_map_list==false){ // Map
         console.log(this.data.length)
-        console.log(this.data2.length)
+        console.log(this.dataAux.length)
         console.log(this.data)
 
-        if((this.data2.length!=this.data.length && this.data.length!=0) || this.data2.length==0  /* || this.buscar*/){
-          this.data2= this.data;
+        if((this.dataAux.length!=this.data.length && this.data.length!=0) || this.dataAux.length==0  /* || this.buscar*/){
+          this.dataAux= this.data;
           console.log('hey')
           this.cleanMap();
           if (this.popup) {
@@ -208,7 +201,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           }
           setTimeout(() => {
             this.mapListeners();
-          }, 100);          //this.buscar= false;
+          }, 100);          
+          //this.buscar= false;
         }
         
         console.log(this.data)
@@ -289,15 +283,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     
               }            
               //console.log(cont)
-              this.geojson_2 = { 
+              this.geojsonAux = { 
                 'features': 
                 cont
               };
-              //console.log(this.geojson_2.features[0])
+              //console.log(this.geojsonAux.features[0])
               this.map.addSource('places', {'type': 'geojson',
               'data': {
                 'type': 'FeatureCollection',
-                'features': this.geojson_2.features
+                'features': this.geojsonAux.features
               }
               });
             } 
@@ -373,11 +367,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
       ///////////////////////////////////////////////////////
       
-      if(this.open_map_list==true){ // LIST //
+      if(this.open_map_list==true){ // List
         this.data= [];
 
         this.charging= true;
-        fetch(`${this.get_device}/0/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+        fetch(`${this.get_device}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`)
         .then((response) => response.json())
         .then(data => {
           console.log(data)
@@ -391,10 +385,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           this.idsParam = deviceIds.join(',');
 
           if(this.data.length<this.quantPage){
-            this.total_page= this.total;
+            this.totalPage= this.total;
           }
           else{
-            this.total_page= this.quantPage*this.currentPage;
+            this.totalPage= this.quantPage*this.currentPage;
           }
         })
       }
@@ -402,22 +396,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   }
 
   getMapDevices(num: any) { // optiene dispositivos
-
     this.getCornerCoordinates();
-    let pos_x_1= '0';
-    let pos_x_2= '0';
-    let pos_y_1= '0';
-    let pos_y_2= '0';
+    let posX1= '0';
+    let posX2= '0';
+    let posY1= '0';
+    let posY2= '0';
     this.pag_tam= this.currentPage;
-    this.pag_pag= this.quantPage;
+    this.pag= this.quantPage;
 
     if(num=='1'){
-      pos_x_1= this.pos_x_1;
-      pos_x_2= this.pos_x_2;
-      pos_y_1= this.pos_y_1;
-      pos_y_2= this.pos_y_2;
+      posX1= this.posX1;
+      posX2= this.posX2;
+      posY1= this.posY1;
+      posY2= this.posY2;
       this.pag_tam= 1;
-      this.pag_pag= 10000;
+      this.pag= 10000;
     }
     if(this.buscar){
       console.log('buscar')
@@ -431,7 +424,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
     this.charging= true;
     return new Promise((resolve, reject) => {
-      fetch(`${this.get_device}/1/${this.search_text}/${this.mark}/${this.ord_asc}/${this.array_sensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag_pag}/${pos_x_1}/${pos_x_2}/${pos_y_1}/${pos_y_2}`)
+      fetch(`${this.get_device}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`)
       .then((response) => response.json())
       .then(data => {
         //console.log(data)
@@ -448,7 +441,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.ngOnDestroy();
             this.newMap();
             this.first= true;
-            this.data2= this.data;
+            this.dataAux= this.data;
           }
           if(this.buscar){
             console.log('buscar')
@@ -573,7 +566,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  getdevicesButton(id: any,ord: any){ // Ordenar columnas
+  getDevicesLocal(id: any,ord: any){ // Ordenar columnas
     //this.order= id;
 
     if(this.totalPages<=1){
@@ -657,6 +650,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.getDevices('1');  
     this.saveStorage();
   }
+
   openList(){ // Abrir lista
     this.open_map_list= true;
     this.getDevices('0'); 
@@ -741,14 +735,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   ngAfterViewInit(): void { // Después de ngOnInit
     this.ngOnDestroy();
     this.newMap();
-    this.first_time= false;
+    this.firstTime= false;
   }
 
-  newMap(){
-    if(this.first_time==false){
+  newMap(){ // Crea el mapa
+    if(this.firstTime==false){
         this.map = new mapboxgl.Map({
           container: this.divMap?.nativeElement, 
-          style: 'mapbox://styles/mapbox/'+this.color_map,
+          style: 'mapbox://styles/mapbox/'+this.colorMap,
           center: [this.currentLngLat.lng, this.currentLngLat.lat],
           zoom: this.zoom, 
         });
@@ -758,7 +752,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           navigator.geolocation.getCurrentPosition(position => { 
             this.map = new mapboxgl.Map({
               container: this.divMap?.nativeElement, 
-              style: 'mapbox://styles/mapbox/'+this.color_map,
+              style: 'mapbox://styles/mapbox/'+this.colorMap,
               center: [position.coords.longitude, position.coords.latitude],
               zoom: this.zoom, 
             });
@@ -766,7 +760,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
           (error) => {
             this.map = new mapboxgl.Map({
               container: this.divMap?.nativeElement, 
-              style: 'mapbox://styles/mapbox/'+this.color_map, 
+              style: 'mapbox://styles/mapbox/'+this.colorMap, 
               center: [-3.7034137886912504,40.41697654880073],
               zoom: this.zoom, 
           });
@@ -777,7 +771,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       else {
         this.map = new mapboxgl.Map({
           container: this.divMap?.nativeElement, 
-          style: 'mapbox://styles/mapbox/'+this.color_map, 
+          style: 'mapbox://styles/mapbox/'+this.colorMap, 
           center: [-3.7034137886912504,40.41697654880073],
           zoom: this.zoom, 
         });      
@@ -793,10 +787,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       bounds = this.map.getBounds();
     }
     if(bounds!=null){
-      this.pos_x_1= bounds.getSouthWest().lng.toFixed(6);
-      this.pos_x_2= bounds.getNorthEast().lng.toFixed(6);
-      this.pos_y_1= bounds.getSouthWest().lat.toFixed(6);
-      this.pos_y_2= bounds.getNorthEast().lat.toFixed(6);
+      this.posX1= bounds.getSouthWest().lng.toFixed(6);
+      this.posX2= bounds.getNorthEast().lng.toFixed(6);
+      this.posY1= bounds.getSouthWest().lat.toFixed(6);
+      this.posY2= bounds.getNorthEast().lat.toFixed(6);
     }
   }
 
@@ -854,7 +848,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   changeMapStyle(event: any): void { // Cambiar apariencia del mapa
     if (this.map) {
-      this.color_map= event;
+      this.colorMap= event;
       this.saveStorage();
       this.map.setStyle('mapbox://styles/mapbox/' + event);
     }
@@ -967,15 +961,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   saveStorage() { // Guarda datos
     localStorage.setItem('open_map_list', this.open_map_list.toString());
-    localStorage.setItem('color_map', this.color_map);
+    localStorage.setItem('colorMap', this.colorMap);
   }
   readStorage() { // Recupera datos
     this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
-    this.color_map = localStorage.getItem('color_map') ?? '0';
-    //console.log(this.color_map)
+    this.colorMap = localStorage.getItem('colorMap') ?? '0';
   }
 
-  formatDateTime(date2: any) { // Formato fecha
+  formatDateTime(date2: any) { // Formato de la fecha
     let dat='';
     const date = new Date(date2)
     const year = date.getFullYear();
@@ -990,6 +983,4 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
     return dat;
   }
-
-
 }

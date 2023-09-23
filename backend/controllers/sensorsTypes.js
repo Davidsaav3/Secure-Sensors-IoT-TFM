@@ -5,7 +5,6 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 
-  /* SENSORS_TYPES //////////////////////////////////////////*/
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;

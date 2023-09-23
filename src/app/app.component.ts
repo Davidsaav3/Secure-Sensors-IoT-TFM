@@ -9,7 +9,7 @@ import { environment } from "./environments/environment"
 })
 export class AppComponent {
 
-  active_lang = environment.lenguaje_lang;
+  active_lang = environment.languageLang;
   constructor(private translate: TranslateService) {
     this.translate.setDefaultLang(this.active_lang[0]);
   }

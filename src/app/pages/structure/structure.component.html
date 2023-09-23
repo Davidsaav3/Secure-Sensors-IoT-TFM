@@ -35,47 +35,47 @@
 					<thead>
 						<tr> 
 							<!--<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'id_estructure'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructureButton('id_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt1" (click)="alt1=false;getStructureLocal('id_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructureButton('id_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt1" (click)="alt1=true;getStructureLocal('id_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'sensors.id' | translate }}
 							</th>-->
 							
 							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'description'}">
-								<svg *ngIf="alt_1_a" (click)="alt_1_a=false;getEstructureButton('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt1" (click)="alt1=false;getStructureLocal('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getEstructureButton('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								  <svg *ngIf="!alt1" (click)="alt1=true;getStructureLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg>
 								{{ 'sensors.description' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'configuration'}">
-								<svg *ngIf="alt_2_a" (click)="alt_2_a=false;getEstructureButton('configuration','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt2" (click)="alt2=false;getStructureLocal('configuration','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getEstructureButton('configuration','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt2" (click)="alt2=true;getStructureLocal('configuration','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.configuration' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'identifier_code'}">
-								<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getEstructureButton('identifier_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt3" (click)="alt3=false;getStructureLocal('identifier_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getEstructureButton('identifier_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt3" (click)="alt3=true;getStructureLocal('identifier_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.identifier_code' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'id_variable_data_structure'}">
-								<svg *ngIf="alt_4_a" (click)="alt_4_a=false;getEstructureButton('id_variable_data_structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt4" (click)="alt4=false;getStructureLocal('id_variable_data_structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getEstructureButton('id_variable_data_structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt4" (click)="alt4=true;getStructureLocal('id_variable_data_structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg>
 								{{ 'structure.id_variable_data_structure' | translate }}
@@ -115,7 +115,7 @@
 									<div class="col-12 col-lg-4 pe-3" style="position: relative">
 										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
 										<select (ngModelChange)="change=true"  type="select" [value]="estructure['id_variable_data_structure']" type="text" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']">
-                                            <ng-container *ngFor="let obj of estructure_variable.structure;let j=index">
+                                            <ng-container *ngFor="let obj of estructureVariable.structure;let j=index">
                                                 <option [selected]="obj.id==estructure['id_variable_data_structure']" value="{{obj.id}}">{{obj.description}}</option>
                                             </ng-container>
                                         </select>
@@ -136,7 +136,7 @@
 												<!--<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>-->
 											</div>
 											<div class="col-6 col-lg-3">
-												<button (click)="newEstructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state==1}">{{ 'sensors.save' | translate }}</button>
+												<button (click)="newStructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state==1}">{{ 'sensors.save' | translate }}</button>
 											</div>	
 										</div>
 									</div>
@@ -152,7 +152,7 @@
 							<td [ngClass]="{'mark': act_id == quote.id_estructure.toString() && state==2}" (click)="orderColumn(quote.id_estructure)">{{ quote.identifier_code }}</td>
 							<td [ngClass]="{'mark': act_id == quote.id_estructure.toString() && state==2}" (click)="orderColumn(quote.id_estructure)">{{ quote.variable_description }}</td>
 
-							<td [ngClass]="{'mark': act_id == quote.id_estructure.toString() && state==2}" (mouseout)="view_dup= -1" (mouseover)="view_dup= i" style="text-align: center;" (click)="duplicateEstructure(quote.id_estructure,quote.description)">                      
+							<td [ngClass]="{'mark': act_id == quote.id_estructure.toString() && state==2}" (mouseout)="view_dup= -1" (mouseover)="view_dup= i" style="text-align: center;" (click)="duplicateStructure(quote.id_estructure,quote.description)">                      
 							<svg *ngIf="view_dup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">5
 								<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 								<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -202,7 +202,7 @@
 									<div class="col-12 col-lg-4 pe-3" style="position: relative">
 										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
 										<select type="select" (ngModelChange)="change=true" [value]="estructure['id_variable_data_structure']" type="text" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']">
-                                            <ng-container *ngFor="let obj of estructure_variable.structure;let j=index">
+                                            <ng-container *ngFor="let obj of estructureVariable.structure;let j=index">
                                                 <option [selected]="obj.id==estructure['id_variable_data_structure']" value="{{obj.id}}">{{obj.description}}</option>
                                             </ng-container>
                                         </select>
@@ -223,7 +223,7 @@
 												<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 											</div>
 											<div class="col-6 col-lg-3 mb-3">
-												<button type="submit" (click)="editEstructure(form, i)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+												<button type="submit" (click)="editStructure(form, i)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 											</div>	
 											<div class="col-12 col-lg-6" [ngClass]="{'pb-3': this.width<965}">
 												<div class="row" style="display: flex; justify-content: end;">
@@ -246,12 +246,12 @@
 		<div  class="row" style="background-color: #fff; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" ><!--*ngIf="open_map_list"-->
 			<div class="col-12 col-lg-6 d-flex mt-3">
 			  <div><!--totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}}-->
-				<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{total_page}} de {{total}}</p>
+				<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
 			  </div>
 			  <div>
 				<!-- -->
-				<select (change)="getEstructureButton('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
-					<option *ngFor="let opcion of this.results_per_pag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
+				<select (change)="getStructureLocal('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 			  </div>
 			</div>
@@ -310,8 +310,8 @@
 						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteEstructure(estructure.id_estructure)" disabled *ngIf="change || change">{{ 'sensors.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteEstructure(estructure.id_estructure)" *ngIf="!change && !change">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteStructure(estructure.id_estructure)" disabled *ngIf="change || change">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteStructure(estructure.id_estructure)" *ngIf="!change && !change">{{ 'sensors.delete' | translate }}</button>
                 	</div>
             	</div>
           	</div>

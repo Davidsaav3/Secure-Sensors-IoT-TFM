@@ -5,7 +5,6 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 
-  /* structure //////////////////////////////////////////*/
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
@@ -63,7 +62,6 @@ router.use(express.json())
   });
 
   
-  /* structure //////////////////////////////////////////*/
   router.get("/duplicate/:description", (req, res) => {  /*/ DUPLICATE  /*/
     const description = req.params.description;
     let query = `SELECT description FROM data_estructure`;
@@ -89,7 +87,6 @@ router.use(express.json())
   });
 
   router.post("", (req, res) => {  /*/ POST  /*/
-  //console.log(req.body)
     const description = req.body.description === "" ? null : req.body.description;
     const configuration = req.body.configuration === "" ? null : req.body.configuration;
     const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;

@@ -8,35 +8,35 @@ import { environment } from "../environments/environment"
   templateUrl: './navbar.component.html',
   styleUrls: ['../app.component.css']
 })
+
 export class NavbarComponent {
-  leng_name= environment.lenguaje_name;
-  leng_lang= environment.lenguaje_lang;
-  active_lang = environment.lenguaje_lang[0];
-  dup_ok=false;
-  dup_not=false;
+  lengName= environment.languageName;
+  lengLang= environment.languageLang;
+  activeLang = environment.languageLang[0];
   rute='';
-  rute2: any;
+  ruteAux: any;
 
-  constructor(private translate: TranslateService,public rutaActiva: Router) {
+  constructor(private translate: TranslateService, public rutaActiva: Router) {
     this.rute= this.rutaActiva.routerState.snapshot.url;
-    this.rute2 = this.rute.split('/');
+    this.ruteAux = this.rute.split('/');
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { // Inicializador
     this.readStorage();
-    this.translate.use(this.active_lang);
+    this.translate.use(this.activeLang);
   }
 
-  changeLenguaje() {
+  changeLanguage() { // Cambia lenguaje
     this.saveStorage();
-    this.translate.use(this.active_lang);
+    this.translate.use(this.activeLang);
   }
 
   saveStorage() { // Guarda datos
-    localStorage.setItem('active_lang', this.active_lang);
+    localStorage.setItem('activeLang', this.activeLang);
   }
+
   readStorage() { // Recupera datos
-    this.active_lang = localStorage.getItem('active_lang') ?? 'es';
+    this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
   
 }

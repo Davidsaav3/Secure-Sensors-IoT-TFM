@@ -5,7 +5,6 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 
-  /* device_configurations /////////////////////////////////////////////////*/
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
     let search_text= req.params.search_text;
@@ -86,7 +85,7 @@ router.use(express.json())
               WHERE dc.enable=${devices_act} order by ${order_by} ${ord_asc}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
-                const responseArray = processResults(result);
+                const responseArray = auxGet(result);
                 res.json(responseArray);
               }); 
             }
@@ -125,7 +124,7 @@ router.use(express.json())
                 order by ${order_by} ${ord_asc}`
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                  const responseArray = processResults(result);
+                  const responseArray = auxGet(result);
                   res.json(responseArray);
                 }); 
               }
@@ -164,7 +163,7 @@ router.use(express.json())
                 //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                  const responseArray = processResults(result);
+                  const responseArray = auxGet(result);
                   res.json(responseArray);
                 }); 
               }
@@ -180,7 +179,7 @@ router.use(express.json())
               WHERE device_configurations.enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
-                const responseArray = processResults(result);
+                const responseArray = auxGet(result);
                 res.json(responseArray);
               }); 
             }
@@ -198,7 +197,7 @@ router.use(express.json())
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                  const responseArray = processResults(result);
+                  const responseArray = auxGet(result);
                   res.json(responseArray);
                 }); 
               }
@@ -215,7 +214,7 @@ router.use(express.json())
                 //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
-                  const responseArray = processResults(result);
+                  const responseArray = auxGet(result);
                   res.json(responseArray);
                 }); 
               }
@@ -243,7 +242,7 @@ router.use(express.json())
           LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id 
           ORDER BY ${order_by} ${ord_asc};
           `, function (err, result) {
-              const responseArray = processResults(result);
+              const responseArray = auxGet(result);
               res.json(responseArray);
             }); 
           }
@@ -253,7 +252,7 @@ router.use(express.json())
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
             WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
-              const responseArray = processResults(result);
+              const responseArray = auxGet(result);
               res.json(responseArray);
             }); 
           }
@@ -281,7 +280,7 @@ router.use(express.json())
             WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR dc.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%'
             ORDER BY ${order_by} ${ord_asc};`, function (err, result) {
             if (err) throw err;
-            const responseArray = processResults(result);
+            const responseArray = auxGet(result);
             res.json(responseArray);    
           });
         }
@@ -293,7 +292,7 @@ router.use(express.json())
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id  
             WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
             if (err) throw err;
-            const responseArray = processResults(result);
+            const responseArray = auxGet(result);
             res.json(responseArray);
           });
         }
@@ -301,12 +300,11 @@ router.use(express.json())
     
   });
 
-  function processResults(result) { //Aux de get
+  function auxGet(result) { //Función auxiliar de get
     const devicesWithSensors = {};
   
     result.forEach((row) => {
       const deviceId = row.id;
-  
       if (!devicesWithSensors[deviceId]) {
         devicesWithSensors[deviceId] = {
           id: deviceId,
@@ -327,7 +325,6 @@ router.use(express.json())
           sensors: [],
         };
       }
-  
       if (row.sensor_id) {
         devicesWithSensors[deviceId].sensors.push({
           type_name: row.type_name,
@@ -340,71 +337,111 @@ router.use(express.json())
 
   router.get("/id/:id", (req, res) => {  /*/ ID /*/
     const id = parseInt(req.params.id);
-    const query = `
-    SELECT dc.*, de.description AS structure_name,
-    s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
-    (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
-    s.correction_specific, s.correction_time_specific, s.topic_specific,
-    (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
-    FROM device_configurations dc
-    INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
-    LEFT JOIN sensors_devices s ON dc.id = s.id_device
-    WHERE dc.id = ?
-    `;
-    con.query(query, [id], (err, result) => {
+
+    let query1 = `SELECT variable_configuration FROM device_configurations WHERE id=?`;
+    con.query(query1, [id], (err, result) => {
       if (err) {
         console.error("Error:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      const devicesWithSensors = {};
-  
-      result.forEach((row) => {
-        const deviceId = row.id;
-    
-        if (!devicesWithSensors[deviceId]) {
-          devicesWithSensors[deviceId] = {
-            id: deviceId,
-            uid: row.uid, 
-            alias: row.alias, 
-            origin: row.origin,
-            description_origin: row.description_origin, 
-            application_id: row.application_id, 
-            topic_name: row.topic_name,
-            typemeter: row.typemeter, 
-            lat: row.lat, 
-            lon: row.lon, 
-            cota: row.cota,
-            timezone: row.timezone,
-            enable: row.enable,
-            organizationid: row.organizationid, 
-            createdAt: row.createdAt,
-            updatedAt: row.updatedAt,
-            id_data_estructure: row.id_data_estructure, 
-            variable_configuration: row.variable_configuration,
-            sensors: [],
-          };
-        }
-    
-        if (row.sensor_id) {
-          devicesWithSensors[deviceId].sensors.push({
-            orden: row.orden,
-            enable: row.sensor_enable, 
-            id_device: row.id_device, 
-            id_type_sensor: row.id_type_sensor, 
-            id: row.sensor_id,
-            datafield: row.datafield, 
-            nodata: row.nodata, 
-            type_name: row.type_name,
-            correction_specific: row.correction_specific,
-            correction_time_specific: row.correction_time_specific, 
-            topic_specific: row.topic_specific, 
-            position: row.position,
-          });
-        }
-      });
-      const responseArray = Object.values(devicesWithSensors);
-      res.json(responseArray);
+      var query = `SELECT dc.*, de.description AS structure_name,
+      s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
+      (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
+      s.correction_specific, s.correction_time_specific, s.topic_specific,
+      (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
+      FROM device_configurations dc
+      LEFT JOIN sensors_devices s ON dc.id = s.id_device
+      WHERE dc.id = ?`
+      var variable_configuration=0;
+      variable_configuration = result[0].variable_configuration;
+
+      setTimeout(() => {
+
+      if(variable_configuration==0){
+        console.log('hola0')
+        query =`SELECT dc.*, de.description AS structure_name,
+         s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
+         (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
+         s.correction_specific, s.correction_time_specific, s.topic_specific,
+         (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
+         FROM device_configurations dc
+         INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
+         LEFT JOIN sensors_devices s ON dc.id = s.id_device
+         WHERE dc.id = ?
+         `; 
+       }
+       if(variable_configuration==1){
+        console.log('hola1')
+        query =`SELECT dc.*, de.description AS structure_name,
+         s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
+         (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
+         s.correction_specific, s.correction_time_specific, s.topic_specific,
+         (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
+         FROM device_configurations dc
+         INNER JOIN variable_data_structure de ON dc.id_data_estructure = de.id
+         LEFT JOIN sensors_devices s ON dc.id = s.id_device
+         WHERE dc.id = ?
+         `;
+       }
+
+       con.query(query, [id], (err, result) => {
+         if (err) {
+           console.error("Error:", err);
+           return res.status(500).json({ error: 'Error en la base de datos' });
+         }
+         const devicesWithSensors = {};
+     
+         result.forEach((row) => {
+           const deviceId = row.id;
+       
+           if (!devicesWithSensors[deviceId]) {
+             devicesWithSensors[deviceId] = {
+               id: deviceId,
+               uid: row.uid, 
+               alias: row.alias, 
+               origin: row.origin,
+               description_origin: row.description_origin, 
+               application_id: row.application_id, 
+               topic_name: row.topic_name,
+               typemeter: row.typemeter, 
+               lat: row.lat, 
+               lon: row.lon, 
+               cota: row.cota,
+               timezone: row.timezone,
+               enable: row.enable,
+               organizationid: row.organizationid, 
+               createdAt: row.createdAt,
+               updatedAt: row.updatedAt,
+               id_data_estructure: row.id_data_estructure, 
+               variable_configuration: row.variable_configuration,
+               sensors: [],
+             };
+           }
+       
+           if (row.sensor_id) {
+             devicesWithSensors[deviceId].sensors.push({
+               orden: row.orden,
+               enable: row.sensor_enable, 
+               id_device: row.id_device, 
+               id_type_sensor: row.id_type_sensor, 
+               id: row.sensor_id,
+               datafield: row.datafield, 
+               nodata: row.nodata, 
+               type_name: row.type_name,
+               correction_specific: row.correction_specific,
+               correction_time_specific: row.correction_time_specific, 
+               topic_specific: row.topic_specific, 
+               position: row.position,
+             });
+           }
+         });
+         const responseArray = Object.values(devicesWithSensors);
+         res.json(responseArray);
+       });
+      }, 100);
+
     });
+
   });
 
   router.get("/max/", (req, res) => {  /*/ MAX  /*/
@@ -445,12 +482,11 @@ router.use(express.json())
     });
   });
 
-
-  router.post("", (req, res) => {  /*/ POST  /*/
+  router.post("", (req, res) => { /*/ POST Y DELETE  /*/
     const { 
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
     } = req.body;
-    aux(req.body.sensors)
+    auxPost(req.body.sensors)
 
     if (!uid) {
       return res.status(400).json({ error: 'El campo uid es requerido.' });
@@ -476,8 +512,8 @@ router.use(express.json())
     );
   });
 
-  function aux(sensors){
-  //router.post("", (req, res) => {  /*/ POST Y DELETE  /*/
+  function auxPost(sensors){
+  //router.post("", (req, res) => {  
 
     const newRecords = sensors;
     const deleteIdDevice = sensors;
@@ -570,7 +606,6 @@ router.use(express.json())
       }
     });
   //});
-
   }
 
   router.put("", (req,res)=>{  /*/ UPDATE  /*/
@@ -578,7 +613,7 @@ router.use(express.json())
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt,id_data_estructure,variable_configuration, id: id7,
     } = req.body;
-    aux(req.body.sensors)
+    auxPost(req.body.sensors)
 
     if (!uid || !topic_name) {
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos.' });
@@ -640,53 +675,4 @@ router.use(express.json())
     });
   });
 
-
 module.exports = router;
-
- /*router.get('/gets', (req, res) => {
-    const query = `
-    SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,(SELECT COUNT(*) AS total FROM device_configurations) as total
-    FROM device_configurations
-    LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
-    LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
-    WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}
-    `;
-  
-    con.query(query, (err, results) => {
-      // Organiza los resultados en un formato deseado
-    const devicesWithSensors = {};
-
-    results.forEach((row) => {
-      const deviceId = row.id;
-
-      if (!devicesWithSensors[deviceId]) {
-        devicesWithSensors[deviceId] = {
-          id: deviceId,
-          topic_name: row.topic_name,
-          organizationid: row.organizationid,
-          uid: row.uid,
-          application_id: row.application_id,
-          alias: row.alias,
-          enable: row.enable,
-          updatedAt: row.updatedAt,
-          lat: row.lat,
-          lon: row.lon,
-          topic_name: row.topic_name,
-          total: row.total,
-          sensors: [],
-        };
-      }
-
-      if (row.sensor_id) {
-        devicesWithSensors[deviceId].sensors.push({
-          type_name: row.type_name,
-          enable: row.sensor_enable,
-        });
-      }
-    });
-
-    const responseArray = Object.values(devicesWithSensors);
-    //console.log(devicesWithSensors)
-    res.json(responseArray);
-  });
-  });*/

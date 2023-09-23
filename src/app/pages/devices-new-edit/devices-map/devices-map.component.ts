@@ -24,7 +24,7 @@ interface MarkerAndColor {
 export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
   rute='';
-  rute2: any;
+  ruteAux: any;
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
@@ -32,8 +32,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
   constructor(private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
     this.rute= this.rute1.routerState.snapshot.url;
-    this.rute2 = this.rute.split('/');
-    if(this.rute2[2]=='edit'){
+    this.ruteAux = this.rute.split('/');
+    if(this.ruteAux[2]=='edit'){
       this.dataSharingService.sharedLat$.subscribe(data => {
         this.sharedLat = data;
       });
@@ -45,50 +45,47 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
    }
 
   @ViewChild('map') divMap?: ElementRef;
-  max_device: string = 'http://localhost:5172/api/device_configurations/max';
+  maxDevice: string = 'http://localhost:5172/api/device_configurations/max';
   id= parseInt(this.rutaActiva.snapshot.params['id']);
-
   zoom: number = 10;
   map?: mapboxgl.Map;
   markers: MarkerAndColor[] = [];
-  color_map= 'streets-v12';
-  id_max= 1;
+  colorMap= 'streets-v12';
+  idMax= 1;
   state= -1;
   
   ngOnInit(): void { // Inicializador
-    fetch(this.max_device)
+    fetch(this.maxDevice)
     .then(response => response.json())
     .then(data => {
-      this.id_max= parseInt(data.id)-1;
-      if(this.id<=this.id_max){
+      this.idMax= parseInt(data.id)-1;
+      if(this.id<=this.idMax){
         this.state= 1;
       }
-      if(this.id>this.id_max){
+      if(this.id>this.idMax){
         this.state= 0;
       }
     })
-    //
+
     setTimeout(() => {
       this.readStorage();
       this.rute= this.rute1.routerState.snapshot.url;
-      this.rute2 = this.rute.split('/');
+      this.ruteAux = this.rute.split('/');
       this.dataSharingService.sharedLat$.subscribe(data => {
         this.sharedLat = data;
       });
       this.dataSharingService.sharedLon$.subscribe(data => {
         this.sharedLon = data;
       });
-      if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
+      if(this.ruteAux[2]=='edit' || (this.ruteAux[2]=='new' && this.state==1)){
         this.currentLngLat= new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
       }
     }, 100);
-    //
-
   }
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
     setTimeout(() => {
-      if(this.rute2[2]=='new' && this.state==0){
+      if(this.ruteAux[2]=='new' && this.state==0){
           if ( !this.divMap ) throw 'No hay mapa';
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => { 
@@ -109,7 +106,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           }
       }
       //
-      if(this.rute2[2]=='edit' || (this.rute2[2]=='new' && this.state==1)){
+      if(this.ruteAux[2]=='edit' || (this.ruteAux[2]=='new' && this.state==1)){
           this.deleteMarker();
           this.map= this.createMap(this.currentLngLat);
           this.currentLngLat= new mapboxgl.LngLat(this.sharedLon,this.sharedLat);
@@ -148,7 +145,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
           for (const input of inputArray) {
             input.onclick = (layer: any) => {
               if (this.map != null) {
-                this.map.setStyle('mapbox://styles/mapbox/' + this.color_map);
+                this.map.setStyle('mapbox://styles/mapbox/' + this.colorMap);
               }
             };
           }
@@ -246,7 +243,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     this.ngOnDestroy();
     this.map = new mapboxgl.Map({
       container: this.divMap.nativeElement,
-      style: 'mapbox://styles/mapbox/'+this.color_map, 
+      style: 'mapbox://styles/mapbox/'+this.colorMap, 
       center: pos,
       zoom: this.zoom,
     });
@@ -255,13 +252,13 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
 
   changeMapStyle(event: any): void { // Cambiar apariencia del mapa
     if (this.map) {
-      this.color_map= event;
+      this.colorMap= event;
       this.saveStorage();
       this.map.setStyle('mapbox://styles/mapbox/' + event);
     }
   }
   
-  ngOnDestroy() {
+  ngOnDestroy() { // Destructor
     try {
       if (this.map) {
           this.map.remove();
@@ -314,7 +311,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
     .addTo( this.map );
     this.markers.push({ color, marker, });
 
-    if(this.rute2[2]=='new'){
+    if(this.ruteAux[2]=='new'){
       this.saveStorage();
       marker.on('dragend', () => this.saveStorage() );      
     }
@@ -336,11 +333,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy{
   }
 
   saveStorage() { // Guarda datos
-    localStorage.setItem('color_map', this.color_map);
+    localStorage.setItem('colorMap', this.colorMap);
   }
 
   readStorage() { // Recupera datos
-    this.color_map = localStorage.getItem('color_map') ?? '0';
+    this.colorMap = localStorage.getItem('colorMap') ?? '0';
   }
 
 }
