@@ -153,15 +153,15 @@
 
                             <div class="row pb-0 pb-1 d-flex">
                                 <div class="col d-flex ps-3" style="justify-content: space-between;">
-                                    <div class="d-flex">
+                                    <div class="d-flex mt-2">
                                         <svg style="cursor: pointer;" (click)="exp=false" *ngIf="exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                                         </svg>
                                         <svg style="cursor: pointer;" (click)="exp=true" *ngIf="!exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
                                         </svg>
-                                        <p *ngIf="exp" class="ms-2">Mostrar configuracón</p>
-                                        <p *ngIf="!exp" class="ms-2">Ocultar configuracón</p>
+                                        <p *ngIf="exp" class="ms-2 mb-0">{{ 'show' | translate }}</p>
+                                        <p *ngIf="!exp" class="ms-2 mb-0">{{ 'hide' | translate }}</p>
                                     </div>
                                     <div>
                                         <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
@@ -175,15 +175,63 @@
                                     <table class="table table-hover ">
                                         <thead>
                                           <tr>
-                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.order' | translate }}</th>
-                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.type' | translate }}</th>
-                                            <th class="rounded-0" *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">{{ 'devices.sensors.datafield' | translate }}</th>
-                                            <th class="rounded-0" *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">{{ 'devices.sensors.nodate' | translate }}</th>
-                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.specific' | translate }}</th>
-                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.time_specific' | translate }}</th>
-                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'devices.sensors.topic_specific' | translate }}</th>
-                                            <th class="rounded-0" style="cursor: pointer;" scope="col">{{ 'sensors.enable' | translate }}</th>
-                                            <th class="rounded-0"scope="col" style="text-align: center;">{{ 'sensors.delete' | translate }}</th>
+                                            <th  style="cursor: pointer; z-index: 100;" scope="col" [ngClass]="{'mark': mark == 'position'}">
+                                                <svg *ngIf="alt_1_a" (click)="alt_1_a=false;getSensorsButton('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                </svg>
+                                                <svg *ngIf="!alt_1_a" (click)="alt_1_a=true;getSensorsButton('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                </svg>{{ 'devices.sensors.order' | translate }}
+                                            </th>
+                                            <th  style="cursor: pointer;" scope="col">
+                                               {{ 'devices.sensors.type' | translate }}
+                                            </th>
+                                            <th  *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'datafield'}">
+                                                <svg *ngIf="alt_2_a" (click)="alt_2_a=false;getSensorsButton('datafield','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                </svg>
+                                                <svg *ngIf="!alt_2_a" (click)="alt_2_a=true;getSensorsButton('datafield','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                </svg>{{ 'devices.sensors.datafield' | translate }}
+                                            </th>
+                                            <th  *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col">
+                                                <!--<svg *ngIf="alt_3_a" (click)="alt_3_a=false;getSensorsButton('nodata','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                </svg>
+                                                <svg *ngIf="!alt_3_a" (click)="alt_3_a=true;getSensorsButton('nodata','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                </svg>-->{{ 'devices.sensors.nodate' | translate }}
+                                            </th>
+                                            <th  style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_specific'}">
+                                                <svg *ngIf="alt_4_a" (click)="alt_4_a=false;getSensorsButton('correction_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                </svg>
+                                                <svg *ngIf="!alt_4_a" (click)="alt_4_a=true;getSensorsButton('correction_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                </svg>{{ 'devices.sensors.specific' | translate }}
+                                            </th>
+                                            <th  style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_time_specific'}">
+                                                <svg *ngIf="alt_5_a" (click)="alt_5_a=false;getSensorsButton('correction_time_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                </svg>
+                                                <svg *ngIf="!alt_5_a" (click)="alt_5_a=true;getSensorsButton('correction_time_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                </svg>{{ 'devices.sensors.time_specific' | translate }}
+                                            </th>
+                                            <th *ngIf="show_large || this.width<965" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'topic_specific'}">
+                                                <svg *ngIf="alt_6_a" (click)="alt_6_a=false;getSensorsButton('topic_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                </svg>
+                                                <svg *ngIf="!alt_6_a" (click)="alt_6_a=true;getSensorsButton('topic_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                </svg>{{ 'devices.sensors.topic_specific' | translate }}
+                                            </th>
+                                            <th  style="cursor: pointer;" scope="col">
+                                                {{ 'sensors.enable' | translate }}
+                                            </th>
+                                            <th scope="col" style="text-align: center;">
+                                                {{ 'sensors.delete' | translate }}
+                                            </th>
                                           </tr>
                                         </thead>
                         
@@ -194,7 +242,7 @@
                                     <label style="display: none" [for]="'id_device'+i">{{ 'devices.sensors.id_device' | translate }}</label>
                                     <input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'id_device'+i" [name]="'id_device'+i" value="{{this.id}}" [(ngModel)]="item.id_device">
                                   
-                                    <td class="rounded-0" scope="col2" class="pb-0 input-0">
+                                    <td  scope="col2" class="pb-0 input-0">
                                       <label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
                                       <input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" value="{{ item.orden }}" type="text" class="form-control" [id]="'orden'+i" [name]="'orden'+i" [(ngModel)]="item['orden']" required>
                                       <div *ngIf="form.submitted && form.controls['orden'].errors" class="text-danger">
@@ -202,7 +250,7 @@
                                       </div>
                                     </td>
                         
-                                    <td class="rounded-0" scope="col"class="pb-0 input-1"> 
+                                    <td  scope="col"class="pb-0 input-1"> 
                                       <select type="number" min="0" maxlength="11" (change)="this.getOrden(i,item.id_type_sensor);this.changed= true;" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor" >
                                         <option *ngFor="let id of this.select_sensors.sensors" [value]="id.id" [selected]="id.id==item.id_type_sensor">{{id.type}}</option>
                                       </select>
@@ -240,7 +288,7 @@
                                       </div>
                                     </td>
 
-                                    <td class="pb-0 input-1">
+                                    <td *ngIf="show_large || this.width<965" class="pb-0 input-1">
                                       <label style="display: none" [for]="'topic_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
                                       <input (ngModelChange)="this.changed= true;" value="{{ item.topic_specific }}" type="text" class="form-control" [id]="'topic_specific'+i" [name]="'topic_specific'+i" [(ngModel)]="item['topic_specific']" type>
                                       <div *ngIf="form.submitted && form.controls['topic_specific'].errors" class="text-danger">

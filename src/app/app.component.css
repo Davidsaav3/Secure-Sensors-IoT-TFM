@@ -447,3 +447,22 @@
 .mapbox-popup-anchor-bottom{
   max-width: 400px;
 }
+
+/* */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+tbody {
+  max-height: 600px; 
+  overflow-y: scroll;
+}
+
+table th {
+  text-align: left;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

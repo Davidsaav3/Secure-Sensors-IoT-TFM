@@ -148,8 +148,7 @@
     "structure.initial_byte": "Initial byte",
     "devices.sensors.topic_specific": "Topic specific",
     "fixed": "Fixed",
-    "variable": "Variable"
-
-
-
+    "variable": "Variable",
+    "show": "Show settings", 
+    "hide": "Hide settings"
 }

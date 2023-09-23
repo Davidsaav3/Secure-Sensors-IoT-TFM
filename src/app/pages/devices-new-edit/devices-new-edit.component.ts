@@ -55,6 +55,20 @@ export class DevicesNewEditComponent implements OnInit{
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
+  alt_1_a=true;
+  alt_1_b=false;
+  alt_2_a=true;
+  alt_2_b=false;
+  alt_3_a=true;
+  alt_3_b=false;  
+  alt_4_a=true;
+  alt_4_b=false;  
+  alt_5_a=true;
+  alt_5_b=false;
+  alt_6_a=true;
+  alt_6_b=false;
+  mark= 'position';
+
   show_large= true;
   view_can= -1;
   delete_it: any;
@@ -92,7 +106,7 @@ export class DevicesNewEditComponent implements OnInit{
     typemeter: '',
     lat: this.sharedLat,
     lon: this.sharedLon,
-    cota: 10,
+    cota: 0,
     timezone: 'Brussels, Copenhagen, Madrid, Paris',
     organizationid: '',
     enable: 0,
@@ -479,7 +493,7 @@ export class DevicesNewEditComponent implements OnInit{
   deleteMarker(){ // eliminar elementos del mapa
     this.devices.lat= null;
     this.devices.lon= null;
-    this.devices.cota= 10;
+    this.devices.cota= 0;
     this.devices.timezone= 'Brussels, Copenhagen, Madrid, Paris';
     this.updatesharedLat();
     this.updatesharedLon();
@@ -543,5 +557,51 @@ export class DevicesNewEditComponent implements OnInit{
     this.delete_it= id;
     this.devices.sensors= this.devices.sensors.filter((item) => item.id != this.delete_it)
     this.changed= true;
+  }
+
+  getSensorsButton(id: any,ord: any){ // Ordenar columnas
+    this.mark= id;
+
+    if (ord == 'ASC') {
+      if (id == 'position') {
+        this.devices.sensors.sort((a: any, b: any) => Number(a.position) - Number(b.position));
+      }
+      if (id == 'datafield') {
+        this.devices.sensors.sort((a: any, b: any) => a.datafield.localeCompare(b.datafield));
+      }
+      if (id == 'nodata') {
+        this.devices.sensors.sort((a: any, b: any) => a.nodata.localeCompare(b.nodata));
+      }
+      if (id == 'correction_specific') {
+        this.devices.sensors.sort((a: any, b: any) => a.correction_specific.localeCompare(b.correction_specific));
+      }
+      if (id == 'correction_time_specific') {
+        this.devices.sensors.sort((a: any, b: any) => a.correction_time_specific.localeCompare(b.correction_time_specific));
+      }
+      if (id == 'topic_specific') {
+        this.devices.sensors.sort((a: any, b: any) => a.topic_specific.localeCompare(b.topic_specific));
+      }
+    }
+    if (ord == 'DESC') {
+      if (id == 'position') {
+        this.devices.sensors.sort((a: any, b: any) => Number(b.position) - Number(a.position));
+      }
+      if (id == 'datafield') {
+        this.devices.sensors.sort((a: any, b: any) => b.datafield.localeCompare(a.datafield));
+      }
+      if (id == 'nodata') {
+        this.devices.sensors.sort((a: any, b: any) => b.nodata.localeCompare(a.nodata));
+      }
+      if (id == 'correction_specific') {
+        this.devices.sensors.sort((a: any, b: any) => b.correction_specific.localeCompare(a.correction_specific));
+      }
+      if (id == 'correction_time_specific') {
+        this.devices.sensors.sort((a: any, b: any) => b.correction_time_specific.localeCompare(a.correction_time_specific));
+      }
+      if (id == 'topic_specific') {
+        this.devices.sensors.sort((a: any, b: any) => b.topic_specific.localeCompare(a.topic_specific));
+      }
+    }
+    //console.log(this.devices.sensors)
   }
 }
