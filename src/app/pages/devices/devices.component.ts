@@ -69,14 +69,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   rute='';
   id= 1;
   timeout: any = null;
-  dup_ok=false;
-  dup_not=false;
+  dupOk=false;
+  dupNot=false;
   searchText='Buscar';
   ordAux= 'ASC';
-  open_map_list= true;
-  view_dup= -10;
-  pencil_dup= -10;
-  pencil_dup1= false;
+  openAux= true;
+  viewDup= -10;
+  pencilDup= -10;
   view_list=false;
   view_map=false;
   popup: any;
@@ -87,7 +86,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   alt4=true;
   alt5=true;
 
-  select_sensors_1 = {
+  selectSensors1 = {
     sensors : [{
       id: -1, 
       name: 'Cualquier sensor',    
@@ -111,7 +110,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       type_name: 'David'
   }
 
-  select_sensors_2 = {
+  selectSensors2 = {
     sensors : [{
       id: -1, 
       name: 'Cualquier sensor',    
@@ -127,7 +126,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }]
   }
 
-  select_sensors_3 = {
+  selectSensorsAux = {
     sensors : [{
       id: -1, 
       name: '',    
@@ -152,7 +151,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
 
   ngOnInit(): void { // Inicialización
     this.initFilters();
-    this.select_sensors_2.sensors= [];
+    this.selectSensors2.sensors= [];
     this.readStorage();
   }
 
@@ -163,7 +162,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.getDevices('0');
   }
 
-  getDevices(num: any){ // consulta de los dispositivos
+  getDevices(num: any){ // Consulta de los dispositivos
     this.state= num;
     if(this.state=='1'){
       this.deleteMarker();
@@ -180,14 +179,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       let posY1= '0';
       let posY2= '0';
       let array= [];
-      for (let index = 0; index < this.select_sensors_3.sensors.length; index++) {
-        array.push(this.select_sensors_3.sensors[index].id);
+      for (let index = 0; index < this.selectSensorsAux.sensors.length; index++) {
+        array.push(this.selectSensorsAux.sensors[index].id);
       }
       this.arraySensors = array.join(',');
       this.pag_tam= 1;
       this.pag= 100000;
 
-      if(this.open_map_list==false){ // Map
+      if(this.openAux==false){ // Map
         console.log(this.data.length)
         console.log(this.dataAux.length)
         console.log(this.data)
@@ -233,7 +232,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     
           setTimeout(()=>{
             if(this.map!=null){
-              //
               let contenido;
               let cont= [];
               let cont2='';
@@ -241,9 +239,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               //console.log(this.markers)
               for (let index = 0; index < this.markers.length; index++) {
                 cont2='';
-                //console.log(this.data[index].sensors.length)
                 if(this.data!=undefined && this.data!=null && this.data[index]!=undefined && this.data[index]!=null){
-                  //console.log('hola '+this.data[index].sensors[0].type_name)
                   for (let index3 = 0; index3 < this.data[index].sensors.length; index3++) {
                     if(this.data[index].sensors[index3].enable==0){
                       cont2+= `<span class="badge rounded-pill text-bg-danger d-inline-block me-2 mb-1">
@@ -257,7 +253,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                     }
                   }
                 }
-                //} 
                 
                 contenido= ``
                 if(this.markers[index].data.uid!=''){
@@ -365,9 +360,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         });
       }
 
-      ///////////////////////////////////////////////////////
+      //
       
-      if(this.open_map_list==true){ // List
+      if(this.openAux==true){ // List
         this.data= [];
 
         this.charging= true;
@@ -427,11 +422,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       fetch(`${this.get_device}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`)
       .then((response) => response.json())
       .then(data => {
-        //console.log(data)
         this.charging= false;
-        //console.log(JSON.stringify(this.data.map(item => item.id)))
-        //console.log(JSON.stringify(data.map((item: { id: any; }) => item.id)))
-
         if (JSON.stringify(this.data.map(item => item.id)) != JSON.stringify(data.map((item: { id: any; }) => item.id))) {
           this.data= [];
           this.data= data;
@@ -487,9 +478,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.currentPage = 1;
     this.quantPage = 15;
     this.page= 1;
-    this.select_sensors_2.sensors= [];
-    this.select_sensors_3.sensors= [];
-    this.select_sensors_3.sensors.push({
+    this.selectSensors2.sensors= [];
+    this.selectSensorsAux.sensors= [];
+    this.selectSensorsAux.sensors.push({
       id: -1, 
       name: '',    
       metric: '', 
@@ -511,9 +502,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     //this.ngOnDestroy();
     //this.newMap();
     this.buscar= true;
-    this.select_sensors_3.sensors= [];
-    if(this.select_sensors_2.sensors.length==0){
-      this.select_sensors_3.sensors.push({
+    this.selectSensorsAux.sensors= [];
+    if(this.selectSensors2.sensors.length==0){
+      this.selectSensorsAux.sensors.push({
         id: -1, 
         name: '',    
         metric: '', 
@@ -529,25 +520,25 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.getDevices('1');    
     }
     else{
-      this.select_sensors_3.sensors= [];
-      for (let index = 0; index < this.select_sensors_2.sensors.length; index++) {
-        if(this.select_sensors_2.sensors[index].id>=0){
-          this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
+      this.selectSensorsAux.sensors= [];
+      for (let index = 0; index < this.selectSensors2.sensors.length; index++) {
+        if(this.selectSensors2.sensors[index].id>=0){
+          this.selectSensorsAux.sensors.push(this.selectSensors2.sensors[index]);
           this.getDevices('1');    
         }
-        if(this.select_sensors_2.sensors.length==1 && this.select_sensors_2.sensors[index].id<0){
-          this.select_sensors_3.sensors.push(this.select_sensors_2.sensors[index]);
-          this.select_sensors_2.sensors= [];
-          this.select_sensors_2.sensors.push(this.select_sensors_3.sensors[index]);
+        if(this.selectSensors2.sensors.length==1 && this.selectSensors2.sensors[index].id<0){
+          this.selectSensorsAux.sensors.push(this.selectSensors2.sensors[index]);
+          this.selectSensors2.sensors= [];
+          this.selectSensors2.sensors.push(this.selectSensorsAux.sensors[index]);
           this.getDevices('1');    
         }
-        if(this.select_sensors_2.sensors.length>1 && this.select_sensors_2.sensors[index].id<0){
-          this.select_sensors_2.sensors= [];
-          this.select_sensors_2.sensors= this.select_sensors_3.sensors;
+        if(this.selectSensors2.sensors.length>1 && this.selectSensors2.sensors[index].id<0){
+          this.selectSensors2.sensors= [];
+          this.selectSensors2.sensors= this.selectSensorsAux.sensors;
         }
-        if(this.select_sensors_2.sensors.length==0){
-          this.select_sensors_2.sensors= [];
-          this.select_sensors_3.sensors.push({
+        if(this.selectSensors2.sensors.length==0){
+          this.selectSensors2.sensors= [];
+          this.selectSensorsAux.sensors.push({
             id: -1, 
             name: '',    
             metric: '', 
@@ -608,11 +599,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     else{
       this.orderDevices(id,ord);
     }
-    
-    //const sectionElement = this.elementRef.nativeElement.querySelector('.mark_select');
-    //if (sectionElement) {
-    //  sectionElement.scrollIntoView({ behavior: 'smooth' });
-    //}
   }
 
   initFilters(){ // Inicializa filtros
@@ -637,22 +623,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         type: this.translate.instant('text_2'),    
       });
 
-      this.select_sensors_1.sensors= data;
+      this.selectSensors1.sensors= data;
       for (let index = 0; index < data.length; index++) {
-        this.select_sensors_1.sensors[index].name= data[index].type;
+        this.selectSensors1.sensors[index].name= data[index].type;
       }
     })
     this.orderDevices('uid','ASC');
   }
 
   openMap(){ // Abrir mapa
-    this.open_map_list= false;
+    this.openAux= false;
     this.getDevices('1');  
     this.saveStorage();
   }
 
   openList(){ // Abrir lista
-    this.open_map_list= true;
+    this.openAux= true;
     this.getDevices('0'); 
     this.saveStorage();
   }
@@ -835,9 +821,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.currentLngLat = this.map!.getCenter();
     });
 
-    if(this.map!=undefined && this.search.value=='' && this.select_sensors_3.sensors[0].id==-1 && this.search.devices_act==2){
+    if(this.map!=undefined && this.search.value=='' && this.selectSensorsAux.sensors[0].id==-1 && this.search.devices_act==2){
       this.map.on('moveend', () => {
-        if(this.open_map_list==false)
+        if(this.openAux==false)
           this.getDevices('0');
       });
     }
@@ -854,7 +840,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  ngOnDestroy(): void { // Elimina mapa
+  ngOnDestroy(): void { // Eliminar mapa
     this.map?.remove();
   }
 
@@ -894,7 +880,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  
   addMarker( lngLat: mapboxgl.LngLat, color: string , name: string, enable: number, data: any) { // Añadir chincheta
     if ( !this.map ) return;
     const marker = new mapboxgl.Marker({
@@ -957,14 +942,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
   }
 
-  /* */
+  /* Funciones Auxiliares */
 
   saveStorage() { // Guarda datos
-    localStorage.setItem('open_map_list', this.open_map_list.toString());
+    localStorage.setItem('openAux', this.openAux.toString());
     localStorage.setItem('colorMap', this.colorMap);
   }
   readStorage() { // Recupera datos
-    this.open_map_list = JSON.parse(localStorage.getItem('open_map_list') ?? '');
+    this.openAux = JSON.parse(localStorage.getItem('openAux') ?? '');
     this.colorMap = localStorage.getItem('colorMap') ?? '0';
   }
 

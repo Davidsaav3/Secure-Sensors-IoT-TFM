@@ -1,4 +1,4 @@
-import { Component , OnInit} from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from "./environments/environment"
 
@@ -9,13 +9,13 @@ import { environment } from "./environments/environment"
 })
 export class AppComponent {
 
-  active_lang = environment.languageLang;
+  activeLang = environment.languageLang;
   constructor(private translate: TranslateService) {
-    this.translate.setDefaultLang(this.active_lang[0]);
+    this.translate.setDefaultLang(this.activeLang[0]);
   }
 
   changeLenguaje(lang: any) {
-    this.active_lang = lang;
+    this.activeLang = lang;
     this.translate.use(lang);
   }
   
