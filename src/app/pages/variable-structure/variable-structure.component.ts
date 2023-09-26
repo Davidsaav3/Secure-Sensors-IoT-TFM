@@ -16,8 +16,6 @@ export class VariableStructureComponent implements OnInit {
 
   getEstructure: string ="http://localhost:5172/api/variable_data_structure/get";
   postStructure: string = "http://localhost:5172/api/variable_data_structure";
-  deleteEstructure: string ="http://localhost:5172/api/variable_data_structure";
-  updateStructure: string = "http://localhost:5172/api/variable_data_structure";
   duplicateEstructure: string ="http://localhost:5172/api/variable_data_structure/duplicate";
 
   totalPages = 5;
@@ -32,30 +30,33 @@ export class VariableStructureComponent implements OnInit {
   alt3 = true;
 
   actId = 0;
-  charging = false;
-  data: any;
-  width = 0;
-  rute = "";
-  viewDup = -1;
-  pencilDup = -1;
-  timeout: any = null;
+  id = 0;
   state = 1;
-  show = false;
-  showAux = true;
-  alertDelete: any = false;
-  alertNew: any = false;
-  notDelete: any = false;
-  notNew: any = false;
-  saveOk: any = false;
-  saveNot: any = false;
+  data: any;
+  rute = "";
+  charging = false;
   saved = false;
   change = false;
+  width = 0;
+  timeout: any = null;
+  
+  show = false;
+  showAux = true;
   dupOk = false;
   dupNot = false;
-  id = 0;
+  viewDup = -1;
+  pencilDup = -1;
+
   searchParameter = "Buscar";
   order = "description";
   ordAux = "ASC";
+
+  alertDelete: any = false;
+  notDelete: any = false;
+  alertNew: any = false;
+  notNew: any = false;
+  saveOk: any = false;
+  saveNot: any = false;
 
   structure = {
     id: 0,
@@ -78,48 +79,13 @@ export class VariableStructureComponent implements OnInit {
   ngOnInit(): void {
     // Inicializador
     this.getStructure(this.order, this.ordAux);
-    this.openClouse();
   }
+  
+  /* GET */
 
   getStructureVoid() {
     // Obtener estructura sin parámetros
     this.getStructure(this.order, this.ordAux);
-  }
-
-  getStructure(id: any, ord: any) {
-    // Obtener todas las estructuras
-    this.order = id;
-    this.rute = this.rutaActiva.routerState.snapshot.url;
-    if (this.search.value == "") {
-      this.searchParameter = "Buscar";
-    } 
-    else {
-      this.searchParameter = this.search.value;
-    }
-    this.charging = true;
-    this.data = [];
-    fetch(
-      `${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
-        }
-        this.data = data;
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
-        }
-      });
   }
 
   getStructureLocal(id: any, ord: any) {
@@ -157,31 +123,63 @@ export class VariableStructureComponent implements OnInit {
     }
   }
 
-  editStructure(form: any) {
-    // Guardar datos de estructuras editado
-    if (form.valid) {
-      fetch(this.updateStructure, {
-        method: "PUT",
-        body: JSON.stringify(this.structure),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      }).then((response) => response.json());
-      this.data = this.data.filter((data: { id: string }) => parseInt(data.id) !== this.structure.id);
-      let structure = this.structure;
-      this.data.push(structure);
-      this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
-      this.actId = this.structure.id;
+  getStructure(id: any, ord: any) {
+    // Obtener todas las estructuras
+    this.order = id;
+    this.rute = this.rutaActiva.routerState.snapshot.url;
+    if (this.search.value == "") {
+      this.searchParameter = "Buscar";
+    } 
+    else {
+      this.searchParameter = this.search.value;
+    }
+    this.charging = true;
+    this.data = [];
+    fetch(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.charging = false;
+        if (data && data.length > 0 && data[0].total) {
+          this.totalPages = Math.ceil(data[0].total / this.quantPage);
+          this.total = data[0].total;
+        } 
+        else {
+          this.totalPages = 0;
+          this.total = 0;
+        }
+        this.data = data;
+        if (this.data.length < this.quantPage) {
+          this.totalPage = this.total;
+        } 
+        else {
+          this.totalPage = this.quantPage * this.currentPage;
+        }
+      });
+  }
+
+  orderColumn(idActual: any) {
+    // Ordenar columnas
+    this.show = true;
+    if (!this.change && !this.change && idActual != this.actId) {
+      this.actId = idActual;
+      this.id = idActual;
       this.openEdit();
       this.state = 2;
-
-      this.saveOk = true;
-      setTimeout(() => {
-        this.saveOk = false;
-      }, 2000);
-
-      this.saved = true;
-      this.change = false;
+      const objetoEnData = this.data.find(
+        (objeto: { id: any }) => objeto.id == idActual
+      );
+      this.structure = { ...objetoEnData };
+      this.structureCopy = {
+        id: this.structure.id,
+        description: this.structure.description,
+        structure: this.structure.structure,
+        initial_byte: this.structure.initial_byte,
+      };
+      this.openClouse();
     }
   }
+
+  /* NEW */
 
   newStructure(form: any) {
     // Guardar datos de estructura nueva
@@ -227,6 +225,67 @@ export class VariableStructureComponent implements OnInit {
     }
   }
 
+  openNew(id: any, description: any, structure: any, initial_byte: any) {
+    // Abrir Nueva estructura
+    this.structure = {
+      id: id,
+      description: description,
+      structure: structure,
+      initial_byte: initial_byte,
+    };
+    this.actId = 1;
+    this.show = true;
+    this.openClouse();
+    this.state = 1;
+  }
+
+  /* EDIT */
+
+  editStructure() {
+    // Guardar estructuras (popup salir sin guardar)
+    if (this.show == true && (this.state == 0 || this.state == 1)) {
+      this.newStructure(this.structure);
+    }
+    if (this.show == false && this.state == 2) {
+      this.editStructureAux(this.structure);
+    }
+  }
+
+  editStructureAux(form: any) {
+    // Guardar datos de estructuras editado
+    if (form.valid) {
+      fetch(this.postStructure, {
+        method: "PUT",
+        body: JSON.stringify(this.structure),
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+      }).then((response) => response.json());
+      this.data = this.data.filter((data: { id: string }) => parseInt(data.id) !== this.structure.id);
+      let structure = this.structure;
+      this.data.push(structure);
+      this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
+      this.actId = this.structure.id;
+      this.openEdit();
+      this.state = 2;
+
+      this.saveOk = true;
+      setTimeout(() => {
+        this.saveOk = false;
+      }, 2000);
+
+      this.saved = true;
+      this.change = false;
+    }
+  }
+
+  openEdit() {
+    // Abrir Edición de estructura
+    this.show = true;
+    this.state = 2;
+    this.showAux = false;
+  }
+
+  /* DUPLICATE */
+
   duplicateStructure(num: any, description: any) {
     // Obtener nombre duplicado de estructura
     if (!this.change && !this.change) {
@@ -252,12 +311,14 @@ export class VariableStructureComponent implements OnInit {
     }
   }
 
+  /* DELETE */
+
   deleteStructure(idActual: any) {
     // Eliminar estructura
     var structure2 = {
       id: this.id,
     };
-    fetch(this.deleteEstructure, {
+    fetch(this.postStructure, {
       method: "DELETE",
       body: JSON.stringify(structure2),
       headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -274,37 +335,7 @@ export class VariableStructureComponent implements OnInit {
     this.openClouse();
   }
 
-  update() {
-    // Guardar estructuras (popup salir sin guardar)
-    if (this.show == true && (this.state == 0 || this.state == 1)) {
-      this.newStructure(this.structure);
-    }
-    if (this.show == false && this.state == 2) {
-      this.editStructure(this.structure);
-    }
-  }
-
-  orderColumn(idActual: any) {
-    // Ordenar columnas
-    this.show = true;
-    if (!this.change && !this.change && idActual != this.actId) {
-      this.actId = idActual;
-      this.id = idActual;
-      this.openEdit();
-      this.state = 2;
-      const objetoEnData = this.data.find(
-        (objeto: { id: any }) => objeto.id == idActual
-      );
-      this.structure = { ...objetoEnData };
-      this.structureCopy = {
-        id: this.structure.id,
-        description: this.structure.description,
-        structure: this.structure.structure,
-        initial_byte: this.structure.initial_byte,
-      };
-      this.openClouse();
-    }
-  }
+  /* BÚSQUEDA */
 
   textSearch(event: any) {
     // Busqueda por texto
@@ -319,21 +350,15 @@ export class VariableStructureComponent implements OnInit {
     }, 500);
   }
 
-  openClouse() {
-    // Logica abrir y cerrar estructuras
-    if (this.show == true) {
-      this.showAux = false;
-    } 
-    else {
-      this.showAux = true;
-    }
-  }
-
-  clouse() {
-    // Cerrar estructura
-    this.show = false;
-    this.openClouse();
+  recharge() {
+    // Recargar campos a sus valores originales
     this.change = false;
+    this.structure = {
+      id: this.structureCopy.id,
+      description: this.structureCopy.description,
+      structure: this.structureCopy.structure,
+      initial_byte: this.structureCopy.initial_byte,
+    };
   }
 
   deleteSearch() {
@@ -347,36 +372,23 @@ export class VariableStructureComponent implements OnInit {
     this.getStructure(this.order, this.ordAux);
   }
 
-  openNew(id: any, description: any, structure: any, initial_byte: any) {
-    // Abrir Nueva estructura
-    this.structure = {
-      id: id,
-      description: description,
-      structure: structure,
-      initial_byte: initial_byte,
-    };
-    this.actId = 1;
-    this.show = true;
+  /* TARJETAS */
+
+  openClouse() {
+    // Abrir y cerrar estructuras
+    if (this.show == true) {
+      this.showAux = false;
+    } 
+    else {
+      this.showAux = true;
+    }
+  }
+
+  clouse() {
+    // Cerrar estructura
+    this.show = false;
     this.openClouse();
-    this.state = 1;
-  }
-
-  openEdit() {
-    // Abrir Edición de estructura
-    this.show = true;
-    this.state = 2;
-    this.showAux = false;
-  }
-
-  recharge() {
-    // Recargar campos a sus valores originales
     this.change = false;
-    this.structure = {
-      id: this.structureCopy.id,
-      description: this.structureCopy.description,
-      structure: this.structureCopy.structure,
-      initial_byte: this.structureCopy.initial_byte,
-    };
   }
 
   clouseAll() {

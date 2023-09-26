@@ -50,4 +50,5 @@ import { DataSharingService } from './services/data_sharing.service';
   providers: [DataSharingService,],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

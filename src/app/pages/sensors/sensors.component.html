@@ -6,8 +6,8 @@
 			<div class="row d-flex">
 				<div class="col-6 col-sm-6 col-lg-3 mb-3">
 					<div class="w-100 d-flex" style="position: relative;">
-						<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="searchArray.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
-						<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="searchArray.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
 						<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;" class="" type="" (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 					</div>
 				</div>

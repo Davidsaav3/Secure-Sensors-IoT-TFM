@@ -23,38 +23,59 @@ interface MarkerAndColor {
 export class DevicesComponent implements AfterViewInit, OnDestroy {
   @ViewChild("map") divMap?: ElementRef;
   styleSelector: mapboxgl.Map | undefined;
+
   constructor(private router: Router, private translate: TranslateService) {}
 
   maxDevice: string = "http://localhost:5172/api/device_configurations/max";
   getDevice: string = "http://localhost:5172/api/device_configurations/get";
   getSensorsList: string = "http://localhost:5172/api/sensors_types/get_list";
 
-  dataAux: any[] = [];
-  first = false;
-  resultsPerPag = environment.resultsPerPag;
   zoom: number = 7;
   map?: mapboxgl.Map;
+  markers: MarkerAndColor[] = [];
+  geojson: any;
+  geojsonAux: any;
+  dataAux: any[] = [];
+  first = false;
+  arraySensors: any;
+  colorMap = "streets-v12";
+  layerList: any;
+  lat: any;
+  lon: any;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     -0.5098796883778505,
     38.3855908932305
   );
-  markers: MarkerAndColor[] = [];
-  geojson: any;
-  geojsonAux: any;
-  arraySensors: any;
-  lat: any;
-  lon: any;
-  state = "0";
+
+  resultsPerPag = environment.resultsPerPag;
+  data: any[] = [];
+  rute = "";
+  id = 1;
+  timeout: any = null;
   idsParam: any;
   searchAux = false;
   firstTime = true;
   pagTam: any;
   pag: any;
+  viewList = false;
+  viewMap = false;
+  showPop: any;
+  searchText = "Buscar";
+  ordAux = "ASC"; 
+
+  charging = false;
+  mark = "uid";
+
   posX1 = "0";
   posX2 = "0";
   posY1 = "0";
   posY2 = "0";
-  layerList: any;
+
+  dupOk = false;
+  dupNot = false;
+  openAux = true;
+  viewDup = -10;
+  pencilDup = -10;
 
   totalPages = 5;
   currentPage = 1;
@@ -63,31 +84,31 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   total = 0;
   totalPage = 0;
 
-  colorMap = "streets-v12";
-  charging = false;
-  mark = "uid";
-  data: any[] = [];
-  rute = "";
-  id = 1;
-  timeout: any = null;
-  dupOk = false;
-  dupNot = false;
-  searchText = "Buscar";
-  ordAux = "ASC";
-  openAux = true;
-  viewDup = -10;
-  pencilDup = -10;
-  viewList = false;
-  viewMap = false;
-  showPop: any;
-
   alt1 = true;
   alt2 = true;
   alt3 = true;
   alt4 = true;
   alt5 = true;
 
-  selectSensors1 = {
+  selectSensors = {
+    sensors: [
+      {
+        id: -1,
+        name: "Cualquier sensor",
+        metric: "",
+        description: "",
+        errorvalue: 1,
+        valuemax: 1,
+        valuemin: 1,
+        position: "",
+        correction_general: null,
+        correction_time_general: null,
+        id_data_structure: 1,
+      },
+    ],
+  };
+
+  selectSensorsCopy = {
     sensors: [
       {
         id: -1,
@@ -103,30 +124,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         id_data_structure: 1,
         data_estructure: "",
         variable_data_structure: "",
-      },
-    ],
-  };
-
-  sensor: any = {
-    id: 0,
-    enable: 1,
-    type_name: "David",
-  };
-
-  selectSensors2 = {
-    sensors: [
-      {
-        id: -1,
-        name: "Cualquier sensor",
-        metric: "",
-        description: "",
-        errorvalue: 1,
-        valuemax: 1,
-        valuemin: 1,
-        position: "",
-        correction_general: null,
-        correction_time_general: null,
-        id_data_structure: 1,
       },
     ],
   };
@@ -149,6 +146,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     ],
   };
 
+  sensor: any = {
+    id: 0,
+    enable: 1,
+    type_name: "David",
+  };
+
   search = {
     value: "",
     sel_type: 0,
@@ -159,7 +162,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   ngOnInit(): void {
     // Inicialización
     this.initFilters();
-    this.selectSensors2.sensors = [];
+    this.selectSensors.sensors = [];
     this.readStorage();
 
     fetch(`${this.getSensorsList}`)
@@ -175,13 +178,74 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           type: this.translate.instant("text_2"),
         });
 
-        this.selectSensors1.sensors = data;
+        this.selectSensorsCopy.sensors = data;
         for (let index = 0; index < data.length; index++) {
-          this.selectSensors1.sensors[index].name = data[index].type;
+          this.selectSensorsCopy.sensors[index].name = data[index].type;
         }
       });
   }
 
+  ngAfterViewInit(): void {
+    // Después de ngOnInit
+    this.ngOnDestroy();
+    this.newMap();
+    this.firstTime = false;
+  }
+
+  auxInit() {
+    // Auxiliar de Init
+    if (this.map != undefined) {
+      this.map.addControl(
+        new mapboxgl.GeolocateControl({
+          positionOptions: {
+            enableHighAccuracy: true,
+          },
+          trackUserLocation: true,
+          showUserHeading: true,
+        })
+      );
+      this.map.addControl(new mapboxgl.NavigationControl());
+      /*if (layerList != null) {
+        let inputs = layerList.getElementsByTagName('input');
+        console.log(inputs)
+        if (inputs != null) {
+          const inputArray = Array.from(inputs);
+          for (const input of inputArray) {
+            input.onclick = (layer: any) => {
+              const layerId = layer.target.id;
+              if (this.map != null) {
+                this.map.setStyle('mapbox://styles/mapbox/' + layerId);
+              }
+            };
+      
+          }
+        }
+      }*/
+      if (!this.map) throw "Mapa no inicializado";
+      this.map.on("zoom", (ev) => {
+        this.zoom = this.map!.getZoom();
+      });
+      this.map.on("zoomend", (ev) => {
+        if (this.map!.getZoom() < 18) return;
+        this.map!.zoomTo(18);
+      });
+      this.map.on("move", () => {
+        this.currentLngLat = this.map!.getCenter();
+      });
+
+      if (this.map != undefined && this.search.value == "" && this.selectSensorsAux.sensors[0].id == -1 && this.search.devicesAct == 2) {
+        this.map.on("moveend", () => {
+          if (this.openAux == false) 
+            this.getDevices("0");
+        });
+      }
+
+      this.mapListeners();
+    }
+  }
+
+  /* GET */
+  
   orderDevices(id: any, ordAux: any) {
     // Ordenar dispositivos
     this.deleteMarker();
@@ -192,8 +256,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   getDevices(num: any) {
     // Consulta de los dispositivos
-    this.state = num;
-    if (this.state == "1") {
+    if (num == "1") {
       this.deleteMarker();
     }
     setTimeout(() => {
@@ -430,7 +493,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       }
     }, 1);
   }
-
+  
   getMapDevices(num: any) {
     // optiene dispositivos
     this.getCornerCoordinates();
@@ -496,6 +559,116 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  newMap() {
+    // Crea el mapa
+    if (this.firstTime == false) {
+      this.map = new mapboxgl.Map({
+        container: this.divMap?.nativeElement,
+        style: "mapbox://styles/mapbox/" + this.colorMap,
+        center: [this.currentLngLat.lng, this.currentLngLat.lat],
+        zoom: this.zoom,
+      });
+    } 
+    else {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.map = new mapboxgl.Map({
+              container: this.divMap?.nativeElement,
+              style: "mapbox://styles/mapbox/" + this.colorMap,
+              center: [position.coords.longitude, position.coords.latitude],
+              zoom: this.zoom,
+            });
+          },
+          (error) => {
+            this.map = new mapboxgl.Map({
+              container: this.divMap?.nativeElement,
+              style: "mapbox://styles/mapbox/" + this.colorMap,
+              center: [-3.7034137886912504, 40.41697654880073],
+              zoom: this.zoom,
+            });
+            console.log("Error geo", error);
+          }
+        );
+      } 
+      else {
+        this.map = new mapboxgl.Map({
+          container: this.divMap?.nativeElement,
+          style: "mapbox://styles/mapbox/" + this.colorMap,
+          center: [-3.7034137886912504, 40.41697654880073],
+          zoom: this.zoom,
+        });
+        console.log("Geo no compatible");
+      }
+    }
+    this.auxInit();
+  }
+
+  /* MAP AUX */
+
+  mapListeners() {
+    // Listeners del mapa
+    this.showPop = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+    });
+
+    if (this.map != null) {
+      this.map.on("mouseenter", "places", (e) => {
+        if (this.map != undefined) {
+          this.map.getCanvas().style.cursor = "pointer";
+
+          if (e != null && e.features != null && e.features[0] != null &&  e.features[0].geometry != null &&e.features[0].properties != null) {
+            let coordinates;
+            if (e.features[0].geometry.type == "Point") {
+              coordinates = e.features[0].geometry.coordinates.slice();
+            }
+            const description = e.features[0].properties["description"];
+            if (coordinates != undefined) {
+              while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+              }
+              const [firstNumber, secondNumber] = coordinates;
+              this.showPop
+                .setLngLat([firstNumber, secondNumber])
+                .setHTML(description)
+                .addTo(this.map);
+            }
+          }
+        }
+      });
+      this.map.on("mouseleave", "places", () => {
+        if (this.map != undefined) {
+          this.map.getCanvas().style.cursor = "";
+          this.showPop.remove();
+        }
+      });
+    }
+  }
+
+  getCornerCoordinates() {
+    // Obtener cordenadas
+    let bounds;
+    if (this.map != null) {
+      bounds = this.map.getBounds();
+    }
+    if (bounds != null) {
+      this.posX1 = bounds.getSouthWest().lng.toFixed(6);
+      this.posX2 = bounds.getNorthEast().lng.toFixed(6);
+      this.posY1 = bounds.getSouthWest().lat.toFixed(6);
+      this.posY2 = bounds.getNorthEast().lat.toFixed(6);
+    }
+  }
+
+  changeMapStyle(event: any): void {
+    // Cambiar apariencia del mapa
+    if (this.map) {
+      this.colorMap = event;
+      this.saveStorage();
+      this.map.setStyle("mapbox://styles/mapbox/" + event);
+    }
+  }
+
   cleanMap() {
     if (this.map != undefined) {
       this.deleteMarker();
@@ -515,30 +688,23 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  deleteSearch() {
-    // Eliminar filtros
-    this.totalPages = 5;
-    this.currentPage = 1;
-    this.quantPage = 15;
-    this.page = 1;
-    this.selectSensors2.sensors = [];
-    this.selectSensorsAux.sensors = [];
-    this.selectSensorsAux.sensors.push({
-      id: -1,
-      name: "",
-      metric: "",
-      description: "",
-      errorvalue: 1,
-      valuemax: 1,
-      valuemin: 1,
-      position: "",
-      correction_general: null,
-      correction_time_general: null,
-      id_data_structure: 1,
-    });
-    this.search.devicesAct = 2;
-    this.search.sensorsAct = 2;
-    this.Page(1);
+  ngOnDestroy(): void {
+    // Eliminar mapa
+    this.map?.remove();
+  }
+
+  /* FILTERS */
+
+  initFilters() {
+    // Inicializa filtros
+    this.deleteMarker();
+    this.rute = this.router.routerState.snapshot.url;
+    fetch(this.maxDevice)
+      .then((response) => response.json())
+      .then((data) => {
+        this.id = parseInt(data.id);
+      });
+    this.orderDevices("uid", "ASC");
   }
 
   filterDevices() {
@@ -547,7 +713,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     //this.newMap();
     this.searchAux = true;
     this.selectSensorsAux.sensors = [];
-    if (this.selectSensors2.sensors.length == 0) {
+    if (this.selectSensors.sensors.length == 0) {
       this.selectSensorsAux.sensors.push({
         id: -1,
         name: "",
@@ -565,23 +731,23 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     } 
     else {
       this.selectSensorsAux.sensors = [];
-      for (let index = 0; index < this.selectSensors2.sensors.length; index++) {
-        if (this.selectSensors2.sensors[index].id >= 0) {
-          this.selectSensorsAux.sensors.push(this.selectSensors2.sensors[index]);
+      for (let index = 0; index < this.selectSensors.sensors.length; index++) {
+        if (this.selectSensors.sensors[index].id >= 0) {
+          this.selectSensorsAux.sensors.push(this.selectSensors.sensors[index]);
           this.getDevices("1");
         }
-        if (this.selectSensors2.sensors.length == 1 && this.selectSensors2.sensors[index].id < 0) {
-          this.selectSensorsAux.sensors.push(this.selectSensors2.sensors[index]);
-          this.selectSensors2.sensors = [];
-          this.selectSensors2.sensors.push(this.selectSensorsAux.sensors[index] );
+        if (this.selectSensors.sensors.length == 1 && this.selectSensors.sensors[index].id < 0) {
+          this.selectSensorsAux.sensors.push(this.selectSensors.sensors[index]);
+          this.selectSensors.sensors = [];
+          this.selectSensors.sensors.push(this.selectSensorsAux.sensors[index] );
           this.getDevices("1");
         }
-        if (this.selectSensors2.sensors.length > 1 && this.selectSensors2.sensors[index].id < 0) {
-          this.selectSensors2.sensors = [];
-          this.selectSensors2.sensors = this.selectSensorsAux.sensors;
+        if (this.selectSensors.sensors.length > 1 && this.selectSensors.sensors[index].id < 0) {
+          this.selectSensors.sensors = [];
+          this.selectSensors.sensors = this.selectSensorsAux.sensors;
         }
-        if (this.selectSensors2.sensors.length == 0) {
-          this.selectSensors2.sensors = [];
+        if (this.selectSensors.sensors.length == 0) {
+          this.selectSensors.sensors = [];
           this.selectSensorsAux.sensors.push({
             id: -1,
             name: "",
@@ -654,31 +820,74 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  initFilters() {
-    // Inicializa filtros
-    this.deleteMarker();
-    this.rute = this.router.routerState.snapshot.url;
-    fetch(this.maxDevice)
-      .then((response) => response.json())
-      .then((data) => {
-        this.id = parseInt(data.id);
+  /* MAP MARKERS */
+
+  addMarker(lngLat: mapboxgl.LngLat,color: string,name: string,enable: number,data: any) {
+    // Añadir chincheta
+    if (!this.map) return;
+    const marker = new mapboxgl.Marker({
+      color: color,
+      draggable: false,
+    })
+      .setLngLat(lngLat)
+      .addTo(this.map);
+    marker.on("click", function () {});
+
+    this.geojson = {
+      id: "FeatureCollection",
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {
+            id: enable,
+            color: color,
+            name: name,
+            description: ``,
+          },
+          geometry: {
+            type: "Point",
+            coordinates1: lngLat.lng,
+            coordinates2: lngLat.lat,
+          },
+        },
+      ],
+    };
+
+    for (const marker of this.geojson.features) {
+      const el = document.createElement("div");
+      el.className = "marker_text";
+      el.style.backgroundSize = "100%";
+      el.style.marginTop = "10px";
+      el.innerHTML = `<p class="p-0 m-0" style="font-size:large; color:white; -webkit-text-stroke: 0.5px black">${marker.properties.name}</p>`;
+      el.addEventListener("click", () => {
+        const url = `/devices/edit/${marker.properties.id}`;
+        window.open(url, "_blank");
       });
-    this.orderDevices("uid", "ASC");
+
+      const coords = new mapboxgl.LngLat(
+        marker.geometry.coordinates1,
+        marker.geometry.coordinates2
+      );
+      new mapboxgl.Marker(el).setLngLat(coords).addTo(this.map);
+    }
+    this.markers.push({ color, marker, name, enable, data });
   }
 
-  openMap() {
-    // Abrir mapa
-    this.openAux = false;
-    this.getDevices("1");
-    this.saveStorage();
+  deleteMarker() {
+    // Eliminar chincheta
+    for (let index = 0; index < this.markers.length; index++) {
+      this.markers[index].marker.remove();
+    }
+    this.data = [];
+    this.markers = [];
+    let contenidoSuperpuesto = document.getElementsByClassName("marker_text");
+    for (let i = 0; i < contenidoSuperpuesto.length; i++) {
+      contenidoSuperpuesto[i].remove();
+    }
   }
 
-  openList() {
-    // Abrir lista
-    this.openAux = true;
-    this.getDevices("0");
-    this.saveStorage();
-  }
+  /* BÚSCAR */
 
   onKeySearch(event: any) {
     // Busqueda por texto
@@ -693,9 +902,51 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }, 1);
   }
 
+  deleteSearch() {
+    // Eliminar filtros
+    this.totalPages = 5;
+    this.currentPage = 1;
+    this.quantPage = 15;
+    this.page = 1;
+    this.selectSensors.sensors = [];
+    this.selectSensorsAux.sensors = [];
+    this.selectSensorsAux.sensors.push({
+      id: -1,
+      name: "",
+      metric: "",
+      description: "",
+      errorvalue: 1,
+      valuemax: 1,
+      valuemin: 1,
+      position: "",
+      correction_general: null,
+      correction_time_general: null,
+      id_data_structure: 1,
+    });
+    this.search.devicesAct = 2;
+    this.search.sensorsAct = 2;
+    this.Page(1);
+  }
+
   deleteText() {
     // Limpiar cuadro de texto
     this.search.value = "";
+  }
+
+  /* TARJETAS */
+
+  openMap() {
+    // Abrir mapa
+    this.openAux = false;
+    this.getDevices("1");
+    this.saveStorage();
+  }
+
+  openList() {
+    // Abrir lista
+    this.openAux = true;
+    this.getDevices("0");
+    this.saveStorage();
   }
 
   /* PAGINACIÓN */
@@ -762,264 +1013,21 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  /* MAPA */
-
-  ngAfterViewInit(): void {
-    // Después de ngOnInit
-    this.ngOnDestroy();
-    this.newMap();
-    this.firstTime = false;
-  }
-
-  newMap() {
-    // Crea el mapa
-    if (this.firstTime == false) {
-      this.map = new mapboxgl.Map({
-        container: this.divMap?.nativeElement,
-        style: "mapbox://styles/mapbox/" + this.colorMap,
-        center: [this.currentLngLat.lng, this.currentLngLat.lat],
-        zoom: this.zoom,
-      });
-    } 
-    else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            this.map = new mapboxgl.Map({
-              container: this.divMap?.nativeElement,
-              style: "mapbox://styles/mapbox/" + this.colorMap,
-              center: [position.coords.longitude, position.coords.latitude],
-              zoom: this.zoom,
-            });
-          },
-          (error) => {
-            this.map = new mapboxgl.Map({
-              container: this.divMap?.nativeElement,
-              style: "mapbox://styles/mapbox/" + this.colorMap,
-              center: [-3.7034137886912504, 40.41697654880073],
-              zoom: this.zoom,
-            });
-            console.log("Error geo", error);
-          }
-        );
-      } 
-      else {
-        this.map = new mapboxgl.Map({
-          container: this.divMap?.nativeElement,
-          style: "mapbox://styles/mapbox/" + this.colorMap,
-          center: [-3.7034137886912504, 40.41697654880073],
-          zoom: this.zoom,
-        });
-        console.log("Geo no compatible");
-      }
-    }
-    this.auxInit();
-  }
-
-  getCornerCoordinates() {
-    // Obtener cordenadas
-    let bounds;
-    if (this.map != null) {
-      bounds = this.map.getBounds();
-    }
-    if (bounds != null) {
-      this.posX1 = bounds.getSouthWest().lng.toFixed(6);
-      this.posX2 = bounds.getNorthEast().lng.toFixed(6);
-      this.posY1 = bounds.getSouthWest().lat.toFixed(6);
-      this.posY2 = bounds.getNorthEast().lat.toFixed(6);
-    }
-  }
-
-  auxInit() {
-    // Auxiliar de Init
-    if (this.map != undefined) {
-      this.map.addControl(
-        new mapboxgl.GeolocateControl({
-          positionOptions: {
-            enableHighAccuracy: true,
-          },
-          trackUserLocation: true,
-          showUserHeading: true,
-        })
-      );
-      this.map.addControl(new mapboxgl.NavigationControl());
-
-      /*if (layerList != null) {
-        let inputs = layerList.getElementsByTagName('input');
-        console.log(inputs)
-        if (inputs != null) {
-          const inputArray = Array.from(inputs);
-          for (const input of inputArray) {
-            input.onclick = (layer: any) => {
-              const layerId = layer.target.id;
-              if (this.map != null) {
-                this.map.setStyle('mapbox://styles/mapbox/' + layerId);
-              }
-            };
-      
-          }
-        }
-      }*/
-      if (!this.map) throw "Mapa no inicializado";
-      this.map.on("zoom", (ev) => {
-        this.zoom = this.map!.getZoom();
-      });
-      this.map.on("zoomend", (ev) => {
-        if (this.map!.getZoom() < 18) return;
-        this.map!.zoomTo(18);
-      });
-      this.map.on("move", () => {
-        this.currentLngLat = this.map!.getCenter();
-      });
-
-      if (this.map != undefined && this.search.value == "" && this.selectSensorsAux.sensors[0].id == -1 && this.search.devicesAct == 2) {
-        this.map.on("moveend", () => {
-          if (this.openAux == false) 
-            this.getDevices("0");
-        });
-      }
-
-      this.mapListeners();
-    }
-  }
-
-  changeMapStyle(event: any): void {
-    // Cambiar apariencia del mapa
-    if (this.map) {
-      this.colorMap = event;
-      this.saveStorage();
-      this.map.setStyle("mapbox://styles/mapbox/" + event);
-    }
-  }
-
-  ngOnDestroy(): void {
-    // Eliminar mapa
-    this.map?.remove();
-  }
-
-  mapListeners() {
-    // Listeners del mapa
-    this.showPop = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-    });
-
-    if (this.map != null) {
-      this.map.on("mouseenter", "places", (e) => {
-        if (this.map != undefined) {
-          this.map.getCanvas().style.cursor = "pointer";
-
-          if (e != null && e.features != null && e.features[0] != null &&  e.features[0].geometry != null &&e.features[0].properties != null) {
-            let coordinates;
-            if (e.features[0].geometry.type == "Point") {
-              coordinates = e.features[0].geometry.coordinates.slice();
-            }
-            const description = e.features[0].properties["description"];
-            if (coordinates != undefined) {
-              while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-              }
-              const [firstNumber, secondNumber] = coordinates;
-              this.showPop
-                .setLngLat([firstNumber, secondNumber])
-                .setHTML(description)
-                .addTo(this.map);
-            }
-          }
-        }
-      });
-      this.map.on("mouseleave", "places", () => {
-        if (this.map != undefined) {
-          this.map.getCanvas().style.cursor = "";
-          this.showPop.remove();
-        }
-      });
-    }
-  }
-
-  addMarker(
-    lngLat: mapboxgl.LngLat,
-    color: string,
-    name: string,
-    enable: number,
-    data: any
-  ) {
-    // Añadir chincheta
-    if (!this.map) return;
-    const marker = new mapboxgl.Marker({
-      color: color,
-      draggable: false,
-    })
-      .setLngLat(lngLat)
-      .addTo(this.map);
-    marker.on("click", function () {});
-
-    this.geojson = {
-      id: "FeatureCollection",
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          properties: {
-            id: enable,
-            color: color,
-            name: name,
-            description: ``,
-          },
-          geometry: {
-            type: "Point",
-            coordinates1: lngLat.lng,
-            coordinates2: lngLat.lat,
-          },
-        },
-      ],
-    };
-
-    for (const marker of this.geojson.features) {
-      const el = document.createElement("div");
-      el.className = "marker_text";
-      el.style.backgroundSize = "100%";
-      el.style.marginTop = "10px";
-      el.innerHTML = `<p class="p-0 m-0" style="font-size:large; color:white; -webkit-text-stroke: 0.5px black">${marker.properties.name}</p>`;
-      el.addEventListener("click", () => {
-        const url = `/devices/edit/${marker.properties.id}`;
-        window.open(url, "_blank");
-      });
-
-      const coords = new mapboxgl.LngLat(
-        marker.geometry.coordinates1,
-        marker.geometry.coordinates2
-      );
-      new mapboxgl.Marker(el).setLngLat(coords).addTo(this.map);
-    }
-    this.markers.push({ color, marker, name, enable, data });
-  }
-
-  deleteMarker() {
-    // Eliminar chincheta
-    for (let index = 0; index < this.markers.length; index++) {
-      this.markers[index].marker.remove();
-    }
-    this.data = [];
-    this.markers = [];
-    let contenidoSuperpuesto = document.getElementsByClassName("marker_text");
-    for (let i = 0; i < contenidoSuperpuesto.length; i++) {
-      contenidoSuperpuesto[i].remove();
-    }
-  }
-
-  /* Funciones Auxiliares */
+  /* LOCAL STORAGE */
 
   saveStorage() {
     // Guarda datos
     localStorage.setItem("openAux", this.openAux.toString());
     localStorage.setItem("colorMap", this.colorMap);
   }
+
   readStorage() {
     // Recupera datos
     this.openAux = JSON.parse(localStorage.getItem("openAux") ?? "");
     this.colorMap = localStorage.getItem("colorMap") ?? "0";
   }
+
+  /* DATE */
 
   formatDateTime(date2: any) {
     // Formato de la fecha

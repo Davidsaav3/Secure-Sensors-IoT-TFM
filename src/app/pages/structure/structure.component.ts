@@ -17,14 +17,11 @@ export class StructureComponent implements OnInit {
       .then((response) => response.json())
       .then((quotesData) => {
         this.aux = quotesData[0].id;
-        //console.log(quotesData[0].id)
       });
   }
 
   getEstructure: string = "http://localhost:5172/api/data_structure/get";
   postEstructure: string = "http://localhost:5172/api/data_structure";
-  deleteEstructure: string = "http://localhost:5172/api/data_structure";
-  updateEstructure: string = "http://localhost:5172/api/data_structure";
   duplicateEstructure: string ="http://localhost:5172/api/data_structure/duplicate";
   getVariableStructureList: string ="http://localhost:5172/api/variable_data_structure/get_list";
 
@@ -42,30 +39,33 @@ export class StructureComponent implements OnInit {
   alt4 = true;
 
   actId = 0;
-  charging = false;
-  data: any;
-  width = 0;
-  rute = "";
-  viewDup = -1;
-  pencilDup = -1;
-  timeout: any = null;
+  id = 0;
   state = 1;
-  show = false;
-  showAux = true;
-  alertDelete: any = false;
-  alertNew: any = false;
-  notDelete: any = false;
-  notNew: any = false;
-  saveOk: any = false;
-  saveNot: any = false;
+  data: any;
+  rute = "";
+  charging = false;
   saved = false;
   change = false;
+  width = 0;
+  timeout: any = null;
+  
+  show = false;
+  showAux = true;
   dupOk = false;
   dupNot = false;
-  id = 0;
+  viewDup = -1;
+  pencilDup = -1;
+
   searchAux = "Buscar";
   order = "description";
   ordAux = "ASC";
+
+  alertDelete: any = false;
+  notDelete: any = false;
+  alertNew: any = false;
+  notNew: any = false;
+  saveOk: any = false;
+  saveNot: any = false;
 
   estructure = {
     id_estructure: "",
@@ -103,9 +103,10 @@ export class StructureComponent implements OnInit {
   ngOnInit(): void {
     // Inicializador
     this.getStructures(this.order, this.ordAux);
-    this.openClouse();
     this.getStructuresList();
   }
+
+  /* GET */
 
   getStructuresVoid() {
     // Obtener sin parámetros
@@ -144,15 +145,6 @@ export class StructureComponent implements OnInit {
         else {
           this.totalPage = this.quantPage * this.currentPage;
         }
-      });
-  }
-
-  getStructuresList() {
-    // optener lista de estructuras de datos
-    fetch(`${this.getVariableStructureList}`)
-      .then((response) => response.json())
-      .then((quotesData) => {
-        this.estructureVariable.structure = quotesData;
       });
   }
 
@@ -198,35 +190,38 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  editStructures(form: any, num: any) {
-    // Guardar datos de estructura editada
-    if (form.valid) {
-      fetch(this.updateEstructure, {
-        method: "PUT",
-        body: JSON.stringify(this.estructure),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      }).then((response) => response.json());
-      this.data = this.data.filter((data: { id_estructure: string }) =>data.id_estructure !== this.estructure.id_estructure);
-      let estructure = this.estructure;
-      this.data.push(estructure);
-      this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
-      this.actId = parseInt(this.estructure.id_estructure);
+  orderColumn(idActual: any) {
+    // Ordenar columnas
+    this.show = true;
+    if (!this.change && !this.change && idActual != this.actId) {
+      this.actId = idActual;
+      this.id = idActual;
       this.openEdit();
       this.state = 2;
-
-      if (num >= 0) {
-        this.data[num].variable_description =this.estructure.variable_description;
-      }
-
-      this.saveOk = true;
-      setTimeout(() => {
-        this.saveOk = false;
-      }, 2000);
-
-      this.saved = true;
-      this.change = false;
+      const objetoEnData = this.data.find((objeto: { id_estructure: any }) => objeto.id_estructure == idActual);
+      this.estructure = { ...objetoEnData };
+      this.estructureCopy = {
+        id_estructure: this.estructure.id_estructure,
+        description: this.estructure.description,
+        configuration: this.estructure.configuration,
+        identifier_code: this.estructure.identifier_code,
+        id_variable_data_structure: this.estructure.id_variable_data_structure,
+        variable_description: this.estructure.variable_description,
+      };
+      this.openClouse();
     }
   }
+
+  getStructuresList() {
+    // optener lista de estructuras de datos
+    fetch(`${this.getVariableStructureList}`)
+      .then((response) => response.json())
+      .then((quotesData) => {
+        this.estructureVariable.structure = quotesData;
+      });
+  }
+
+  /* NEW */
 
   newStructures(form: any) {
     // Guardar datos de estructura nueva
@@ -272,122 +267,6 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  duplicateStructures(num: any, description: any) {
-    // Duplicar estructura
-    if (!this.change && !this.change) {
-      fetch(`${this.duplicateEstructure}/${description}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error de la red");
-          }
-          return response.text();
-        })
-        .then((data) => {this.estructure = this.data.find((objeto: { id_estructure: any }) => objeto.id_estructure == num);
-          this.openClouse();
-          this.state = 0;
-          this.openNew("1",data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure,this.estructure.variable_description);
-          this.change = true;
-        })
-        .catch((error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
-        });
-    }
-  }
-
-  deleteStructures(idActual: any) {
-    // Eliminar sensor
-    var estructure2 = {
-      id_estructure: this.id,
-    };
-    fetch(this.deleteEstructure, {
-      method: "DELETE",
-      body: JSON.stringify(estructure2),
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-    }).then((response) => response.json());
-    this.alertDelete = true;
-
-    setTimeout(() => {
-      this.alertDelete = false;
-    }, 2000);
-
-    this.data = this.data.filter((objeto: { id_estructure: any }) => objeto.id_estructure != idActual);
-    this.openClouse();
-  }
-
-  update() {
-    // Guardar estructuras en el popup de salir sin guardar
-    if (this.show == true && (this.state == 0 || this.state == 1)) {
-      this.newStructures(this.estructure);
-    }
-    if (this.show == false && this.state == 2) {
-      this.editStructures(this.estructure, -1);
-    }
-  }
-
-  clouse() {
-    // Cerrar estructura
-    this.show = false;
-    this.openClouse();
-    this.change = false;
-  }
-
-  orderColumn(idActual: any) {
-    // Ordenar columnas
-    this.show = true;
-    if (!this.change && !this.change && idActual != this.actId) {
-      this.actId = idActual;
-      this.id = idActual;
-      this.openEdit();
-      this.state = 2;
-      const objetoEnData = this.data.find((objeto: { id_estructure: any }) => objeto.id_estructure == idActual);
-      this.estructure = { ...objetoEnData };
-      this.estructureCopy = {
-        id_estructure: this.estructure.id_estructure,
-        description: this.estructure.description,
-        configuration: this.estructure.configuration,
-        identifier_code: this.estructure.identifier_code,
-        id_variable_data_structure: this.estructure.id_variable_data_structure,
-        variable_description: this.estructure.variable_description,
-      };
-      this.openClouse();
-    }
-  }
-
-  textSearch(event: any) {
-    // Busqueda por texto
-    this.currentPage = 1;
-    clearTimeout(this.timeout);
-    var $this = this;
-
-    this.timeout = setTimeout(() => {
-      if (event.keyCode != 13) {
-        $this.getStructures(this.order, this.ordAux);
-        $this.openClouse();
-      }
-    }, 500);
-  }
-
-  openClouse() {
-    // Abrir y cerrar tarjetas
-    if (this.show == true) {
-      this.showAux = false;
-    } 
-    else {
-      this.showAux = true;
-    }
-  }
-
-  deleteSearch() {
-    // Borrar busqueda por texto
-    this.Page(1);
-    this.totalPages = 5;
-    this.currentPage = 1;
-    this.quantPage = 15;
-    this.page = 1;
-    this.search.value = "";
-    this.getStructures(this.order, this.ordAux);
-  }
-
   openNew(id_estructure: any,description: any,configuration: any, identifier_code: any,id_variable_data_structure: any,variable_description: any) {
     // Abrir Nuevo sensor
     if (id_estructure == "") {
@@ -419,11 +298,115 @@ export class StructureComponent implements OnInit {
     this.state = 1;
   }
 
+  /* EDIT */
+
+  editStructures() {
+    // Guardar estructuras en el popup de salir sin guardar
+    if (this.show == true && (this.state == 0 || this.state == 1)) {
+      this.newStructures(this.estructure);
+    }
+    if (this.show == false && this.state == 2) {
+      this.editStructuresAux(this.estructure, -1);
+    }
+  }
+
+  editStructuresAux(form: any, num: any) {
+    // Guardar datos de estructura editada
+    if (form.valid) {
+      fetch(this.postEstructure, {
+        method: "PUT",
+        body: JSON.stringify(this.estructure),
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+      }).then((response) => response.json());
+      this.data = this.data.filter((data: { id_estructure: string }) =>data.id_estructure !== this.estructure.id_estructure);
+      let estructure = this.estructure;
+      this.data.push(estructure);
+      this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
+      this.actId = parseInt(this.estructure.id_estructure);
+      this.openEdit();
+      this.state = 2;
+
+      if (num >= 0) {
+        this.data[num].variable_description =this.estructure.variable_description;
+      }
+
+      this.saveOk = true;
+      setTimeout(() => {
+        this.saveOk = false;
+      }, 2000);
+
+      this.saved = true;
+      this.change = false;
+    }
+  }
+
   openEdit() {
     // Abrir Editar estructura
     this.show = true;
     this.state = 2;
     this.showAux = false;
+  }
+
+  /* DUPLICATE */
+
+  duplicateStructures(num: any, description: any) {
+    // Duplicar estructura
+    if (!this.change && !this.change) {
+      fetch(`${this.duplicateEstructure}/${description}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error de la red");
+          }
+          return response.text();
+        })
+        .then((data) => {this.estructure = this.data.find((objeto: { id_estructure: any }) => objeto.id_estructure == num);
+          this.openClouse();
+          this.state = 0;
+          this.openNew("1",data,this.estructure.configuration,this.estructure.identifier_code,this.estructure.id_variable_data_structure,this.estructure.variable_description);
+          this.change = true;
+        })
+        .catch((error) => {
+          console.error("Error al verificar la descripción duplicada:", error);
+        });
+    }
+  }
+
+  /* DELETE */
+
+  deleteStructures(idActual: any) {
+    // Eliminar sensor
+    var estructure2 = {
+      id_estructure: this.id,
+    };
+    fetch(this.postEstructure, {
+      method: "DELETE",
+      body: JSON.stringify(estructure2),
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+    }).then((response) => response.json());
+    this.alertDelete = true;
+
+    setTimeout(() => {
+      this.alertDelete = false;
+    }, 2000);
+
+    this.data = this.data.filter((objeto: { id_estructure: any }) => objeto.id_estructure != idActual);
+    this.openClouse();
+  }
+
+  /* BÚSQUEDA */
+
+  textSearch(event: any) {
+    // Busqueda por texto
+    this.currentPage = 1;
+    clearTimeout(this.timeout);
+    var $this = this;
+
+    this.timeout = setTimeout(() => {
+      if (event.keyCode != 13) {
+        $this.getStructures(this.order, this.ordAux);
+        $this.openClouse();
+      }
+    }, 500);
   }
 
   recharge() {
@@ -437,6 +420,36 @@ export class StructureComponent implements OnInit {
       id_variable_data_structure: this.estructureCopy.id_variable_data_structure,
       variable_description: this.estructureCopy.variable_description,
     };
+  }
+
+  deleteSearch() {
+    // Borrar busqueda por texto
+    this.Page(1);
+    this.totalPages = 5;
+    this.currentPage = 1;
+    this.quantPage = 15;
+    this.page = 1;
+    this.search.value = "";
+    this.getStructures(this.order, this.ordAux);
+  }
+
+  /* TAEJETAS */
+
+  clouse() {
+    // Cerrar estructura
+    this.show = false;
+    this.openClouse();
+    this.change = false;
+  }
+
+  openClouse() {
+    // Abrir y cerrar tarjetas
+    if (this.show == true) {
+      this.showAux = false;
+    } 
+    else {
+      this.showAux = true;
+    }
   }
 
   clouseAll() {

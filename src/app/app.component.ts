@@ -19,5 +19,5 @@ export class AppComponent {
     this.translate.use(lang);
   }
   
-  title = 'Sensors';
+  title = 'Sensors IoT';
 }

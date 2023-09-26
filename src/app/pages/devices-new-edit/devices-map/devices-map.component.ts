@@ -9,8 +9,7 @@ interface MarkerAndColor {
   marker: mapboxgl.Marker;
 }
 
-(mapboxgl as any).accessToken =
-  "pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ";
+(mapboxgl as any).accessToken = "pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ";
 
 @Component({
   selector: "app-devices-map",
@@ -29,6 +28,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
+  
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     this.sharedLon,
     this.sharedLat
@@ -48,15 +48,17 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  @ViewChild("map") divMap?: ElementRef;
   maxDevice: string = "http://localhost:5172/api/device_configurations/max";
-  id = parseInt(this.rutaActiva.snapshot.params["id"]);
-  zoom: number = 10;
+
+  @ViewChild("map") divMap?: ElementRef;
   map?: mapboxgl.Map;
+  zoom: number = 10;
   markers: MarkerAndColor[] = [];
   colorMap = "streets-v12";
+
+  id = parseInt(this.rutaActiva.snapshot.params["id"]);
   idMax = 1;
-  state = -1;
+  state = -1; 
 
   ngOnInit(): void {
     // Inicializador
@@ -90,6 +92,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       }
     }, 100);
   }
+
+  /* AUX INIT */
 
   ngAfterViewInit(): void {
     // Se ejecuta despues de ngOnInit
@@ -263,8 +267,10 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     }, 10);
   }
 
+  /* CREATE / DESTROY */
+
   createMap(pos: any) {
-    // crea el mapa
+    // Crea el mapa
     if (!this.divMap) throw "No hay mapa";
     this.ngOnDestroy();
     this.map = new mapboxgl.Map({
@@ -274,15 +280,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       zoom: this.zoom,
     });
     return this.map;
-  }
-
-  changeMapStyle(event: any): void {
-    // Cambiar apariencia del mapa
-    if (this.map) {
-      this.colorMap = event;
-      this.saveStorage();
-      this.map.setStyle("mapbox://styles/mapbox/" + event);
-    }
   }
 
   ngOnDestroy() {
@@ -296,28 +293,18 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  showMap() {
-    // Redimesiona mapa
-    try {
-      if (this.map) {
-        this.map.resize();
-      }
-    } catch (error) {
-      this.ngOnDestroy();
+  /* MAP STYLE */
+  
+  changeMapStyle(event: any): void {
+    // Cambiar apariencia del mapa
+    if (this.map) {
+      this.colorMap = event;
+      this.saveStorage();
+      this.map.setStyle("mapbox://styles/mapbox/" + event);
     }
   }
 
-  updatesharedLat() {
-    // Actualizar Latitud
-    this.dataSharingService.updatesharedLat(this.sharedLat);
-  }
-
-  updatesharedLon() {
-    // ctualizar Longitud
-    this.dataSharingService.updatesharedLon(this.sharedLon);
-  }
-
-  /* //////////// MAPA /////////////// */
+  /* MARKER */
 
   createMarker(marker: mapboxgl.LngLat) {
     // Añade chincheta (1)
@@ -325,11 +312,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     const color = "#0dcaf0";
     const lngLat = marker;
     this.addMarker(lngLat, color);
-  }
-
-  updatesharedAct() {
-    // Enviar act
-    this.dataSharingService.updatesharedAct(true);
   }
 
   addMarker(lngLat: mapboxgl.LngLat, color: string) {
@@ -368,6 +350,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  /* LOCAL STORAGE */
+
   saveStorage() {
     // Guarda datos
     localStorage.setItem("colorMap", this.colorMap);
@@ -376,5 +360,22 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   readStorage() {
     // Recupera datos
     this.colorMap = localStorage.getItem("colorMap") ?? "0";
+  }
+
+  /* SHARED */
+
+  updatesharedAct() {
+    // Enviar act
+    this.dataSharingService.updatesharedAct(true);
+  }
+
+  updatesharedLat() {
+    // Actualizar Latitud
+    this.dataSharingService.updatesharedLat(this.sharedLat);
+  }
+
+  updatesharedLon() {
+    // ctualizar Longitud
+    this.dataSharingService.updatesharedLon(this.sharedLon);
   }
 }

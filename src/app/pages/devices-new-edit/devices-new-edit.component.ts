@@ -12,15 +12,18 @@ import { environment } from "../../environments/environment";
 })
 
 export class DevicesNewEditComponent implements OnInit {
+
   sharedLat: any = "";
   sharedLon: any = "";
-  cont = 0;
   date: any;
+  
   state = 0; // 0 new // 1 duplicate // 2 edit
   rute = "";
   ruteAux: any;
+  cont = 0;
 
   @HostListener("window:resize", ["$event"])
+  
   onResize(event: any) {
     window.resizeBy(-1, 0);
     this.resize();
@@ -30,7 +33,7 @@ export class DevicesNewEditComponent implements OnInit {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.createDate();
-    //console.log(this.ruteAux[2])
+    
     if (this.ruteAux[2] == "new") {
       fetch(`${this.getStructureList}`)
         .then((response) => response.json())
@@ -38,7 +41,6 @@ export class DevicesNewEditComponent implements OnInit {
           this.structures.structure = quotesData.data_estructure;
           this.auxFixed = quotesData.data_estructure[0].id_estructure;
           this.devices.id_data_estructure = this.auxFixed;
-          //console.log(this.auxFixed)
         });
     }
   }
@@ -60,29 +62,31 @@ export class DevicesNewEditComponent implements OnInit {
   alt5 = true;
   alt6 = true;
 
+  activeLang = environment.languageLang[0];
   mark = "position";
+  exp = false;
+  data: any;
+  idMax = 2;
+  width = 0;
+
+  eraseAux = false;
+  deleteAux = -1;
+  actNot = false;
+  changed = false;
   showLarge = true;
   deleteId: any;
   auxFixed = 0;
   auxVariable = 0;
-  exp = false;
-  lon: any;
-  lat: any;
-  cota: any;
-  timezone: any;
-  eraseAux = false;
-  deleteAux = -1;
-  activeLang = environment.languageLang[0];
+  actOk = false;
   showMap = true;
   showForm = true;
   viewRec = false;
   saved = false;
-  actOk = false;
-  actNot = false;
-  changed = false;
-  data: any;
-  idMax = 2;
-  width = 0;
+
+  lon: any;
+  lat: any;
+  cota: any;
+  timezone: any;
 
   devices = {
     id: "",
@@ -244,6 +248,8 @@ export class DevicesNewEditComponent implements OnInit {
     this.showLarge = false;
   }
 
+  /* GET */
+
   getDevices() {
     // Obtener Dispositivos
     fetch(`${this.idDevice}/${this.id}`)
@@ -265,6 +271,138 @@ export class DevicesNewEditComponent implements OnInit {
         console.error(error);
       });
   }
+
+  getSensorsLocal(id: any, ord: any) {
+    // Ordenar columnas
+    this.mark = id;
+
+    if (ord == "ASC") {
+      if (id == "position") {
+        this.devices.sensors.sort((a: any, b: any) => Number(a.position) - Number(b.position));
+      }
+      if (id == "datafield") {
+        this.devices.sensors.sort((a: any, b: any) =>a.datafield.localeCompare(b.datafield));
+      }
+      if (id == "nodata") {
+        this.devices.sensors.sort((a: any, b: any) =>a.nodata.localeCompare(b.nodata));
+      }
+      if (id == "correction_specific") {
+        this.devices.sensors.sort((a: any, b: any) =>a.correction_specific.localeCompare(b.correction_specific));
+      }
+      if (id == "correction_time_specific") {
+        this.devices.sensors.sort((a: any, b: any) =>a.correction_time_specific.localeCompare(b.correction_time_specific));
+      }
+      if (id == "topic_specific") {
+        this.devices.sensors.sort((a: any, b: any) =>a.topic_specific.localeCompare(b.topic_specific));
+      }
+    }
+    if (ord == "DESC") {
+      if (id == "position") {
+        this.devices.sensors.sort((a: any, b: any) => Number(b.position) - Number(a.position));
+      }
+      if (id == "datafield") {
+        this.devices.sensors.sort((a: any, b: any) =>b.datafield.localeCompare(a.datafield));
+      }
+      if (id == "nodata") {
+        this.devices.sensors.sort((a: any, b: any) =>b.nodata.localeCompare(a.nodata));
+      }
+      if (id == "correction_specific") {
+        this.devices.sensors.sort((a: any, b: any) =>b.correction_specific.localeCompare(a.correction_specific));
+      }
+      if (id == "correction_time_specific") {
+        this.devices.sensors.sort((a: any, b: any) =>b.correction_time_specific.localeCompare(a.correction_time_specific));
+      }
+      if (id == "topic_specific") {
+        this.devices.sensors.sort((a: any, b: any) =>b.topic_specific.localeCompare(a.topic_specific));
+      }
+    }
+  }
+
+  getStructure(num: any) {
+    // optener estructuras de datos
+    fetch(`${this.getStructureList}`)
+      .then((response) => response.json())
+      .then((quotesData) => {
+        if (num == 1) {
+          this.structures.structure = quotesData.variable_data_structure;
+        } 
+        else {
+          this.structures.structure = quotesData.data_estructure;
+        }
+        this.auxVariable = quotesData.variable_data_structure[0].id_estructure;
+        this.auxFixed = quotesData.data_estructure[0].id_estructure;
+      });
+  }
+
+  /* NEW */
+
+  newDevices(form: any) {
+    // Guardar Dispositivos
+    this.createDate();
+    this.devices.createdAt = this.date;
+    this.devices.updatedAt = this.date;
+    this.getShared();
+    //console.log(this.devices)
+
+    if (form.valid) {
+      if (this.devices.sensors.length == 0) {
+        let sensors_aux = [
+          {
+            id: -1,
+            enable: 0,
+            idDevice: this.id,
+            id_type_sensor: 0,
+            datafield: "",
+            nodata: true,
+            orden: 1,
+            type_name: "",
+            correction_specific: "",
+            correction_time_specific: "",
+            topic_specific: "",
+            position: 0,
+          },
+        ];
+        this.devices.sensors = sensors_aux;
+        fetch(this.postDevice, {
+          method: "POST",
+          body: JSON.stringify(this.devices),
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        }).then((response) => response.json());
+        this.devices.sensors = [];
+      } 
+      else {
+        fetch(this.postDevice, {
+          method: "POST",
+          body: JSON.stringify(this.devices),
+          headers: { "Content-type": "application/json; charset=UTF-8" },
+        }).then((response) => response.json());
+      }
+      this.newSensors();
+    }
+  }
+
+  newSensors() {
+    // Guardar nuevos sensores de los dispositivos
+    if (this.state == 0) {
+      this.changed = false;
+      setTimeout(() => {
+        this.router.navigate([`/devices/edit/${this.id}`]);
+      }, 100);
+    }
+    if (this.state == 1) {
+      this.devices.sensors.forEach((sensor: { idDevice: number }) => {
+        sensor.idDevice = this.idMax;
+      });
+      this.devices.createdAt = this.date;
+      this.changed = false;
+      setTimeout(() => {
+        this.router.navigate([`/devices/edit/${this.idMax}`]);
+      }, 100);
+    }
+    return;
+  }
+
+  /* EDIT */
 
   editDevices(form: any) {
     // Guardar Dispositivo
@@ -316,82 +454,7 @@ export class DevicesNewEditComponent implements OnInit {
     this.devices.updatedAt = this.formatDateTime(this.date);
   }
 
-  newSensors() {
-    // Guardar nuevos sensores de los dispositivos
-    if (this.state == 0) {
-      this.changed = false;
-      setTimeout(() => {
-        this.router.navigate([`/devices/edit/${this.id}`]);
-      }, 100);
-    }
-    if (this.state == 1) {
-      this.devices.sensors.forEach((sensor: { idDevice: number }) => {
-        sensor.idDevice = this.idMax;
-      });
-      this.devices.createdAt = this.date;
-      this.changed = false;
-      setTimeout(() => {
-        this.router.navigate([`/devices/edit/${this.idMax}`]);
-      }, 100);
-    }
-    return;
-  }
-
-  newDevices(form: any) {
-    // Guardar Dispositivos
-    this.createDate();
-    this.devices.createdAt = this.date;
-    this.devices.updatedAt = this.date;
-    this.getShared();
-    //console.log(this.devices)
-
-    if (form.valid) {
-      if (this.devices.sensors.length == 0) {
-        let sensors_aux = [
-          {
-            id: -1,
-            enable: 0,
-            idDevice: this.id,
-            id_type_sensor: 0,
-            datafield: "",
-            nodata: true,
-            orden: 1,
-            type_name: "",
-            correction_specific: "",
-            correction_time_specific: "",
-            topic_specific: "",
-            position: 0,
-          },
-        ];
-        this.devices.sensors = sensors_aux;
-        fetch(this.postDevice, {
-          method: "POST",
-          body: JSON.stringify(this.devices),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
-        }).then((response) => response.json());
-        this.devices.sensors = [];
-      } 
-      else {
-        fetch(this.postDevice, {
-          method: "POST",
-          body: JSON.stringify(this.devices),
-          headers: { "Content-type": "application/json; charset=UTF-8" },
-        }).then((response) => response.json());
-      }
-      this.newSensors();
-    }
-  }
-
-  getShared() {
-    // Recupera datos compartidos
-    this.dataSharingService.sharedLat$.subscribe((data) => {
-      this.devices.lat = data;
-    });
-    this.dataSharingService.sharedLon$.subscribe((data) => {
-      this.devices.lon = data;
-    });
-    this.dataSharingService.updatesharedAct(false);
-  }
+  /* DELET */
 
   deleteDevices(idActual: any) {
     // Eliminar Dispositivo
@@ -409,19 +472,46 @@ export class DevicesNewEditComponent implements OnInit {
     }, 100);
   }
 
-  updatesharedLat() {
-    // Actualizar Latitud
-    setTimeout(() => {
-      this.dataSharingService.updatesharedLat(this.devices.lat);
-    }, 100);
-  }
-  updatesharedLon() {
-    // Actualizar Longitud
-    setTimeout(() => {
-      this.dataSharingService.updatesharedLon(this.devices.lon);
-    }, 100);
+  /* SENSORS LIST */
+
+  addSensor() {
+    // Añadir a lista compartida
+    let sensors_aux = {
+      id: this.devices.sensors.length,
+      enable: 0,
+      idDevice: this.id,
+      id_type_sensor: this.selectSensors.sensors[0].id,
+      datafield: "",
+      nodata: true,
+      orden: 1,
+      type_name: "",
+      correction_specific: "",
+      correction_time_specific: "",
+      topic_specific: "",
+      position: 0,
+    };
+    this.devices.sensors.push(sensors_aux);
+    this.changed = true;
   }
 
+  getOrder(num: any, num2: any) {
+    // Asocia un order al sensor segun su type
+    let cosita: any;
+    cosita = this.selectSensors.sensors.find((objeto: { id: any }) => objeto.id == num2);
+    if (cosita != undefined) {
+      this.devices.sensors[num].orden = cosita.position;
+    }
+  }
+
+  deleteSensor(id: any) {
+    // Añadir a lista compartida
+    this.deleteId = id;
+    this.devices.sensors = this.devices.sensors.filter((item) => item.id != this.deleteId);
+    this.changed = true;
+  }
+
+  /* RECHARGE */
+  
   rechargeMap() {
     // Recargar mapa
     fetch(`${this.idDevice}/${this.id}`)
@@ -447,6 +537,52 @@ export class DevicesNewEditComponent implements OnInit {
     this.dataSharingService.updatesharedAct(false);
     this.cont++;
   }
+
+  /* AUX */
+
+  deleteMarker() {
+    // eliminar chinchetas del mapa
+    this.devices.lat = null;
+    this.devices.lon = null;
+    this.devices.cota = 0;
+    this.devices.timezone = "Brussels, Copenhagen, Madrid, Paris";
+    this.updatesharedLat();
+    this.updatesharedLon();
+  }
+
+  resize(): void {
+    // Redimensionar pantalla
+    this.width = window.innerWidth;
+  }
+
+  /* SHARED */
+
+  getShared() {
+    // Recupera datos compartidos
+    this.dataSharingService.sharedLat$.subscribe((data) => {
+      this.devices.lat = data;
+    });
+    this.dataSharingService.sharedLon$.subscribe((data) => {
+      this.devices.lon = data;
+    });
+    this.dataSharingService.updatesharedAct(false);
+  }
+
+  updatesharedLat() {
+    // Actualizar Latitud
+    setTimeout(() => {
+      this.dataSharingService.updatesharedLat(this.devices.lat);
+    }, 100);
+  }
+
+  updatesharedLon() {
+    // Actualizar Longitud
+    setTimeout(() => {
+      this.dataSharingService.updatesharedLon(this.devices.lon);
+    }, 100);
+  }
+
+  /* TARJETAS */
 
   formShow() {
     // Expandir formulario
@@ -476,6 +612,8 @@ export class DevicesNewEditComponent implements OnInit {
     this.showLarge = false;
   }
 
+  /* LOCAL STORAGE */
+
   readStorage() {
     // Recupera datos de local storage
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
@@ -496,40 +634,11 @@ export class DevicesNewEditComponent implements OnInit {
     }, 1);
   }
 
-  getStructure(num: any) {
-    // optener estructuras de datos
-    fetch(`${this.getStructureList}`)
-      .then((response) => response.json())
-      .then((quotesData) => {
-        if (num == 1) {
-          this.structures.structure = quotesData.variable_data_structure;
-        } 
-        else {
-          this.structures.structure = quotesData.data_estructure;
-        }
-        this.auxVariable = quotesData.variable_data_structure[0].id_estructure;
-        this.auxFixed = quotesData.data_estructure[0].id_estructure;
-      });
-  }
-
-  deleteMarker() {
-    // eliminar chinchetas del mapa
-    this.devices.lat = null;
-    this.devices.lon = null;
-    this.devices.cota = 0;
-    this.devices.timezone = "Brussels, Copenhagen, Madrid, Paris";
-    this.updatesharedLat();
-    this.updatesharedLon();
-  }
+  /* DATE */
 
   createDate() {
     // Genera fecha
     this.date = this.formatDateTime(new Date());
-  }
-
-  resize(): void {
-    // Redimensionar pantalla
-    this.width = window.innerWidth;
   }
 
   formatDateTime(date2: any) {
@@ -547,90 +656,5 @@ export class DevicesNewEditComponent implements OnInit {
       dat = "";
     }
     return dat;
-  }
-
-  /* */
-
-  getOrder(num: any, num2: any) {
-    // Asocia un order al sensor segun su type
-    let cosita: any;
-    cosita = this.selectSensors.sensors.find((objeto: { id: any }) => objeto.id == num2);
-    if (cosita != undefined) {
-      this.devices.sensors[num].orden = cosita.position;
-    }
-  }
-
-  addSensor() {
-    // Añadir a lista compartida
-    let sensors_aux = {
-      id: this.devices.sensors.length,
-      enable: 0,
-      idDevice: this.id,
-      id_type_sensor: this.selectSensors.sensors[0].id,
-      datafield: "",
-      nodata: true,
-      orden: 1,
-      type_name: "",
-      correction_specific: "",
-      correction_time_specific: "",
-      topic_specific: "",
-      position: 0,
-    };
-    this.devices.sensors.push(sensors_aux);
-    this.changed = true;
-  }
-
-  deleteSensor(id: any) {
-    // Añadir a lista compartida
-    this.deleteId = id;
-    this.devices.sensors = this.devices.sensors.filter((item) => item.id != this.deleteId);
-    this.changed = true;
-  }
-
-  getSensorsLocal(id: any, ord: any) {
-    // Ordenar columnas
-    this.mark = id;
-
-    if (ord == "ASC") {
-      if (id == "position") {
-        this.devices.sensors.sort((a: any, b: any) => Number(a.position) - Number(b.position));
-      }
-      if (id == "datafield") {
-        this.devices.sensors.sort((a: any, b: any) =>a.datafield.localeCompare(b.datafield));
-      }
-      if (id == "nodata") {
-        this.devices.sensors.sort((a: any, b: any) =>a.nodata.localeCompare(b.nodata));
-      }
-      if (id == "correction_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.correction_specific.localeCompare(b.correction_specific));
-      }
-      if (id == "correction_time_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.correction_time_specific.localeCompare(b.correction_time_specific));
-      }
-      if (id == "topic_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.topic_specific.localeCompare(b.topic_specific));
-      }
-    }
-    if (ord == "DESC") {
-      if (id == "position") {
-        this.devices.sensors.sort((a: any, b: any) => Number(b.position) - Number(a.position));
-      }
-      if (id == "datafield") {
-        this.devices.sensors.sort((a: any, b: any) =>b.datafield.localeCompare(a.datafield));
-      }
-      if (id == "nodata") {
-        this.devices.sensors.sort((a: any, b: any) =>b.nodata.localeCompare(a.nodata));
-      }
-      if (id == "correction_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.correction_specific.localeCompare(a.correction_specific));
-      }
-      if (id == "correction_time_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.correction_time_specific.localeCompare(a.correction_time_specific));
-      }
-      if (id == "topic_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.topic_specific.localeCompare(a.topic_specific));
-      }
-    }
-    //console.log(this.devices.sensors)
   }
 }
