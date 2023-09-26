@@ -153,6 +153,25 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.initFilters();
     this.selectSensors2.sensors= [];
     this.readStorage();
+
+    fetch(`${this.get_sensors_list}`)
+    .then((response) => response.json())
+    .then(data => {
+      data.unshift({
+        id: -3, 
+        type: this.translate.instant('text_1'),    
+      });
+
+      data.unshift({
+        id: -2, 
+        type: this.translate.instant('text_2'),    
+      });
+
+      this.selectSensors1.sensors= data;
+      for (let index = 0; index < data.length; index++) {
+        this.selectSensors1.sensors[index].name= data[index].type;
+      }
+    })
   }
 
   orderDevices(id: any, ordAux: any){ // Ordenar dispositivos
@@ -283,15 +302,17 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
                 cont
               };
               //console.log(this.geojsonAux.features[0])
-              this.map.addSource('places', {'type': 'geojson',
-              'data': {
-                'type': 'FeatureCollection',
-                'features': this.geojsonAux.features
+              if (!this.map.getSource('places')) {
+                this.map.addSource('places', {'type': 'geojson',
+                'data': {
+                  'type': 'FeatureCollection',
+                  'features': this.geojsonAux.features
+                }
+                });
               }
-              });
             } 
     
-            if(this.map!=null){
+            if(this.map!=null && !this.map.getLayer('places')){
               this.map.addLayer({
                 'id': 'places',
                 'type': 'circle',
@@ -316,7 +337,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
               if (labelLayer) {
                 labelLayerId = labelLayer.id;
               }
-              if(this.map!=undefined){
+              if(this.map!=undefined && !this.map.getLayer('add-3d-buildings')){
                 this.map.addLayer({
                   'id': 'add-3d-buildings',
                   'source': 'composite',
@@ -370,10 +391,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         .then((response) => response.json())
         .then(data => {
           console.log(data)
-
           this.charging= false;
-          this.totalPages= Math.ceil(data[0].total/this.quantPage);
-          this.total= data[0].total;
+          if (data && data.length > 0 && data[0].total) {
+            this.totalPages = Math.ceil(data[0].total / this.quantPage);
+            this.total = data[0].total;
+          } else {
+            this.totalPages = 0;
+            this.total = 0;
+          }
           //
           this.data= data;
           const deviceIds = this.data.map(device => device.id);
@@ -560,7 +585,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   getDevicesLocal(id: any,ord: any){ // Ordenar columnas
     //this.order= id;
 
-    if(this.totalPages<=1){
+    if(this.totalPages<=1 && false){
       if (ord == 'ASC') {
         if (id == 'uid') {
           this.data.sort((a: any, b: any) => a.uid.localeCompare(b.uid));
@@ -608,25 +633,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     .then(response => response.json())
     .then(data => {
       this.id= parseInt(data.id);
-    })
-
-    fetch(`${this.get_sensors_list}`)
-    .then((response) => response.json())
-    .then(data => {
-      data.unshift({
-        id: -3, 
-        type: this.translate.instant('text_1'),    
-      });
-
-      data.unshift({
-        id: -2, 
-        type: this.translate.instant('text_2'),    
-      });
-
-      this.selectSensors1.sensors= data;
-      for (let index = 0; index < data.length; index++) {
-        this.selectSensors1.sensors[index].name= data[index].type;
-      }
     })
     this.orderDevices('uid','ASC');
   }

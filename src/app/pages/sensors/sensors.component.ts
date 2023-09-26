@@ -26,6 +26,7 @@ export class SensorsComponent implements OnInit{
   delete_sensors: string = 'http://localhost:5172/api/sensors_types';
   update_sensors: string = 'http://localhost:5172/api/sensors_types';
   duplicate_sensor: string = 'http://localhost:5172/api/sensors_types/duplicate';
+  get_id: string = 'http://localhost:5172/api/sensors_types/id';
 
   totalPages = 5;
   currentPage = 1;
@@ -115,11 +116,16 @@ export class SensorsComponent implements OnInit{
 
     fetch(`${this.get_sensors}/${this.search}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
-      .then(quotesData => {
+      .then(data => {
         this.charging = false;
-        this.totalPages = Math.ceil(quotesData[0].total / this.quantPage);
-        this.total = quotesData[0].total;
-        this.data = quotesData;
+        if (data && data.length > 0 && data[0].total) {
+          this.totalPages = Math.ceil(data[0].total / this.quantPage);
+          this.total = data[0].total;
+        } else {
+          this.totalPages = 0;
+          this.total = 0;
+        }
+        this.data = data;
 
         if (this.data.length < this.quantPage) {
           this.totalPage = this.total;
@@ -137,7 +143,7 @@ export class SensorsComponent implements OnInit{
   getSensorsLocal(id: any,ord: any){ // Ordenar columnas local
     this.order= id;
 
-    if(this.totalPages<=1){
+    if(this.totalPages<=1 && false){
       if (ord == 'ASC') {
         if (id == 'position') {
           this.data.sort((a: any, b: any) => {return a.position - b.position;});
@@ -305,24 +311,33 @@ export class SensorsComponent implements OnInit{
 
   orderColumn(id_actual: any){ // Ordenar columnas
     if(!this.change && !this.change && id_actual!=this.actId){
-      this.actId= id_actual;
-      this.openEdit();
-      this.state=2;
-      const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
-      this.sensors = { ...objetoEnData };
-      this.sensorsCopy = {
-        id: this.sensors.id, 
-        type: this.sensors.type,    
-        metric: this.sensors.metric, 
-        description: this.sensors.description,
-        errorvalue: this.sensors.errorvalue,
-        valuemax: this.sensors.valuemax,
-        valuemin: this.sensors.valuemin,
-        position: this.sensors.position,
-        correction_general: this.sensors.correction_general,
-        correction_time_general: this.sensors.correction_time_general,
-      }
-      this.openClouse();
+      fetch(`${this.get_id}/${id_actual}`)
+      .then(response => response.json())
+      .then(data => {
+        this.sensors= data[0];
+        this.actId= id_actual;
+        this.openEdit();
+        this.state=2;
+        //const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
+        let sensors = { ...this.sensors };
+        this.sensorsCopy = {
+          id: sensors.id, 
+          type: sensors.type,    
+          metric: sensors.metric, 
+          description: sensors.description,
+          errorvalue: sensors.errorvalue,
+          valuemax: sensors.valuemax,
+          valuemin: sensors.valuemin,
+          position: sensors.position,
+          correction_general: sensors.correction_general,
+          correction_time_general: sensors.correction_time_general,
+        }
+        this.openClouse();
+      })
+      .catch(error => {
+        console.error(error); 
+      }); 
+      
     }
   }
   
@@ -348,6 +363,11 @@ export class SensorsComponent implements OnInit{
   }
 
   deleteSearch(){ // Borrar busqueda
+    this.Page(1);
+    this.totalPages = 5;
+    this.currentPage = 1;
+    this.quantPage = 15;
+    this.page= 1;
     this.searchArray.value= '';
     this.getSensors(this.order,this.orderAux);
   }

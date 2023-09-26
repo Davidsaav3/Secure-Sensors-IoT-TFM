@@ -208,7 +208,7 @@
 			  </div>
 			  <div>
 				<!-- -->
-				<select (change)="getStructureLocal('description','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+				<select (change)="this.currentPage=1;getStructureLocal('description','ASC');" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
 					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 			  </div>

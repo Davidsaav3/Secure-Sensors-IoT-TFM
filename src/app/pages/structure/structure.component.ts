@@ -100,6 +100,7 @@ export class StructureComponent implements OnInit{
   ngOnInit(): void { // Inicializador
     this.getStructure(this.order,this.ordAux);
     this.openClouse();
+    this.getStructureList();
   }
 
   getStructureVoid(){ // Obtener sin parámetros
@@ -120,11 +121,16 @@ export class StructureComponent implements OnInit{
     this.data= [];
     fetch(`${this.get_estructure}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
     .then((response) => response.json())
-    .then(quotesData => {
+    .then(data => {
       this.charging= false
-      this.totalPages= Math.ceil(quotesData[0].total/this.quantPage);
-      this.total= quotesData[0].total;
-      this.data = quotesData
+      if (data && data.length > 0 && data[0].total) {
+        this.totalPages = Math.ceil(data[0].total / this.quantPage);
+        this.total = data[0].total;
+      } else {
+        this.totalPages = 0;
+        this.total = 0;
+      }
+      this.data = data
       if(this.data.length<this.quantPage){
         this.totalPage= this.total;
       }
@@ -132,7 +138,6 @@ export class StructureComponent implements OnInit{
         this.totalPage= this.quantPage*this.currentPage;
       }
     });
-    this.getStructureList();
   }
 
   getStructureList(){ // optener lista de estructuras de datos
@@ -146,7 +151,7 @@ export class StructureComponent implements OnInit{
   getStructureLocal(id: any,ord: any){ // Ordenar columnas local
     this.order= id;
 
-    if(this.totalPages<=1){
+    if(this.totalPages<=1 && false){
       if (ord == 'ASC') {
         if (id == 'description') {
           this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
@@ -353,6 +358,11 @@ export class StructureComponent implements OnInit{
   }
 
   deleteSearch(){ // Borrar busqueda por texto
+    this.Page(1);
+    this.totalPages = 5;
+    this.currentPage = 1;
+    this.quantPage = 15;
+    this.page= 1;
     this.search.value= '';
     this.getStructure(this.order,this.ordAux);
   }
