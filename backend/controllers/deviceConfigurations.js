@@ -352,12 +352,14 @@ router.use(express.json())
       FROM device_configurations dc
       LEFT JOIN sensors_devices s ON dc.id = s.id_device
       WHERE dc.id = ?`
-      var variable_configuration=0;
+      var variable_configuration=-1;
       variable_configuration = result[0].variable_configuration;
+      console.log(result[0].variable_configuration)
 
       setTimeout(() => {
 
       if(variable_configuration==0){
+        console.log('hola0')
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
          (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
@@ -370,6 +372,7 @@ router.use(express.json())
          `; 
        }
        if(variable_configuration==1){
+        console.log('hola1')
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
          (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
@@ -387,54 +390,121 @@ router.use(express.json())
            console.error("Error:", err);
            return res.status(500).json({ error: 'Error en la base de datos' });
          }
-         const devicesWithSensors = {};
-     
-         result.forEach((row) => {
-           const deviceId = row.id;
-       
-           if (!devicesWithSensors[deviceId]) {
-             devicesWithSensors[deviceId] = {
-               id: deviceId,
-               uid: row.uid, 
-               alias: row.alias, 
-               origin: row.origin,
-               description_origin: row.description_origin, 
-               application_id: row.application_id, 
-               topic_name: row.topic_name,
-               typemeter: row.typemeter, 
-               lat: row.lat, 
-               lon: row.lon, 
-               cota: row.cota,
-               timezone: row.timezone,
-               enable: row.enable,
-               organizationid: row.organizationid, 
-               createdAt: row.createdAt,
-               updatedAt: row.updatedAt,
-               id_data_estructure: row.id_data_estructure, 
-               variable_configuration: row.variable_configuration,
-               sensors: [],
-             };
-           }
-       
-           if (row.sensor_id) {
-             devicesWithSensors[deviceId].sensors.push({
-               orden: row.orden,
-               enable: row.sensor_enable, 
-               id_device: row.id_device, 
-               id_type_sensor: row.id_type_sensor, 
-               id: row.sensor_id,
-               datafield: row.datafield, 
-               nodata: row.nodata, 
-               type_name: row.type_name,
-               correction_specific: row.correction_specific,
-               correction_time_specific: row.correction_time_specific, 
-               topic_specific: row.topic_specific, 
-               position: row.position,
-             });
-           }
-         });
-         const responseArray = Object.values(devicesWithSensors);
-         res.json(responseArray);
+         if (result.length === 0) {
+            // Ninguna de las consultas anteriores devolvió filas, ejecuta ambas sin el LEFT JOIN
+            console.log('Ejecutando ambas consultas sin LEFT JOIN');
+            query = `SELECT dc.*,
+            s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
+            (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
+            s.correction_specific, s.correction_time_specific, s.topic_specific,
+            (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
+            FROM device_configurations dc
+            LEFT JOIN sensors_devices s ON dc.id = s.id_device
+            WHERE dc.id = ?
+            `;
+    
+            con.query(query, [id], (err, result) => {
+              if (err) {
+                console.error("Error:", err);
+                return res.status(500).json({ error: 'Error en la base de datos' });
+              }
+              const devicesWithSensors = {};
+              result.forEach((row) => {
+                const deviceId = row.id;
+            
+                if (!devicesWithSensors[deviceId]) {
+                  devicesWithSensors[deviceId] = {
+                    id: deviceId,
+                    uid: row.uid, 
+                    alias: row.alias, 
+                    origin: row.origin,
+                    description_origin: row.description_origin, 
+                    application_id: row.application_id, 
+                    topic_name: row.topic_name,
+                    typemeter: row.typemeter, 
+                    lat: row.lat, 
+                    lon: row.lon, 
+                    cota: row.cota,
+                    timezone: row.timezone,
+                    enable: row.enable,
+                    organizationid: row.organizationid, 
+                    createdAt: row.createdAt,
+                    updatedAt: row.updatedAt,
+                    id_data_estructure: row.id_data_estructure, 
+                    variable_configuration: row.variable_configuration,
+                    sensors: [],
+                  };
+                }
+            
+                if (row.sensor_id) {
+                  devicesWithSensors[deviceId].sensors.push({
+                    orden: row.orden,
+                    enable: row.sensor_enable, 
+                    id_device: row.id_device, 
+                    id_type_sensor: row.id_type_sensor, 
+                    id: row.sensor_id,
+                    datafield: row.datafield, 
+                    nodata: row.nodata, 
+                    type_name: row.type_name,
+                    correction_specific: row.correction_specific,
+                    correction_time_specific: row.correction_time_specific, 
+                    topic_specific: row.topic_specific, 
+                    position: row.position,
+                  });
+                }
+              });
+              const responseArray = Object.values(devicesWithSensors);
+              res.json(responseArray);            });
+          }
+          else{
+            const devicesWithSensors = {};
+            result.forEach((row) => {
+              const deviceId = row.id;
+          
+              if (!devicesWithSensors[deviceId]) {
+                devicesWithSensors[deviceId] = {
+                  id: deviceId,
+                  uid: row.uid, 
+                  alias: row.alias, 
+                  origin: row.origin,
+                  description_origin: row.description_origin, 
+                  application_id: row.application_id, 
+                  topic_name: row.topic_name,
+                  typemeter: row.typemeter, 
+                  lat: row.lat, 
+                  lon: row.lon, 
+                  cota: row.cota,
+                  timezone: row.timezone,
+                  enable: row.enable,
+                  organizationid: row.organizationid, 
+                  createdAt: row.createdAt,
+                  updatedAt: row.updatedAt,
+                  id_data_estructure: row.id_data_estructure, 
+                  variable_configuration: row.variable_configuration,
+                  sensors: [],
+                };
+              }
+          
+              if (row.sensor_id) {
+                devicesWithSensors[deviceId].sensors.push({
+                  orden: row.orden,
+                  enable: row.sensor_enable, 
+                  id_device: row.id_device, 
+                  id_type_sensor: row.id_type_sensor, 
+                  id: row.sensor_id,
+                  datafield: row.datafield, 
+                  nodata: row.nodata, 
+                  type_name: row.type_name,
+                  correction_specific: row.correction_specific,
+                  correction_time_specific: row.correction_time_specific, 
+                  topic_specific: row.topic_specific, 
+                  position: row.position,
+                });
+              }
+            });
+            const responseArray = Object.values(devicesWithSensors);
+            res.json(responseArray);
+          }
        });
       }, 100);
 

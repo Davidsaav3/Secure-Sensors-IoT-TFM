@@ -117,7 +117,7 @@
                       </svg>{{ 'devices.edit.topic' | translate }}
                     </th>
 
-                    <th style="cursor: pointer; " class="single-line" [ngClass]="{'mark': mark == 'application_id'}" scope="col">
+                    <th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'application_id'}">
                       <svg *ngIf="alt3" (click)="alt3=false;getDevicesLocal('application_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
@@ -126,12 +126,14 @@
                       </svg>{{ 'devices.edit.aplication' | translate }}
                     </th>
 
-                    <th style="cursor: pointer; " class="single-line"  scope="col">
-                      {{ 'sensors.enable' | translate }}</th>
-                    <th class="d-none d-md-none d-lg-block" class="single-line" >{{ 'sensors.sensors' | translate }}
+                    <th style="cursor: pointer;" class="d-none d-lg-none d-xl-table-cell d-flex" scope="col">
+                      {{ 'sensors.enable' | translate }}
+                    </th>
+                    <th class="d-none d-md-none d-lg-none d-xl-table-cell d-flex" class="single-line" >
+                      {{ 'sensors.sensors' | translate }}
                     </th>
 
-                    <th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'data_estructure'}">
+                    <th class="d-none d-md-none d-lg-none d-xl-table-cell d-flex" style="text-align: left; cursor: pointer;">
                       <svg *ngIf="alt4" (click)="alt4=false;getDevicesLocal('data_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
                         <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
                       </svg>
@@ -158,8 +160,8 @@
                   <tr class="over" tyle="display: block;" *ngFor="let quote of data; let i = index" style="cursor: pointer;">
 
                     <th class="rounded-0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.uid }}</th>
-                    <td class="d-none d-md-none d-lg-table-cell" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.topic_name }}</td>
-                    <td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.application_id }}</td>
+                    <td class="" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.topic_name }}</td>
+                    <td class="" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.application_id }}</td>
 
                     <td [routerLink]="['/devices/edit/', quote.id]" scope="col">
                       <span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
@@ -180,8 +182,8 @@
                       </div>
                     </td>
 
-                    <td *ngIf="quote.variable_configuration==0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
-                    <td *ngIf="quote.variable_configuration==1" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.variable_data_structure }}</td>
+                    <td class="d-none d-lg-none d-xl-table-cell d-flex" *ngIf="quote.variable_configuration==0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
+                    <td class="d-none d-lg-none d-xl-table-cell d-flex" *ngIf="quote.variable_configuration==1" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.variable_data_structure }}</td>
                     <td [routerLink]="['/devices/edit/', quote.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
 
                     <td (mouseout)="viewDup= -1" (mouseover)="viewDup=i" style="text-align: center;" routerLink="/devices/new/{{quote.id}}">                      
