@@ -433,7 +433,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.pag= 10000;
     }
     if(this.buscar){
-      console.log('buscar')
+      //console.log('buscar')
       this.ngOnDestroy();
       this.newMap();
       //this.cleanMap();
@@ -460,7 +460,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
             this.dataAux= this.data;
           }
           if(this.buscar){
-            console.log('buscar')
+            //console.log('buscar')
             this.ngOnDestroy();
             this.newMap();
             //this.cleanMap();

@@ -40,7 +40,7 @@ export class StructureComponent implements OnInit{
   alt3=true;
   alt4=true;
 
-  act_id= '';
+  act_id= 0;
   charging= false;
   data: any;
   width= 0;
@@ -202,7 +202,7 @@ export class StructureComponent implements OnInit{
       this.data.sort((a: { description: string; }, b: { description: any; }) => {
         return a.description.localeCompare(b.description);
       });
-      this.act_id= this.estructure.id_estructure.toString();
+      this.act_id= parseInt(this.estructure.id_estructure);
       this.openEdit();
       this.state=2;
       
@@ -242,7 +242,7 @@ export class StructureComponent implements OnInit{
 
         this.openClouse();
         let estructure = {
-          id_estructure: this.id.toString(), 
+          id_estructure: this.id, 
           description: this.estructure.description,    
           configuration: this.estructure.configuration, 
           identifier_code: this.estructure.identifier_code, 
@@ -252,7 +252,7 @@ export class StructureComponent implements OnInit{
         this.data.sort((a: { description: string; }, b: { description: any; }) => {
           return a.description.localeCompare(b.description);
         });
-        this.act_id= this.id.toString();
+        this.act_id= this.id;
         this.openEdit();
         this.state=2;
       })
@@ -287,7 +287,7 @@ export class StructureComponent implements OnInit{
 
   deleteStructure(id_actual: any){ // Eliminar sensor
     var estructure2 = {
-      id_estructure: this.act_id,    
+      id_estructure: this.id,    
     }
     fetch(this.delete_estructure, {
       method: "DELETE",body: JSON.stringify(estructure2),headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -320,6 +320,7 @@ export class StructureComponent implements OnInit{
     this.show= true;
     if(!this.change && !this.change && id_actual!=this.act_id){
       this.act_id= id_actual;
+      this.id= id_actual;
       this.openEdit();
       this.state=2;
       const objetoEnData= this.data.find((objeto: { id_estructure: any; }) => objeto.id_estructure == id_actual);
@@ -391,7 +392,7 @@ export class StructureComponent implements OnInit{
       }
     }
     
-    this.act_id= '1';
+    this.act_id= 1;
     this.show= true;
     this.openClouse();
     this.state= 1;

@@ -43,7 +43,7 @@ export class SensorsComponent implements OnInit{
   alt6=true;
   alt7=true;
 
-  actId= '';
+  actId= 0;
   charging= false;
   data: any;
   width= 0;
@@ -205,7 +205,7 @@ export class SensorsComponent implements OnInit{
       let sensors = this.sensors;
       this.data.push(sensors)
       this.data.sort((a:any,b:any) => {return a.position-b.position;});
-      this.actId= this.sensors.id.toString();
+      this.actId= parseInt(this.sensors.id);
       this.openEdit();
       this.state=2;
       this.saveOk= true;
@@ -249,7 +249,7 @@ export class SensorsComponent implements OnInit{
             return 1;
           }
         });
-        this.actId= this.id.toString();
+        this.actId= this.id;
         this.openEdit();
         this.state=2;
       })
@@ -284,7 +284,7 @@ export class SensorsComponent implements OnInit{
 
   deleteSensor(id_actual: any){ // Eliminar sensor
     var sensors2 = {
-      id: id_actual,    
+      id: this.id,    
     }
     fetch(this.delete_sensors, {
       method: "DELETE",body: JSON.stringify(sensors2),headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -316,6 +316,7 @@ export class SensorsComponent implements OnInit{
       .then(data => {
         this.sensors= data[0];
         this.actId= id_actual;
+        this.id= id_actual;
         this.openEdit();
         this.state=2;
         //const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == id_actual);

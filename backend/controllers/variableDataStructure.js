@@ -64,23 +64,25 @@ router.use(express.json())
 
   router.post("", (req, res) => {  /*/ POST  /*/
     const { description, structure } = req.body;
-    const initial_byte=  parseInt(req.body.initial_byte);
+    const initial_byte = parseInt(req.body.initial_byte);
+    
     if (!description || !structure) {
       return res.status(400).json({ error: 'Descripción, structure y initial byte son requeridas' });
     }
-    const query = "INSERT INTO variable_data_structure (description, structure, initial_byte) VALUES (?, ?,?)";
+
+    const query = "INSERT INTO variable_data_structure (description, structure, initial_byte) VALUES (?, ?, ?)";
     con.query(query, [description, structure, initial_byte], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 1) {
-        const insertedId = result.insertId;
-        return res.status(201).json({ id: insertedId });
+        const insertedId = result.insertId; // Obtiene el ID insertado
+        return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
-  
+    
   router.put("", (req, res) => {  /*/ UPDATE  /*/
     const { id, description, structure, initial_byte } = req.body;
     if (!id || (!description && !structure && !initial_byte)) {

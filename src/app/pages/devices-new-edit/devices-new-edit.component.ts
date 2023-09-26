@@ -449,7 +449,7 @@ export class DevicesNewEditComponent implements OnInit{
 
   getStructureList(event: any){ 
     let num= event.target.checked ? 1 : 0;
-    console.log(num)
+    //console.log(num)
     this.getStructure(num);
     setTimeout(() => {
       this.devices.variable_configuration= num;

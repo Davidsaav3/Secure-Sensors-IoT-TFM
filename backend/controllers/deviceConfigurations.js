@@ -358,7 +358,6 @@ router.use(express.json())
       setTimeout(() => {
 
       if(variable_configuration==0){
-        console.log('hola0')
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
          (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
@@ -371,7 +370,6 @@ router.use(express.json())
          `; 
        }
        if(variable_configuration==1){
-        console.log('hola1')
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
          (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,

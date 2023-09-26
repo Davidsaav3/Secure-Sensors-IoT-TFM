@@ -30,7 +30,7 @@ export class VariableStructureComponent implements OnInit{
   alt2=true;
   alt3=true;
 
-  actId= '';
+  actId= 0;
   charging= false;
   data: any;
   width= 0;
@@ -57,14 +57,14 @@ export class VariableStructureComponent implements OnInit{
   ordAux= 'ASC';
 
   structure = {
-    id: '', 
+    id: 0, 
     description: '',    
     structure: '', 
     initial_byte: '', 
   }
 
   structureCopy = {
-    id: '', 
+    id: 0, 
     description: '',    
     structure: '', 
     initial_byte: '', 
@@ -156,13 +156,13 @@ export class VariableStructureComponent implements OnInit{
         method: "PUT",body: JSON.stringify(this.structure),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json()) 
-      this.data = this.data.filter((data: { id: string; }) => data.id !== this.structure.id);
+      this.data = this.data.filter((data: { id: string; }) => parseInt(data.id) !== this.structure.id);
       let structure= this.structure;
       this.data.push(structure)
       this.data.sort((a: { description: string; }, b: { description: any; }) => {
         return a.description.localeCompare(b.description);
       });
-      this.actId= this.structure.id.toString();
+      this.actId= this.structure.id;
       this.openEdit();
       this.state=2;
       
@@ -199,7 +199,7 @@ export class VariableStructureComponent implements OnInit{
 
         this.openClouse();
         let structure = {
-          id: this.id.toString(), 
+          id: this.id, 
           description: this.structure.description,    
           structure: this.structure.structure, 
           initial_byte: this.structure.initial_byte, 
@@ -208,7 +208,7 @@ export class VariableStructureComponent implements OnInit{
         this.data.sort((a: { description: string; }, b: { description: any; }) => {
           return a.description.localeCompare(b.description);
         });
-        this.actId= this.id.toString();
+        this.actId= this.id;
         this.openEdit();
         this.state=2;
       })
@@ -243,7 +243,7 @@ export class VariableStructureComponent implements OnInit{
 
   deleteStructure(id_actual: any){ // Eliminar estructura
     var structure2 = {
-      id: this.actId,    
+      id: this.id,    
     }
     fetch(this.deleteEstructure, {
       method: "DELETE",body: JSON.stringify(structure2),headers: {"Content-type": "application/json; charset=UTF-8"}
@@ -270,6 +270,7 @@ export class VariableStructureComponent implements OnInit{
     this.show= true;
     if(!this.change && !this.change && id_actual!=this.actId){
       this.actId= id_actual;
+      this.id= id_actual;
       this.openEdit();
       this.state=2;
       const objetoEnData= this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
@@ -328,7 +329,7 @@ export class VariableStructureComponent implements OnInit{
       structure: structure, 
       initial_byte: initial_byte, 
     }
-    this.actId= '1';
+    this.actId= 1;
     this.show= true;
     this.openClouse();
     this.state= 1;
