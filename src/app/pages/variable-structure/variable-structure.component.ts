@@ -241,7 +241,7 @@ export class VariableStructureComponent implements OnInit{
     }
   }
 
-  deleteStructure(id_actual: any){ // Eliminar estructura
+  deleteStructure(idActual: any){ // Eliminar estructura
     var structure2 = {
       id: this.id,    
     }
@@ -253,7 +253,7 @@ export class VariableStructureComponent implements OnInit{
     setTimeout(() => {
       this.alertDelete= false;
     }, 2000);
-    this.data= this.data.filter((objeto: { id: any; }) => objeto.id != id_actual)
+    this.data= this.data.filter((objeto: { id: any; }) => objeto.id != idActual)
     this.openClouse();
   }
 
@@ -266,14 +266,14 @@ export class VariableStructureComponent implements OnInit{
    }
   }
 
-  orderColumn(id_actual: any){ // Ordenar columnas
+  orderColumn(idActual: any){ // Ordenar columnas
     this.show= true;
-    if(!this.change && !this.change && id_actual!=this.actId){
-      this.actId= id_actual;
-      this.id= id_actual;
+    if(!this.change && !this.change && idActual!=this.actId){
+      this.actId= idActual;
+      this.id= idActual;
       this.openEdit();
       this.state=2;
-      const objetoEnData= this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
+      const objetoEnData= this.data.find((objeto: { id: any; }) => objeto.id == idActual);
       this.structure = { ...objetoEnData };
       this.structureCopy = {
         id: this.structure.id, 

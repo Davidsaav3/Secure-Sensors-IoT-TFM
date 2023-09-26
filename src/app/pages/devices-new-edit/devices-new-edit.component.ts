@@ -33,7 +33,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.createDate();
     //console.log(this.ruteAux[2])
     if(this.ruteAux[2]=='new'){
-    fetch(`${this.get_structure_list}`)
+    fetch(`${this.getStructureList}`)
       .then((response) => response.json())
       .then(quotesData => {
         this.structures.structure = quotesData.data_estructure;
@@ -44,15 +44,13 @@ export class DevicesNewEditComponent implements OnInit{
     }
   }
 
-  deleteDevice_device: string = 'http://localhost:5172/api/device_configurations';
-  update_device: string = 'http://localhost:5172/api/device_configurations';
-  id_device: string = 'http://localhost:5172/api/device_configurations/id';
-  post_sensors_devices: string = 'http://localhost:5172/api/sensors_devices';
-  post_device: string = 'http://localhost:5172/api/device_configurations';
-  max_device: string = 'http://localhost:5172/api/device_configurations/max';
-  get_structure_list: string = 'http://localhost:5172/api/data_structure/get_list';
-  duplicate_device: string = 'http://localhost:5172/api/device_configurations/duplicate';
-  get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
+  deleteDevice: string = 'http://localhost:5172/api/device_configurations';
+  idDevice: string = 'http://localhost:5172/api/device_configurations/id';
+  postDevice: string = 'http://localhost:5172/api/device_configurations';
+  maxDevice: string = 'http://localhost:5172/api/device_configurations/max';
+  getStructureList: string = 'http://localhost:5172/api/data_structure/get_list';
+  duplicateDevice: string = 'http://localhost:5172/api/device_configurations/duplicate';
+  getSensorsList: string = 'http://localhost:5172/api/sensors_types/get_list';
 
   id= parseInt(this.rutaActiva.snapshot.params['id']);
 
@@ -76,8 +74,8 @@ export class DevicesNewEditComponent implements OnInit{
   aux1= false;
   aux2= -1;
   activeLang = environment.languageLang[0];
-  show_map=true;
-  show_form= true;
+  showMap=true;
+  showForm= true;
   viewRec= false;
   saved= false;
   actOk= false;
@@ -110,7 +108,7 @@ export class DevicesNewEditComponent implements OnInit{
     sensors: [{
       id: 1, 
       enable: 0, 
-      id_device: 0,
+      idDevice: 0,
       id_type_sensor: 0,
       datafield: '',
       nodata: true,
@@ -146,7 +144,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.ruteAux = this.rute.split('/');
     this.getStructure(0);
     
-    fetch(`${this.get_sensors_list}`)
+    fetch(`${this.getSensorsList}`)
     .then((response) => response.json())
     .then(data => {
       this.selectSensors.sensors= data;
@@ -167,7 +165,7 @@ export class DevicesNewEditComponent implements OnInit{
     }
     //    
     if(this.ruteAux[2]=='new'){
-      fetch(this.max_device)
+      fetch(this.maxDevice)
       .then(response => response.json())
       .then(data => {
         this.idMax= parseInt(data.id);  
@@ -179,7 +177,7 @@ export class DevicesNewEditComponent implements OnInit{
         }
 
         if(this.state==1){ // 1. Duplicate
-          fetch(`${this.id_device}/${this.id}`)
+          fetch(`${this.idDevice}/${this.id}`)
           .then(response => response.json())
           .then(data => {
             this.devices= data[0];
@@ -197,7 +195,7 @@ export class DevicesNewEditComponent implements OnInit{
           this.changed= true;
           //
           setTimeout(() => {
-            fetch(`${this.duplicate_device}/${this.devices.uid}`)
+            fetch(`${this.duplicateDevice}/${this.devices.uid}`)
             .then((response) => {
               if (!response.ok) {
                 throw new Error('Error de la red');
@@ -235,7 +233,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   getDevices(){ // Obtener Dispositivos
-    fetch(`${this.id_device}/${this.id}`)
+    fetch(`${this.idDevice}/${this.id}`)
     .then(response => response.json())
     .then(data => {
       this.devices= data[0];
@@ -264,7 +262,7 @@ export class DevicesNewEditComponent implements OnInit{
         let sensors_aux =  [{
           id: -1, 
           enable: 0, 
-          id_device: this.id,
+          idDevice: this.id,
           id_type_sensor: 0,
           datafield: '',
           nodata: true,
@@ -276,14 +274,14 @@ export class DevicesNewEditComponent implements OnInit{
           position: 0,
         }]
         this.devices.sensors= sensors_aux;
-        fetch(this.post_device, {
+        fetch(this.postDevice, {
           method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(response => response.json()) 
         this.devices.sensors= [];
       }
       else{
-        fetch(this.post_device, {
+        fetch(this.postDevice, {
           method: "PUT",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(response => response.json()) 
@@ -308,8 +306,8 @@ export class DevicesNewEditComponent implements OnInit{
       }, 100);
     }
     if(this.state==1){
-      this.devices.sensors.forEach((sensor: { id_device: number; }) => {
-        sensor.id_device = this.idMax;
+      this.devices.sensors.forEach((sensor: { idDevice: number; }) => {
+        sensor.idDevice = this.idMax;
       });
       this.devices.createdAt= this.date;
       this.changed= false;
@@ -320,7 +318,7 @@ export class DevicesNewEditComponent implements OnInit{
     return;
   }
 
-  newDevice(form: any) { // Guardar Dispositivos
+  newDevices(form: any) { // Guardar Dispositivos
     this.createDate();
     this.devices.createdAt= this.date;
     this.devices.updatedAt= this.date;
@@ -332,7 +330,7 @@ export class DevicesNewEditComponent implements OnInit{
         let sensors_aux =  [{
           id: -1, 
           enable: 0, 
-          id_device: this.id,
+          idDevice: this.id,
           id_type_sensor: 0,
           datafield: '',
           nodata: true,
@@ -344,14 +342,14 @@ export class DevicesNewEditComponent implements OnInit{
           position: 0,
         }]
         this.devices.sensors= sensors_aux;
-        fetch(this.post_device, {
+        fetch(this.postDevice, {
           method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(response => response.json()) 
         this.devices.sensors= [];
       }
       else{
-        fetch(this.post_device, {
+        fetch(this.postDevice, {
           method: "POST",body: JSON.stringify(this.devices),headers: {"Content-type": "application/json; charset=UTF-8"}
         })
         .then(response => response.json()) 
@@ -370,11 +368,11 @@ export class DevicesNewEditComponent implements OnInit{
     this.dataSharingService.updatesharedAct(false);
   }
 
-  deleteDevice(id_actual: any){ // Eliminar Dispositivo
+  deleteDevices(idActual: any){ // Eliminar Dispositivo
     var devices = {
-      id: id_actual,    
+      id: idActual,    
     }
-    fetch(this.deleteDevice_device, {
+    fetch(this.deleteDevice, {
       method: "DELETE",body: JSON.stringify(devices),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
@@ -396,7 +394,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   rechargeMap(){ // Recargar mapa
-    fetch(`${this.id_device}/${this.id}`)
+    fetch(`${this.idDevice}/${this.id}`)
     .then(response => response.json())
     .then(data => {
       this.devices.lat= data[0].lat;
@@ -419,27 +417,27 @@ export class DevicesNewEditComponent implements OnInit{
     this.cont++;
   }
 
-  showForm(){ // Expandir formulario
-    this.show_form=true;
+  formShow(){ // Expandir formulario
+    this.showForm=true;
     if(this.ruteAux[2]=='edit'){
       this.onResize(0);
     }  
   }
 
-  hideForm(){ // Contrarer formulario
-    this.show_form=false;
+  formHide(){ // Contrarer formulario
+    this.showForm=false;
     if(this.ruteAux[2]=='edit'){
       this.onResize(0);
     }
   }
 
-  showMap(){ // Expandir mapa
+  mapShow(){ // Expandir mapa
     this.showLarge= true;
-    this.show_map=false;
+    this.showMap=false;
   }
 
-  hideMap(){ // Contrarer mapa
-    this.show_map=true;
+  mapHide(){ // Contrarer mapa
+    this.showMap=true;
     this.showLarge= false;
   }
 
@@ -447,7 +445,7 @@ export class DevicesNewEditComponent implements OnInit{
     this.activeLang = localStorage.getItem('activeLang') ?? 'es';
   }
 
-  getStructureList(event: any){ 
+  getStructuresList(event: any){ 
     let num= event.target.checked ? 1 : 0;
     //console.log(num)
     this.getStructure(num);
@@ -463,7 +461,7 @@ export class DevicesNewEditComponent implements OnInit{
   }
 
   getStructure(num: any){ // optener estructuras de datos
-    fetch(`${this.get_structure_list}`)
+    fetch(`${this.getStructureList}`)
       .then((response) => response.json())
       .then(quotesData => {
         if(num==1){
@@ -524,7 +522,7 @@ export class DevicesNewEditComponent implements OnInit{
     let sensors_aux = {
       id: this.devices.sensors.length, 
       enable: 0, 
-      id_device: this.id,
+      idDevice: this.id,
       id_type_sensor: this.selectSensors.sensors[0].id,
       datafield: '',
       nodata: true,
@@ -536,7 +534,6 @@ export class DevicesNewEditComponent implements OnInit{
       position: 0,
     }
     this.devices.sensors.push(sensors_aux);
-    this.show_map= true;
     this.changed= true;
   }
 

@@ -59,7 +59,7 @@
     "devices.sensors.type" : "Tipo",
     "devices.sensors.datafield" : "Datafield",
     "devices.sensors.nodate" : "Sin datos",
-    "devices.sensors.add" : "Añade sensores a este dispositivo",
+    "devices.sensors.add" : "Sin sensores",
     "devices.sensors.m1.1" : "Eliminar dispositivo",
     "devices.sensors.m1.2" : "¿ Esta seguro que desea eliminar el dispostivo ?",
     "devices.sensors.m2.1" : "Dispositivo desactivado",

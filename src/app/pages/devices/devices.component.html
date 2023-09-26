@@ -8,22 +8,22 @@
         <div class="col-12 col-lg-3 pb-3 d-flex">
           <div class="">
             <button type="button" class="btn hov" (click)="openList()">
-              <svg *ngIf="!view_list && !openAux" (mouseover)="view_list=true" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
+              <svg *ngIf="!viewList && !openAux" (mouseover)="viewList=true" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/>
                 <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/>
                 <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z"/>
               </svg>
-              <svg *ngIf="view_list || openAux" (mouseout)="view_list=false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
+              <svg *ngIf="viewList || openAux" (mouseout)="viewList=false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
               </svg>
             </button>
           </div>
           <div class="">
             <button type="button" class="btn hov" (click)="openMap()">
-              <svg *ngIf="!view_map && openAux" (mouseover)="view_map=true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-map mb-2" viewBox="0 0 16 16">
+              <svg *ngIf="!viewMap && openAux" (mouseover)="viewMap=true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-map mb-2" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"></path>
               </svg>
-              <svg *ngIf="view_map || !openAux" (mouseout)="view_map=false" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-map-fill mb-2" viewBox="0 0 16 16">
+              <svg *ngIf="viewMap || !openAux" (mouseout)="viewMap=false" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-map-fill mb-2" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.502.502 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5V.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.498.498 0 0 0-.196 0L5 14.09zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1-.5-.1z"/>
               </svg>
             </button>
@@ -43,12 +43,12 @@
               </svg>
             </div>
             <div class="col-4 col-lg-3 p-0 m-0 pb-3">
-              <select *ngIf="selectSensors2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensors_act">
+              <select *ngIf="selectSensors2.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensorsAct">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
               </select>
-              <select disabled *ngIf="selectSensors2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_3" name="sensors_3" [(ngModel)]="search.sensors_act">
+              <select disabled *ngIf="selectSensors2.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_3" name="sensors_3" [(ngModel)]="search.sensorsAct">
                 <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
                 <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
                 <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -58,7 +58,7 @@
         </div>
         <!---->
         <div class="col-12 col-lg-2 p-0 m-0 pb-3 px-3">
-          <select  (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="devices_act" name="devices_act" [(ngModel)]="search.devices_act">
+          <select  (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="devicesAct" name="devicesAct" [(ngModel)]="search.devicesAct">
             <option selected [ngValue]="2">{{ 'sensors.all_devices' | translate }}</option>
             <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
             <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>

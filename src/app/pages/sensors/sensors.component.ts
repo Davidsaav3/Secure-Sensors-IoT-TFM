@@ -21,12 +21,12 @@ export class SensorsComponent implements OnInit{
     this.resize();
   }
 
-  get_sensors: string = 'http://localhost:5172/api/sensors_types/get';
-  post_sensors: string = 'http://localhost:5172/api/sensors_types';
-  delete_sensors: string = 'http://localhost:5172/api/sensors_types';
-  update_sensors: string = 'http://localhost:5172/api/sensors_types';
-  duplicate_sensor: string = 'http://localhost:5172/api/sensors_types/duplicate';
-  get_id: string = 'http://localhost:5172/api/sensors_types/id';
+  getSensor: string = 'http://localhost:5172/api/sensors_types/get';
+  postSensors: string = 'http://localhost:5172/api/sensors_types';
+  deleteSensor: string = 'http://localhost:5172/api/sensors_types';
+  updateSensors: string = 'http://localhost:5172/api/sensors_types';
+  duplicateSensor: string = 'http://localhost:5172/api/sensors_types/duplicate';
+  getId: string = 'http://localhost:5172/api/sensors_types/id';
 
   totalPages = 5;
   currentPage = 1;
@@ -114,7 +114,7 @@ export class SensorsComponent implements OnInit{
     this.charging = true;
     this.data= [];
 
-    fetch(`${this.get_sensors}/${this.search}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+    fetch(`${this.getSensor}/${this.search}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
       .then((response) => response.json())
       .then(data => {
         this.charging = false;
@@ -197,7 +197,7 @@ export class SensorsComponent implements OnInit{
 
   editSensor(form: any) { // Guardar datos de sensores editado
     if (form.valid) {
-      fetch(this.update_sensors, {
+      fetch(this.updateSensors, {
         method: "PUT",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then(response => response.json())
@@ -221,7 +221,7 @@ export class SensorsComponent implements OnInit{
   newSensor(form: any) { // Guardar datos de sensores nuevos
     this.state= 1;
     if (form.valid) {
-      fetch(this.post_sensors, {
+      fetch(this.postSensors, {
         method: "POST",body: JSON.stringify(this.sensors),headers: {"Content-type": "application/json; charset=UTF-8"}
       })
       .then((response) => {
@@ -260,9 +260,9 @@ export class SensorsComponent implements OnInit{
     }
   }
 
-  duplicateSensor(num: any, type: any){ // Duplicar sensor
+  duplicateSensors(num: any, type: any){ // Duplicar sensor
     if(!this.change && !this.change){
-      fetch(`${this.duplicate_sensor}/${type}`)
+      fetch(`${this.duplicateSensor}/${type}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error en la red');
@@ -282,11 +282,11 @@ export class SensorsComponent implements OnInit{
     }
   }
 
-  deleteSensor(id_actual: any){ // Eliminar sensor
+  deleteSensors(idActual: any){ // Eliminar sensor
     var sensors2 = {
       id: this.id,    
     }
-    fetch(this.delete_sensors, {
+    fetch(this.deleteSensor, {
       method: "DELETE",body: JSON.stringify(sensors2),headers: {"Content-type": "application/json; charset=UTF-8"}
     })
     .then(response => response.json()) 
@@ -294,7 +294,7 @@ export class SensorsComponent implements OnInit{
     setTimeout(() => {
       this.alertDelete= false;
     }, 2000);
-    this.data= this.data.filter((objeto: { id: any; }) => objeto.id != id_actual)
+    this.data= this.data.filter((objeto: { id: any; }) => objeto.id != idActual)
     this.clouse();
   }
 
@@ -309,17 +309,17 @@ export class SensorsComponent implements OnInit{
     this.width = window.innerWidth;
   }
 
-  orderColumn(id_actual: any){ // Ordenar columnas
-    if(!this.change && !this.change && id_actual!=this.actId){
-      fetch(`${this.get_id}/${id_actual}`)
+  orderColumn(idActual: any){ // Ordenar columnas
+    if(!this.change && !this.change && idActual!=this.actId){
+      fetch(`${this.getId}/${idActual}`)
       .then(response => response.json())
       .then(data => {
         this.sensors= data[0];
-        this.actId= id_actual;
-        this.id= id_actual;
+        this.actId= idActual;
+        this.id= idActual;
         this.openEdit();
         this.state=2;
-        //const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == id_actual);
+        //const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == idActual);
         let sensors = { ...this.sensors };
         this.sensorsCopy = {
           id: sensors.id, 

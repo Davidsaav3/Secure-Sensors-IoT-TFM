@@ -25,15 +25,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   styleSelector: mapboxgl.Map | undefined;
   constructor(private router: Router,private translate: TranslateService) { }
 
-  max_device: string = 'http://localhost:5172/api/device_configurations/max';
-  get_device: string = 'http://localhost:5172/api/device_configurations/get';
-  get_device_xd: string = 'http://localhost:5172/api/device_configurations/gets';
-  get_sensors_list: string = 'http://localhost:5172/api/sensors_types/get_list';
+  maxDevice: string = 'http://localhost:5172/api/device_configurations/max';
+  getDevice: string = 'http://localhost:5172/api/device_configurations/get';
+  getSensorsList: string = 'http://localhost:5172/api/sensors_types/get_list';
 
   dataAux: any[]= [];
   first= false;
   resultsPerPag= environment.resultsPerPag;
-  active_lang = environment.languageLang[0];
   zoom: number = 7;
   map?: mapboxgl.Map;
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(-0.5098796883778505, 38.3855908932305);
@@ -47,7 +45,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   idsParam: any;
   buscar= false;
   firstTime= true;
-  pag_tam:any;
+  pagTam:any;
   pag: any;
   posX1= '0';
   posX2= '0';
@@ -76,8 +74,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   openAux= true;
   viewDup= -10;
   pencilDup= -10;
-  view_list=false;
-  view_map=false;
+  viewList=false;
+  viewMap=false;
   popup: any;
 
   alt1=true;
@@ -145,8 +143,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   search = {
     value: '', 
     sel_type: 0,
-    sensors_act: 2,
-    devices_act: 2
+    sensorsAct: 2,
+    devicesAct: 2
   }
 
   ngOnInit(): void { // Inicialización
@@ -154,7 +152,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     this.selectSensors2.sensors= [];
     this.readStorage();
 
-    fetch(`${this.get_sensors_list}`)
+    fetch(`${this.getSensorsList}`)
     .then((response) => response.json())
     .then(data => {
       data.unshift({
@@ -202,7 +200,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         array.push(this.selectSensorsAux.sensors[index].id);
       }
       this.arraySensors = array.join(',');
-      this.pag_tam= 1;
+      this.pagTam= 1;
       this.pag= 100000;
 
       if(this.openAux==false){ // Map
@@ -387,7 +385,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
         this.data= [];
 
         this.charging= true;
-        fetch(`${this.get_device}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`)
+        fetch(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`)
         .then((response) => response.json())
         .then(data => {
           console.log(data)
@@ -421,7 +419,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     let posX2= '0';
     let posY1= '0';
     let posY2= '0';
-    this.pag_tam= this.currentPage;
+    this.pagTam= this.currentPage;
     this.pag= this.quantPage;
 
     if(num=='1'){
@@ -429,7 +427,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       posX2= this.posX2;
       posY1= this.posY1;
       posY2= this.posY2;
-      this.pag_tam= 1;
+      this.pagTam= 1;
       this.pag= 10000;
     }
     if(this.buscar){
@@ -444,7 +442,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
     }
     this.charging= true;
     return new Promise((resolve, reject) => {
-      fetch(`${this.get_device}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensors_act}/${this.search.devices_act}/${this.pag_tam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`)
+      fetch(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`)
       .then((response) => response.json())
       .then(data => {
         this.charging= false;
@@ -518,8 +516,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       correction_time_general: null,
       id_data_structure: 1,
     });
-    this.search.devices_act= 2;
-    this.search.sensors_act= 2;
+    this.search.devicesAct= 2;
+    this.search.sensorsAct= 2;
     this.Page(1);
   }
 
@@ -629,7 +627,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
   initFilters(){ // Inicializa filtros
     this.deleteMarker(); 
     this.rute= this.router.routerState.snapshot.url;
-    fetch(this.max_device)
+    fetch(this.maxDevice)
     .then(response => response.json())
     .then(data => {
       this.id= parseInt(data.id);
@@ -827,7 +825,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy{
       this.currentLngLat = this.map!.getCenter();
     });
 
-    if(this.map!=undefined && this.search.value=='' && this.selectSensorsAux.sensors[0].id==-1 && this.search.devices_act==2){
+    if(this.map!=undefined && this.search.value=='' && this.selectSensorsAux.sensors[0].id==-1 && this.search.devicesAct==2){
       this.map.on('moveend', () => {
         if(this.openAux==false)
           this.getDevices('0');

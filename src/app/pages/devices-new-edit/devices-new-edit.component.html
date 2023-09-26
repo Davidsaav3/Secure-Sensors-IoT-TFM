@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <form class="row cont0 needs-validation" #form="ngForm" >
     <div class="row p-0 m-0" [ngClass]="{'flex-column': this.width<965}">
-        <div *ngIf="show_form" class="p-0" [ngClass]="{'c200': !this.show_map || this.width<965, 'c20': this.show_map || this.width>=965}"> 
+        <div *ngIf="showForm" class="p-0" [ngClass]="{'c200': !this.showMap || this.width<965, 'c20': this.showMap || this.width>=965}"> 
             <div class="cont1 pb-0" [ngClass]="{'alt': this.width>=965}">
                 <div class="row c1">
                     <div class="col-12" >
@@ -21,10 +21,10 @@
                                 </div>
                             </div> 
                             <div  *ngIf="this.width>965" class="col-1" style="cursor: pointer; display: flex; justify-content: flex-end;">
-                                <svg class="text-right" *ngIf="show_map" (click)="showMap()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
+                                <svg class="text-right" *ngIf="showMap" (click)="mapShow()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"></path>
                                 </svg>
-                                <svg class="text-right" *ngIf="!show_map" (click)="hideMap()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
+                                <svg class="text-right" *ngIf="!showMap" (click)="mapHide()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                                 </svg>
                             </div> 
@@ -134,7 +134,7 @@
                                         <div class="">
                                             <div class="form-check form-switch pt-4 pe-3 ps-3">
                                                 <label class="toggle colorcito tt2 t2">
-                                                    <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" (change)="getStructureList($event)" id="check2" name="check2" [(ngModel)]="devices.variable_configuration">
+                                                    <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" (change)="getStructuresList($event)" id="check2" name="check2" [(ngModel)]="devices.variable_configuration">
                                                     <span class="slider" [ngStyle]="{'background-color': devices.variable_configuration ? 'rgb(127, 67, 219)' : 'rgb(108, 117, 125)'}"></span>
                                                     <span class="labels t2" [attr.data-on]="'variable' | translate" [attr.data-off]="'fixed' | translate"></span>
                                                 </label>
@@ -149,25 +149,25 @@
                 <div class="row c2">
                     <div class="col-12 "> 
                         <!---->
-                        <form class="" *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
-
-                            <div class="row pb-0 pb-1 d-flex">
-                                <div class="col d-flex ps-3" style="justify-content: space-between;">
-                                    <div class="d-flex mt-2">
-                                        <svg style="cursor: pointer;" (click)="exp=false" *ngIf="exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                                        </svg>
-                                        <svg style="cursor: pointer;" (click)="exp=true" *ngIf="!exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
-                                            <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
-                                        </svg>
-                                        <p *ngIf="exp" class="ms-2 mb-0">{{ 'show' | translate }}</p>
-                                        <p *ngIf="!exp" class="ms-2 mb-0">{{ 'hide' | translate }}</p>
-                                    </div>
-                                    <div>
-                                        <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
-                                    </div>
+                        <div class="row pb-0 pb-1 d-flex">
+                            <div class="col d-flex ps-3" style="justify-content: space-between;">
+                                <div class="d-flex mt-2">
+                                    <svg style="cursor: pointer;" (click)="exp=false" *ngIf="exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                    </svg>
+                                    <svg style="cursor: pointer;" (click)="exp=true" *ngIf="!exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
+                                    </svg>
+                                    <p *ngIf="exp" class="ms-2 mb-0">{{ 'show' | translate }}</p>
+                                    <p *ngIf="!exp" class="ms-2 mb-0">{{ 'hide' | translate }}</p>
                                 </div>
-                            </div>	
+                                <div>
+                                    <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
+                                </div>
+                            </div>
+                        </div>	
+
+                        <form class="" *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
                         
                             <div class="row">
                                 <div class="col-12"> 
@@ -239,8 +239,8 @@
                                   <tr class="pb-0" style="overflow-y: scroll;">
                                     <label style="display: none" [for]="'id'+i">{{ 'devices.sensors.id' | translate }}</label>
                                     <input (ngModelChange)="this.changed= true;" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
-                                    <label style="display: none" [for]="'id_device'+i">{{ 'devices.sensors.id_device' | translate }}</label>
-                                    <input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'id_device'+i" [name]="'id_device'+i" value="{{this.id}}" [(ngModel)]="item.id_device">
+                                    <label style="display: none" [for]="'idDevice'+i">{{ 'devices.sensors.idDevice' | translate }}</label>
+                                    <input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'idDevice'+i" [name]="'idDevice'+i" value="{{this.id}}" [(ngModel)]="item.idDevice">
                                   
                                     <td  scope="col2" class="pb-0 input-0">
                                       <label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
@@ -324,7 +324,6 @@
                         
                         <div class="text-center" *ngIf="devices.sensors.length<=0">
                             <h3 class="mt-5">{{ 'devices.sensors.add' | translate }}</h3>
-                            <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
                         </div>
                         <!---->
                     </div> 
@@ -332,7 +331,7 @@
             </div>
         </div>
 
-        <div *ngIf="show_map" class="p-0" [ngClass]="{'c200': !this.show_form || this.width<965, 'c20': this.show_form || this.width>=965}">
+        <div *ngIf="showMap" class="p-0" [ngClass]="{'c200': !this.showForm || this.width<965, 'c20': this.showForm || this.width>=965}">
             <div class="cont2 ms-lg-3 ms-0 ms-md-0" [ngClass]="{'alt': this.width>=965}" >
                 
                 <div *ngIf="this.ruteAux[2]=='edit'" class="c4 d-flex justify-content-between">
@@ -340,10 +339,10 @@
                         <h5 class="">{{devices.alias}}</h5>
                     </div>
                     <div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
-                        <svg class="text-right" *ngIf="show_form" (click)="hideForm()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
+                        <svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"></path>
                         </svg>
-                        <svg class="text-right" *ngIf="!show_form" (click)="showForm()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
+                        <svg class="text-right" *ngIf="!showForm" (click)="formShow()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                         </svg>
                     </div>  
@@ -353,10 +352,10 @@
                         <h5 class="">{{devices.alias}}</h5>
                     </div>
                     <div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
-                        <svg class="text-right" *ngIf="show_form" (click)="hideForm()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+                        <svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"></path>
                         </svg>
-                        <svg class="text-right" *ngIf="!show_form" (click)="showForm()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+                        <svg class="text-right" *ngIf="!showForm" (click)="formShow()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                         </svg>
                     </div>  
@@ -502,7 +501,7 @@
 						    <button *ngIf="changed==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal13">{{ 'sensors.cancel' | translate }}</button>
                         </div>
                         <div class="col-md-6 col-12 mt-1 pb-3">
-                            <button type="button navb" class="btn btn-info navb me-3" style="width: 100%" (click)="newDevice(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
+                            <button type="button navb" class="btn btn-info navb me-3" style="width: 100%" (click)="newDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
                         </div>
                     </div>
                 </div>
@@ -571,7 +570,7 @@
                         <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
                     </div>
                     <div class="col-6">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteDevice(devices.id)" routerLink="/devices">{{ 'sensors.delete' | translate }}</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteDevices(devices.id)" routerLink="/devices">{{ 'sensors.delete' | translate }}</button>
                     </div>
                 </div>
             </div>
@@ -645,7 +644,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  routerLink="/devices">{{ 'sensors.exit' | translate }}</button>
                     </div>
                     <div class="col-7">
-                        <button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" (click)="newDevice(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
+                        <button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" (click)="newDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
                     </div>
                 </div>
             </div>
