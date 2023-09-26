@@ -1,412 +1,411 @@
 <app-navbar></app-navbar>
-<form class="row cont0 needs-validation" #form="ngForm" >
-    <div class="row p-0 m-0" [ngClass]="{'flex-column': this.width<965}">
-        <div *ngIf="showForm" class="p-0" [ngClass]="{'c200': !this.showMap || this.width<965, 'c20': this.showMap || this.width>=965}"> 
-            <div class="cont1 pb-0" [ngClass]="{'alt': this.width>=965}">
-                <div class="row c1">
-                    <div class="col-12" >
-                        <div class="row pb-3">
-                            <div class="col-8 d-flex"> 
-                                <h2 class="pe-3" *ngIf="state==0 && this.ruteAux[2]=='new'">{{ 'devices.edit.new_device' | translate }}</h2>
-                                <!----><h2 class="pe-3" *ngIf="state==1 && this.ruteAux[2]=='new'">{{ 'sensors.duplicate' | translate }} {{ devices['uid'] }}</h2>
-                                <!----><h2 class="pe-3" *ngIf="this.ruteAux[2]=='edit'">{{ 'device' | translate }} {{devices.uid}}</h2>
-                            </div>
-                            <div class="col-3 d-flex justify-content-end">
-                                <div class="form-check form-switch">
-                                    <label class="toggle tt1 t1">
+<form class="row cont0 needs-validation" #form="ngForm">
+	<div class="row p-0 m-0" [ngClass]="{'flex-column': this.width<965}">
+		<div *ngIf="showForm" class="p-0" [ngClass]="{'c200': !this.showMap || this.width<965, 'c20': this.showMap || this.width>=965}">
+			<div class="cont1 pb-0" [ngClass]="{'alt': this.width>=965}">
+				<div class="row c1">
+					<div class="col-12">
+						<div class="row pb-3">
+							<div class="col-8 d-flex">
+								<h2 class="pe-3" *ngIf="state==0 && this.ruteAux[2]=='new'">{{ 'devices.edit.new_device' | translate }}</h2>
+								<h2 class="pe-3" *ngIf="state==1 && this.ruteAux[2]=='new'">{{ 'sensors.duplicate' | translate }} {{ devices['uid'] }}</h2>
+								<h2 class="pe-3" *ngIf="this.ruteAux[2]=='edit'">{{ 'device' | translate }} {{devices.uid}}</h2>
+							</div>
+							<div class="col-3 d-flex justify-content-end">
+								<div class="form-check form-switch">
+									<label class="toggle tt1 t1">
                                   <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" id="check" name="check" [(ngModel)]="devices.enable">
                                         <span class="slider"></span>
                                         <span class="labels t1" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
                                     </label>
-                                </div>
-                            </div> 
-                            <div  *ngIf="this.width>965" class="col-1" style="cursor: pointer; display: flex; justify-content: flex-end;">
-                                <svg class="text-right" *ngIf="showMap" (click)="mapShow()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
+								</div>
+							</div>
+							<div *ngIf="this.width>965" class="col-1" style="cursor: pointer; display: flex; justify-content: flex-end;">
+								<svg class="text-right" *ngIf="showMap" (click)="mapShow()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"></path>
                                 </svg>
-                                <svg class="text-right" *ngIf="!showMap" (click)="mapHide()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
+								<svg class="text-right" *ngIf="!showMap" (click)="mapHide()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                                 </svg>
-                            </div> 
-                        </div>
+							</div>
+						</div>
 
-                        <div *ngIf="!exp">
-                            <div class="row" >
-                                <div class="col-md-3">
-                                    <input [value]="devices['createdAt']" type="text" id="createdAt_2" class="form-control d-none" name="createdAt_2" [(ngModel)]="devices['createdAt']" type>
+						<div *ngIf="!exp">
+							<div class="row">
+								<div class="col-md-3">
+									<input [value]="devices['createdAt']" type="text" id="createdAt_2" class="form-control d-none" name="createdAt_2" [(ngModel)]="devices['createdAt']" type>
 
-                                    <label for="uid">{{ 'devices.edit.uid' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['uid']" type="text" id="uid" class="form-control" name="uid" [(ngModel)]="devices['uid']" required type>
-                                    <div *ngIf="form.submitted && form.controls['uid'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['uid'].errors['required']">{{ 'devices.edit.uid' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="alias">{{ 'devices.edit.alias' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['alias']" type="text" id="alias" class="form-control" name="alias" [(ngModel)]="devices['alias']" type>
-                                    <div *ngIf="form.submitted && form.controls['alias'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['alias'].errors['required']">{{ 'devices.edit.alias' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="organizationid">{{ 'devices.edit.organization' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['organizationid']" type="text" id="organizationid" class="form-control" name="organizationid" [(ngModel)]="devices['organizationid']" type>
-                                    <div *ngIf="form.submitted && form.controls['organizationid'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['organizationid'].errors['required']">{{ 'devices.edit.organization' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                            </div>
+									<label for="uid">{{ 'devices.edit.uid' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['uid']" type="text" id="uid" class="form-control" name="uid" [(ngModel)]="devices['uid']" required type>
+									<div *ngIf="form.submitted && form.controls['uid'].errors" class="text-danger">
+										<div *ngIf="form.controls['uid'].errors['required']">{{ 'devices.edit.uid' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<label for="alias">{{ 'devices.edit.alias' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['alias']" type="text" id="alias" class="form-control" name="alias" [(ngModel)]="devices['alias']" type>
+									<div *ngIf="form.submitted && form.controls['alias'].errors" class="text-danger">
+										<div *ngIf="form.controls['alias'].errors['required']">{{ 'devices.edit.alias' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label for="organizationid">{{ 'devices.edit.organization' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['organizationid']" type="text" id="organizationid" class="form-control" name="organizationid" [(ngModel)]="devices['organizationid']" type>
+									<div *ngIf="form.submitted && form.controls['organizationid'].errors" class="text-danger">
+										<div *ngIf="form.controls['organizationid'].errors['required']">{{ 'devices.edit.organization' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+							</div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="typemeter">{{ 'devices.edit.typemeter' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['typemeter']" type="text" id="typemeter" class="form-control" name="typemeter" [(ngModel)]="devices['typemeter']" type>
-                                    <div *ngIf="form.submitted && form.controls['typemeter'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['typemeter'].errors['required']">{{ 'devices.edit.typemeter' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="application_id">{{ 'devices.edit.aplication' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['application_id']" type="text" id="application_id" class="form-control" name="application_id" [(ngModel)]="devices['application_id']" type>
-                                    <div *ngIf="form.submitted && form.controls['application_id'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['application_id'].errors['required']">{{ 'devices.edit.aplication' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="topic_name">{{ 'devices.edit.topic' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['topic_name']" type="text" id="topic_name" class="form-control" name="topic_name" [(ngModel)]="devices['topic_name']" required type>
-                                    <div *ngIf="form.submitted && form.controls['topic_name'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['topic_name'].errors['required']">{{ 'devices.edit.topic' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="origin">{{ 'devices.edit.origin' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['origin']" type="text" id="origin" class="form-control" name="origin" [(ngModel)]="devices['origin']" type>
-                                    <div *ngIf="form.submitted && form.controls['origin'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['origin'].errors['required']">{{ 'devices.edit.origin' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="description_origin">{{ 'devices.edit.description' | translate }}</label>
-                                    <input maxlength="45" (ngModelChange)="changed=true" [value]="devices['description_origin']" type="text" id="description_origin" class="form-control" name="description_origin" [(ngModel)]="devices['description_origin']" type>
-                                    <div *ngIf="form.submitted && form.controls['description_origin'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['description_origin'].errors['required']">{{ 'devices.edit.description' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
+							<div class="row">
+								<div class="col-md-6">
+									<label for="typemeter">{{ 'devices.edit.typemeter' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['typemeter']" type="text" id="typemeter" class="form-control" name="typemeter" [(ngModel)]="devices['typemeter']" type>
+									<div *ngIf="form.submitted && form.controls['typemeter'].errors" class="text-danger">
+										<div *ngIf="form.controls['typemeter'].errors['required']">{{ 'devices.edit.typemeter' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<label for="application_id">{{ 'devices.edit.aplication' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['application_id']" type="text" id="application_id" class="form-control" name="application_id" [(ngModel)]="devices['application_id']" type>
+									<div *ngIf="form.submitted && form.controls['application_id'].errors" class="text-danger">
+										<div *ngIf="form.controls['application_id'].errors['required']">{{ 'devices.edit.aplication' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<label for="topic_name">{{ 'devices.edit.topic' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['topic_name']" type="text" id="topic_name" class="form-control" name="topic_name" [(ngModel)]="devices['topic_name']" required type>
+									<div *ngIf="form.submitted && form.controls['topic_name'].errors" class="text-danger">
+										<div *ngIf="form.controls['topic_name'].errors['required']">{{ 'devices.edit.topic' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+							</div>
 
-                                <div class="col-md-6">
-                                    <label for="createdAt">{{ 'created' | translate }}</label>
-                                    <input disabled="disabled" maxlength="45" (ngModelChange)="changed=true" [value]="devices['createdAt']" type="text" id="createdAt" class="form-control" name="createdAt" [(ngModel)]="devices['createdAt']" type>
-                                    <div *ngIf="form.submitted && form.controls['createdAt'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['createdAt'].errors['required']">{{ 'created' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="updatedAt">{{ 'mod' | translate }}</label>
-                                    <input disabled="disabled" maxlength="45" (ngModelChange)="changed=true" [value]="devices['updatedAt']" type="text" id="updatedAt" class="form-control" name="updatedAt" [(ngModel)]="devices['updatedAt']" type>
-                                    <div *ngIf="form.submitted && form.controls['updatedAt'].errors" class="text-danger">
-                                        <div *ngIf="form.controls['updatedAt'].errors['required']">{{ 'mod' | translate }} {{ 'required' | translate }}</div>
-                                    </div>
-                                </div>
-                                <!--{{devices.variable_configuration}}
-                                {{devices.id_data_estructure}}-->
-                                <div style="position: relative;" class="col-md-12"><!--{{devices.id_data_estructure}}{{devices.variable_configuration}}-->
-                                    <div class="d-flex" style="justify-content: space-between;">
-                                        <div style="width: -webkit-fill-available;">
-                                            <label for="id_data_estructure">{{ 'structure' | translate }}</label>
-                                            <select style="position: relative" type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
+							<div class="row">
+								<div class="col-md-6">
+									<label for="origin">{{ 'devices.edit.origin' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['origin']" type="text" id="origin" class="form-control" name="origin" [(ngModel)]="devices['origin']" type>
+									<div *ngIf="form.submitted && form.controls['origin'].errors" class="text-danger">
+										<div *ngIf="form.controls['origin'].errors['required']">{{ 'devices.edit.origin' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label for="description_origin">{{ 'devices.edit.description' | translate }}</label>
+									<input maxlength="45" (ngModelChange)="changed=true" [value]="devices['description_origin']" type="text" id="description_origin" class="form-control" name="description_origin" [(ngModel)]="devices['description_origin']" type>
+									<div *ngIf="form.submitted && form.controls['description_origin'].errors" class="text-danger">
+										<div *ngIf="form.controls['description_origin'].errors['required']">{{ 'devices.edit.description' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+
+								<div class="col-md-6">
+									<label for="createdAt">{{ 'created' | translate }}</label>
+									<input disabled="disabled" maxlength="45" (ngModelChange)="changed=true" [value]="devices['createdAt']" type="text" id="createdAt" class="form-control" name="createdAt" [(ngModel)]="devices['createdAt']" type>
+									<div *ngIf="form.submitted && form.controls['createdAt'].errors" class="text-danger">
+										<div *ngIf="form.controls['createdAt'].errors['required']">{{ 'created' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<label for="updatedAt">{{ 'mod' | translate }}</label>
+									<input disabled="disabled" maxlength="45" (ngModelChange)="changed=true" [value]="devices['updatedAt']" type="text" id="updatedAt" class="form-control" name="updatedAt" [(ngModel)]="devices['updatedAt']" type>
+									<div *ngIf="form.submitted && form.controls['updatedAt'].errors" class="text-danger">
+										<div *ngIf="form.controls['updatedAt'].errors['required']">{{ 'mod' | translate }} {{ 'required' | translate }}</div>
+									</div>
+								</div>
+
+								<div style="position: relative;" class="col-md-12">
+									<div class="d-flex" style="justify-content: space-between;">
+										<div style="width: -webkit-fill-available;">
+											<label for="id_data_estructure">{{ 'structure' | translate }}</label>
+											<select style="position: relative" type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
                                                 <ng-container *ngFor="let id of structures.structure;let j=index">
                                                     <option [selected]="id.id_estructure==devices['id_data_estructure']" value="{{id.id_estructure}}">{{id.description}}</option>
                                                 </ng-container>
                                             </select>
-                                            <div>
-                                                <svg style="position: absolute; top:35px; right:170px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+											<div>
+												<svg style="position: absolute; top:35px; right:170px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                                     <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                                                 </svg>
-                                            </div>
-                                            <div *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
-                                                <div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'structure' | translate }} {{ 'required' | translate }}</div>
-                                            </div>
-                                        </div>
-                                        <div class="">
-                                            <div class="form-check form-switch pt-4 pe-3 ps-3">
-                                                <label class="toggle colorcito tt2 t2">
+											</div>
+											<div *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
+												<div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'structure' | translate }} {{ 'required' | translate }}</div>
+											</div>
+										</div>
+										<div class="">
+											<div class="form-check form-switch pt-4 pe-3 ps-3">
+												<label class="toggle colorcito tt2 t2">
                                                     <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" (change)="getStructuresList($event)" id="check2" name="check2" [(ngModel)]="devices.variable_configuration">
                                                     <span class="slider" [ngStyle]="{'background-color': devices.variable_configuration ? 'rgb(127, 67, 219)' : 'rgb(108, 117, 125)'}"></span>
                                                     <span class="labels t2" [attr.data-on]="'variable' | translate" [attr.data-off]="'fixed' | translate"></span>
                                                 </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row c2">
-                    <div class="col-12 "> 
-                        <!---->
-                        <div class="row pb-0 pb-1 d-flex">
-                            <div class="col d-flex ps-3" style="justify-content: space-between;">
-                                <div class="d-flex mt-2">
-                                    <svg style="cursor: pointer;" (click)="exp=false" *ngIf="exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row c2">
+					<div class="col-12 ">
+
+						<div class="row pb-0 pb-1 d-flex">
+							<div class="col d-flex ps-3" style="justify-content: space-between;">
+								<div class="d-flex mt-2">
+									<svg style="cursor: pointer;" (click)="exp=false" *ngIf="exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                                     </svg>
-                                    <svg style="cursor: pointer;" (click)="exp=true" *ngIf="!exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
+									<svg style="cursor: pointer;" (click)="exp=true" *ngIf="!exp" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
                                     </svg>
-                                    <p *ngIf="exp" class="ms-2 mb-0">{{ 'show' | translate }}</p>
-                                    <p *ngIf="!exp" class="ms-2 mb-0">{{ 'hide' | translate }}</p>
-                                </div>
-                                <div>
-                                    <button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
-                                </div>
-                            </div>
-                        </div>	
+									<p *ngIf="exp" class="ms-2 mb-0">{{ 'show' | translate }}</p>
+									<p *ngIf="!exp" class="ms-2 mb-0">{{ 'hide' | translate }}</p>
+								</div>
+								<div>
+									<button type="button" (click)="addSensor()" class="btn btn-info">{{ 'devices.sensors.new' | translate }}</button>
+								</div>
+							</div>
+						</div>
 
-                        <form class="" *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
-                        
-                            <div class="row">
-                                <div class="col-12"> 
-                                    <div class="over" [style.height]="exp ? '62vh' : '20vh'" style="background-color: #f8f8f8;" > 
-                                    <table class="table table-hover ">
-                                        <thead>
-                                          <tr>
-                                            <th  style="cursor: pointer; z-index: 100;" scope="col" [ngClass]="{'mark': mark == 'position'}">
-                                                <svg *ngIf="alt1" (click)="alt1=false;getSensorsLocal('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                                </svg>
-                                                <svg *ngIf="!alt1" (click)="alt1=true;getSensorsLocal('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                </svg>{{ 'devices.sensors.order' | translate }}
-                                            </th>
-                                            <th  style="cursor: pointer;" scope="col">
-                                               {{ 'devices.sensors.type' | translate }}
-                                            </th>
-                                            <th  *ngIf="showLarge || this.width<965" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'datafield'}">
-                                                <svg *ngIf="alt2" (click)="alt2=false;getSensorsLocal('datafield','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                                </svg>
-                                                <svg *ngIf="!alt2" (click)="alt2=true;getSensorsLocal('datafield','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                </svg>{{ 'devices.sensors.datafield' | translate }}
-                                            </th>
-                                            <th  *ngIf="showLarge || this.width<965" style="cursor: pointer;" scope="col">
-                                                <!--<svg *ngIf="alt3" (click)="alt3=false;getSensorsLocal('nodata','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                                </svg>
-                                                <svg *ngIf="!alt3" (click)="alt3=true;getSensorsLocal('nodata','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                </svg>-->{{ 'devices.sensors.nodate' | translate }}
-                                            </th>
-                                            <th  style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_specific'}">
-                                                <svg *ngIf="alt4" (click)="alt4=false;getSensorsLocal('correction_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                                </svg>
-                                                <svg *ngIf="!alt4" (click)="alt4=true;getSensorsLocal('correction_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                </svg>{{ 'devices.sensors.specific' | translate }}
-                                            </th>
-                                            <th  style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_time_specific'}">
-                                                <svg *ngIf="alt5" (click)="alt5=false;getSensorsLocal('correction_time_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                                </svg>
-                                                <svg *ngIf="!alt5" (click)="alt5=true;getSensorsLocal('correction_time_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                </svg>{{ 'devices.sensors.time_specific' | translate }}
-                                            </th>
-                                            <th *ngIf="showLarge || this.width<965" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'topic_specific'}">
-                                                <svg *ngIf="alt6" (click)="alt6=false;getSensorsLocal('topic_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                                                    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                                                </svg>
-                                                <svg *ngIf="!alt6" (click)="alt6=true;getSensorsLocal('topic_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                                </svg>{{ 'devices.sensors.topic_specific' | translate }}
-                                            </th>
-                                            <th  style="cursor: pointer;" scope="col">
-                                                {{ 'sensors.enable' | translate }}
-                                            </th>
-                                            <th scope="col" style="text-align: center;">
-                                                {{ 'sensors.delete' | translate }}
-                                            </th>
-                                          </tr>
-                                        </thead>
-                        
-                                        <tbody style="background-color: rgb(255, 255, 255);" *ngFor="let item of devices.sensors;let i=index">
-                                  <tr class="pb-0" style="overflow-y: scroll;">
-                                    <label style="display: none" [for]="'id'+i">{{ 'devices.sensors.id' | translate }}</label>
-                                    <input (ngModelChange)="this.changed= true;" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
-                                    <label style="display: none" [for]="'idDevice'+i">{{ 'devices.sensors.idDevice' | translate }}</label>
-                                    <input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'idDevice'+i" [name]="'idDevice'+i" value="{{this.id}}" [(ngModel)]="item.idDevice">
-                                  
-                                    <td  scope="col2" class="pb-0 input-0">
-                                      <label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
-                                      <input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" value="{{ item.orden }}" type="text" class="form-control" [id]="'orden'+i" [name]="'orden'+i" [(ngModel)]="item['orden']" required>
-                                      <div *ngIf="form.submitted && form.controls['orden'].errors" class="text-danger">
-                                          <div *ngIf="form.controls['orden'].errors['required']">{{ 'devices.sensors.order' | translate }} {{ 'required' | translate }}</div>
-                                      </div>
-                                    </td>
-                        
-                                    <td  scope="col"class="pb-0 input-1"> 
-                                      <select type="number" min="0" maxlength="11" (change)="this.getOrder(i,item.id_type_sensor);this.changed= true;" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor" >
-                                        <option *ngFor="let id of this.selectSensors.sensors" [value]="id.id" [selected]="id.id==item.id_type_sensor">{{id.type}}</option>
-                                      </select>
-                                    </td>
-                        
-                                    <td *ngIf="showLarge || this.width<965" class="pb-0 input-1">
-                                      <label style="display: none" [for]="'datafield'+i">{{ 'devices.sensors.datafield' | translate }}</label>
-                                      <input maxlength="45" (ngModelChange)="this.changed= true;" value="{{ item.datafield }}" type="text" class="form-control" [id]="'datafield'+i" [name]="'datafield'+i" [(ngModel)]="item['datafield']" type>
-                                      <div *ngIf="form.submitted && form.controls['datafield'].errors" class="text-danger">
-                                          <div *ngIf="form.controls['datafield'].errors['required']">{{ 'devices.sensors.datafield' | translate }} {{ 'required' | translate }}</div>
-                                      </div>
-                                    </td>
-                        
-                                    <td *ngIf="showLarge || this.width<965" class="pb-0">
-                                      <div class="form-check">
-                                        <label style="display: none" [for]="'nodata'+i">{{ 'devices.sensors.nodata' | translate }}</label>
-                                        <input min="0" maxlength="4" (ngModelChange)="this.changed= true;" class="form-check-input" type="checkbox" value="{{item.nodata}}" aria-label="Checkbox for following text input" [id]="'nodata'+i" [name]="'nodata'+i" [(ngModel)]="item.nodata">
-                                        <label class="form-check-label" for="flexCheckDefault">{{ 'devices.sensors.nodate' | translate }}</label>
-                                      </div>
-                                    </td>
-                        
-                                    <td class="pb-0 input-1">
-                                      <label style="display: none" [for]="'correction_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
-                                      <input (ngModelChange)="this.changed= true;" value="{{ item.correction_specific }}" type="text" class="form-control" [id]="'correction_specific'+i" [name]="'correction_specific'+i" [(ngModel)]="item['correction_specific']" type>
-                                      <div *ngIf="form.submitted && form.controls['correction_specific'].errors" class="text-danger">
-                                          <div *ngIf="form.controls['correction_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
-                                      </div>
-                                    </td>
-                        
-                                    <td class="pb-0">
-                                      <label style="display: none" [for]="'correction_time_specific'+i">{{ 'devices.sensors.time_specific' | translate }}</label>
-                                      <input (ngModelChange)="this.changed= true;" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'correction_time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
-                                      <div *ngIf="form.submitted && form.controls['correction_time_specific'].errors" class="text-danger">
-                                          <div *ngIf="form.controls['correction_time_specific'].errors['required']">{{ 'devices.sensors.time_specific' | translate }} {{ 'required' | translate }}</div>
-                                      </div>
-                                    </td>
+						<form class="" *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
 
-                                    <td *ngIf="showLarge || this.width<965" class="pb-0 input-1">
-                                      <label style="display: none" [for]="'topic_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
-                                      <input (ngModelChange)="this.changed= true;" value="{{ item.topic_specific }}" type="text" class="form-control" [id]="'topic_specific'+i" [name]="'topic_specific'+i" [(ngModel)]="item['topic_specific']" type>
-                                      <div *ngIf="form.submitted && form.controls['topic_specific'].errors" class="text-danger">
-                                          <div *ngIf="form.controls['topic_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
-                                      </div>
-                                    </td>
-                        
-                                    <td class="pb-0">
-                                      <label class="toggle t2 tt2 mt-1 mb-3">
-                                        <label style="display: none" [for]="'enable'+i">{{ 'devices.sensors.enable' | translate }}</label>
-                                        <input maxlength="4" (ngModelChange)="this.changed= true;" type="checkbox" [id]="'enable'+i" [name]="'enable'+i" checked [(ngModel)]="item.enable">
-                                        <span class="slider"></span>
-                                        <span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>				
-                                      </label>
-                                    </td>
-                        
-                                    <td class="input-00" (mouseout)="aux2= -1" (mouseover)="aux2= i" style="cursor: pointer; text-align: center; padding-top: 0.7em;"(click)="deleteSensor(item.id)">
-                                      <svg *ngIf="aux2!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
-                                        <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>
-                                      </svg>
-                                      <svg *ngIf="aux2==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash2-fill" viewBox="0 0 16 16">
-                                        <path d="M2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225zm9.89-.69C10.966 2.214 9.578 2 8 2c-1.58 0-2.968.215-3.926.534-.477.16-.795.327-.975.466.18.14.498.307.975.466C5.032 3.786 6.42 4 8 4s2.967-.215 3.926-.534c.477-.16.795-.327.975-.466-.18-.14-.498-.307-.975-.466z"/>
-                                      </svg>
-                                    </td>
-                        
-                                  </tr>
-                                        </tbody>
-                                      </table>
-                              </div>
-                                </div> 
-                            </div>	
-                        </form>
-                        
-                        <div class="text-center" *ngIf="devices.sensors.length<=0">
-                            <h3 class="mt-5">{{ 'devices.sensors.add' | translate }}</h3>
-                        </div>
-                        <!---->
-                    </div> 
-                </div>
-            </div>
-        </div>
+							<div class="row">
+								<div class="col-12">
+									<div class="over" [style.height]="exp ? '62vh' : '20vh'" style="background-color: #f8f8f8;">
+										<table class="table table-hover ">
+											<thead>
+												<tr>
+													<th style="cursor: pointer; z-index: 100;" scope="col" [ngClass]="{'mark': mark == 'position'}">
+														<svg *ngIf="alt1" (click)="alt1=false;getSensorsLocal('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                        </svg>
+														<svg *ngIf="!alt1" (click)="alt1=true;getSensorsLocal('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                        </svg>{{ 'devices.sensors.order' | translate }}
+													</th>
+													<th style="cursor: pointer;" scope="col">
+														{{ 'devices.sensors.type' | translate }}
+													</th>
+													<th *ngIf="showLarge || this.width<965" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'datafield'}">
+														<svg *ngIf="alt2" (click)="alt2=false;getSensorsLocal('datafield','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                        </svg>
+														<svg *ngIf="!alt2" (click)="alt2=true;getSensorsLocal('datafield','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                        </svg>{{ 'devices.sensors.datafield' | translate }}
+													</th>
+													<th *ngIf="showLarge || this.width<965" style="cursor: pointer;" scope="col">
+														<!--<svg *ngIf="alt3" (click)="alt3=false;getSensorsLocal('nodata','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                        </svg>
+                                                        <svg *ngIf="!alt3" (click)="alt3=true;getSensorsLocal('nodata','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                        </svg>-->{{ 'devices.sensors.nodate' | translate }}
+													</th>
+													<th style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_specific'}">
+														<svg *ngIf="alt4" (click)="alt4=false;getSensorsLocal('correction_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                        </svg>
+														<svg *ngIf="!alt4" (click)="alt4=true;getSensorsLocal('correction_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                        </svg>{{ 'devices.sensors.specific' | translate }}
+													</th>
+													<th style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'correction_time_specific'}">
+														<svg *ngIf="alt5" (click)="alt5=false;getSensorsLocal('correction_time_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                        </svg>
+														<svg *ngIf="!alt5" (click)="alt5=true;getSensorsLocal('correction_time_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                        </svg>{{ 'devices.sensors.time_specific' | translate }}
+													</th>
+													<th *ngIf="showLarge || this.width<965" style="cursor: pointer;" scope="col" [ngClass]="{'mark': mark == 'topic_specific'}">
+														<svg *ngIf="alt6" (click)="alt6=false;getSensorsLocal('topic_specific','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+                                                            <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+                                                        </svg>
+														<svg *ngIf="!alt6" (click)="alt6=true;getSensorsLocal('topic_specific','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                                        </svg>{{ 'devices.sensors.topic_specific' | translate }}
+													</th>
+													<th style="cursor: pointer;" scope="col">
+														{{ 'sensors.enable' | translate }}
+													</th>
+													<th scope="col" style="text-align: center;">
+														{{ 'sensors.delete' | translate }}
+													</th>
+												</tr>
+											</thead>
 
-        <div *ngIf="showMap" class="p-0" [ngClass]="{'c200': !this.showForm || this.width<965, 'c20': this.showForm || this.width>=965}">
-            <div class="cont2 ms-lg-3 ms-0 ms-md-0" [ngClass]="{'alt': this.width>=965}" >
-                
-                <div *ngIf="this.ruteAux[2]=='edit'" class="c4 d-flex justify-content-between">
-                    <div class="col-6" >
-                        <h5 class="">{{devices.alias}}</h5>
-                    </div>
-                    <div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
-                        <svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
+											<tbody style="background-color: rgb(255, 255, 255);" *ngFor="let item of devices.sensors;let i=index">
+												<tr class="pb-0" style="overflow-y: scroll;">
+													<label style="display: none" [for]="'id'+i">{{ 'devices.sensors.id' | translate }}</label>
+													<input (ngModelChange)="this.changed= true;" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
+													<label style="display: none" [for]="'idDevice'+i">{{ 'devices.sensors.idDevice' | translate }}</label>
+													<input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'idDevice'+i" [name]="'idDevice'+i" value="{{this.id}}" [(ngModel)]="item.idDevice">
+
+													<td scope="col2" class="pb-0 input-0">
+														<label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
+														<input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" value="{{ item.orden }}" type="text" class="form-control" [id]="'orden'+i" [name]="'orden'+i" [(ngModel)]="item['orden']" required>
+														<div *ngIf="form.submitted && form.controls['orden'].errors" class="text-danger">
+															<div *ngIf="form.controls['orden'].errors['required']">{{ 'devices.sensors.order' | translate }} {{ 'required' | translate }}</div>
+														</div>
+													</td>
+
+													<td scope="col" class="pb-0 input-1">
+														<select type="number" min="0" maxlength="11" (change)="this.getOrder(i,item.id_type_sensor);this.changed= true;" class="form-select" aria-label="Default select example" [id]="'type_name'+i" [name]="'type_name'+i" [(ngModel)]="item.id_type_sensor">
+                                                            <option *ngFor="let id of this.selectSensors.sensors" [value]="id.id" [selected]="id.id==item.id_type_sensor">{{id.type}}</option>
+                                                        </select>
+													</td>
+
+													<td *ngIf="showLarge || this.width<965" class="pb-0 input-1">
+														<label style="display: none" [for]="'datafield'+i">{{ 'devices.sensors.datafield' | translate }}</label>
+														<input maxlength="45" (ngModelChange)="this.changed= true;" value="{{ item.datafield }}" type="text" class="form-control" [id]="'datafield'+i" [name]="'datafield'+i" [(ngModel)]="item['datafield']" type>
+														<div *ngIf="form.submitted && form.controls['datafield'].errors" class="text-danger">
+															<div *ngIf="form.controls['datafield'].errors['required']">{{ 'devices.sensors.datafield' | translate }} {{ 'required' | translate }}</div>
+														</div>
+													</td>
+
+													<td *ngIf="showLarge || this.width<965" class="pb-0">
+														<div class="form-check">
+															<label style="display: none" [for]="'nodata'+i">{{ 'devices.sensors.nodata' | translate }}</label>
+															<input min="0" maxlength="4" (ngModelChange)="this.changed= true;" class="form-check-input" type="checkbox" value="{{item.nodata}}" aria-label="Checkbox for following text input" [id]="'nodata'+i" [name]="'nodata'+i" [(ngModel)]="item.nodata">
+															<label class="form-check-label" for="flexCheckDefault">{{ 'devices.sensors.nodate' | translate }}</label>
+														</div>
+													</td>
+
+													<td class="pb-0 input-1">
+														<label style="display: none" [for]="'correction_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
+														<input (ngModelChange)="this.changed= true;" value="{{ item.correction_specific }}" type="text" class="form-control" [id]="'correction_specific'+i" [name]="'correction_specific'+i" [(ngModel)]="item['correction_specific']" type>
+														<div *ngIf="form.submitted && form.controls['correction_specific'].errors" class="text-danger">
+															<div *ngIf="form.controls['correction_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
+														</div>
+													</td>
+
+													<td class="pb-0">
+														<label style="display: none" [for]="'correction_time_specific'+i">{{ 'devices.sensors.time_specific' | translate }}</label>
+														<input (ngModelChange)="this.changed= true;" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'correction_time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
+														<div *ngIf="form.submitted && form.controls['correction_time_specific'].errors" class="text-danger">
+															<div *ngIf="form.controls['correction_time_specific'].errors['required']">{{ 'devices.sensors.time_specific' | translate }} {{ 'required' | translate }}</div>
+														</div>
+													</td>
+
+													<td *ngIf="showLarge || this.width<965" class="pb-0 input-1">
+														<label style="display: none" [for]="'topic_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
+														<input (ngModelChange)="this.changed= true;" value="{{ item.topic_specific }}" type="text" class="form-control" [id]="'topic_specific'+i" [name]="'topic_specific'+i" [(ngModel)]="item['topic_specific']" type>
+														<div *ngIf="form.submitted && form.controls['topic_specific'].errors" class="text-danger">
+															<div *ngIf="form.controls['topic_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
+														</div>
+													</td>
+
+													<td class="pb-0">
+														<label class="toggle t2 tt2 mt-1 mb-3">
+                                                            <label style="display: none" [for]="'enable'+i">{{ 'devices.sensors.enable' | translate }}</label>
+                                                            <input maxlength="4" (ngModelChange)="this.changed= true;" type="checkbox" [id]="'enable'+i" [name]="'enable'+i" checked [(ngModel)]="item.enable">
+                                                            <span class="slider"></span>
+                                                            <span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
+														</label>
+													</td>
+
+													<td class="input-00" (mouseout)="deleteAux= -1" (mouseover)="deleteAux= i" style="cursor: pointer; text-align: center; padding-top: 0.7em;" (click)="deleteSensor(item.id)">
+														<svg *ngIf="deleteAux!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash2" viewBox="0 0 16 16">
+                                                            <path d="M14 3a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2zM3.215 4.207l1.493 8.957a1 1 0 0 0 .986.836h4.612a1 1 0 0 0 .986-.836l1.493-8.957C11.69 4.689 9.954 5 8 5c-1.954 0-3.69-.311-4.785-.793z"/>
+                                                        </svg>
+														<svg *ngIf="deleteAux==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash2-fill" viewBox="0 0 16 16">
+                                                            <path d="M2.037 3.225A.703.703 0 0 1 2 3c0-1.105 2.686-2 6-2s6 .895 6 2a.702.702 0 0 1-.037.225l-1.684 10.104A2 2 0 0 1 10.305 15H5.694a2 2 0 0 1-1.973-1.671L2.037 3.225zm9.89-.69C10.966 2.214 9.578 2 8 2c-1.58 0-2.968.215-3.926.534-.477.16-.795.327-.975.466.18.14.498.307.975.466C5.032 3.786 6.42 4 8 4s2.967-.215 3.926-.534c.477-.16.795-.327.975-.466-.18-.14-.498-.307-.975-.466z"/>
+                                                        </svg>
+													</td>
+
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</form>
+
+						<div class="text-center" *ngIf="devices.sensors.length<=0">
+							<h3 class="mt-5">{{ 'devices.sensors.add' | translate }}</h3>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div *ngIf="showMap" class="p-0" [ngClass]="{'c200': !this.showForm || this.width<965, 'c20': this.showForm || this.width>=965}">
+			<div class="cont2 ms-lg-3 ms-0 ms-md-0" [ngClass]="{'alt': this.width>=965}">
+
+				<div *ngIf="this.ruteAux[2]=='edit'" class="c4 d-flex justify-content-between">
+					<div class="col-6">
+						<h5 class="">{{devices.alias}}</h5>
+					</div>
+					<div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
+						<svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"></path>
                         </svg>
-                        <svg class="text-right" *ngIf="!showForm" (click)="formShow()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
+						<svg class="text-right" *ngIf="!showForm" (click)="formShow()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-hide" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                         </svg>
-                    </div>  
-                </div>	
-                <div *ngIf="this.ruteAux[2]=='new'" class="c4 d-flex justify-content-between">
-                    <div class="col-9" > 
-                        <h5 class="">{{devices.alias}}</h5>
-                    </div>
-                    <div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
-                        <svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
+					</div>
+				</div>
+				<div *ngIf="this.ruteAux[2]=='new'" class="c4 d-flex justify-content-between">
+					<div class="col-9">
+						<h5 class="">{{devices.alias}}</h5>
+					</div>
+					<div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
+						<svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707z"></path>
                         </svg>
-                        <svg class="text-right" *ngIf="!showForm" (click)="formShow()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
+						<svg class="text-right" *ngIf="!showForm" (click)="formShow()" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrows-angle-contract" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M.172 15.828a.5.5 0 0 0 .707 0l4.096-4.096V14.5a.5.5 0 1 0 1 0v-3.975a.5.5 0 0 0-.5-.5H1.5a.5.5 0 0 0 0 1h2.768L.172 15.121a.5.5 0 0 0 0 .707zM15.828.172a.5.5 0 0 0-.707 0l-4.096 4.096V1.5a.5.5 0 1 0-1 0v3.975a.5.5 0 0 0 .5.5H14.5a.5.5 0 0 0 0-1h-2.768L15.828.879a.5.5 0 0 0 0-.707z"/>
                         </svg>
-                    </div>  
-                </div>	
+					</div>
+				</div>
 
 
-                <div class="c5 p-0 m-0" style="width: 100%;">
-                    <app-devices-map style="width: 100%;"></app-devices-map>
-                </div>
+				<div class="c5 p-0 m-0" style="width: 100%;">
+					<app-devices-map style="width: 100%;"></app-devices-map>
+				</div>
 
-                <div class="row c6">
-                    <div *ngIf="(this.ruteAux[2]=='edit' || state==1) && (this.width>965)" class="col-1 pt-4" (click)="rechargeMap()" style="cursor: pointer;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+				<div class="row c6">
+					<div *ngIf="(this.ruteAux[2]=='edit' || state==1) && (this.width>965)" class="col-1 pt-4" (click)="rechargeMap()" style="cursor: pointer;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
                             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
                         </svg>
-                    </div>
-                    <div class="col-11 col-lg-6 col-md-11 col-11"> 
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label for="lat">{{ 'devices.edit.lat' | translate }}</label>
-                                <input (change)="updatesharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
-                                <div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
-                                    <div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} {{ 'required' | translate }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="lon">{{ 'devices.edit.long' | translate }}</label>
-                                <input (change)="updatesharedLon()" (ngModelChange)="changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
-                                <div *ngIf="form.submitted && form.controls['lon'].errors" class="text-danger">
-                                    <div *ngIf="form.controls['lon'].errors['required']">{{ 'devices.edit.long' | translate }} {{ 'required' | translate }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="cota">{{ 'devices.edit.alt' | translate }}</label>
-                                <input (ngModelChange)="changed=true" [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
-                                <div *ngIf="form.submitted && form.controls['cota'].errors" class="text-danger">
-                                    <div *ngIf="form.controls['cota'].errors['required']">{{ 'devices.edit.alt' | translate }} {{ 'required' | translate }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="(this.ruteAux[2]=='edit' || state==1) && (this.width<=965)" class="col-1 pt-4" (click)="rechargeMap()" style="cursor: pointer;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+					</div>
+					<div class="col-11 col-lg-6 col-md-11 col-11">
+						<div class="row">
+							<div class="col-md-4">
+								<label for="lat">{{ 'devices.edit.lat' | translate }}</label>
+								<input (change)="updatesharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
+								<div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
+									<div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} {{ 'required' | translate }}</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<label for="lon">{{ 'devices.edit.long' | translate }}</label>
+								<input (change)="updatesharedLon()" (ngModelChange)="changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
+								<div *ngIf="form.submitted && form.controls['lon'].errors" class="text-danger">
+									<div *ngIf="form.controls['lon'].errors['required']">{{ 'devices.edit.long' | translate }} {{ 'required' | translate }}</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<label for="cota">{{ 'devices.edit.alt' | translate }}</label>
+								<input (ngModelChange)="changed=true" [value]="devices['cota']" type="text" id="cota" class="form-control" name="cota" [(ngModel)]="devices['cota']" type="number">
+								<div *ngIf="form.submitted && form.controls['cota'].errors" class="text-danger">
+									<div *ngIf="form.controls['cota'].errors['required']">{{ 'devices.edit.alt' | translate }} {{ 'required' | translate }}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="(this.ruteAux[2]=='edit' || state==1) && (this.width<=965)" class="col-1 pt-4" (click)="rechargeMap()" style="cursor: pointer;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
                             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
                             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
                         </svg>
-                    </div>
-                    <div style="position: relative;" class="col-11 col-lg-4 col-md-11 col-11"> 
-                        <label for="timezone" class="form-label m-0">{{ 'devices.edit.zone' | translate }}</label>
-                        <select class="form-select" aria-label="Default select example"(ngModelChange)="changed=true" [value]="devices['timezone']" type="text" id="timezone" class="form-control" name="timezone" [(ngModel)]="devices['timezone']" type>
+					</div>
+					<div style="position: relative;" class="col-11 col-lg-4 col-md-11 col-11">
+						<label for="timezone" class="form-label m-0">{{ 'devices.edit.zone' | translate }}</label>
+						<select class="form-select" aria-label="Default select example" (ngModelChange)="changed=true" [value]="devices['timezone']" type="text" id="timezone" class="form-control" name="timezone" [(ngModel)]="devices['timezone']" type>
                             <option value="Eniwetok, Kwajalein">(GMT -12:00) Eniwetok, Kwajalein</option>
                             <option value="Midway Island, Samoa">(GMT -11:00) Midway Island, Samoa</option>
                             <option value="Hawaii">(GMT -10:00) Hawaii</option>
@@ -448,207 +447,206 @@
                             <option value="Apia, Nukualofa">(GMT +13:00) Apia, Nukualofa</option>
                             <option value="Line Islands, Tokelau">(GMT +14:00) Line Islands, Tokelau</option>
                         </select>
-                        <svg style="position: absolute; top:35px; right:20px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+						<svg style="position: absolute; top:35px; right:20px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                         </svg>
-                        <div *ngIf="form.submitted && form.controls['timezone'].errors" class="text-danger">
-                            <div *ngIf="form.controls['timezone'].errors['required']">{{ 'devices.edit.zone' | translate }} {{ 'required' | translate }}</div>
-                        </div>
-                    </div>
-                    <div class="col-1 col-lg-1 col-md-1 col-1 pt-4" (mouseout)="aux1= false" (mouseover)="aux1= true" style="cursor: pointer; text-align: center; padding-top: 0.7em;" (click)="deleteMarker()">
-                        <svg *ngIf="!aux1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+						<div *ngIf="form.submitted && form.controls['timezone'].errors" class="text-danger">
+							<div *ngIf="form.controls['timezone'].errors['required']">{{ 'devices.edit.zone' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+					<div class="col-1 col-lg-1 col-md-1 col-1 pt-4" (mouseout)="eraseAux= false" (mouseover)="eraseAux= true" style="cursor: pointer; text-align: center; padding-top: 0.7em;" (click)="deleteMarker()">
+						<svg *ngIf="!eraseAux" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
                             <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                         </svg>
-                        <svg *ngIf="aux1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
+						<svg *ngIf="eraseAux" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 16">
                             <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
                         </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="row p-0 m-0">
-        <div class="col-12 p-0">
-            <div *ngIf="this.ruteAux[2]=='edit'" class="">
-                <div class="">
-                    <div class="row">
-                        <div class="col-md-6 col-12">
-                            <div class="row">
-                                <div class="col-md-6 col-12 mt-1 pb-3">
-                                    <button *ngIf="changed==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" routerLink="/devices" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-                                    <button *ngIf="changed==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal8">{{ 'reset.data' | translate }}</button>
-                                </div>
-                                <div class="col-md-6 col-12 mt-1 pb-3">
-                                    <button ng-click="ocultar = true" type="button navb" class="btn btn-info navb me-3" style="width: 100%"  (click)="editDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-12 d-flex" style="justify-content: flex-end;">
-                            <div class="col-md-6 col-12 mt-1 pb-3">
-                                <button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal9" disabled *ngIf="changed">{{ 'devices.edit.erase_disp' | translate }}</button>
-                                <button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal9" *ngIf="!changed">{{ 'devices.edit.erase_disp' | translate }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="this.ruteAux[2]=='new'" class="row">
-                <div class="col-md-6 col-12">
-                    <div class="row">
-                        <div class="col-md-6 col-12 mt-1 pb-3">
-                            <button *ngIf="changed==false" type="button navb" class="btn btn-secondary text-light navb" routerLink="/devices" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
-						    <button *ngIf="changed==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal13">{{ 'sensors.cancel' | translate }}</button>
-                        </div>
-                        <div class="col-md-6 col-12 mt-1 pb-3">
-                            <button type="button navb" class="btn btn-info navb me-3" style="width: 100%" (click)="newDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="row p-0 m-0">
+		<div class="col-12 p-0">
+			<div *ngIf="this.ruteAux[2]=='edit'" class="">
+				<div class="">
+					<div class="row">
+						<div class="col-md-6 col-12">
+							<div class="row">
+								<div class="col-md-6 col-12 mt-1 pb-3">
+									<button *ngIf="changed==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" routerLink="/devices" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+									<button *ngIf="changed==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal8">{{ 'reset.data' | translate }}</button>
+								</div>
+								<div class="col-md-6 col-12 mt-1 pb-3">
+									<button ng-click="ocultar = true" type="button navb" class="btn btn-info navb me-3" style="width: 100%" (click)="editDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-12 d-flex" style="justify-content: flex-end;">
+							<div class="col-md-6 col-12 mt-1 pb-3">
+								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal9" disabled *ngIf="changed">{{ 'devices.edit.erase_disp' | translate }}</button>
+								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal9" *ngIf="!changed">{{ 'devices.edit.erase_disp' | translate }}</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div *ngIf="this.ruteAux[2]=='new'" class="row">
+				<div class="col-md-6 col-12">
+					<div class="row">
+						<div class="col-md-6 col-12 mt-1 pb-3">
+							<button *ngIf="changed==false" type="button navb" class="btn btn-secondary text-light navb" routerLink="/devices" style="width: 100%">{{ 'sensors.cancel' | translate }}</button>
+							<button *ngIf="changed==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal13">{{ 'sensors.cancel' | translate }}</button>
+						</div>
+						<div class="col-md-6 col-12 mt-1 pb-3">
+							<button type="button navb" class="btn btn-info navb me-3" style="width: 100%" (click)="newDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
 
 <div class="toast-cont">
-    <div *ngIf="actOk" class="top-0 end-0 p-3">
-        <div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-          <div class="d-flex">
-            <div class="toast-body"> {{ 'devices.edit.e1' | translate }}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        </div>
-    </div>
-    <div *ngIf="actNot" class="top-0 end-0 p-3">
-        <div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-            <div class="toast-body">{{ 'devices.edit.e2' | translate }}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
+	<div *ngIf="actOk" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body"> {{ 'devices.edit.e1' | translate }}</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+	<div *ngIf="actNot" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">{{ 'devices.edit.e2' | translate }}</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <div class="modal fade" id="exampleModal8" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="border-bottom: 0px;">
-                <h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" >
-                <p class="not">{{ 'irreversible' | translate }}</p>
-            </div>
-            <div class="modal-footer" style="border-top: 0px;">
-                <div class="row">
-                    <div class="col-7">
-                        <button style="width: max-content;" type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
-                    </div>
-                    <div class="col-5">
-                        <button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !changed}">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'irreversible' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-7">
+						<button style="width: max-content;" type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
+					</div>
+					<div class="col-5">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !changed}">Cancelar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="exampleModal9" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="border-bottom: 0px;">
-                <h3 class="modal-title">{{ 'devices.edit.m1.1' | translate }}</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" >
-                <p class="not">{{ 'devices.edit.m1.2' | translate }}</p>
-            </div>
-            <div class="modal-footer" style="border-top: 0px;">
-                <div class="row">
-                    <div class="col-6">
-                        <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
-                    </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteDevices(devices.id)" routerLink="/devices">{{ 'sensors.delete' | translate }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'devices.edit.m1.1' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'devices.edit.m1.2' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteDevices(devices.id)" routerLink="/devices">{{ 'sensors.delete' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<!---->
+
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header" style="border-bottom: 0px;">
-            <h3 class="modal-title">{{ 'devices.edit.m5.1' | translate }}</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" >
-            <p class="not">{{ 'devices.edit.m5.1' | translate }}</p>
-          </div>
-          <div class="modal-footer" style="border-top: 0px;">
-            <div class="row">
-                <div class="col-6">
-                    <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-danger">{{ 'sensors.delete' | translate }}</button>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'devices.edit.m5.1' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'devices.edit.m5.1' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button type="button" class="btn btn-danger">{{ 'sensors.delete' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header" style="border-bottom: 0px;">
-            <h3 class="modal-title">{{ 'devices.edit.m3.1' | translate }}</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" >
-            <p class="not">{{ 'devices.edit.m3.2' | translate }}</p>
-          </div>
-          <div class="modal-footer" style="border-top: 0px;">
-            <div class="row">
-                <div class="col-6">
-                    <button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
-                </div>
-                <div class="col-6">
-                    <button type="button" class="btn btn-info">{{ 'sensors.acept' | translate }}</button>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'devices.edit.m3.1' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'devices.edit.m3.2' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.cancel' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button type="button" class="btn btn-info">{{ 'sensors.acept' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="exampleModal13" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header" style="border-bottom: 0px;">
-                <h3 class="modal-title">{{ 'devices.edit.m2.1' | translate }}</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" >
-                <p class="not">{{ 'devices.edit.m2.2' | translate }}</p>
-            </div>
-            <div class="modal-footer" style="border-top: 0px;">
-                <div class="row">
-                    <div class="col-5">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"  routerLink="/devices">{{ 'sensors.exit' | translate }}</button>
-                    </div>
-                    <div class="col-7">
-                        <button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" (click)="newDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'devices.edit.m2.1' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'devices.edit.m2.2' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-5">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" routerLink="/devices">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-7">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" (click)="newDevices(form)" [ngClass]="{'disabled': !changed}">{{ 'sensors.save' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-

@@ -5,6 +5,7 @@ import { Component} from '@angular/core';
   templateUrl: './device.component.html',
   styleUrls: ['../app.component.css']
 })
+
 export class DeviceComponent {
   constructor() { }
 }

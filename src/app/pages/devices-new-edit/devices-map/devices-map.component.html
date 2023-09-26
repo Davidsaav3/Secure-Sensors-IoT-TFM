@@ -1,8 +1,6 @@
-
 <div id="map" #map style="position: relative;">
-  
 	<div id="menu" style="position: absolute;">
-		<input *ngIf="colorMap=='streets-v12'" id="streets-v12"  name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
+		<input *ngIf="colorMap=='streets-v12'" id="streets-v12" name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
 		<input *ngIf="colorMap!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()" id="streets-v12" type="radio" name="rtoggle" value="streets">
 		<label for="streets-v12">{{ 'predeterminado' | translate }}</label>
 
@@ -19,8 +17,7 @@
 		<label for="light-v11">{{ 'claro' | translate }}</label>
 
 		<input *ngIf="colorMap=='dark-v11'" id="dark-v11" name="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
-		<input  *ngIf="colorMap!='dark-v11'" (click)="changeMapStyle('dark-v11');saveStorage()" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
+		<input *ngIf="colorMap!='dark-v11'" (click)="changeMapStyle('dark-v11');saveStorage()" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
 		<label for="dark-v11">{{ 'oscuro' | translate }}</label>
 	</div>
-
 </div>

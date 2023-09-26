@@ -3,38 +3,38 @@
 
 	<div class="cc2 cont me-0 c100">
 		<div class="p-3 pb-0 pe-2">
-				<div class="row d-flex">
-					<div class="col-6 col-sm-6 col-lg-3 mb-3">
-						<div class="w-100 d-flex" style="position: relative;">
-							<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'search_variable_data_structure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
-							<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'search_variable_data_structure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
-							<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;" class="" type="" (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
-						</div>
+			<div class="row d-flex">
+				<div class="col-6 col-sm-6 col-lg-3 mb-3">
+					<div class="w-100 d-flex" style="position: relative;">
+						<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'search_variable_data_structure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+						<input (keyup)="textSearch($event)" id="search" name="search" type="text" [(ngModel)]="search.value" class="form-control" placeholder="{{ 'search_variable_data_structure' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+						<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;" class="" type="" (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 					</div>
+				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
 						<button type="button" class="btn btn-info" (click)="openNew('','','','')" [ngClass]="{'disabled': change}">{{ 'structure.new' | translate }}</button>
 					</div>
 				</div>
-			</div>	
+			</div>
 		</div>
 
 		<div class="row flex-row-reverse pe-3" style="height: 72vh;">
-			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
+			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div class="spinner-border text-secondary" role="status">
 					<span class="visually-hidden">{{ 'loading' | translate }}</span>
 				</div>
 			</div>
-			<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;"> 
+			<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div style="height: min-content;">
-				  <p style="font-size: x-large;">{{ 'no_structure' | translate }}</p>
+					<p style="font-size: x-large;">{{ 'no_structure' | translate }}</p>
 				</div>
 			</div>
-			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;"> 
-				
+			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;">
+
 				<table id="miTabla" class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
-						<tr> 
+						<tr>
 							<!--<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': mark == 'id'}">
 								<svg *ngIf="alt1" (click)="alt1=false;getStructureLocal('id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
@@ -48,10 +48,9 @@
 								<svg *ngIf="alt1" (click)="alt1=false;getStructureLocal('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								  <svg *ngIf="!alt1" (click)="alt1=true;getStructureLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt1" (click)="alt1=true;getStructureLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg>
-								{{ 'sensors.description' | translate }}
+								  </svg> {{ 'sensors.description' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'structure'}">
 								<svg *ngIf="alt2" (click)="alt2=false;getStructureLocal('structure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -59,8 +58,7 @@
 								</svg>
 								<svg *ngIf="!alt2" (click)="alt2=true;getStructureLocal('structure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								</svg>
-								{{ 'structure.structure' | translate }}
+								</svg> {{ 'structure.structure' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'initial_byte'}">
 								<svg *ngIf="alt3" (click)="alt3=false;getStructureLocal('initial_byte','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -68,20 +66,19 @@
 								</svg>
 								<svg *ngIf="!alt3" (click)="alt3=true;getStructureLocal('initial_byte','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								</svg>
-								{{ 'structure.initial_byte' | translate }}
+								</svg> {{ 'structure.initial_byte' | translate }}
 							</th>
-											
+
 							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
 					</thead>
-					<!---->
+
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr *ngIf="(i+1)==actId && (state==0 || state==1)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 pb-0 row w-100"> 
-									
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 pb-0 row w-100">
+
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
 										<input maxlength="45" (ngModelChange)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
@@ -103,55 +100,53 @@
 											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-			
-									<div class="col-12 col-lg-12 mt-4"  *ngIf="state==1 || state==0">
+
+									<div class="col-12 col-lg-12 mt-4" *ngIf="state==1 || state==0">
 										<div class="row">
 											<div class="col-6 col-lg-3" [ngClass]="{'mb-3': this.width<965}">
-												<!--*ngIf="change==false"--><button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-												<!--<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>-->
+												<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 											</div>
 											<div class="col-6 col-lg-3">
 												<button (click)="newStructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state==1}">{{ 'sensors.save' | translate }}</button>
-											</div>	
+											</div>
 										</div>
 									</div>
-			
+
 								</form>
 							</td>
 						</tr>
-						<!---->
+
 						<tr style="cursor: pointer;" [ngClass]="{'disabled': change}">
-							<!--<th class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.id }}</th>-->
 							<th style="border-radius: 0px;" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.description }}</th>
 							<td [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.structure }}</td>
 							<td [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.initial_byte }}</td>
 
-							<td [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateStructure(quote.id,quote.description)">                      
-							<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">5
+							<td [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateStructure(quote.id,quote.description)">
+								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">5
 								<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 								<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
 								<path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
 							</svg>
-							<svg *ngIf="viewDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
+								<svg *ngIf="viewDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
 								<path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z"/>
 								<path d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5ZM8.5 6.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5a.5.5 0 0 1 1 0Z"/>
 							  </svg>
 							</td>
 							<td [ngClass]="{'mark': actId == quote.id && state==2}" (mouseover)="pencilDup= i" (mouseout)="pencilDup= -1" (click)="orderColumn(quote.id)" style="color: black; text-align: center;">
-								<svg *ngIf="pencilDup!=i"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+								<svg *ngIf="pencilDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
 									<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
 								</svg>
-								<svg *ngIf="pencilDup==i"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+								<svg *ngIf="pencilDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
 									<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
 								</svg>
 							</td>
 						</tr>
-						<!---->
+
 						<tr [ngClass]="{'mark_select': actId == quote.id}" *ngIf="quote.id==actId && (state==2)" id="primera">
 							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
-								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation p-3 pt-2 pb-0 m-0 row w-100"> 
-									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true"  type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ structure.id }}" [(ngModel)]="structure.id">
-									
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation p-3 pt-2 pb-0 m-0 row w-100">
+									<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ structure.id }}" [(ngModel)]="structure.id">
+
 									<div class="col-12 col-lg-3 pe-3">
 										<label for="description">{{ 'sensors.description' | translate }}</label>
 										<input maxlength="45" (ngModelChange)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
@@ -173,7 +168,7 @@
 											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
 										</div>
 									</div>
-			
+
 									<div class="col-12 col-lg-12 mt-4" *ngIf="state==2">
 										<div class="row">
 											<div class="col-6 col-lg-3">
@@ -182,7 +177,7 @@
 											</div>
 											<div class="col-6 col-lg-3 mb-3">
 												<button type="submit" (click)="editStructure(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-											</div>	
+											</div>
 											<div class="col-12 col-lg-6" [ngClass]="{'pb-3': this.width<965}">
 												<div class="row" style="display: flex; justify-content: end;">
 													<div class="col-12 col-lg-6">
@@ -198,68 +193,69 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>		
-		</div> 
+			</div>
+		</div>
 
-		<div  class="row" style="background-color: #fff; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;" ><!--*ngIf="open_map_list"-->
+		<div class="row" style="background-color: #fff; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
 			<div class="col-12 col-lg-6 d-flex mt-3">
-			  <div><!--totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}}-->
-				<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
-			  </div>
-			  <div>
-				<!-- -->
-				<select (change)="this.currentPage=1;getStructureLocal('description','ASC');" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage" >
+				<div>
+					<!--totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}}-->
+					<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
+				</div>
+				<div>
+
+					<select (change)="this.currentPage=1;getStructureLocal('description','ASC');" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
-			  </div>
+				</div>
 			</div>
 			<div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
-			  <nav aria-label="Page navigation example">
-				<ul *ngIf="data.length>0" class="pagination mt-3 mb-0">
-				  <li class="page-item" >
-					<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
-					  <span aria-hidden="true">{{ 'first' | translate }}</span>
-					</a>
-				  </li>
-				  <li class="page-item" *ngIf="currentPage-10>0">
-					<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="previousPage10()">
-					  <span aria-hidden="true">&laquo; 10</span>
-					</a>
-				  </li>
-				  <li class="page-item" *ngIf="this.currentPage-1!=0">
-					<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{ this.currentPage-1 }}</a>
-				  </li>
-				  <li class="page-item">
-					<a class="page-link mark" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
-				  </li>
-				  <li class="page-item" *ngIf="this.currentPage!=totalPages">
-					<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1 }}</a>
-				  </li>
-				  <li class="page-item" *ngIf="currentPage+10<totalPages">
-					<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="nextPage10()">
-					  <span aria-hidden="true">10 &raquo;</span>
-					</a>
-				  </li>
-				  <li class="page-item" >
-					<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="lastPage()">
-					  <span aria-hidden="true">{{ 'last' | translate }}</span>
-					</a>
-				  </li>
-				</ul>
-			  </nav>
+				<nav aria-label="Page navigation example">
+					<ul *ngIf="data.length>0" class="pagination mt-3 mb-0">
+						<li class="page-item">
+							<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
+								<span aria-hidden="true">{{ 'first' | translate }}</span>
+							</a>
+						</li>
+						<li class="page-item" *ngIf="currentPage-10>0">
+							<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="previousPage10()">
+								<span aria-hidden="true">&laquo; 10</span>
+							</a>
+						</li>
+						<li class="page-item" *ngIf="this.currentPage-1!=0">
+							<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{ this.currentPage-1 }}</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link mark" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
+						</li>
+						<li class="page-item" *ngIf="this.currentPage!=totalPages">
+							<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1 }}</a>
+						</li>
+						<li class="page-item" *ngIf="currentPage+10<totalPages">
+							<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="nextPage10()">
+								<span aria-hidden="true">10 &raquo;</span>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="lastPage()">
+								<span aria-hidden="true">{{ 'last' | translate }}</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
 			</div>
-		  </div>  
-	  </div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
 			<div class="modal-header" style="border-bottom: 0px;">
 				<h3 class="modal-title">{{ 'structure.m1.1' | translate }}</h3>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body" >
+			<div class="modal-body">
 				<p class="not">{{ 'structure.m1.2' | translate }}</p>
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
@@ -270,35 +266,35 @@
 					<div class="col-6">
 						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteStructure(this.id)" disabled *ngIf="change">{{ 'sensors.delete' | translate }}</button>
 						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" (click)="deleteStructure(this.id)" *ngIf="!change">{{ 'sensors.delete' | translate }}</button>
-                	</div>
-            	</div>
-          	</div>
-        </div>
-    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header" style="border-bottom: 0px;">
-            <h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" >
-            <p class="not">{{ 'irreversible' | translate }}</p>
-          </div>
-          <div class="modal-footer" style="border-top: 0px;">
-            <div class="row">
-                <div class="col-7">
-                    <button style="width: max-content;" type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
-                </div>
-                <div class="col-5">
-					<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" (click)="update()" [ngClass]="{'disabled': !change}">{{ 'sensors.exit' | translate }}</button>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'irreversible' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-7">
+						<button style="width: max-content;" type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
+					</div>
+					<div class="col-5">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" (click)="update()" [ngClass]="{'disabled': !change}">{{ 'sensors.exit' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="toast-cont">
@@ -306,10 +302,10 @@
 	<div *ngIf="dupOk" class="top-0 right-0 p-3">
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
-			<div class="toast-body">
-				{{ 'structure.e7' | translate }}
-			</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				<div class="toast-body">
+					{{ 'structure.e7' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
 	</div>
@@ -329,7 +325,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-				{{ 'structure.e3' | translate }}
+					{{ 'structure.e3' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -340,7 +336,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-				{{ 'structure.e6' | translate }}
+					{{ 'structure.e6' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -351,7 +347,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-				{{ 'structure.e4' | translate }}
+					{{ 'structure.e4' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -362,7 +358,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-				{{ 'structure.e5' | translate }}
+					{{ 'structure.e5' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -372,21 +368,21 @@
 	<div *ngIf="saveOk" class="top-0 end-0 p-3">
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
-			<div class="toast-body">
-				{{ 'structure.e2' | translate }}
-			</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				<div class="toast-body">
+					{{ 'structure.e2' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
 	</div>
-	
+
 	<div *ngIf="saveNot" class="top-0 end-0 p-3">
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
-			<div class="toast-body">
-				{{ 'structure.e1' | translate }}
-			</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+				<div class="toast-body">
+					{{ 'structure.e1' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
 		</div>
 	</div>
