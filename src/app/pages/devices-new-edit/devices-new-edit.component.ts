@@ -24,7 +24,7 @@ export class DevicesNewEditComponent implements OnInit {
 
   @HostListener("window:resize", ["$event"])
   
-  onResize(event: any) {
+  onResize() {
     window.resizeBy(-1, 0);
     this.resize();
   }
@@ -45,7 +45,6 @@ export class DevicesNewEditComponent implements OnInit {
     }
   }
 
-  deleteDevice: string = "http://localhost:5172/api/device_configurations";
   idDevice: string = "http://localhost:5172/api/device_configurations/id";
   postDevice: string = "http://localhost:5172/api/device_configurations";
   maxDevice: string = "http://localhost:5172/api/device_configurations/max";
@@ -146,8 +145,7 @@ export class DevicesNewEditComponent implements OnInit {
     ],
   };
 
-  ngOnInit(): void {
-    // Inicializador
+  ngOnInit(): void { // Inicializa
     this.devices.sensors = [];
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
@@ -244,14 +242,13 @@ export class DevicesNewEditComponent implements OnInit {
       this.readStorage();
     }, 10);
 
-    this.onResize(0);
+    this.onResize();
     this.showLarge = false;
   }
 
   /* GET */
 
-  getDevices() {
-    // Obtener Dispositivos
+  getDevices() { // Obtene el Dispositivo
     fetch(`${this.idDevice}/${this.id}`)
       .then((response) => response.json())
       .then((data) => {
@@ -272,8 +269,7 @@ export class DevicesNewEditComponent implements OnInit {
       });
   }
 
-  getSensorsLocal(id: any, ord: any) {
-    // Ordenar columnas
+  getSensorsLocal(id: any, ord: any) { // Ordena columnas de sensores
     this.mark = id;
 
     if (ord == "ASC") {
@@ -318,8 +314,7 @@ export class DevicesNewEditComponent implements OnInit {
     }
   }
 
-  getStructure(num: any) {
-    // optener estructuras de datos
+  getStructure(num: any) { // Obtiene las listas de estructuras de datos
     fetch(`${this.getStructureList}`)
       .then((response) => response.json())
       .then((quotesData) => {
@@ -336,8 +331,7 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* NEW */
 
-  newDevices(form: any) {
-    // Guardar Dispositivos
+  newDevices(form: any) { // Guardar la información del Dispositivo
     this.createDate();
     this.devices.createdAt = this.date;
     this.devices.updatedAt = this.date;
@@ -381,8 +375,7 @@ export class DevicesNewEditComponent implements OnInit {
     }
   }
 
-  newSensors() {
-    // Guardar nuevos sensores de los dispositivos
+  newSensors() { // Guardar los nuevos sensores de los dispositivos
     if (this.state == 0) {
       this.changed = false;
       setTimeout(() => {
@@ -404,8 +397,7 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* EDIT */
 
-  editDevices(form: any) {
-    // Guardar Dispositivo
+  editDevices(form: any) { // Edita la información del Dispositivo
     this.getShared();
     this.createDate();
     this.devices.updatedAt = this.date;
@@ -456,12 +448,11 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* DELET */
 
-  deleteDevices(idActual: any) {
-    // Eliminar Dispositivo
+  deleteDevices(idActual: any) { // Elimina el Dispositivo
     var devices = {
       id: idActual,
     };
-    fetch(this.deleteDevice, {
+    fetch(this.postDevice, {
       method: "DELETE",
       body: JSON.stringify(devices),
       headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -474,8 +465,7 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* SENSORS LIST */
 
-  addSensor() {
-    // Añadir a lista compartida
+  addSensor() { // Añadir sensor a la lista de sensores
     let sensors_aux = {
       id: this.devices.sensors.length,
       enable: 0,
@@ -494,8 +484,7 @@ export class DevicesNewEditComponent implements OnInit {
     this.changed = true;
   }
 
-  getOrder(num: any, num2: any) {
-    // Asocia un order al sensor segun su type
+  getOrder(num: any, num2: any) { // Obtiene el orden del sensor segun su tipo
     let cosita: any;
     cosita = this.selectSensors.sensors.find((objeto: { id: any }) => objeto.id == num2);
     if (cosita != undefined) {
@@ -503,8 +492,7 @@ export class DevicesNewEditComponent implements OnInit {
     }
   }
 
-  deleteSensor(id: any) {
-    // Añadir a lista compartida
+  deleteSensor(id: any) { // Elimina sensor de lista de sensores
     this.deleteId = id;
     this.devices.sensors = this.devices.sensors.filter((item) => item.id != this.deleteId);
     this.changed = true;
@@ -512,8 +500,7 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* RECHARGE */
   
-  rechargeMap() {
-    // Recargar mapa
+  rechargeMap() { // Recargar mapa a su estado anterior a la edición sin guardado
     fetch(`${this.idDevice}/${this.id}`)
       .then((response) => response.json())
       .then((data) => {
@@ -530,8 +517,7 @@ export class DevicesNewEditComponent implements OnInit {
     this.changed = false;
   }
 
-  recharge() {
-    // Recargar campos a sus valores originales
+  recharge() { // Recargar los campos del dispositivo a sus valores originales
     this.ngOnInit();
     this.changed = false;
     this.dataSharingService.updatesharedAct(false);
@@ -540,8 +526,7 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* AUX */
 
-  deleteMarker() {
-    // eliminar chinchetas del mapa
+  deleteMarker() { // eliminar chincheta del mapa
     this.devices.lat = null;
     this.devices.lon = null;
     this.devices.cota = 0;
@@ -550,15 +535,13 @@ export class DevicesNewEditComponent implements OnInit {
     this.updatesharedLon();
   }
 
-  resize(): void {
-    // Redimensionar pantalla
+  resize(): void { // Redimensiona la pantalla
     this.width = window.innerWidth;
   }
 
   /* SHARED */
 
-  getShared() {
-    // Recupera datos compartidos
+  getShared() { // Recupera datos compartidos con (devices-map)
     this.dataSharingService.sharedLat$.subscribe((data) => {
       this.devices.lat = data;
     });
@@ -568,15 +551,13 @@ export class DevicesNewEditComponent implements OnInit {
     this.dataSharingService.updatesharedAct(false);
   }
 
-  updatesharedLat() {
-    // Actualizar Latitud
+  updatesharedLat() { // Actualiza la Latitud (devices-map)
     setTimeout(() => {
       this.dataSharingService.updatesharedLat(this.devices.lat);
     }, 100);
   }
 
-  updatesharedLon() {
-    // Actualizar Longitud
+  updatesharedLon() { // Actualiza la Longitud (devices-map)
     setTimeout(() => {
       this.dataSharingService.updatesharedLon(this.devices.lon);
     }, 100);
@@ -584,44 +565,38 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* TARJETAS */
 
-  formShow() {
-    // Expandir formulario
+  formShow() { // Expandir tarjeta formulario
     this.showForm = true;
     if (this.ruteAux[2] == "edit") {
-      this.onResize(0);
+      this.onResize();
     }
   }
 
-  formHide() {
-    // Contrarer formulario
+  formHide() { // Contrarer tarjeta formulario
     this.showForm = false;
     if (this.ruteAux[2] == "edit") {
-      this.onResize(0);
+      this.onResize();
     }
   }
 
-  mapShow() {
-    // Expandir mapa
+  mapShow() { // Expandir tarjeta mapa
     this.showLarge = true;
     this.showMap = false;
   }
 
-  mapHide() {
-    // Contrarer mapa
+  mapHide() { // Contrarer tarjeta mapa
     this.showMap = true;
     this.showLarge = false;
   }
 
   /* LOCAL STORAGE */
 
-  readStorage() {
-    // Recupera datos de local storage
+  readStorage() { // Recupera datos de local storage
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
   }
 
   getStructuresList(event: any) {
     let num = event.target.checked ? 1 : 0;
-    //console.log(num)
     this.getStructure(num);
     setTimeout(() => {
       this.devices.variable_configuration = num;
@@ -636,13 +611,11 @@ export class DevicesNewEditComponent implements OnInit {
 
   /* DATE */
 
-  createDate() {
-    // Genera fecha
+  createDate() { // Fecha actual
     this.date = this.formatDateTime(new Date());
   }
 
-  formatDateTime(date2: any) {
-    // Formato fecha
+  formatDateTime(date2: any) { // Formato fecha
     let dat = "";
     const date = new Date(date2);
     const year = date.getFullYear();

@@ -100,21 +100,18 @@ export class StructureComponent implements OnInit {
     value: "",
   };
 
-  ngOnInit(): void {
-    // Inicializador
+  ngOnInit(): void { // Inicializa
     this.getStructures(this.order, this.ordAux);
     this.getStructuresList();
   }
 
   /* GET */
 
-  getStructuresVoid() {
-    // Obtener sin parámetros
+  getStructuresVoid() { // Obtiene estructura de datos sin parámetros
     this.getStructures(this.order, this.ordAux);
   }
 
-  getStructures(id: any, ord: any) {
-    // Obtener todos los estructuras
+  getStructures(id: any, ord: any) { // Obtiene todas las estructuras de datos
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
@@ -148,8 +145,7 @@ export class StructureComponent implements OnInit {
       });
   }
 
-  getStructuresLocal(id: any, ord: any) {
-    // Ordenar columnas local
+  getStructuresLocal(id: any, ord: any) { // Ordena las columnas en local
     this.order = id;
 
     if (this.totalPages <= 1 && false) {
@@ -190,8 +186,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  orderColumn(idActual: any) {
-    // Ordenar columnas
+  orderColumn(idActual: any) { // Ordenar las columnas con una consulta
     this.show = true;
     if (!this.change && !this.change && idActual != this.actId) {
       this.actId = idActual;
@@ -212,8 +207,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  getStructuresList() {
-    // optener lista de estructuras de datos
+  getStructuresList() { // Obtiene la lista de estructuras de datos variables
     fetch(`${this.getVariableStructureList}`)
       .then((response) => response.json())
       .then((quotesData) => {
@@ -223,8 +217,7 @@ export class StructureComponent implements OnInit {
 
   /* NEW */
 
-  newStructures(form: any) {
-    // Guardar datos de estructura nueva
+  newStructures(form: any) { // Guardar datos de estructura de datoss nueva
     this.state = 1;
     if (form.valid) {
       fetch(this.postEstructure, {
@@ -267,8 +260,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  openNew(id_estructure: any,description: any,configuration: any, identifier_code: any,id_variable_data_structure: any,variable_description: any) {
-    // Abrir Nuevo sensor
+  openNew(id_estructure: any,description: any,configuration: any, identifier_code: any,id_variable_data_structure: any,variable_description: any) { // Abre Nueva estructura de datos
     if (id_estructure == "") {
       this.estructureCopy.id_variable_data_structure = this.aux;
       this.estructure = {
@@ -300,8 +292,7 @@ export class StructureComponent implements OnInit {
 
   /* EDIT */
 
-  editStructures() {
-    // Guardar estructuras en el popup de salir sin guardar
+  editStructures() { // Guardar la estructura editada (popup)
     if (this.show == true && (this.state == 0 || this.state == 1)) {
       this.newStructures(this.estructure);
     }
@@ -310,8 +301,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  editStructuresAux(form: any, num: any) {
-    // Guardar datos de estructura editada
+  editStructuresAux(form: any, num: any) { // Guardar datos de estructura editada
     if (form.valid) {
       fetch(this.postEstructure, {
         method: "PUT",
@@ -340,8 +330,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  openEdit() {
-    // Abrir Editar estructura
+  openEdit() { // Abre tarjeta Editar estructura de datos
     this.show = true;
     this.state = 2;
     this.showAux = false;
@@ -349,8 +338,7 @@ export class StructureComponent implements OnInit {
 
   /* DUPLICATE */
 
-  duplicateStructures(num: any, description: any) {
-    // Duplicar estructura
+  duplicateStructures(num: any, description: any) { // Obtiene nombre de estructura de datos duplicada
     if (!this.change && !this.change) {
       fetch(`${this.duplicateEstructure}/${description}`)
         .then((response) => {
@@ -373,8 +361,7 @@ export class StructureComponent implements OnInit {
 
   /* DELETE */
 
-  deleteStructures(idActual: any) {
-    // Eliminar sensor
+  deleteStructures(idActual: any) { // Elimina estructura de datos
     var estructure2 = {
       id_estructure: this.id,
     };
@@ -395,8 +382,7 @@ export class StructureComponent implements OnInit {
 
   /* BÚSQUEDA */
 
-  textSearch(event: any) {
-    // Busqueda por texto
+  textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
     clearTimeout(this.timeout);
     var $this = this;
@@ -409,8 +395,7 @@ export class StructureComponent implements OnInit {
     }, 500);
   }
 
-  recharge() {
-    // Recargar campos a sus valores originales
+  recharge() {// Recargar campos a sus valores originales
     this.change = false;
     this.estructure = {
       id_estructure: this.estructureCopy.id_estructure,
@@ -422,8 +407,7 @@ export class StructureComponent implements OnInit {
     };
   }
 
-  deleteSearch() {
-    // Borrar busqueda por texto
+  deleteSearch() { // Borrar busqueda por texto
     this.Page(1);
     this.totalPages = 5;
     this.currentPage = 1;
@@ -435,15 +419,13 @@ export class StructureComponent implements OnInit {
 
   /* TAEJETAS */
 
-  clouse() {
-    // Cerrar estructura
+  clouse() { // Cierra tarjeta estructura de datos
     this.show = false;
     this.openClouse();
     this.change = false;
   }
 
-  openClouse() {
-    // Abrir y cerrar tarjetas
+  openClouse() { // Abre y cierra tarjetas de estructuras de datos
     if (this.show == true) {
       this.showAux = false;
     } 
@@ -452,8 +434,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  clouseAll() {
-    // Cerrar todas las estructuras
+  clouseAll() { // Cerrar todas las tarjetas de estructuras
     this.showAux = false;
     this.show = false;
     this.openClouse();
@@ -462,16 +443,14 @@ export class StructureComponent implements OnInit {
 
   /* PAGINACIÓN */
 
-  firstPage(): void {
-    // Primera pagina
+  firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
       this.getStructuresVoid();
     }
   }
 
-  previousPage10(): void {
-    // 10 paginas mas
+  previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
       this.getStructuresVoid();
@@ -482,30 +461,26 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  previousPage(): void {
-    // Pagina anterior
+  previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
       this.getStructuresVoid();
     }
   }
 
-  Page(num: any): void {
-    // Pagina actual
+  Page(num: any): void { // Pagina actual
     this.currentPage = num;
     this.getStructuresVoid();
   }
 
-  nextPage(): void {
-    // Pagina siguiente
+  nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.getStructuresVoid();
     }
   }
 
-  nextPage10(): void {
-    // 10 paginas menos
+  nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
       this.getStructuresVoid();
@@ -516,8 +491,7 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  lastPage(): void {
-    // Ultima pagina
+  lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
       this.getStructuresVoid();

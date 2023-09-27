@@ -60,8 +60,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   idMax = 1;
   state = -1; 
 
-  ngOnInit(): void {
-    // Inicializador
+  ngOnInit(): void { // Inicialización
     fetch(this.maxDevice)
       .then((response) => response.json())
       .then((data) => {
@@ -95,8 +94,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   /* AUX INIT */
 
-  ngAfterViewInit(): void {
-    // Se ejecuta despues de ngOnInit
+  ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
     setTimeout(() => {
       if (this.ruteAux[2] == "new" && this.state == 0) {
         if (!this.divMap) throw "No hay mapa";
@@ -138,8 +136,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     }, 100);
   }
 
-  auxInit() {
-    // Auxiliar de ngAfterViewInit
+  auxInit() { // Auxiliar de ngOnInit
     if (this.map != undefined) {
       this.map.addControl(
         new mapboxgl.GeolocateControl({
@@ -269,8 +266,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   /* CREATE / DESTROY */
 
-  createMap(pos: any) {
-    // Crea el mapa
+  createMap(pos: any) { // Crea el mapa
     if (!this.divMap) throw "No hay mapa";
     this.ngOnDestroy();
     this.map = new mapboxgl.Map({
@@ -282,8 +278,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     return this.map;
   }
 
-  ngOnDestroy() {
-    // Destructor
+  ngOnDestroy() { // Destructor del mapa
     try {
       if (this.map) {
         this.map.remove();
@@ -295,8 +290,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   /* MAP STYLE */
   
-  changeMapStyle(event: any): void {
-    // Cambiar apariencia del mapa
+  changeMapStyle(event: any): void { // Cambiar el estilo del mapa
     if (this.map) {
       this.colorMap = event;
       this.saveStorage();
@@ -306,16 +300,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   /* MARKER */
 
-  createMarker(marker: mapboxgl.LngLat) {
-    // Añade chincheta (1)
+  createMarker(marker: mapboxgl.LngLat) { // Crea chincheta al mapa
     if (!this.map) return;
     const color = "#0dcaf0";
     const lngLat = marker;
     this.addMarker(lngLat, color);
   }
 
-  addMarker(lngLat: mapboxgl.LngLat, color: string) {
-    // Crear chincheta (2)
+  addMarker(lngLat: mapboxgl.LngLat, color: string) { // Añade chincheta al mapa
     if (!this.map) return;
     this.markers = [];
     this.markers.splice(0, 1);
@@ -339,8 +331,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.updatesharedLon();
   }
 
-  deleteMarker() {
-    // Quita chincheta
+  deleteMarker() {  // Elimina chincheta del mapa
     for (let index = 0; index < this.markers.length; index++) {
       this.markers[index].marker.remove();
     }
@@ -352,30 +343,25 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   /* LOCAL STORAGE */
 
-  saveStorage() {
-    // Guarda datos
+  saveStorage() { // Guarda datos en local storage
     localStorage.setItem("colorMap", this.colorMap);
   }
 
-  readStorage() {
-    // Recupera datos
+  readStorage() { // Recupera datos del local storage
     this.colorMap = localStorage.getItem("colorMap") ?? "0";
   }
 
   /* SHARED */
 
-  updatesharedAct() {
-    // Enviar act
+  updatesharedAct() { // Actualiza activación (devices-new-edit)
     this.dataSharingService.updatesharedAct(true);
   }
 
-  updatesharedLat() {
-    // Actualizar Latitud
+  updatesharedLat() { // Actualiza latitud (devices-new-edit)
     this.dataSharingService.updatesharedLat(this.sharedLat);
   }
 
-  updatesharedLon() {
-    // ctualizar Longitud
+  updatesharedLon() { // Actualiza longitud (devices-new-edit)
     this.dataSharingService.updatesharedLon(this.sharedLon);
   }
 }

@@ -22,25 +22,21 @@ export class NavbarComponent {
     this.ruteAux = this.rute.split("/");
   }
 
-  ngOnInit(): void {
-    // Inicializador
+  ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
   }
 
-  changeLanguage() {
-    // Cambia lenguaje
+  changeLanguage() { // Cambia lenguaje
     this.saveStorage();
     this.translate.use(this.activeLang);
   }
 
-  saveStorage() {
-    // Guarda datos
+  saveStorage() { // Guarda datos en el local storage
     localStorage.setItem("activeLang", this.activeLang);
   }
 
-  readStorage() {
-    // Recupera datos
+  readStorage() { // Recupera datos del local storage
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
   }
 }

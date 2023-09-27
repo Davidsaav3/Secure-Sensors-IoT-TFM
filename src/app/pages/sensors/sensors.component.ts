@@ -11,7 +11,7 @@ import { environment } from "../../environments/environment";
 export class SensorsComponent implements OnInit {
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
-  onResize(event: any) {
+  onResize() {
     window.resizeBy(-1, 0);
     this.resize();
   }
@@ -99,20 +99,17 @@ export class SensorsComponent implements OnInit {
     value: "",
   };
 
-  ngOnInit(): void {
-    // Inicializador
+  ngOnInit(): void { // Inicializa
     this.getSensors(this.order, this.ordAux);
   }
 
   /* GET */
 
-  getSensorsVoid() {
-    // Obtener sensores sin parámetros
+  getSensorsVoid() { // Obtiene los sensores sin pasar arámetros
     this.getSensors(this.order, this.ordAux);
   }
 
-  getSensorsLocal(id: any, ord: any) {
-    // Ordenar columnas local
+  getSensorsLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
 
     if (this.totalPages <= 1 && false) {
@@ -182,8 +179,7 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  getSensors(id: any, ord: any) {
-    // Obtiene los sesnores
+  getSensors(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     this.searchAux = this.searchAuxArray.value || "Buscar";
@@ -218,8 +214,7 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  orderColumn(idActual: any) {
-    // Ordenar columnas
+  orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
     if (!this.change && !this.change && idActual != this.actId) {
       fetch(`${this.getId}/${idActual}`)
         .then((response) => response.json())
@@ -253,8 +248,7 @@ export class SensorsComponent implements OnInit {
   
   /* NEW */
 
-  newSensor(form: any) {
-    // Guardar datos de sensores nuevos
+  newSensor(form: any) { // Guardar datos de sensores nuevos
     this.state = 1;
     if (form.valid) {
       fetch(this.postSensors, {
@@ -298,8 +292,7 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  openNew(id: any,type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any) {
-    // Abrir Nuevo sensor
+  openNew(id: any,type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any) { // Abre Nuevo sensor
     this.sensors = {
       id: id,
       type: type,
@@ -319,8 +312,7 @@ export class SensorsComponent implements OnInit {
 
   /* EDIT */
 
-  editSensor(form: any) {
-    // Guardar datos de sensores editado
+  editSensor(form: any) { // Guardar datos del sensor editado
     if (form.valid) {
       fetch(this.postSensors, {
         method: "PUT",
@@ -344,8 +336,7 @@ export class SensorsComponent implements OnInit {
     this.change = false;
   }
   
-  openEdit() {
-    // Abrir Editar sensor
+  openEdit() { // Abre Editar sensor
     this.show = true;
     this.state = 2;
     this.showAux = false;
@@ -353,8 +344,7 @@ export class SensorsComponent implements OnInit {
 
   /* DUPLICATE */
 
-  duplicateSensors(num: any, type: any) {
-    // Duplicar sensor
+  duplicateSensors(num: any, type: any) { // Obtiene el nombre del sensor duplicado
     if (!this.change && !this.change) {
       fetch(`${this.duplicateSensor}/${type}`)
         .then((response) => {
@@ -378,8 +368,7 @@ export class SensorsComponent implements OnInit {
 
   /* DELETE */
 
-  deleteSensors(idActual: any) {
-    // Eliminar sensor
+  deleteSensors(idActual: any) { // Elimina sensor
     var sensors2 = {
       id: this.id,
     };
@@ -400,8 +389,7 @@ export class SensorsComponent implements OnInit {
 
   /* BÚSQUEDA */
 
-  textSearch(event: any) {
-    // Busqueda por texto
+  textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
     clearTimeout(this.timeout);
     var $this = this;
@@ -414,8 +402,7 @@ export class SensorsComponent implements OnInit {
     }, 500);
   }
 
-  recharge() {
-    // recargar sensores a sus valores anteriores
+  recharge() { // recarga sensor a su valor anterior
     this.sensors = {
       id: this.sensorsCopy.id,
       type: this.sensorsCopy.type,
@@ -431,8 +418,7 @@ export class SensorsComponent implements OnInit {
     this.change = false;
   }
 
-  deleteSearch() {
-    // Borrar busqueda
+  deleteSearch() {// Borra texto de busqueda
     this.Page(1);
     this.totalPages = 5;
     this.currentPage = 1;
@@ -444,8 +430,7 @@ export class SensorsComponent implements OnInit {
 
   /* TARJETAS */
 
-  openClouse() {
-    // Abrir y cerrar tarjeta sensores
+  openClouse() { // Abre y cierra la tarjeta de sensores
     if (this.show == true) {
       this.showAux = false;
     } 
@@ -454,16 +439,14 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  clouse() {
-    // Cerrar panel lateral
+  clouse() { // Cierra tarjetas
     this.show = false;
     this.state = -1;
     this.openClouse();
     this.change = false;
   }
 
-  clouseAll() {
-    // Cerrar todas las pestañas
+  clouseAll() { // Cierra todas las tarjetas
     this.showAux = false;
     this.show = false;
     this.openClouse();
@@ -471,23 +454,20 @@ export class SensorsComponent implements OnInit {
     this.change = false;
   }
 
-  resize(): void {
-    // Redimensionar tarjeta sensores
+  resize(): void { // Redimensiona tarjetas
     this.width = window.innerWidth;
   }
 
   /* PAGINACIÓN */
 
-  firstPage(): void {
-    // Primera pagina
+  firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
       this.getSensorsVoid();
     }
   }
 
-  previousPage10(): void {
-    // 10 paginas mas
+  previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
       this.getSensorsVoid();
@@ -498,30 +478,26 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  previousPage(): void {
-    // Pagina anterior
+  previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
       this.getSensorsVoid();
     }
   }
 
-  Page(num: any): void {
-    // Pagina actual
+  Page(num: any): void { // Pagina actual
     this.currentPage = num;
     this.getSensorsVoid();
   }
 
-  nextPage(): void {
-    // Pagina siguiente
+  nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.getSensorsVoid();
     }
   }
 
-  nextPage10(): void {
-    // 10 paginas menos
+  nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
       this.getSensorsVoid();
@@ -532,8 +508,7 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  lastPage(): void {
-    // Ultima pagina
+  lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
       this.getSensorsVoid();
