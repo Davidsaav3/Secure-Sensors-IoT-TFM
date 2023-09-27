@@ -167,8 +167,8 @@ export class DevicesNewEditComponent implements OnInit {
       this.dataSharingService.sharedLon$.subscribe((data) => {
         this.devices.lon = data;
       });
-      this.updatesharedLat();
-      this.updatesharedLon();
+      this.updateSharedLat();
+      this.updateSharedLon();
     }
     //
     if (this.ruteAux[2] == "new") {
@@ -225,8 +225,8 @@ export class DevicesNewEditComponent implements OnInit {
             // 0. New
             this.devices.lat = 0;
             this.devices.lon = 0;
-            this.dataSharingService.updatesharedLon(0);
-            this.dataSharingService.updatesharedLat(0);
+            this.dataSharingService.updateSharedLon(0);
+            this.dataSharingService.updateSharedLat(0);
           }
         });
       this.getShared();
@@ -508,8 +508,8 @@ export class DevicesNewEditComponent implements OnInit {
         this.devices.lon = data[0].lon;
         this.devices.cota = data[0].cota;
         this.devices.timezone = data[0].timezone;
-        this.updatesharedLat();
-        this.updatesharedLon();
+        this.updateSharedLat();
+        this.updateSharedLon();
       })
       .catch((error) => {
         console.error(error);
@@ -517,10 +517,10 @@ export class DevicesNewEditComponent implements OnInit {
     this.changed = false;
   }
 
-  recharge() { // Recargar los campos del dispositivo a sus valores originales
+  rechargeForm() { // Recargar los campos del dispositivo a sus valores originales
     this.ngOnInit();
     this.changed = false;
-    this.dataSharingService.updatesharedAct(false);
+    this.dataSharingService.updateSharedAct(false);
     this.cont++;
   }
 
@@ -531,8 +531,8 @@ export class DevicesNewEditComponent implements OnInit {
     this.devices.lon = null;
     this.devices.cota = 0;
     this.devices.timezone = "Brussels, Copenhagen, Madrid, Paris";
-    this.updatesharedLat();
-    this.updatesharedLon();
+    this.updateSharedLat();
+    this.updateSharedLon();
   }
 
   resize(): void { // Redimensiona la pantalla
@@ -548,18 +548,18 @@ export class DevicesNewEditComponent implements OnInit {
     this.dataSharingService.sharedLon$.subscribe((data) => {
       this.devices.lon = data;
     });
-    this.dataSharingService.updatesharedAct(false);
+    this.dataSharingService.updateSharedAct(false);
   }
 
-  updatesharedLat() { // Actualiza la Latitud (devices-map)
+  updateSharedLat() { // Actualiza la Latitud (devices-map)
     setTimeout(() => {
-      this.dataSharingService.updatesharedLat(this.devices.lat);
+      this.dataSharingService.updateSharedLat(this.devices.lat);
     }, 100);
   }
 
-  updatesharedLon() { // Actualiza la Longitud (devices-map)
+  updateSharedLon() { // Actualiza la Longitud (devices-map)
     setTimeout(() => {
-      this.dataSharingService.updatesharedLon(this.devices.lon);
+      this.dataSharingService.updateSharedLon(this.devices.lon);
     }, 100);
   }
 

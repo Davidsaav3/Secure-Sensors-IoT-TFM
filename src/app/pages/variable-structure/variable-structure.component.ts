@@ -47,7 +47,7 @@ export class VariableStructureComponent implements OnInit {
   viewDup = -1;
   pencilDup = -1;
 
-  searchParameter = "Buscar";
+  searchParameter = "search";
   order = "description";
   ordAux = "ASC";
 
@@ -124,7 +124,7 @@ export class VariableStructureComponent implements OnInit {
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
-      this.searchParameter = "Buscar";
+      this.searchParameter = "search";
     } 
     else {
       this.searchParameter = this.search.value;
@@ -337,7 +337,7 @@ export class VariableStructureComponent implements OnInit {
     }, 500);
   }
 
-  recharge() { // Recargar campos a sus valores originales
+  rechargeForm() { // Recargar campos a sus valores originales
     this.change = false;
     this.structure = {
       id: this.structureCopy.id,

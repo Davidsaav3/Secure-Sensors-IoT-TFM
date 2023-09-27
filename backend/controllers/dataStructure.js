@@ -12,7 +12,7 @@ router.use(express.json())
     const tam = parseInt(req.params.pag_pag);
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
-    if (type0 === 'Buscar') {
+    if (type0 === 'search') {
       query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure LIMIT 1) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
       query += ` ORDER BY ${type1} ${type2}`;
     } else {

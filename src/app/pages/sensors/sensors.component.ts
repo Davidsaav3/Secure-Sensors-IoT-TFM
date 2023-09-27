@@ -58,7 +58,7 @@ export class SensorsComponent implements OnInit {
   viewDup = -1;
   pencilDup = -1;
 
-  searchAux = "Buscar";
+  searchAux = "search";
   order = "description";
   ordAux = "ASC";
 
@@ -182,7 +182,7 @@ export class SensorsComponent implements OnInit {
   getSensors(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
-    this.searchAux = this.searchAuxArray.value || "Buscar";
+    this.searchAux = this.searchAuxArray.value || "search";
     this.charging = true;
     this.data = [];
 
@@ -402,7 +402,7 @@ export class SensorsComponent implements OnInit {
     }, 500);
   }
 
-  recharge() { // recarga sensor a su valor anterior
+  rechargeForm() { // recarga sensor a su valor anterior
     this.sensors = {
       id: this.sensorsCopy.id,
       type: this.sensorsCopy.type,

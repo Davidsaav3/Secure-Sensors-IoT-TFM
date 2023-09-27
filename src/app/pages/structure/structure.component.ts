@@ -56,7 +56,7 @@ export class StructureComponent implements OnInit {
   viewDup = -1;
   pencilDup = -1;
 
-  searchAux = "Buscar";
+  searchAux = "search";
   order = "description";
   ordAux = "ASC";
 
@@ -115,7 +115,7 @@ export class StructureComponent implements OnInit {
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
-      this.searchAux = "Buscar";
+      this.searchAux = "search";
     } 
     else {
       this.searchAux = this.search.value;
@@ -395,7 +395,7 @@ export class StructureComponent implements OnInit {
     }, 500);
   }
 
-  recharge() {// Recargar campos a sus valores originales
+  rechargeForm() {// Recargar campos a sus valores originales
     this.change = false;
     this.estructure = {
       id_estructure: this.estructureCopy.id_estructure,

@@ -13,13 +13,13 @@ export class DataSharingService {
   private sharedAct = new BehaviorSubject<any>(false);
   sharedAct$ = this.sharedAct.asObservable();
 
-  updatesharedLat(sharedLat: any) {
+  updateSharedLat(sharedLat: any) {
     this.sharedLat.next(sharedLat);
   }
-  updatesharedLon(sharedLon: any) {
+  updateSharedLon(sharedLon: any) {
     this.sharedLon.next(sharedLon);
   }
-  updatesharedAct(sharedAct: any) {
+  updateSharedAct(sharedAct: any) {
     this.sharedAct.next(sharedAct);
   }
 }

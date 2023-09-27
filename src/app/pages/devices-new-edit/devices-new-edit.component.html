@@ -130,7 +130,7 @@
 												<div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'structure' | translate }} {{ 'required' | translate }}</div>
 											</div>
 										</div>
-										<div class="">
+										<div >
 											<div class="form-check form-switch pt-4 pe-3 ps-3">
 												<label class="toggle colorcito tt2 t2">
                                                     <input maxlength="4" type="checkbox" (ngModelChange)="changed=true" (change)="getStructuresList($event)" id="check2" name="check2" [(ngModel)]="devices.variable_configuration">
@@ -166,7 +166,7 @@
 							</div>
 						</div>
 
-						<form class="" *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
+						<form  *ngIf="devices.sensors.length>0" #form="ngForm" #miDiv>
 
 							<div class="row">
 								<div class="col-12">
@@ -335,7 +335,7 @@
 
 				<div *ngIf="this.ruteAux[2]=='edit'" class="c4 d-flex justify-content-between">
 					<div class="col-6">
-						<h5 class="">{{devices.alias}}</h5>
+						<h5 >{{devices.alias}}</h5>
 					</div>
 					<div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
 						<svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-show" viewBox="0 0 16 16">
@@ -348,7 +348,7 @@
 				</div>
 				<div *ngIf="this.ruteAux[2]=='new'" class="c4 d-flex justify-content-between">
 					<div class="col-9">
-						<h5 class="">{{devices.alias}}</h5>
+						<h5 >{{devices.alias}}</h5>
 					</div>
 					<div *ngIf="this.width>965" class="col-3" style="cursor: pointer; cursor: pointer; display: flex; justify-content: flex-end;">
 						<svg class="text-right" *ngIf="showForm" (click)="formHide()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-arrows-angle-expand" viewBox="0 0 16 16">
@@ -376,14 +376,14 @@
 						<div class="row">
 							<div class="col-md-4">
 								<label for="lat">{{ 'devices.edit.lat' | translate }}</label>
-								<input (change)="updatesharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
+								<input (change)="updateSharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
 								<div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
 									<div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} {{ 'required' | translate }}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<label for="lon">{{ 'devices.edit.long' | translate }}</label>
-								<input (change)="updatesharedLon()" (ngModelChange)="changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
+								<input (change)="updateSharedLon()" (ngModelChange)="changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
 								<div *ngIf="form.submitted && form.controls['lon'].errors" class="text-danger">
 									<div *ngIf="form.controls['lon'].errors['required']">{{ 'devices.edit.long' | translate }} {{ 'required' | translate }}</div>
 								</div>
@@ -469,8 +469,8 @@
 
 	<div class="row p-0 m-0">
 		<div class="col-12 p-0">
-			<div *ngIf="this.ruteAux[2]=='edit'" class="">
-				<div class="">
+			<div *ngIf="this.ruteAux[2]=='edit'" >
+				<div >
 					<div class="row">
 						<div class="col-md-6 col-12">
 							<div class="row">
@@ -542,7 +542,7 @@
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
 					<div class="col-7">
-						<button style="width: max-content;" type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal" (click)="recharge()">{{ 'reset.data' | translate }}</button>
+						<button style="width: max-content;" type="button" class="btn btn-secondary me-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-5">
 						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !changed}">Cancelar</button>

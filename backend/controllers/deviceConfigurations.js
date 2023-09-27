@@ -65,7 +65,7 @@ router.use(express.json())
     console.log("---")
 
 
-      if(search_text=='Buscar'){ // BUSQUEDA POR TEXTO ?
+      if(search_text=='search'){ // BUSQUEDA POR TEXTO ?
         if(array_sensors!=-1 || devices_act!=2){ //TIENE FILTROS AVANZADOS ?
           if(state=='0'){
             var variable= '';

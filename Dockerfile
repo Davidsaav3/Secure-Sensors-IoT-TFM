@@ -1,21 +1,29 @@
-FROM node:10-alpine as build-step
+# Use the official Node.js runtime as the base image
+FROM node:16 AS build
 
-RUN mkdir -p /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-WORkDIR /app
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
 
-COPY package.json /app
+# Install dependencies
+RUN npm install
 
-#RUN npm install
-RUN NODE_ENV=development npm i
+# Copy the rest of the application code to the container
+COPY . .
 
-COPY . /app/
+# Build the Angular app for production
+RUN npm run build
 
-RUN npm run build --prod
-#docker build --no-cache -t mybuild:v1 .  
+# Use a lightweight web server to serve the Angular app
+FROM nginx:alpine
 
-#Segunda etapa
+# Copy the built Angular app from the previous stage to the Nginx container
+COPY --from=build /usr/src/app/dist/sensors /usr/share/nginx/html
 
-FROM nginx:1.17.1-alpine
+# Expose port 80 for the web server
+EXPOSE 80
 
-COPY --from=build-step /app/dist/sensors /usr/share/nginx/html
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]

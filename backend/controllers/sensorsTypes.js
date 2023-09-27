@@ -15,7 +15,7 @@ router.use(express.json())
     let query;
     let values;
   
-    if (type0 == 'Buscar') {
+    if (type0 == 'search') {
       query = `SELECT id, type, metric, description, position, correction_general, correction_time_general,(SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?`;
     } else {
       query = `

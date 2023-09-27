@@ -60,7 +60,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   viewList = false;
   viewMap = false;
   showPop: any;
-  searchText = "Buscar";
+  searchText = "search";
   ordAux = "ASC"; 
 
   charging = false;
@@ -186,7 +186,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
     this.ngOnDestroy();
-    this.newMap();
+    this.createMap();
     this.firstTime = false;
   }
 
@@ -256,7 +256,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
     setTimeout(() => {
       if (this.search.value == "") {
-        this.searchText = "Buscar";
+        this.searchText = "search";
       } 
       else {
         this.searchText = this.search.value;
@@ -501,10 +501,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
     if (this.searchAux) {
       this.ngOnDestroy();
-      this.newMap();
+      this.createMap();
       //this.cleanMap();
       //this.ngOnDestroy();
-      //this.newMap();
+      //this.createMap();
       //this.mapListeners();
       this.searchAux = false;
     }
@@ -521,16 +521,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             this.idsParam = deviceIds.join(",");
             if (this.first == false) {
               this.ngOnDestroy();
-              this.newMap();
+              this.createMap();
               this.first = true;
               this.dataAux = this.data;
             }
             if (this.searchAux) {
               this.ngOnDestroy();
-              this.newMap();
+              this.createMap();
               //this.cleanMap();
               //this.ngOnDestroy();
-              //this.newMap();
+              //this.createMap();
               //this.mapListeners();
               this.searchAux = false;
             }
@@ -544,7 +544,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  newMap() { // Crea el mapa
+  createMap() { // Crea el mapa
     if (this.firstTime == false) {
       this.map = new mapboxgl.Map({
         container: this.divMap?.nativeElement,
@@ -688,7 +688,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   filterDevices() { // Activa los filtros del mapa
     //this.ngOnDestroy();
-    //this.newMap();
+    //this.createMap();
     this.searchAux = true;
     this.selectSensorsAux.sensors = [];
     if (this.selectSensors.sensors.length == 0) {

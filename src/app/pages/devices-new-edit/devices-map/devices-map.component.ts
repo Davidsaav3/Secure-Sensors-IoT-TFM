@@ -152,7 +152,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       this.map.on("click", (e) => {
         this.deleteMarker();
         this.createMarker(e.lngLat.wrap());
-        this.updatesharedAct();
+        this.updateSharedAct();
       });
 
       let layerList = document.getElementById("menu");
@@ -327,8 +327,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
     this.sharedLat = lngLat.lat;
     this.sharedLon = lngLat.lng;
-    this.updatesharedLat();
-    this.updatesharedLon();
+    this.updateSharedLat();
+    this.updateSharedLon();
   }
 
   deleteMarker() {  // Elimina chincheta del mapa
@@ -353,15 +353,15 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   /* SHARED */
 
-  updatesharedAct() { // Actualiza activación (devices-new-edit)
-    this.dataSharingService.updatesharedAct(true);
+  updateSharedAct() { // Actualiza activación (devices-new-edit)
+    this.dataSharingService.updateSharedAct(true);
   }
 
-  updatesharedLat() { // Actualiza latitud (devices-new-edit)
-    this.dataSharingService.updatesharedLat(this.sharedLat);
+  updateSharedLat() { // Actualiza latitud (devices-new-edit)
+    this.dataSharingService.updateSharedLat(this.sharedLat);
   }
 
-  updatesharedLon() { // Actualiza longitud (devices-new-edit)
-    this.dataSharingService.updatesharedLon(this.sharedLon);
+  updateSharedLon() { // Actualiza longitud (devices-new-edit)
+    this.dataSharingService.updateSharedLon(this.sharedLon);
   }
 }
