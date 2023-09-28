@@ -231,12 +231,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         this.currentLngLat = this.map!.getCenter();
       });
 
-      if (this.map != undefined && this.search.value == "" && this.selectSensorsAux.sensors[0].id == -1 && this.search.devicesAct == 2) {
         this.map.on("moveend", () => {
           if (this.openAux == false) 
             this.getDevices("0");
         });
-      }
+      
 
       this.mapListeners();
     }
@@ -286,6 +285,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           this.dataAux = this.data;
           console.log("hey");
           this.cleanMap();
+          this.deleteMarker()
           if (this.showPop) {
             this.showPop.remove();
           }
@@ -300,6 +300,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         this.getMapDevices("1")
           .then((data) => {
             this.markers = [];
+            console.log(this.data);
 
             for (let quote of this.data) {
               let color = "#198754";
@@ -501,9 +502,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       this.pagTam = 1;
       this.pag = 10000;
     }
-    if (this.searchAux) {
-      //this.ngOnDestroy();
-      //this.createMap();
+    else {
+      this.ngOnDestroy();
+      this.createMap();
       //this.cleanMap();
       //this.ngOnDestroy();
       //this.createMap();
@@ -516,26 +517,31 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         .then((response) => response.json())
         .then((data) => {
           this.charging = false;
-          if (JSON.stringify(this.data.map((item) => item.id)) != JSON.stringify(data.map((item: { id: any }) => item.id))) {
-            //this.data = [];
-            //this.data = data;
-            //const deviceIds = this.data.map((device) => device.id);
-            //this.idsParam = deviceIds.join(",");
+          if (JSON.stringify(this.data.map((item) => item.id)) != JSON.stringify(data.map((item: { id: any }) => item.id)) || this.searched) {
+            console.log('xd2')
 
-            const newDataIds = data.map((item: { id: any }) => item.id);
-            // Los nuevos
-            const newElements = data.filter((item:any) => !this.data.some((existingItem) => existingItem.id === item.id));
-            // Los eliminados
-            const removedElements = this.data.filter((existingItem) => !newDataIds.includes(existingItem.id));
-            
-            // Añade nuevos
-            this.data.push(...newElements);
-            // Elimina
-            this.data = this.data.filter((item) => !removedElements.some((removedItem) => removedItem.id === item.id));
-        
-            const deviceIds = this.data.map((device) => device.id);
-            this.idsParam = deviceIds.join(",");
-
+            if(!this.searched){
+              const newDataIds = data.map((item: { id: any }) => item.id);
+              // Los nuevos
+              const newElements = data.filter((item:any) => !this.data.some((existingItem) => existingItem.id === item.id));
+              // Los eliminados
+              const removedElements = this.data.filter((existingItem) => !newDataIds.includes(existingItem.id));
+              
+              // Añade nuevos
+              this.data.push(...newElements);
+              // Elimina
+              this.data = this.data.filter((item) => !removedElements.some((removedItem) => removedItem.id === item.id));
+          
+              const deviceIds = this.data.map((device) => device.id);
+              this.idsParam = deviceIds.join(",");
+              }
+              else{
+              this.data = [];
+              this.data = data;
+              const deviceIds = this.data.map((device) => device.id);
+              this.idsParam = deviceIds.join(",");
+              }
+              
             if (this.first == false) {
               this.ngOnDestroy();
               this.createMap();
@@ -544,14 +550,19 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             }
             if (this.searched) {
               this.searched= false;
-              //this.ngOnDestroy();
-              //this.createMap();
-              this.cleanMap();
+              this.ngOnDestroy();
+              this.createMap();
+              //this.cleanMap();
               //this.ngOnDestroy();
               //this.createMap();
               this.mapListeners();
+              // pq no se rellena al momento y hay q hacer cosas raras xd
+              //pinchos fantasma q siempre están
             }
+          setTimeout(() => {
             resolve(this.data);
+          }, 100);
+
           }
         })
         .catch((error) => {
