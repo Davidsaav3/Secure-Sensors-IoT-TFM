@@ -62,7 +62,7 @@ export class DevicesNewEditComponent implements OnInit {
   alt6 = true;
 
   activeLang = environment.languageLang[0];
-  mark = "position";
+  mark = "position1";
   exp = false;
   data: any;
   idMax = 2;
@@ -519,9 +519,9 @@ export class DevicesNewEditComponent implements OnInit {
 
   rechargeForm() { // Recargar los campos del dispositivo a sus valores originales
     this.ngOnInit();
-    this.changed = false;
     this.dataSharingService.updateSharedAct(false);
     this.cont++;
+    this.changed = false;
   }
 
   /* AUX */

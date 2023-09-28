@@ -62,6 +62,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   showPop: any;
   searchText = "search";
   ordAux = "ASC"; 
+  searched= false;
 
   charging = false;
   mark = "uid";
@@ -280,7 +281,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         console.log(this.dataAux.length);
         console.log(this.data);
 
-        if ((this.dataAux.length != this.data.length && this.data.length != 0) ||this.dataAux.length == 0 /* || this.searchAux*/) {
+        if ((this.dataAux.length != this.data.length && this.data.length != 0) ||this.dataAux.length == 0 || this.searched /* || this.searchAux*/) {
+          
           this.dataAux = this.data;
           console.log("hey");
           this.cleanMap();
@@ -500,13 +502,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       this.pag = 10000;
     }
     if (this.searchAux) {
-      this.ngOnDestroy();
-      this.createMap();
+      //this.ngOnDestroy();
+      //this.createMap();
       //this.cleanMap();
       //this.ngOnDestroy();
       //this.createMap();
       //this.mapListeners();
-      this.searchAux = false;
+      //this.searchAux = false;
     }
     this.charging = true;
     return new Promise((resolve, reject) => {
@@ -514,25 +516,40 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         .then((response) => response.json())
         .then((data) => {
           this.charging = false;
-          if (JSON.stringify(this.data.map((item) => item.id)) !=JSON.stringify(data.map((item: { id: any }) => item.id))) {
-            this.data = [];
-            this.data = data;
+          if (JSON.stringify(this.data.map((item) => item.id)) != JSON.stringify(data.map((item: { id: any }) => item.id))) {
+            //this.data = [];
+            //this.data = data;
+            //const deviceIds = this.data.map((device) => device.id);
+            //this.idsParam = deviceIds.join(",");
+
+            const newDataIds = data.map((item: { id: any }) => item.id);
+            // Los nuevos
+            const newElements = data.filter((item:any) => !this.data.some((existingItem) => existingItem.id === item.id));
+            // Los eliminados
+            const removedElements = this.data.filter((existingItem) => !newDataIds.includes(existingItem.id));
+            
+            // Añade nuevos
+            this.data.push(...newElements);
+            // Elimina
+            this.data = this.data.filter((item) => !removedElements.some((removedItem) => removedItem.id === item.id));
+        
             const deviceIds = this.data.map((device) => device.id);
             this.idsParam = deviceIds.join(",");
+
             if (this.first == false) {
               this.ngOnDestroy();
               this.createMap();
               this.first = true;
               this.dataAux = this.data;
             }
-            if (this.searchAux) {
-              this.ngOnDestroy();
-              this.createMap();
-              //this.cleanMap();
+            if (this.searched) {
+              this.searched= false;
               //this.ngOnDestroy();
               //this.createMap();
-              //this.mapListeners();
-              this.searchAux = false;
+              this.cleanMap();
+              //this.ngOnDestroy();
+              //this.createMap();
+              this.mapListeners();
             }
             resolve(this.data);
           }
@@ -542,6 +559,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           reject(error);
         });
     });
+    
   }
 
   createMap() { // Crea el mapa
@@ -653,12 +671,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   cleanMap() {
     if (this.map != undefined) {
       this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
-      this.deleteMarker();
 
       if (this.map.getLayer("places")) {
         this.map.removeLayer("places");
@@ -687,6 +699,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
 
   filterDevices() { // Activa los filtros del mapa
+    this.searched= true;
     //this.ngOnDestroy();
     //this.createMap();
     this.searchAux = true;

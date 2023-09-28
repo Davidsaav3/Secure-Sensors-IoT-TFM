@@ -59,7 +59,7 @@ export class SensorsComponent implements OnInit {
   pencilDup = -1;
 
   searchAux = "search";
-  order = "description";
+  order = "position";
   ordAux = "ASC";
 
   alertDelete: any = false;

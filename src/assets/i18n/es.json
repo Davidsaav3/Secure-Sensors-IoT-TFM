@@ -44,6 +44,8 @@
     "sensors.delete" : "Eliminar",
     "sensors.enable" : "Activado",
     "sensors.disable" : "Desactivado",
+    "sensors.enable2" : "Act",
+    "sensors.disable2" : "Desact",
     "sensors.exit" : "Salir",
     "sensors.l1" : "Todos",
     "sensors.l2" : "Todos los estados",
