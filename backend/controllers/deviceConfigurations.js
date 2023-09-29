@@ -16,10 +16,6 @@ router.use(express.json())
     let ord_asc= req.params.ord_asc;
     let sensors_act= req.params.sensors_act;
     let x1= req.params.pos_x_1;
-
-    console.log(req.params.pos_x_1)
-    console.log(x1)
-
     let x2= req.params.pos_x_2;
     let y1= req.params.pos_y_1;
     let y2= req.params.pos_y_2;
@@ -199,7 +195,7 @@ router.use(express.json())
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -253,10 +249,6 @@ router.use(express.json())
           }
           else{
             console.log("MAPA SIMPLE")
-            console.log(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
-            LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
-            LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
-            WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`)
             con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 

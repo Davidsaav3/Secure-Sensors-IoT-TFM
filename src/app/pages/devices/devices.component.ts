@@ -35,8 +35,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   markers: MarkerAndColor[] = [];
   geojson: any;
   geojsonAux: any;
-  dataAux: any[] = [];
-  first = false;
   arraySensors: any;
   colorMap = "streets-v12";
   layerList: any;
@@ -46,6 +44,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     -0.5098796883778505,
     38.3855908932305
   );
+  currentRotation= 0;
+  currentPitch = 0;   
+  pass2= false; 
 
   resultsPerPag = environment.resultsPerPag;
   data: any[] = [];
@@ -53,8 +54,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   id = 1;
   timeout: any = null;
   idsParam: any;
+  idsParam1: any;
   searchAux = false;
-  firstTime = true;
   pagTam: any;
   pag: any;
   viewList = false;
@@ -188,7 +189,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
     this.ngOnDestroy();
     this.createMap();
-    this.firstTime = false;
   }
 
   auxInit() { // Auxiliar de ngOnInit
@@ -202,58 +202,23 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           showUserHeading: true,
         })
       );
-      this.map.addControl(new mapboxgl.NavigationControl());
-      /*if (layerList != null) {
-        let inputs = layerList.getElementsByTagName('input');
-        console.log(inputs)
-        if (inputs != null) {
-          const inputArray = Array.from(inputs);
-          for (const input of inputArray) {
-            input.onclick = (layer: any) => {
-              const layerId = layer.target.id;
-              if (this.map != null) {
-                this.map.setStyle('mapbox://styles/mapbox/' + layerId);
-              }
-            };
-      
-          }
-        }
-      }*/
-      if (!this.map) throw "Mapa no inicializado";
-      this.map.on("zoom", (ev) => {
-        this.zoom = this.map!.getZoom();
-      });
-      this.map.on("zoomend", (ev) => {
-        if (this.map!.getZoom() < 18) return;
-        this.map!.zoomTo(18);
-      });
-      this.map.on("move", () => {
-        this.currentLngLat = this.map!.getCenter();
-      });
-
-        this.map.on("moveend", () => {
-          if (this.openAux == false) 
-            this.getDevices("0");
-        });
-      
-
-      this.mapListeners();
+    this.map.addControl(new mapboxgl.NavigationControl());
     }
+    setTimeout(() => {
+      this.mapListeners();
+    }, 100);
   }
 
   /* GET */
   
   orderDevices(id: any, ordAux: any) { // Ordena dispositivos
-    this.deleteMarker();
+    //this.deleteMarker();
     this.mark = id;
     this.ordAux = ordAux;
     this.getDevices("0");
   }
 
   getDevices(num: any) { // Obtiene los dispositivos
-    if (num == "1") {
-      this.deleteMarker();
-    }
     setTimeout(() => {
       if (this.search.value == "") {
         this.searchText = "search";
@@ -275,32 +240,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
       if (this.openAux == false) {
 
-        // Map
-        console.log(this.data.length);
-        console.log(this.dataAux.length);
-        console.log(this.data);
-
-        if ((this.dataAux.length != this.data.length && this.data.length != 0) ||this.dataAux.length == 0 || this.searched /* || this.searchAux*/) {
-          
-          this.dataAux = this.data;
-          console.log("hey");
-          this.cleanMap();
-          this.deleteMarker()
-          if (this.showPop) {
-            this.showPop.remove();
-          }
-
-          setTimeout(() => {
-            this.mapListeners();
-          }, 100);
-        }
-
-        console.log(this.data);
-
         this.getMapDevices("1")
-          .then((data) => {
-            this.markers = [];
-            console.log(this.data);
+          .then((pass) => {
+            if (pass || this.searched) {
+              console.log(this.data)
+
+              this.searched= false;
+              this.markers = [];
 
             for (let quote of this.data) {
               let color = "#198754";
@@ -315,8 +261,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               let enable = parseInt(quote.id);
               this.addMarker(coords, color, name, enable, quote);
             }
-
-            console.log(this.markers);
+            console.log(this.markers)
+            //console.log(this.markers);
 
             setTimeout(() => {
               if (this.map != null) {
@@ -369,7 +315,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
                 this.geojsonAux = {
                   features: cont,
                 };
-                if (!this.map.getSource("places")) {
+                if (this.map.getLayer("places")) {
+                  this.map.removeLayer("places");
+                }
+                if (this.map.getSource("places")) {
+                  this.map.removeSource("places");
+                }
+                if (this.map != null && !this.map.getSource("places")) {
                   this.map.addSource("places", {
                     type: "geojson",
                     data: {
@@ -445,6 +397,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
                 }
               }
             }, 100);
+          }
           })
           .catch((error) => {
             console.error("Error al obtener los datos:", error);
@@ -459,7 +412,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         fetch(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
+            //console.log(data);
             this.charging = false;
             if (data && data.length > 0 && data[0].total) {
               this.totalPages = Math.ceil(data[0].total / this.quantPage);
@@ -502,23 +455,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       this.pagTam = 1;
       this.pag = 10000;
     }
-    else {
-      this.ngOnDestroy();
-      this.createMap();
-      //this.cleanMap();
-      //this.ngOnDestroy();
-      //this.createMap();
-      //this.mapListeners();
-      //this.searchAux = false;
-    }
+
     this.charging = true;
     return new Promise((resolve, reject) => {
       fetch(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`)
         .then((response) => response.json())
         .then((data) => {
+          let pass= false;
           this.charging = false;
-          if (JSON.stringify(this.data.map((item) => item.id)) != JSON.stringify(data.map((item: { id: any }) => item.id)) || this.searched) {
-            console.log('xd2')
+          const deviceIds1 = data.map((device: { id: any; }) => device.id);
+          this.idsParam1 = deviceIds1.join(",");
+          //console.log(this.idsParam)
+          //console.log(this.idsParam1)
+
+          if ((this.idsParam != this.idsParam1) || this.searched) {
+            pass= true;
+            //console.log('xd2')
 
             if(!this.searched){
               const newDataIds = data.map((item: { id: any }) => item.id);
@@ -530,38 +482,26 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               // Añade nuevos
               this.data.push(...newElements);
               // Elimina
-              this.data = this.data.filter((item) => !removedElements.some((removedItem) => removedItem.id === item.id));
+              this.data = data.filter((item: { id: any; }) => !removedElements.some((removedItem) => removedItem.id === item.id));
           
               const deviceIds = this.data.map((device) => device.id);
-              this.idsParam = deviceIds.join(",");
-              }
-              else{
+              this.idsParam = this.idsParam1;
+            }
+            else{
               this.data = [];
               this.data = data;
               const deviceIds = this.data.map((device) => device.id);
               this.idsParam = deviceIds.join(",");
-              }
-              
-            if (this.first == false) {
-              this.ngOnDestroy();
-              this.createMap();
-              this.first = true;
-              this.dataAux = this.data;
             }
+
             if (this.searched) {
-              this.searched= false;
               this.ngOnDestroy();
               this.createMap();
-              //this.cleanMap();
-              //this.ngOnDestroy();
-              //this.createMap();
-              this.mapListeners();
-              // pq no se rellena al momento y hay q hacer cosas raras xd
-              //pinchos fantasma q siempre están
             }
-          setTimeout(() => {
-            resolve(this.data);
-          }, 100);
+
+            setTimeout(() => {
+              resolve(pass);
+            }, 100);
 
           }
         })
@@ -573,13 +513,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     
   }
 
-  createMap() { // Crea el mapa
-    if (this.firstTime == false) {
+  createMap() { // Crea el mapa    
+    if (this.searched) {
+      //console.log('hey hola q tal')
       this.map = new mapboxgl.Map({
         container: this.divMap?.nativeElement,
         style: "mapbox://styles/mapbox/" + this.colorMap,
         center: [this.currentLngLat.lng, this.currentLngLat.lat],
         zoom: this.zoom,
+        bearing: this.currentRotation,
+        pitch: this.currentPitch,
       });
     } 
     else {
@@ -591,6 +534,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               style: "mapbox://styles/mapbox/" + this.colorMap,
               center: [position.coords.longitude, position.coords.latitude],
               zoom: this.zoom,
+              bearing: this.currentRotation,
+              pitch: this.currentPitch,
             });
           },
           (error) => {
@@ -599,6 +544,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               style: "mapbox://styles/mapbox/" + this.colorMap,
               center: [-3.7034137886912504, 40.41697654880073],
               zoom: this.zoom,
+              bearing: this.currentRotation,
+              pitch: this.currentPitch,
             });
             console.log("Error geo", error);
           }
@@ -610,6 +557,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           style: "mapbox://styles/mapbox/" + this.colorMap,
           center: [-3.7034137886912504, 40.41697654880073],
           zoom: this.zoom,
+          bearing: this.currentRotation,
+          pitch: this.currentPitch,
         });
         console.log("Geo no compatible");
       }
@@ -620,6 +569,28 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   /* MAP AUX */
 
   mapListeners() { // Listeners del mapa
+    if (!this.map) throw "Mapa no inicializado";
+    this.map.on("zoom", (ev) => {
+      this.zoom = this.map!.getZoom();
+    });
+    this.map.on("zoomend", (ev) => {
+      if (this.map!.getZoom() < 18) return;
+      this.map!.zoomTo(18);
+    });
+    this.map.on("move", () => {
+      this.currentLngLat = this.map!.getCenter();
+    });
+    this.map.on("rotate", () => {
+      this.currentRotation = this.map!.getBearing();
+    });
+    this.map.on("pitch", () => {
+      this.currentPitch = this.map!.getPitch();
+    });
+    this.map.on("moveend", () => {
+      if (this.openAux == false) 
+        this.getDevices("0");
+    });
+
     this.showPop = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
@@ -677,6 +648,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       this.saveStorage();
       this.map.setStyle("mapbox://styles/mapbox/" + event);
     }
+    this.searched= true;
+    this.getDevices("0");
   }
 
   cleanMap() {
@@ -699,7 +672,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   /* FILTERS */
 
   initFilters() { // Inicializa los filtros del mapa
-    this.deleteMarker();
+    //this.deleteMarker();
     this.rute = this.router.routerState.snapshot.url;
     fetch(this.maxDevice)
       .then((response) => response.json())
