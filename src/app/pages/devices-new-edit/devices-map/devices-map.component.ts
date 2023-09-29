@@ -28,7 +28,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
-  
+  idDevice: string = "http://localhost:5172/api/device_configurations/id";
+
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     this.sharedLon,
     this.sharedLat
@@ -37,15 +38,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   constructor(private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
     this.rute = this.rute1.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
-    if (this.ruteAux[2] == "edit" || (this.ruteAux[2] == "new" && this.state == 1)) {
-      this.dataSharingService.sharedLat$.subscribe((data) => {
-        this.sharedLat = data;
-      });
-      this.dataSharingService.sharedLon$.subscribe((data) => {
-        this.sharedLon = data;
-      });
-      this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat); //setTimeout
-    }
   }
 
   maxDevice: string = "http://localhost:5172/api/device_configurations/max";
@@ -110,10 +102,21 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       }
       //
       if (this.ruteAux[2] == "edit" ||(this.ruteAux[2] == "new" && this.state == 1)) {
-        this.deleteMarker();
-        this.map = this.createMap(this.currentLngLat);
-        this.createMarker(this.currentLngLat);
-        this.auxInit();
+        fetch(`${this.idDevice}/${this.ruteAux[3]}`)
+        .then((response) => response.json())
+        .then((data) => {
+          this.sharedLon= data[0].lon;
+          this.sharedLat= data[0].lat;
+          this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat); //setTimeout
+          console.log(this.currentLngLat)
+          this.map = this.createMap(this.currentLngLat);
+          this.deleteMarker();
+          this.createMarker(this.currentLngLat);
+          this.auxInit();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       }
     }, 100);
   }

@@ -269,6 +269,8 @@ export class DevicesNewEditComponent implements OnInit {
         if (data[0].variable_configuration == undefined ||data[0].variable_configuration == null) {
           this.devices.variable_configuration = 0;
         }
+        console.log(this.devices.lat)
+        console.log(this.devices.lon)
         this.updateSharedLat();
         this.updateSharedLon();
       })
