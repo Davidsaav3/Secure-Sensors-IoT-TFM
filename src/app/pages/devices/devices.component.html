@@ -283,9 +283,6 @@
 						<input *ngIf="colorMap=='dark-v11'" id="dark-v11" name="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
 						<input *ngIf="colorMap!='dark-v11'" (click)="changeMapStyle('dark-v11');saveStorage()" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
 						<label for="dark-v11">{{ 'oscuro' | translate }}</label>
-
-						<input (click)="cleanMap()" type="button">
-
 					</div>
 				</div>
 			</div>

@@ -111,7 +111,7 @@ export class DevicesNewEditComponent implements OnInit {
       {
         id: 1,
         enable: 0,
-        idDevice: 0,
+        id_device: 0,
         id_type_sensor: 0,
         datafield: "",
         nodata: true,
@@ -161,14 +161,15 @@ export class DevicesNewEditComponent implements OnInit {
       this.showLarge = false;
       this.getDevices();
 
-      this.dataSharingService.sharedLat$.subscribe((data) => {
-        this.devices.lat = data;
-      });
-      this.dataSharingService.sharedLon$.subscribe((data) => {
-        this.devices.lon = data;
-      });
-      this.updateSharedLat();
-      this.updateSharedLon();
+      setTimeout(() => {
+        this.dataSharingService.sharedLat$.subscribe((data) => {
+          this.devices.lat = data;
+        });
+        this.dataSharingService.sharedLon$.subscribe((data) => {
+          this.devices.lon = data;
+        });
+      }, 1000);
+      
     }
     //
     if (this.ruteAux[2] == "new") {
@@ -196,6 +197,11 @@ export class DevicesNewEditComponent implements OnInit {
 
                 this.createDate();
                 this.devices.createdAt = this.formatDateTime(this.date);
+                this.devices.updatedAt = this.formatDateTime(this.date);
+
+                for (let index = 0; index < this.devices.sensors.length; index++) {
+                  this.devices.sensors[index].id_device= this.idMax;
+                }
               })
               .catch((error) => {
                 console.error(error);
@@ -219,7 +225,7 @@ export class DevicesNewEditComponent implements OnInit {
                     error
                   );
                 });
-            }, 100);
+            }, 200);
           }
           if (this.state == 0) {
             // 0. New
@@ -263,6 +269,8 @@ export class DevicesNewEditComponent implements OnInit {
         if (data[0].variable_configuration == undefined ||data[0].variable_configuration == null) {
           this.devices.variable_configuration = 0;
         }
+        this.updateSharedLat();
+        this.updateSharedLon();
       })
       .catch((error) => {
         console.error(error);
@@ -344,7 +352,7 @@ export class DevicesNewEditComponent implements OnInit {
           {
             id: -1,
             enable: 0,
-            idDevice: this.id,
+            id_device: this.id,
             id_type_sensor: 0,
             datafield: "",
             nodata: true,
@@ -383,8 +391,8 @@ export class DevicesNewEditComponent implements OnInit {
       }, 100);
     }
     if (this.state == 1) {
-      this.devices.sensors.forEach((sensor: { idDevice: number }) => {
-        sensor.idDevice = this.idMax;
+      this.devices.sensors.forEach((sensor: { id_device: number }) => {
+        sensor.id_device = this.idMax;
       });
       this.devices.createdAt = this.date;
       this.changed = false;
@@ -407,7 +415,7 @@ export class DevicesNewEditComponent implements OnInit {
           {
             id: -1,
             enable: 0,
-            idDevice: this.id,
+            id_device: this.id,
             id_type_sensor: 0,
             datafield: "",
             nodata: true,
@@ -469,7 +477,7 @@ export class DevicesNewEditComponent implements OnInit {
     let sensors_aux = {
       id: this.devices.sensors.length,
       enable: 0,
-      idDevice: this.id,
+      id_device: this.id,
       id_type_sensor: this.selectSensors.sensors[0].id,
       datafield: "",
       nodata: true,

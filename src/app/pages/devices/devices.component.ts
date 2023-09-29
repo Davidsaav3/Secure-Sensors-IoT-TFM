@@ -564,7 +564,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
     setTimeout(() => {
       this.auxInit();
-    }, 100);
+    }, 300);
   }
 
   /* MAP AUX */

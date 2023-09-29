@@ -37,7 +37,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   constructor(private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
     this.rute = this.rute1.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
-    if (this.ruteAux[2] == "edit") {
+    if (this.ruteAux[2] == "edit" || (this.ruteAux[2] == "new" && this.state == 1)) {
       this.dataSharingService.sharedLat$.subscribe((data) => {
         this.sharedLat = data;
       });
@@ -73,23 +73,9 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
         }
       });
 
-    setTimeout(() => {
       this.readStorage();
       this.rute = this.rute1.routerState.snapshot.url;
       this.ruteAux = this.rute.split("/");
-      this.dataSharingService.sharedLat$.subscribe((data) => {
-        this.sharedLat = data;
-      });
-      this.dataSharingService.sharedLon$.subscribe((data) => {
-        this.sharedLon = data;
-      });
-      if (this.ruteAux[2] == "edit" ||(this.ruteAux[2] == "new" && this.state == 1)) {
-        this.currentLngLat = new mapboxgl.LngLat(
-          this.sharedLon,
-          this.sharedLat
-        );
-      }
-    }, 100);
   }
 
   /* AUX INIT */
@@ -126,10 +112,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       if (this.ruteAux[2] == "edit" ||(this.ruteAux[2] == "new" && this.state == 1)) {
         this.deleteMarker();
         this.map = this.createMap(this.currentLngLat);
-        this.currentLngLat = new mapboxgl.LngLat(
-          this.sharedLon,
-          this.sharedLat
-        );
         this.createMarker(this.currentLngLat);
         this.auxInit();
       }
@@ -233,10 +215,12 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     setInterval(() => {
       try {
         this.dataSharingService.sharedLat$.subscribe((data) => {
-          this.sharedLat = data;
+          if(data!=0)
+            this.sharedLat = data;
         });
         this.dataSharingService.sharedLon$.subscribe((data) => {
-          this.sharedLon = data;
+          if(data!=0)
+            this.sharedLon = data;
         });
         if (this.sharedLat != this.currentLngLat.lat ||this.sharedLon != this.currentLngLat.lng) {
           this.deleteMarker();

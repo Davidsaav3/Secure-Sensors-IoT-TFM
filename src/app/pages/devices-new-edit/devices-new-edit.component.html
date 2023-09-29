@@ -238,8 +238,8 @@
 												<tr class="pb-0" style="overflow-y: scroll;">
 													<label style="display: none" [for]="'id'+i">{{ 'devices.sensors.id' | translate }}</label>
 													<input (ngModelChange)="this.changed= true;" type="text" style="display: none" class="form-control" [id]="'id'+i" [name]="'id'+i" value="{{i}}" [(ngModel)]="item.id">
-													<label style="display: none" [for]="'idDevice'+i">{{ 'devices.sensors.idDevice' | translate }}</label>
-													<input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'idDevice'+i" [name]="'idDevice'+i" value="{{this.id}}" [(ngModel)]="item.idDevice">
+													<label style="display: none" [for]="'id_device'+i">{{ 'devices.sensors.id_device' | translate }}</label>
+													<input type="number" min="0" maxlength="11" (ngModelChange)="this.changed= true;" style="display: none" class="form-control" [id]="'id_device'+i" [name]="'id_device'+i" value="{{this.id}}" [(ngModel)]="item.id_device">
 
 													<td scope="col2" class="pb-0 input-0">
 														<label style="display: none" [for]="'orden'+i">{{ 'devices.sensors.order' | translate }}</label>
