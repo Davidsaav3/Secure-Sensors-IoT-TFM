@@ -187,7 +187,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
-    this.ngOnDestroy();
     this.createMap();
   }
 
@@ -204,9 +203,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       );
     this.map.addControl(new mapboxgl.NavigationControl());
     }
-    setTimeout(() => {
-      this.mapListeners();
-    }, 100);
+    this.mapListeners();
   }
 
   /* GET */
@@ -246,6 +243,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               console.log(this.data)
 
               this.searched= false;
+              for (let index = 0; index < this.markers.length; index++) {
+                this.markers[index].marker.remove();
+              }
               this.markers = [];
 
             for (let quote of this.data) {
@@ -478,7 +478,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               const newElements = data.filter((item:any) => !this.data.some((existingItem) => existingItem.id === item.id));
               // Los eliminados
               const removedElements = this.data.filter((existingItem) => !newDataIds.includes(existingItem.id));
-              
               // Añade nuevos
               this.data.push(...newElements);
               // Elimina
@@ -495,13 +494,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             }
 
             if (this.searched) {
-              this.ngOnDestroy();
-              this.createMap();
+              //this.ngOnDestroy();
+              //this.createMap();
+              this.cleanMap();
             }
 
             setTimeout(() => {
               resolve(pass);
-            }, 100);
+            }, 300);
 
           }
         })
@@ -515,7 +515,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   createMap() { // Crea el mapa    
     if (this.searched) {
-      //console.log('hey hola q tal')
       this.map = new mapboxgl.Map({
         container: this.divMap?.nativeElement,
         style: "mapbox://styles/mapbox/" + this.colorMap,
@@ -563,13 +562,16 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         console.log("Geo no compatible");
       }
     }
-    this.auxInit();
+    setTimeout(() => {
+      this.auxInit();
+    }, 100);
   }
 
   /* MAP AUX */
 
   mapListeners() { // Listeners del mapa
-    if (!this.map) throw "Mapa no inicializado";
+    if (this.map != null) {
+
     this.map.on("zoom", (ev) => {
       this.zoom = this.map!.getZoom();
     });
@@ -596,7 +598,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       closeOnClick: false,
     });
 
-    if (this.map != null) {
       this.map.on("mouseenter", "places", (e) => {
         if (this.map != undefined) {
           this.map.getCanvas().style.cursor = "pointer";
@@ -654,13 +655,18 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   cleanMap() {
     if (this.map != undefined) {
-      this.deleteMarker();
-
       if (this.map.getLayer("places")) {
         this.map.removeLayer("places");
       }
       if (this.map.getSource("places")) {
         this.map.removeSource("places");
+      }
+      const elementsToDelete  = document.querySelectorAll(".marker_text");
+      elementsToDelete.forEach((element) => {
+        element.remove(); // Elimina el elemento del DOM
+      });
+      for (let index = 0; index < this.markers.length; index++) {
+        this.markers[index].marker.remove();
       }
     }
   }
@@ -672,7 +678,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   /* FILTERS */
 
   initFilters() { // Inicializa los filtros del mapa
-    //this.deleteMarker();
     this.rute = this.router.routerState.snapshot.url;
     fetch(this.maxDevice)
       .then((response) => response.json())
@@ -684,8 +689,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   filterDevices() { // Activa los filtros del mapa
     this.searched= true;
-    //this.ngOnDestroy();
-    //this.createMap();
     this.searchAux = true;
     this.selectSensorsAux.sensors = [];
     if (this.selectSensors.sensors.length == 0) {
@@ -845,18 +848,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       new mapboxgl.Marker(el).setLngLat(coords).addTo(this.map);
     }
     this.markers.push({ color, marker, name, enable, data });
-  }
-
-  deleteMarker() { // Eliminar chincheta del mapa
-    for (let index = 0; index < this.markers.length; index++) {
-      this.markers[index].marker.remove();
-    }
-    this.data = [];
-    this.markers = [];
-    let contenidoSuperpuesto = document.getElementsByClassName("marker_text");
-    for (let i = 0; i < contenidoSuperpuesto.length; i++) {
-      contenidoSuperpuesto[i].remove();
-    }
   }
 
   /* BÚSCAR */
