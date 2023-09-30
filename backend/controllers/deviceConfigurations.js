@@ -270,15 +270,14 @@ router.use(express.json())
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure 
           FROM (
             SELECT id
-            FROM device_configurations
+            FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%'
             LIMIT ${tam}
             OFFSET ${act}
           ) AS subquery
           LEFT JOIN device_configurations dc ON subquery.id = dc.id
           LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
           LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
-            WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR dc.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%'
-            ORDER BY ${order_by} ${ord_asc};`, function (err, result) {
+          ORDER BY ${order_by} ${ord_asc};`, function (err, result) {
             if (err) throw err;
             const responseArray = auxGet(result);
             res.json(responseArray);    

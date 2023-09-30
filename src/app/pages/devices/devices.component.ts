@@ -853,6 +853,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   /* BÚSCAR */
 
   onKeySearch(event: any) { // Busqueda por texto
+    this.searched= true;
     this.currentPage = 1;
     this.deleteSearch();
     clearTimeout(this.timeout);
