@@ -108,7 +108,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           this.sharedLon= data[0].lon;
           this.sharedLat= data[0].lat;
           this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat); //setTimeout
-          console.log(this.currentLngLat)
+          //console.log(this.currentLngLat)
           this.map = this.createMap(this.currentLngLat);
           this.deleteMarker();
           this.createMarker(this.currentLngLat);

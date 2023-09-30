@@ -70,7 +70,7 @@ export class SensorsComponent implements OnInit {
   saveNot: any = false;
 
   sensors = {
-    id: "",
+    id: 0,
     type: "",
     metric: "",
     description: "",
@@ -84,7 +84,7 @@ export class SensorsComponent implements OnInit {
   };
 
   sensorsCopy = {
-    id: "",
+    id: 0,
     type: "",
     metric: "",
     description: "",
@@ -295,7 +295,8 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  openNew(id: any,type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any,discard_value:any) { // Abre Nuevo sensor
+  openNew(id:any,type:any,metric:any,description:any,errorvalue:any,valuemax:any,valuemin:any,position:any,correction_general:any,correction_time_general:any,discard_value:any) { // Abre Nuevo sensor
+
     this.sensors = {
       id: id,
       type: type,
@@ -309,6 +310,7 @@ export class SensorsComponent implements OnInit {
       correction_time_general: correction_time_general,
       discard_value: discard_value,
     };
+
     this.show = true;
     this.openClouse();
   }
@@ -323,11 +325,11 @@ export class SensorsComponent implements OnInit {
         body: JSON.stringify(this.sensors),
         headers: { "Content-type": "application/json; charset=UTF-8" },
       }).then((response) => response.json());
-      this.data = this.data.filter((data: { id: string }) => data.id !== this.sensors.id);
+      this.data = this.data.filter((data: { id: number }) => data.id !== this.sensors.id);
       let sensors = this.sensors;
       this.data.push(sensors);
       this.data.sort((a: any, b: any) => {return a.position - b.position;});
-      this.actId = parseInt(this.sensors.id);
+      this.actId = this.sensors.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
@@ -361,7 +363,32 @@ export class SensorsComponent implements OnInit {
           this.sensors = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
-          this.openNew("",data,this.sensors.metric,this.sensors.description,this.sensors.errorvalue,this.sensors.valuemax,this.sensors.valuemin,this.sensors.position,this.sensors.correction_general,this.sensors.correction_time_general,this.sensors.discard_value);
+          
+          fetch(`${this.getId}/${this.sensors.id}`)
+          .then((response) => response.json())
+          .then((data1) => {
+            this.sensors = data1[0];
+            this.actId = this.sensors.id;
+            this.id = this.sensors.id;
+            let sensors = { ...this.sensors };
+            this.sensorsCopy = {
+              id: sensors.id,
+              type: sensors.type,
+              metric: sensors.metric,
+              description: sensors.description,
+              errorvalue: sensors.errorvalue,
+              valuemax: sensors.valuemax,
+              valuemin: sensors.valuemin,
+              position: sensors.position,
+              correction_general: sensors.correction_general,
+              correction_time_general: sensors.correction_time_general,
+              discard_value: sensors.discard_value,
+            };
+            this.openNew("",data,this.sensors.metric,this.sensors.description,this.sensors.errorvalue,this.sensors.valuemax,this.sensors.valuemin,this.sensors.position,this.sensors.correction_general,this.sensors.correction_time_general,this.sensors.discard_value);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
           this.change = true;
         })
         .catch((error) => {

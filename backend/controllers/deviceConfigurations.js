@@ -83,7 +83,7 @@ router.use(express.json())
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
               LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
               order by ${order_by} ${ord_asc}`
-              console.log(variable)
+              //console.log(variable)
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                 const responseArray = auxGet(result);
@@ -120,7 +120,7 @@ router.use(express.json())
                 
                 variable+= `
                 order by ${order_by} ${ord_asc}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -159,7 +159,7 @@ router.use(express.json())
                 }*/
                 variable+= `
                 order by ${order_by} ${ord_asc}`
-                console.log(variable)
+                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -354,12 +354,11 @@ router.use(express.json())
       WHERE dc.id = ?`
       var variable_configuration=-1;
       variable_configuration = result[0].variable_configuration;
-      console.log(result[0].variable_configuration)
+      //console.log(result[0].variable_configuration)
 
       setTimeout(() => {
 
       if(variable_configuration==0){
-        console.log('hola0')
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
          (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
@@ -372,7 +371,6 @@ router.use(express.json())
          `; 
        }
        if(variable_configuration==1){
-        console.log('hola1')
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
          (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
@@ -392,7 +390,7 @@ router.use(express.json())
          }
          if (result.length === 0) {
             // Ninguna de las consultas anteriores devolvió filas, ejecuta ambas sin el LEFT JOIN
-            console.log('Ejecutando ambas consultas sin LEFT JOIN');
+            //console.log('Ejecutando ambas consultas sin LEFT JOIN');
             query = `SELECT dc.*,
             s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
             (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,

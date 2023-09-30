@@ -269,8 +269,8 @@ export class DevicesNewEditComponent implements OnInit {
         if (data[0].variable_configuration == undefined ||data[0].variable_configuration == null) {
           this.devices.variable_configuration = 0;
         }
-        console.log(this.devices.lat)
-        console.log(this.devices.lon)
+        //console.log(this.devices.lat)
+        //console.log(this.devices.lon)
         this.updateSharedLat();
         this.updateSharedLon();
       })
@@ -438,6 +438,8 @@ export class DevicesNewEditComponent implements OnInit {
         this.devices.sensors = [];
       } 
       else {
+        //console.log(this.devices.lat)
+        //console.log(this.devices.lon)
         fetch(this.postDevice, {
           method: "PUT",
           body: JSON.stringify(this.devices),

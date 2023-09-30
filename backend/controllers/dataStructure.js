@@ -114,7 +114,7 @@ router.use(express.json())
     const configuration = req.body.configuration === "" ? null : req.body.configuration;
     const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
     const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
-    console.log(description)
+    //console.log(description)
 
     if ((/*! id_variable_data_structure && */!id_estructure)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });

@@ -240,7 +240,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         this.getMapDevices("1")
           .then((pass) => {
             if (pass || this.searched) {
-              console.log(this.data)
+              //console.log(this.data)
 
               this.searched= false;
               for (let index = 0; index < this.markers.length; index++) {
@@ -261,7 +261,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               let enable = parseInt(quote.id);
               this.addMarker(coords, color, name, enable, quote);
             }
-            console.log(this.markers)
+            //console.log(this.markers)
             //console.log(this.markers);
 
             setTimeout(() => {
