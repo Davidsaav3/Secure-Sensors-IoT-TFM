@@ -422,7 +422,8 @@ export class StructureComponent implements OnInit {
   clouse() { // Cierra tarjeta estructura de datos
     this.show = false;
     this.openClouse();
-    this.change = false;
+    this.change = false;    
+    this.actId= -1; 
   }
 
   openClouse() { // Abre y cierra tarjetas de estructuras de datos

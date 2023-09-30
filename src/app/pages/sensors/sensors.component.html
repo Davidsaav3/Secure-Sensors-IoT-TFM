@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','','',null,null,null,0,'','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew('','','','',null,null,null,0,'','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -179,14 +179,14 @@
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 
 					<div class="col-12">
-						<h1 *ngIf="state==0">{{ 'sensors.duplicate' | translate }} {{sensors.type}}</h1>
-						<h1 *ngIf="state==1">{{ 'sensors.nuevo_sensor' | translate }}</h1>
-						<h1 *ngIf="state==2">{{ 'sensors.of' | translate }} {{ sensors.type }}</h1>
+						<h1 *ngIf="state==0" class="mb-0">{{ 'sensors.duplicate' | translate }} {{sensors.type}}</h1>
+						<h1 *ngIf="state==1" class="mb-0">{{ 'sensors.nuevo_sensor' | translate }}</h1>
+						<h1 *ngIf="state==2" class="mb-0">{{ 'sensors.of' | translate }} {{ sensors.type }}</h1>
 					</div>
 
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ sensors.id }}" [(ngModel)]="sensors.id">
 
-					<div class="col-12 pt-3 form-group">
+					<div class="col-12 pt-2 form-group">
 						<label for="type">{{ 'sensors.type' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="sensors['type']" required type>
 						<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
@@ -194,7 +194,7 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-md-6 mt-2">
+					<div class="col-12 col-md-6">
 						<label for="metric">{{ 'sensors.metric' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.metric }}" type="text" id="metric" class="form-control" name="metric" [(ngModel)]="sensors['metric']" required type>
 						<div *ngIf="form.submitted && form.controls['metric'].errors" class="text-danger">
@@ -218,7 +218,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-6 mt-2" [ngClass]="{'mt-4': this.width>=965}">
+					<div class="col-md-6 mt-2" [ngClass]="{'mt-2': this.width>=965}">
 						<label for="errorvalue">{{ 'sensors.error_value' | translate }}</label>
 						<input type="number" (ngModelChange)="change=true" value="{{ sensors.errorvalue }}" id="errorvalue" class="form-control" name="errorvalue" [(ngModel)]="sensors['errorvalue']">
 						<div *ngIf="form.submitted && form.controls['errorvalue'].errors" class="text-danger">
@@ -226,7 +226,7 @@
 						</div>
 					</div>
 
-					<div class="col-md-6 mt-2" [ngClass]="{'mt-4': this.width>=965}">
+					<div class="col-md-6 mt-2" [ngClass]="{'mt-2': this.width>=965}">
 						<label for="time_general">{{ 'sensors.time_general' | translate }}</label>
 						<input (ngModelChange)="change=true" value="{{ sensors.correction_time_general }}" type="text" id="time_general" class="form-control" name="time_general" [(ngModel)]="sensors['correction_time_general']" type>
 						<div *ngIf="form.submitted && form.controls['time_general'].errors" class="text-danger">
@@ -258,28 +258,36 @@
 						</div>
 					</div>
 
+					<div class="col-md-12 mt-2">
+						<label for="discard_value">{{ 'sensors.discard_value' | translate }}</label>
+						<input (ngModelChange)="change=true" value="{{ sensors.discard_value }}" type="text" id="discard_value" class="form-control" name="discard_value" [(ngModel)]="sensors['discard_value']" type>
+						<div *ngIf="form.submitted && form.controls['discard_value'].errors" class="text-danger">
+							<div *ngIf="form.controls['discard_value'].errors['required']">{{ 'sensors.discard_value' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 
 
 			<div class="col-12 mt-3">
 				<div class="row" *ngIf="state==1 || state==0">
-					<div class="col-6 mt-2">
+					<div class="col-6">
 						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 					</div>
-					<div class="col-6 mt-2">
+					<div class="col-6">
 						<button (click)="newSensor(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
 					</div>
 				</div>
 				<div class="row" *ngIf="state==2">
-					<div class="col-6 mt-2">
+					<div class="col-6">
 						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 					</div>
-					<div class="col-6 mt-2">
+					<div class="col-6">
 						<button (click)="editSensor(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>
-					<div class="col-12 mt-3">
+					<div class="col-12 mt-2">
 						<div class="row d-flex" style="justify-content: flex-end;">
 							<div class="col-6">
 								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" disabled *ngIf="change">{{ 'sensors.erase_sensor' | translate }}</button>

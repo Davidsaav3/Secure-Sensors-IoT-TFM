@@ -78,11 +78,12 @@ router.use(express.json())
             (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure,`;
             if(devices_act!=2 && array_sensors==-1){
               console.log("LISTA ACT")
-              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations LIMIT ${tam} OFFSET ${act}) AS subquery 
+              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations WHERE enable=${devices_act} LIMIT ${tam} OFFSET ${act}) AS subquery 
               LEFT JOIN device_configurations dc ON subquery.id = dc.id
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
-              LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id 
-              WHERE dc.enable=${devices_act} order by ${order_by} ${ord_asc}`
+              LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
+              order by ${order_by} ${ord_asc}`
+              console.log(variable)
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                 const responseArray = auxGet(result);
@@ -96,7 +97,7 @@ router.use(express.json())
                 if(devices_act!=2){
                   variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta} AND enable=${devices_act}) as total FROM (
                     SELECT id
-                    FROM device_configurations
+                    FROM device_configurations where id IN ${consulta} AND enable=${devices_act} 
                     LIMIT ${tam}
                     OFFSET ${act}
                   ) AS subquery
@@ -107,7 +108,7 @@ router.use(express.json())
                 else{
                   variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta}) as total FROM (
                     SELECT id
-                    FROM device_configurations
+                    FROM device_configurations where id IN ${consulta}
                     LIMIT ${tam}
                     OFFSET ${act}
                   ) AS subquery
@@ -116,12 +117,10 @@ router.use(express.json())
                   LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id `
                 }
                 //
-                variable+= ` where dc.id IN ${consulta}`
-                if(devices_act!=2){
-                  variable+= ` AND dc.enable=${devices_act}`
-                }
+                
                 variable+= `
                 order by ${order_by} ${ord_asc}`
+                console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -133,7 +132,7 @@ router.use(express.json())
                 if(devices_act!=2){
                   variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) AND device_configurations.enable=${devices_act}) as total FROM (
                     SELECT id
-                    FROM device_configurations
+                    FROM device_configurations where dc.id NOT IN (SELECT id_device FROM sensors_devices) AND enable=${devices_act}
                     LIMIT ${tam}
                     OFFSET ${act}
                   ) AS subquery
@@ -145,7 +144,7 @@ router.use(express.json())
                   variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) ) as total 
                   FROM (
                     SELECT id
-                    FROM device_configurations
+                    FROM device_configurations where dc.id NOT IN (SELECT id_device FROM sensors_devices)
                     LIMIT ${tam}
                     OFFSET ${act}
                   ) AS subquery
@@ -154,13 +153,13 @@ router.use(express.json())
                   LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id `
                 }
                 //
-                variable+= ` where dc.id NOT IN (SELECT id_device FROM sensors_devices)`
+                /*variable+= ` where dc.id NOT IN (SELECT id_device FROM sensors_devices)`
                 if(devices_act!=2){
                   variable+= ` AND dc.enable=${devices_act}`
-                }
+                }*/
                 variable+= `
                 order by ${order_by} ${ord_asc}`
-                //console.log(variable)
+                console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);

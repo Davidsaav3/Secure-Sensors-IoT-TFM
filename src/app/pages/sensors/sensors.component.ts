@@ -80,6 +80,7 @@ export class SensorsComponent implements OnInit {
     position: 0,
     correction_general: "",
     correction_time_general: "",
+    discard_value: "",
   };
 
   sensorsCopy = {
@@ -93,6 +94,7 @@ export class SensorsComponent implements OnInit {
     position: 0,
     correction_general: "",
     correction_time_general: "",
+    discard_value: "",
   };
 
   searchAuxArray = {
@@ -215,7 +217,7 @@ export class SensorsComponent implements OnInit {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    if (!this.change && !this.change && idActual != this.actId) {
+    if (!this.change && idActual != this.actId) {
       fetch(`${this.getId}/${idActual}`)
         .then((response) => response.json())
         .then((data) => {
@@ -237,6 +239,7 @@ export class SensorsComponent implements OnInit {
             position: sensors.position,
             correction_general: sensors.correction_general,
             correction_time_general: sensors.correction_time_general,
+            discard_value: sensors.discard_value,
           };
           this.openClouse();
         })
@@ -292,7 +295,7 @@ export class SensorsComponent implements OnInit {
     }
   }
 
-  openNew(id: any,type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any) { // Abre Nuevo sensor
+  openNew(id: any,type: any,metric: any,description: any,errorvalue: any,valuemax: any,valuemin: null,position: any,correction_general: any,correction_time_general: any,discard_value:any) { // Abre Nuevo sensor
     this.sensors = {
       id: id,
       type: type,
@@ -304,6 +307,7 @@ export class SensorsComponent implements OnInit {
       position: position,
       correction_general: correction_general,
       correction_time_general: correction_time_general,
+      discard_value: discard_value,
     };
     this.show = true;
     this.openClouse();
@@ -357,7 +361,7 @@ export class SensorsComponent implements OnInit {
           this.sensors = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
-          this.openNew("",data,this.sensors.metric,this.sensors.description,this.sensors.errorvalue,this.sensors.valuemax,this.sensors.valuemin,this.sensors.position,this.sensors.correction_general,this.sensors.correction_time_general);
+          this.openNew("",data,this.sensors.metric,this.sensors.description,this.sensors.errorvalue,this.sensors.valuemax,this.sensors.valuemin,this.sensors.position,this.sensors.correction_general,this.sensors.correction_time_general,this.sensors.discard_value);
           this.change = true;
         })
         .catch((error) => {
@@ -414,6 +418,7 @@ export class SensorsComponent implements OnInit {
       position: this.sensorsCopy.position,
       correction_general: this.sensorsCopy.correction_general,
       correction_time_general: this.sensorsCopy.correction_time_general,
+      discard_value: this.sensorsCopy.discard_value,
     };
     this.change = false;
   }
@@ -444,13 +449,13 @@ export class SensorsComponent implements OnInit {
     this.state = -1;
     this.openClouse();
     this.change = false;
+    this.actId= -1;
   }
 
   clouseAll() { // Cierra todas las tarjetas
     this.showAux = false;
     this.show = false;
     this.openClouse();
-    this.change = false;
     this.change = false;
   }
 

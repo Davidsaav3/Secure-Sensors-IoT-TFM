@@ -19,7 +19,7 @@ router.use(express.json())
       query = `SELECT id, type, metric, description, position, correction_general, correction_time_general,(SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?`;
     } else {
       query = `
-        SELECT id, type, metric, description, position, correction_general, correction_time_general,(SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%') as total FROM sensors_types
+        SELECT id, type, metric, description, position, correction_general, correction_time_general,discard_value,(SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%') as total FROM sensors_types
         WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%'
         ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?
       `;
@@ -82,12 +82,12 @@ router.use(express.json())
   });
   
   router.post("", (req, res) => {  /*/  POST  /*/
-    const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general } = req.body;
+    const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value } = req.body;
     if (!type || !metric) {
       return res.status(400).json({ error: 'Los campos type y metric son requeridos.' });
     }
-    const query = `INSERT INTO sensors_types (type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    con.query(query, [type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general], (err, result) => {
+    const query = `INSERT INTO sensors_types (type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    con.query(query, [type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
@@ -101,7 +101,7 @@ router.use(express.json())
   
   router.put("", (req, res) => {  /*/  UPDATE  /*/
     const {
-      type,metric,description,errorvalue,valuemax,valuemin,id,position,correction_general,correction_time_general,
+      type,metric,description,errorvalue,valuemax,valuemin,id,position,correction_general,correction_time_general,discard_value
     } = req.body;
     if (!type) {
       return res.status(400).json({ error: 'El campo type es requerido.' });
@@ -111,11 +111,11 @@ router.use(express.json())
     }
     const query = `
       UPDATE sensors_types
-      SET position = ?,type = ?,metric = ?,description = ?,errorvalue = ?,valuemax = ?, valuemin = ?, correction_general = ?,correction_time_general = ?
+      SET position = ?,type = ?,metric = ?,description = ?,errorvalue = ?,valuemax = ?, valuemin = ?, correction_general = ?,correction_time_general = ?, discard_value= ?
       WHERE id = ?
     `;
     const values = [
-      position,type,metric,description,errorvalue,valuemax,valuemin,correction_general,correction_time_general,id,
+      position,type,metric,description,errorvalue,valuemax,valuemin,correction_general,correction_time_general,discard_value,id,
     ];
     con.query(query, values, (err, result) => {
       if (err) {

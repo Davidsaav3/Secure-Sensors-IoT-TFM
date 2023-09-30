@@ -372,6 +372,7 @@ export class VariableStructureComponent implements OnInit {
     this.show = false;
     this.openClouse();
     this.change = false;
+    this.actId= -1;
   }
 
   clouseAll() { // Cerrar todas las tarjetas de estructuras

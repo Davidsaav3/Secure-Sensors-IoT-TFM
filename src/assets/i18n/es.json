@@ -153,5 +153,6 @@
     "fixed": "Fijo",
     "variable": "Variable",
     "show": "Mostrar configuracón",
-    "hide": "Ocultar configuracón"
+    "hide": "Ocultar configuracón",
+    "sensors.discard_value": "Valor descartado"
 }

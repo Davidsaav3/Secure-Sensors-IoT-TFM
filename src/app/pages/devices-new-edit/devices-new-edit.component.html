@@ -376,14 +376,14 @@
 						<div class="row">
 							<div class="col-md-4">
 								<label for="lat">{{ 'devices.edit.lat' | translate }}</label>
-								<input (change)="updateSharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
+								<input min="-90" max="90" (change)="updateSharedLat()" (ngModelChange)="changed=true" [value]="devices['lat']" type="text" id="lat" class="form-control" name="lat" [(ngModel)]="devices['lat']" type="number">
 								<div *ngIf="form.submitted && form.controls['lat'].errors" class="text-danger">
 									<div *ngIf="form.controls['lat'].errors['required']">{{ 'devices.edit.lat' | translate }} {{ 'required' | translate }}</div>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<label for="lon">{{ 'devices.edit.long' | translate }}</label>
-								<input (change)="updateSharedLon()" (ngModelChange)="changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
+								<input min="-90" max="90" (change)="updateSharedLon()" (ngModelChange)="changed=true" [value]="devices['lon']" type="text" id="lon" class="form-control" name="lon" [(ngModel)]="devices['lon']" type="number">
 								<div *ngIf="form.submitted && form.controls['lon'].errors" class="text-danger">
 									<div *ngIf="form.controls['lon'].errors['required']">{{ 'devices.edit.long' | translate }} {{ 'required' | translate }}</div>
 								</div>

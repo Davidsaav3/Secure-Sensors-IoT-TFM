@@ -152,5 +152,7 @@
     "fixed": "Fixed",
     "variable": "Variable",
     "show": "Show settings", 
-    "hide": "Hide settings"
+    "hide": "Hide settings",
+    "sensors.discard_value": "Discard value"
+
 }
