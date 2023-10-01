@@ -120,7 +120,6 @@ router.use(express.json())
                 
                 variable+= `
                 order by ${order_by} ${ord_asc}`
-                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -159,7 +158,6 @@ router.use(express.json())
                 }*/
                 variable+= `
                 order by ${order_by} ${ord_asc}`
-                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -194,7 +192,6 @@ router.use(express.json())
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
-                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -211,7 +208,6 @@ router.use(express.json())
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
-                //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -353,7 +349,6 @@ router.use(express.json())
       WHERE dc.id = ?`
       var variable_configuration=-1;
       variable_configuration = result[0].variable_configuration;
-      //console.log(result[0].variable_configuration)
 
       setTimeout(() => {
 
@@ -389,7 +384,6 @@ router.use(express.json())
          }
          if (result.length === 0) {
             // Ninguna de las consultas anteriores devolvió filas, ejecuta ambas sin el LEFT JOIN
-            //console.log('Ejecutando ambas consultas sin LEFT JOIN');
             query = `SELECT dc.*,
             s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
             (SELECT type FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS type_name,
@@ -516,7 +510,6 @@ router.use(express.json())
         console.error("Error:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      //console.log(result[0].Auto_increment)
       const id = result[0].Auto_increment;
       res.json({ id });
     });
@@ -674,7 +667,6 @@ router.use(express.json())
   }
 
   router.put("", (req,res)=>{  /*/ UPDATE  /*/
-  //console.log(req.body)
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt,id_data_estructure,variable_configuration, id: id7,
     } = req.body;

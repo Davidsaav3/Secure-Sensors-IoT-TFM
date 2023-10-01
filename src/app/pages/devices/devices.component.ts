@@ -470,7 +470,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
           if ((this.idsParam != this.idsParam1) || this.searched) {
             pass= true;
-            //console.log('xd2')
 
             if(!this.searched){
               const newDataIds = data.map((item: { id: any }) => item.id);
