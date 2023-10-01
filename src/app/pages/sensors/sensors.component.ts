@@ -274,6 +274,7 @@ export class SensorsComponent implements OnInit {
           }, 2000);
 
           this.openClouse();
+          this.sensors.id= data.id;
           let sensors = this.sensors;
           this.data.push(sensors);
           this.data.sort((a: { position: string }, b: { position: any }) => {
