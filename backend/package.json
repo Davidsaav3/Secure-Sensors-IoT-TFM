@@ -1,0 +1,12 @@
+{
+  "name": "sensors",
+  "version": "0.0.0",
+  "description": "Backend server",
+  "main": "server.js",
+  "dependencies": {
+      "@popperjs/core": "^2.11.7",
+      "cors": "^2.8.5",
+      "express": "^4.18.2",
+      "mysql": "^2.18.1"
+  }
+}
