@@ -20,10 +20,10 @@ export class SensorsComponent implements OnInit {
     this.resize();
   }
 
-  getSensor: string = "http://localhost:5172/api/sensors_types/get";
-  postSensors: string = "http://localhost:5172/api/sensors_types";
-  duplicateSensor: string = "http://localhost:5172/api/sensors_types/duplicate";
-  getId: string = "http://localhost:5172/api/sensors_types/id";
+  getSensor: string = environment.baseUrl+"/sensors_types/get";
+  postSensors: string = environment.baseUrl+"/sensors_types";
+  duplicateSensor: string = environment.baseUrl+"/sensors_types/duplicate";
+  getId: string = environment.baseUrl+"/sensors_types/id";
 
   totalPages = 5;
   currentPage = 1;

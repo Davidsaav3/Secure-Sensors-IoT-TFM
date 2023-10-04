@@ -26,9 +26,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   constructor(private router: Router, private translate: TranslateService) {}
 
-  maxDevice: string = "http://localhost:5172/api/device_configurations/max";
-  getDevice: string = "http://localhost:5172/api/device_configurations/get";
-  getSensorsList: string = "http://localhost:5172/api/sensors_types/get_list";
+  maxDevice: string = environment.baseUrl+"/device_configurations/max";
+  getDevice: string = environment.baseUrl+"/device_configurations/get";
+  getSensorsList: string = environment.baseUrl+"/sensors_types/get_list";
 
   zoom: number = 7;
   map?: mapboxgl.Map;

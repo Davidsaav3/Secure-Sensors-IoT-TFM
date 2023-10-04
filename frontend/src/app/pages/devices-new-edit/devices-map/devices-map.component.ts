@@ -3,6 +3,7 @@ import * as mapboxgl from "mapbox-gl";
 import { ActivatedRoute } from "@angular/router";
 import { DataSharingService } from "../../../services/data_sharing.service";
 import { Router } from "@angular/router";
+import { environment } from "../../../environments/environment";
 
 interface MarkerAndColor {
   color: string;
@@ -28,7 +29,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
-  idDevice: string = "http://localhost:5172/api/device_configurations/id";
+  idDevice: string = environment.baseUrl+"/device_configurations/id";
 
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     this.sharedLon,
@@ -40,7 +41,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.ruteAux = this.rute.split("/");
   }
 
-  maxDevice: string = "http://localhost:5172/api/device_configurations/max";
+  maxDevice: string = environment.baseUrl+"/device_configurations/max";
 
   @ViewChild("map") divMap?: ElementRef;
   map?: mapboxgl.Map;
