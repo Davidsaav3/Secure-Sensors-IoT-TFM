@@ -82,7 +82,10 @@ router.use(express.json())
   });
   
   router.post("", (req, res) => {  /*/  POST  /*/
-    const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value } = req.body;
+  const valuemin = parseFloat(req.params.valuemin);
+  const valuemax = parseFloat(req.params.valuemax);
+
+    const { type, metric, description, errorvalue, position, correction_general, correction_time_general, discard_value } = req.body;
     if (!type || !metric) {
       return res.status(400).json({ error: 'Los campos type y metric son requeridos.' });
     }
@@ -100,8 +103,12 @@ router.use(express.json())
   });
   
   router.put("", (req, res) => {  /*/  UPDATE  /*/
+  const valuemin = parseFloat(req.params.valuemin);
+  const valuemax = parseFloat(req.params.valuemax);
+  console.log(valuemin)
+  
     const {
-      type,metric,description,errorvalue,valuemax,valuemin,id,position,correction_general,correction_time_general,discard_value
+      type,metric,description,errorvalue,id,position,correction_general,correction_time_general,discard_value
     } = req.body;
     if (!type) {
       return res.status(400).json({ error: 'El campo type es requerido.' });

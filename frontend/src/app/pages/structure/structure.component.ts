@@ -20,10 +20,10 @@ export class StructureComponent implements OnInit {
       });
   }
 
-  getEstructure: string = environment.baseUrl+"/data_structure/get";
-  postEstructure: string = environment.baseUrl+"/data_structure";
-  duplicateEstructure: string =environment.baseUrl+"/data_structure/duplicate";
-  getVariableStructureList: string =environment.baseUrl+"/variable_data_structure/get_list";
+  getEstructure: string = environment.baseUrl+environment.dataStructure+"/get";
+  postEstructure: string = environment.baseUrl+environment.dataStructure;
+  duplicateEstructure: string =environment.baseUrl+environment.dataStructure+"/duplicate";
+  getVariableStructureList: string =environment.baseUrl+environment.variableDataStructure+"/get_list";
 
   totalPages = 5;
   currentPage = 1;

@@ -45,12 +45,12 @@ export class DevicesNewEditComponent implements OnInit {
     }
   }
 
-  idDevice: string = environment.baseUrl+"/device_configurations/id";
-  postDevice: string = environment.baseUrl+"/device_configurations";
-  maxDevice: string = environment.baseUrl+"/device_configurations/max";
-  getStructureList: string = environment.baseUrl+"/data_structure/get_list";
-  duplicateDevice: string = environment.baseUrl+"/device_configurations/duplicate";
-  getSensorsList: string = environment.baseUrl+"/sensors_types/get_list";
+  idDevice: string = environment.baseUrl+environment.deviceConfigurations+"/id";
+  postDevice: string = environment.baseUrl+environment.deviceConfigurations;
+  maxDevice: string = environment.baseUrl+environment.deviceConfigurations+"/max";
+  getStructureList: string = environment.baseUrl+environment.dataStructure+"/get_list";
+  duplicateDevice: string = environment.baseUrl+environment.deviceConfigurations+"/duplicate";
+  getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
 
   id = parseInt(this.rutaActiva.snapshot.params["id"]);
 

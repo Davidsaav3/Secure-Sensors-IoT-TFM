@@ -14,9 +14,9 @@ export class VariableStructureComponent implements OnInit {
   
   constructor(public rutaActiva: Router, private elementRef: ElementRef) {}
 
-  getEstructure: string =environment.baseUrl+"/variable_data_structure/get";
-  postStructure: string = environment.baseUrl+"/variable_data_structure";
-  duplicateEstructure: string =environment.baseUrl+"/variable_data_structure/duplicate";
+  getEstructure: string =environment.baseUrl+environment.variableDataStructure+"/get";
+  postStructure: string = environment.baseUrl+environment.variableDataStructure;
+  duplicateEstructure: string =environment.baseUrl+environment.variableDataStructure+"/duplicate";
 
   totalPages = 5;
   currentPage = 1;

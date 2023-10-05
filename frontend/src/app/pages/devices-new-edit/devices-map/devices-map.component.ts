@@ -10,8 +10,7 @@ interface MarkerAndColor {
   marker: mapboxgl.Marker;
 }
 
-(mapboxgl as any).accessToken = "pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ";
-
+(mapboxgl as any).accessToken =environment.accessTokenMap;
 @Component({
   selector: "app-devices-map",
   templateUrl: "./devices-map.component.html",
@@ -29,7 +28,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
-  idDevice: string = environment.baseUrl+"/device_configurations/id";
+  idDevice: string = environment.baseUrl+environment.deviceConfigurations+"/id";
 
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     this.sharedLon,
@@ -41,7 +40,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.ruteAux = this.rute.split("/");
   }
 
-  maxDevice: string = environment.baseUrl+"/device_configurations/max";
+  maxDevice: string = environment.baseUrl+environment.deviceConfigurations+"/max";
 
   @ViewChild("map") divMap?: ElementRef;
   map?: mapboxgl.Map;

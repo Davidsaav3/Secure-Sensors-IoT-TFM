@@ -103,10 +103,10 @@
 
 									<div class="col-12 col-lg-12 mt-4" *ngIf="state==1 || state==0">
 										<div class="row">
-											<div class="col-6 col-lg-3" [ngClass]="{'mb-3': this.width<965}">
+											<div class="col-6 col-lg-2" [ngClass]="{'mb-3': this.width<965}">
 												<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 											</div>
-											<div class="col-6 col-lg-3">
+											<div class="col-6 col-lg-2">
 												<button (click)="newStructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state==1}">{{ 'sensors.save' | translate }}</button>
 											</div>
 										</div>
@@ -171,16 +171,20 @@
 
 									<div class="col-12 col-lg-12 mt-4" *ngIf="state==2">
 										<div class="row">
-											<div class="col-6 col-lg-3">
-												<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-												<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
-											</div>
-											<div class="col-6 col-lg-3 mb-3">
-												<button type="submit" (click)="editStructureAux(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+											<div class="col-lg-6 col-12">
+												<div class="row">
+													<div class="col-6 col-lg-4">
+														<button *ngIf="change==false || this.saved==true" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+														<button *ngIf="change==true && this.saved==false" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
+													</div>
+													<div class="col-6 col-lg-4 mb-3">
+														<button type="submit" (click)="editStructureAux(form)" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+													</div>
+												</div>
 											</div>
 											<div class="col-12 col-lg-6" [ngClass]="{'pb-3': this.width<965}">
 												<div class="row" style="display: flex; justify-content: end;">
-													<div class="col-12 col-lg-6">
+													<div class="col-12 col-lg-4">
 														<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" disabled *ngIf="change" data-bs-target="#exampleModal">{{ 'sensors.delete' | translate }}</button>
 														<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" *ngIf="!change" data-bs-target="#exampleModal">{{ 'sensors.delete' | translate }}</button>
 													</div>

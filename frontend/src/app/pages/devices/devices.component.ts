@@ -12,7 +12,7 @@ interface MarkerAndColor {
   data: any;
 }
 
-(mapboxgl as any).accessToken ="pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ";
+(mapboxgl as any).accessToken =environment.accessTokenMap;
 
 @Component({
   selector: "app-devices",
@@ -26,9 +26,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   constructor(private router: Router, private translate: TranslateService) {}
 
-  maxDevice: string = environment.baseUrl+"/device_configurations/max";
-  getDevice: string = environment.baseUrl+"/device_configurations/get";
-  getSensorsList: string = environment.baseUrl+"/sensors_types/get_list";
+  maxDevice: string = environment.baseUrl+environment.deviceConfigurations+"/max";
+  getDevice: string = environment.baseUrl+environment.deviceConfigurations+"/get";
+  getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
 
   zoom: number = 7;
   map?: mapboxgl.Map;

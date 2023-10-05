@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
-app.use(cors({ origin: process.env.URL_BASE }));
+app.use(cors({ origin: process.env.PORT_API }));
 
 const deviceConfigurationsRouter = require('./controllers/deviceConfigurations');
 const sensorsTypesRouter = require('./controllers/sensorsTypes');
@@ -15,7 +15,7 @@ app.use("/api/sensors_types", sensorsTypesRouter);
 app.use("/api/data_structure", dataStructureRouter);
 app.use("/api/variable_data_structure",variableDataStructureRouter);
 
-const port = process.env.PORT;
+const port = process.env.PORT_SENSORS;
 app.listen(port, () => {
-  console.log(`Sirviendo: http://localhost:`+process.env.PORT+`/api/`);
+  console.log(`Sirviendo: `+process.env.URL_BASE + process.env.PORT_SENSORS+`/api/`);
 });
