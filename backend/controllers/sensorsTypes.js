@@ -65,7 +65,7 @@ router.use(express.json())
         contador++;
       }
 
-      res.send(type_2);
+      res.json({ duplicatedSensor: type_2 });
     });
   });
   

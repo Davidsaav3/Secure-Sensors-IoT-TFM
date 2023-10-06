@@ -4,6 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { DataSharingService } from "../../../services/data_sharing.service";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
+import { HttpClient } from '@angular/common/http';
 
 interface MarkerAndColor {
   color: string;
@@ -35,7 +36,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.sharedLat
   );
 
-  constructor(private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
+  constructor(private http: HttpClient,private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
     this.rute = this.rute1.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -53,17 +54,19 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   state = -1; 
 
   ngOnInit(): void { // Inicialización
-    fetch(this.maxDevice)
-      .then((response) => response.json())
-      .then((data) => {
+    this.http.get(this.maxDevice).subscribe(
+      (data: any) => {
         this.idMax = parseInt(data.id) - 1;
         if (this.id <= this.idMax) {
           this.state = 1;
-        }
-        if (this.id > this.idMax) {
+        } else {
           this.state = 0;
         }
-      });
+      },
+      (error:any) => {
+        console.error(error);
+      }
+    );
 
       this.readStorage();
       this.rute = this.rute1.routerState.snapshot.url;
@@ -102,20 +105,20 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       }
       //
       if (this.ruteAux[2] == "edit" ||(this.ruteAux[2] == "new" && this.state == 1)) {
-        fetch(`${this.idDevice}/${this.ruteAux[3]}`)
-        .then((response) => response.json())
-        .then((data) => {
-          this.sharedLon= data[0].lon;
-          this.sharedLat= data[0].lat;
-          this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat); //setTimeout
-          this.map = this.createMap(this.currentLngLat);
-          this.deleteMarker();
-          this.createMarker(this.currentLngLat);
-          this.auxInit();
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        this.http.get(`${this.idDevice}/${this.ruteAux[3]}`).subscribe(
+          (data: any) => {
+            this.sharedLon = data[0].lon;
+            this.sharedLat = data[0].lat;
+            this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
+            this.map = this.createMap(this.currentLngLat);
+            this.deleteMarker();
+            this.createMarker(this.currentLngLat);
+            this.auxInit();
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
       }
     }, 100);
   }

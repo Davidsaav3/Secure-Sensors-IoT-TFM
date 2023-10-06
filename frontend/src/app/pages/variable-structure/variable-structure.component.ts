@@ -1,6 +1,7 @@
 import { Component, OnInit, ElementRef } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: "app-variable-structure",
@@ -12,7 +13,7 @@ export class VariableStructureComponent implements OnInit {
 
   resultsPerPag = environment.resultsPerPag;
   
-  constructor(public rutaActiva: Router, private elementRef: ElementRef) {}
+  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {}
 
   getEstructure: string =environment.baseUrl+environment.variableDataStructure+"/get";
   postStructure: string = environment.baseUrl+environment.variableDataStructure;
@@ -131,26 +132,27 @@ export class VariableStructureComponent implements OnInit {
     }
     this.charging = true;
     this.data = [];
-    fetch(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
-      .then((response) => response.json())
-      .then((data) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
-        }
-        this.data = data;
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
-        }
-      });
+    this.http.get(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+    .subscribe((data: any) => {
+      this.charging = false;
+      if (data && data.length > 0 && data[0].total) {
+        this.totalPages = Math.ceil(data[0].total / this.quantPage);
+        this.total = data[0].total;
+      } 
+      else {
+        this.totalPages = 0;
+        this.total = 0;
+      }
+      this.data = data;
+      if (this.data.length < this.quantPage) {
+        this.totalPage = this.total;
+      } 
+      else {
+        this.totalPage = this.quantPage * this.currentPage;
+      }
+    }, (error) => {
+      console.error(error);
+    });
   }
 
   orderColumn(idActual: any) { // Ordena las columnas con una consulta
@@ -179,41 +181,35 @@ export class VariableStructureComponent implements OnInit {
   newStructure(form: any) { // Guardar los datos de una estructura nueva
     this.state = 1;
     if (form.valid) {
-      fetch(this.postStructure, {
-        method: "POST",
-        body: JSON.stringify(this.structure),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error en la solicitud");
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      this.http.post(this.postStructure, this.structure, httpOptions)
+        .subscribe(
+          (data: any) => {
+            this.id = data.id;
+            this.alertNew = true;
+  
+            setTimeout(() => {
+              this.alertNew = false;
+            }, 2000);
+  
+            this.openClouse();
+            let structure = {
+              id: this.id,
+              description: this.structure.description,
+              structure: this.structure.structure,
+              initial_byte: this.structure.initial_byte,
+            };
+            this.data.push(structure);
+            this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
+            this.actId = this.id;
+            this.openEdit();
+            this.state = 2;
+          },
+          (error) => {
+            console.error("Error:", error);
           }
-          return response.json();
-        })
-        .then((data) => {
-          this.id = data.id;
-          this.alertNew = true;
-
-          setTimeout(() => {
-            this.alertNew = false;
-          }, 2000);
-
-          this.openClouse();
-          let structure = {
-            id: this.id,
-            description: this.structure.description,
-            structure: this.structure.structure,
-            initial_byte: this.structure.initial_byte,
-          };
-          this.data.push(structure);
-          this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
-          this.actId = this.id;
-          this.openEdit();
-          this.state = 2;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+        );
+  
       this.change = false;
     }
   }
@@ -244,11 +240,16 @@ export class VariableStructureComponent implements OnInit {
 
   editStructureAux(form: any) { // Guardar datos de estructura
     if (form.valid) {
-      fetch(this.postStructure, {
-        method: "PUT",
-        body: JSON.stringify(this.structure),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      }).then((response) => response.json());
+    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+    this.http.put(this.postStructure, this.structure, httpOptions)
+      .subscribe(
+        (data) => {
+          // Respuesta
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
       this.data = this.data.filter((data: { id: string }) => parseInt(data.id) !== this.structure.id);
       let structure = this.structure;
       this.data.push(structure);
@@ -277,25 +278,18 @@ export class VariableStructureComponent implements OnInit {
 
   duplicateStructure(num: any, description: any) { // Obtiene el nombre de una estructura duplicada
     if (!this.change && !this.change) {
-      fetch(`${this.duplicateEstructure}/${description}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error de la red");
-          }
-          return response.text();
-        })
-        .then((data) => {
-          this.structure = this.data.find(
-            (objeto: { id: any }) => objeto.id == num
-          );
+      this.http.get(`${this.duplicateEstructure}/${description}`).subscribe(
+        (data: any) => {
+          this.structure = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
-          this.openNew("",data,this.structure.structure,this.structure.initial_byte);
+          this.openNew('', data.duplicatedDescription, this.structure.structure, this.structure.initial_byte);
           this.change = true;
-        })
-        .catch((error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
-        });
+        },
+        (error) => {
+          console.error('Error al verificar la descripción duplicada:', error);
+        }
+      );
     }
   }
 
@@ -305,11 +299,19 @@ export class VariableStructureComponent implements OnInit {
     var structure2 = {
       id: this.id,
     };
-    fetch(this.postStructure, {
-      method: "DELETE",
+    const httpOptions = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8' }),
       body: JSON.stringify(structure2),
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-    }).then((response) => response.json());
+    };
+  
+    this.http.delete(this.postStructure, httpOptions).subscribe(
+      (response: any) => {
+        // Procesa la respuesta aquí si es necesario
+      },
+      (error:any) => {
+        console.error(error);
+      }
+    );
     this.alertDelete = true;
 
     setTimeout(() => {

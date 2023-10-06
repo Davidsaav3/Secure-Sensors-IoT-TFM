@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import * as mapboxgl from "mapbox-gl";
 import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/app/environments/environment";
+import { HttpClient } from '@angular/common/http';
 
 interface MarkerAndColor {
   color: string;
@@ -24,7 +25,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   @ViewChild("map") divMap?: ElementRef;
   styleSelector: mapboxgl.Map | undefined;
 
-  constructor(private router: Router, private translate: TranslateService) {}
+  constructor(private http: HttpClient,private router: Router, private translate: TranslateService) {}
 
   maxDevice: string = environment.baseUrl+environment.deviceConfigurations+"/max";
   getDevice: string = environment.baseUrl+environment.deviceConfigurations+"/get";
@@ -166,24 +167,27 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     this.selectSensors.sensors = [];
     this.readStorage();
 
-    fetch(`${this.getSensorsList}`)
-      .then((response) => response.json())
-      .then((data) => {
+    this.http.get(this.getSensorsList).subscribe(
+      (data: any) => {
         data.unshift({
           id: -3,
-          type: this.translate.instant("text_1"),
+          type: this.translate.instant('text_1'),
         });
 
         data.unshift({
           id: -2,
-          type: this.translate.instant("text_2"),
+          type: this.translate.instant('text_2'),
         });
 
         this.selectSensorsCopy.sensors = data;
         for (let index = 0; index < data.length; index++) {
           this.selectSensorsCopy.sensors[index].name = data[index].type;
         }
-      });
+      },
+      (error:any) => {
+        console.error('Error al obtener datos:', error);
+      }
+    );
   }
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
@@ -399,7 +403,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             }, 100);
           }
           })
-          .catch((error) => {
+          .catch((error:any) => {
             console.error("Error al obtener los datos:", error);
           });
       }
@@ -409,31 +413,32 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         // List
         this.data = [];
         this.charging = true;
-        fetch(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`)
-          .then((response) => response.json())
-          .then((data) => {
-            //console.log(data);
+        this.http.get(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`).subscribe(
+          (data: any) => {
             this.charging = false;
+    
             if (data && data.length > 0 && data[0].total) {
               this.totalPages = Math.ceil(data[0].total / this.quantPage);
               this.total = data[0].total;
-            } 
-            else {
+            } else {
               this.totalPages = 0;
               this.total = 0;
             }
-            
+    
             this.data = data;
             const deviceIds = this.data.map((device) => device.id);
             this.idsParam = deviceIds.join(",");
-
+    
             if (this.data.length < this.quantPage) {
               this.totalPage = this.total;
-            } 
-            else {
+            } else {
               this.totalPage = this.quantPage * this.currentPage;
             }
-          });
+          },
+          (error) => {
+            console.error('Error al obtener datos:', error);
+          }
+        );
       }
     }, 1);
   }
@@ -458,59 +463,58 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
     this.charging = true;
     return new Promise((resolve, reject) => {
-      fetch(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`)
-        .then((response) => response.json())
-        .then((data) => {
-          let pass= false;
-          this.charging = false;
-          const deviceIds1 = data.map((device: { id: any; }) => device.id);
-          this.idsParam1 = deviceIds1.join(",");
-          //console.log(this.idsParam)
-          //console.log(this.idsParam1)
+      this.http.get(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`).subscribe(
+      (data: any) => {
+        let pass = false;
+        this.charging = false;
+        const deviceIds1 = data.map((device: { id: any }) => device.id);
+        this.idsParam1 = deviceIds1.join(",");
 
-          if ((this.idsParam != this.idsParam1) || this.searched) {
-            pass= true;
+        if (this.idsParam != this.idsParam1 || this.searched) {
+          pass = true;
 
-            if(!this.searched){
-              const newDataIds = data.map((item: { id: any }) => item.id);
-              // Los nuevos
-              const newElements = data.filter((item:any) => !this.data.some((existingItem) => existingItem.id === item.id));
-              // Los eliminados
-              const removedElements = this.data.filter((existingItem) => !newDataIds.includes(existingItem.id));
-              // Añade nuevos
-              this.data.push(...newElements);
-              // Elimina
-              this.data = data.filter((item: { id: any; }) => !removedElements.some((removedItem) => removedItem.id === item.id));
-          
-              const deviceIds = this.data.map((device) => device.id);
-              this.idsParam = this.idsParam1;
-            }
-            else{
-              this.data = [];
-              this.data = data;
-              const deviceIds = this.data.map((device) => device.id);
-              this.idsParam = deviceIds.join(",");
-            }
+          if (!this.searched) {
+            const newDataIds = data.map((item: { id: any }) => item.id);
+            const newElements = data.filter(
+              (item: any) => !this.data.some((existingItem) => existingItem.id === item.id)
+            );
+            const removedElements = this.data.filter(
+              (existingItem) => !newDataIds.includes(existingItem.id)
+            );
 
-            if (this.searched) {
-              //this.ngOnDestroy();
-              //this.createMap();
-              this.cleanMap();
-            }
+            this.data.push(...newElements);
+            this.data = data.filter(
+              (item: { id: any }) => !removedElements.some((removedItem) => removedItem.id === item.id)
+            );
 
-            setTimeout(() => {
-              resolve(pass);
-            }, 300);
-
+            const deviceIds = this.data.map((device) => device.id);
+            this.idsParam = this.idsParam1;
+          } else {
+            this.data = [];
+            this.data = data;
+            const deviceIds = this.data.map((device) => device.id);
+            this.idsParam = deviceIds.join(",");
           }
-        })
-        .catch((error) => {
-          console.error(error);
-          reject(error);
-        });
-    });
-    
+
+          if (this.searched) {
+            this.cleanMap();
+          }
+
+          setTimeout(() => {
+            resolve(pass);
+          }, 300);
+        }
+      },
+      (error) => {
+        console.error(error);
+        reject(error);
+      }
+    );
+  })
   }
+  
+    
+  
 
   createMap() { // Crea el mapa    
     if (this.searched) {
@@ -678,11 +682,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   initFilters() { // Inicializa los filtros del mapa
     this.rute = this.router.routerState.snapshot.url;
-    fetch(this.maxDevice)
-      .then((response) => response.json())
-      .then((data) => {
+    this.http.get(this.maxDevice).subscribe(
+      (data: any) => {
         this.id = parseInt(data.id);
-      });
+      },
+      (error) => {
+        console.error('Error al obtener datos:', error);
+      }
+    );
     this.orderDevices("uid", "ASC");
   }
 

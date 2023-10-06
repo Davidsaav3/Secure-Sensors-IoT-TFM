@@ -58,7 +58,7 @@ router.use(express.json())
         description_2 = `${description}_${contador}`;
         contador++;
       }
-      res.send(description_2);
+      res.json({ duplicatedDescription: description_2 });
     });
   });
 

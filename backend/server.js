@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
-app.use(cors({ origin: process.env.PORT_API }));
+app.use(cors({ origin: process.env.URL_BASE+process.env.PORT_API }));
 
 const deviceConfigurationsRouter = require('./controllers/deviceConfigurations');
 const sensorsTypesRouter = require('./controllers/sensorsTypes');

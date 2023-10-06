@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: "app-sensors",
@@ -16,7 +17,7 @@ export class SensorsComponent implements OnInit {
     this.resize();
   }
 
-  constructor(public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -188,9 +189,9 @@ export class SensorsComponent implements OnInit {
     this.charging = true;
     this.data = [];
 
-    fetch(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
-      .then((response) => response.json())
-      .then((data) => {
+    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+    .subscribe(
+      (data: any) => {
         this.charging = false;
         if (data && data.length > 0 && data[0].total) {
           this.totalPages = Math.ceil(data[0].total / this.quantPage);
@@ -201,14 +202,18 @@ export class SensorsComponent implements OnInit {
           this.total = 0;
         }
         this.data = data;
-
+  
         if (this.data.length < this.quantPage) {
           this.totalPage = this.total;
         } 
         else {
           this.totalPage = this.quantPage * this.currentPage;
         }
-      });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
@@ -218,15 +223,14 @@ export class SensorsComponent implements OnInit {
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
     if (!this.change && idActual != this.actId) {
-      fetch(`${this.getId}/${idActual}`)
-        .then((response) => response.json())
-        .then((data) => {
+      this.http.get(`${this.getId}/${idActual}`)
+      .subscribe(
+        (data: any) => {
           this.sensors = data[0];
           this.actId = idActual;
           this.id = idActual;
           this.openEdit();
           this.state = 2;
-          //const objetoEnData = this.data.find((objeto: { id: any; }) => objeto.id == idActual);
           let sensors = { ...this.sensors };
           this.sensorsCopy = {
             id: sensors.id,
@@ -242,56 +246,49 @@ export class SensorsComponent implements OnInit {
             discard_value: sensors.discard_value,
           };
           this.openClouse();
-        })
-        .catch((error) => {
+        },
+        (error) => {
           console.error(error);
-        });
+        }
+      );
     }
   }
   
   /* NEW */
 
-  newSensor(form: any) { // Guardar datos de sensores nuevos
+  newSensor(form: any) {
     this.state = 1;
     if (form.valid) {
-      fetch(this.postSensors, {
-        method: "POST",
-        body: JSON.stringify(this.sensors),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error en la solicitud");
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      this.http.post(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+        .subscribe(
+          (data: any) => {
+            this.id = data.id;
+            this.alertNew = true;
+  
+            setTimeout(() => {
+              this.alertNew = false;
+            }, 2000);
+  
+            this.openClouse();
+            this.sensors.id = data.id;
+            let sensors = { ...this.sensors };
+            this.data.push(sensors);
+            this.data.sort((a: { position: string }, b: { position: any }) => {
+              if (typeof a.position === "string" && typeof b.position === "string") {
+                return a.position.localeCompare(b.position);
+              } else {
+                return 1;
+              }
+            });
+            this.actId = this.id;
+            this.openEdit();
+            this.state = 2;
+          },
+          (error) => {
+            console.error("Error:", error);
           }
-          return response.json();
-        })
-        .then((data) => {
-          this.id = data.id;
-          this.alertNew = true;
-
-          setTimeout(() => {
-            this.alertNew = false;
-          }, 2000);
-
-          this.openClouse();
-          this.sensors.id= data.id;
-          let sensors = this.sensors;
-          this.data.push(sensors);
-          this.data.sort((a: { position: string }, b: { position: any }) => {
-            if (typeof a.position === "string" && typeof b.position === "string") {
-              return a.position.localeCompare(b.position);
-            } 
-            else {
-              return 1;
-            }
-          });
-          this.actId = this.id;
-          this.openEdit();
-          this.state = 2;
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
+        );
       this.change = false;
     }
   }
@@ -321,11 +318,16 @@ export class SensorsComponent implements OnInit {
 
   editSensor(form: any) { // Guardar datos del sensor editado
     if (form.valid) {
-      fetch(this.postSensors, {
-        method: "PUT",
-        body: JSON.stringify(this.sensors),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-      }).then((response) => response.json());
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      this.http.put(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+        .subscribe(
+          (response: any) => {
+            // Respuesta
+          },
+          (error) => {
+            console.error("Error:", error);
+          }
+        );
       this.data = this.data.filter((data: { id: number }) => data.id !== this.sensors.id);
       let sensors = this.sensors;
       this.data.push(sensors);
@@ -353,48 +355,57 @@ export class SensorsComponent implements OnInit {
 
   duplicateSensors(num: any, type: any) { // Obtiene el nombre del sensor duplicado
     if (!this.change && !this.change) {
-      fetch(`${this.duplicateSensor}/${type}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error en la red");
-          }
-          return response.text();
-        })
-        .then((data) => {
+      this.http.get(`${this.duplicateSensor}/${type}`)
+      .subscribe(
+        (data: any) => {
           this.sensors = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
-          
-          fetch(`${this.getId}/${this.sensors.id}`)
-          .then((response) => response.json())
-          .then((data1) => {
-            this.sensors = data1[0];
-            this.actId = this.sensors.id;
-            this.id = this.sensors.id;
-            let sensors = { ...this.sensors };
-            this.sensorsCopy = {
-              id: sensors.id,
-              type: sensors.type,
-              metric: sensors.metric,
-              description: sensors.description,
-              errorvalue: sensors.errorvalue,
-              valuemax: sensors.valuemax,
-              valuemin: sensors.valuemin,
-              position: sensors.position,
-              correction_general: sensors.correction_general,
-              correction_time_general: sensors.correction_time_general,
-              discard_value: sensors.discard_value,
-            };
-            this.openNew("",data,this.sensors.metric,this.sensors.description,this.sensors.errorvalue,this.sensors.valuemax,this.sensors.valuemin,this.sensors.position,this.sensors.correction_general,this.sensors.correction_time_general,this.sensors.discard_value);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+    
+          this.http.get(`${this.getId}/${this.sensors.id}`)
+            .subscribe(
+              (data1: any) => {
+                this.sensors = data1[0];
+                this.actId = this.sensors.id;
+                this.id = this.sensors.id;
+                let sensors = { ...this.sensors };
+                this.sensorsCopy = {
+                  id: sensors.id,
+                  type: sensors.type,
+                  metric: sensors.metric,
+                  description: sensors.description,
+                  errorvalue: sensors.errorvalue,
+                  valuemax: sensors.valuemax,
+                  valuemin: sensors.valuemin,
+                  position: sensors.position,
+                  correction_general: sensors.correction_general,
+                  correction_time_general: sensors.correction_time_general,
+                  discard_value: sensors.discard_value,
+                };
+                this.openNew(
+                  '',
+                  data.duplicatedSensor,
+                  this.sensors.metric,
+                  this.sensors.description,
+                  this.sensors.errorvalue,
+                  this.sensors.valuemax,
+                  this.sensors.valuemin,
+                  this.sensors.position,
+                  this.sensors.correction_general,
+                  this.sensors.correction_time_general,
+                  this.sensors.discard_value
+                );
+              },
+              (error) => {
+                console.error(error);
+              }
+            );
           this.change = true;
-        })
-        .catch((error) => {
+        },
+        (error) => {
           console.error("Error al verificar la descripción duplicada:", error);
-        });
+        }
+      );
     }
   }
 
@@ -404,11 +415,22 @@ export class SensorsComponent implements OnInit {
     var sensors2 = {
       id: this.id,
     };
-    fetch(this.postSensors, {
-      method: "DELETE",
-      body: JSON.stringify(sensors2),
-      headers: { "Content-type": "application/json; charset=UTF-8" },
-    }).then((response) => response.json());
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json; charset=UTF-8',
+      }),
+      body: sensors2,
+    };
+
+    this.http.delete(this.postSensors, options).subscribe(
+        (response: any) => {
+          // Realiza acciones con la respuesta si es necesario
+          console.log('Sensors eliminados:', response);
+        },
+        (error: any) => {
+          console.error('Error al eliminar sensores:', error);
+        }
+      );
     this.alertDelete = true;
 
     setTimeout(() => {
