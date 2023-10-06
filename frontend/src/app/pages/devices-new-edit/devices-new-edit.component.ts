@@ -167,7 +167,7 @@ export class DevicesNewEditComponent implements OnInit {
       this.showLarge = false;
       this.getDevices();
   
-      setTimeout(() => {
+      setTimeout(() => { // Asincrono
         this.dataSharingService.sharedLat$.subscribe((data) => {
           this.devices.lat = data;
         });
@@ -205,23 +205,21 @@ export class DevicesNewEditComponent implements OnInit {
                 for (let index = 0; index < this.devices.sensors.length; index++) {
                   this.devices.sensors[index].id_device = this.idMax;
                 }
+
+                this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text' }).subscribe(
+                  (data: string) => {
+                    this.devices.uid = data;
+                  },
+                  (error) => {
+                    console.error('Error al verificar la descripción duplicada:', error);
+                  }
+                );
               },
               (error) => {
                 console.error(error);
               }
             );
             this.changed = true;
-  
-            setTimeout(() => {
-              this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text' }).subscribe(
-                (data: string) => {
-                  this.devices.uid = data;
-                },
-                (error) => {
-                  console.error('Error al verificar la descripción duplicada:', error);
-                }
-              );
-            }, 200);
           }
   
           if (this.state == 0) {
@@ -378,7 +376,7 @@ export class DevicesNewEditComponent implements OnInit {
           })
         }).subscribe(
           (response: any) => {
-            // Manejar la respuesta aquí
+            // Respuesta
           },
           (error) => {
             console.error(error);
@@ -405,9 +403,7 @@ export class DevicesNewEditComponent implements OnInit {
   newSensors() { // Guardar los nuevos sensores de los dispositivos
     if (this.state == 0) {
       this.changed = false;
-      setTimeout(() => {
-        this.router.navigate([`/devices/edit/${this.id}`]);
-      }, 100);
+      this.router.navigate([`/devices/edit/${this.id}`]);
     }
     if (this.state == 1) {
       this.devices.sensors.forEach((sensor: { id_device: number }) => {
@@ -415,9 +411,7 @@ export class DevicesNewEditComponent implements OnInit {
       });
       this.devices.createdAt = this.date;
       this.changed = false;
-      setTimeout(() => {
-        this.router.navigate([`/devices/edit/${this.idMax}`]);
-      }, 100);
+      this.router.navigate([`/devices/edit/${this.idMax}`]);
     }
     return;
   }
@@ -498,17 +492,12 @@ export class DevicesNewEditComponent implements OnInit {
     this.http.delete(this.postDevice, httpOptions)
       .subscribe(
         (response: any) => {
-          // Maneja la respuesta aquí si es necesario
-          // Por ejemplo, puedes procesar `response` para obtener datos adicionales si la respuesta los contiene
+          this.router.navigate(["/devices"]);
         },
         (error) => {
           console.error("Error:", error);
         }
       );
-
-    setTimeout(() => {
-      this.router.navigate(["/devices"]);
-    }, 100);
   }
 
   /* SENSORS LIST */
@@ -600,15 +589,11 @@ export class DevicesNewEditComponent implements OnInit {
   }
 
   updateSharedLat() { // Actualiza la Latitud (devices-map)
-    setTimeout(() => {
-      this.dataSharingService.updateSharedLat(this.devices.lat);
-    }, 100);
+    this.dataSharingService.updateSharedLat(this.devices.lat);
   }
 
   updateSharedLon() { // Actualiza la Longitud (devices-map)
-    setTimeout(() => {
-      this.dataSharingService.updateSharedLon(this.devices.lon);
-    }, 100);
+    this.dataSharingService.updateSharedLon(this.devices.lon);
   }
 
   /* TARJETAS */
@@ -643,10 +628,10 @@ export class DevicesNewEditComponent implements OnInit {
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
   }
 
-  getStructuresList(event: any) {
+  async getStructuresList(event: any) {
     let num = event.target.checked ? 1 : 0;
-    this.getStructure(num);
-    setTimeout(() => {
+    try {
+      const result = await this.getStructure(num);
       this.devices.variable_configuration = num;
       if (num == 0) {
         this.devices.id_data_estructure = this.auxFixed;
@@ -654,7 +639,9 @@ export class DevicesNewEditComponent implements OnInit {
       if (num == 1) {
         this.devices.id_data_estructure = this.auxVariable;
       }
-    }, 1);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   }
 
   /* DATE */

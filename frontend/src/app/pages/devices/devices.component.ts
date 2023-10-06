@@ -220,7 +220,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
 
   getDevices(num: any) { // Obtiene los dispositivos
-    setTimeout(() => {
+    setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
       } 
@@ -268,7 +268,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             //console.log(this.markers)
             //console.log(this.markers);
 
-            setTimeout(() => {
+            setTimeout(() => { // Asincrono
               if (this.map != null) {
                 let contenido;
                 let cont = [];
@@ -499,10 +499,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           if (this.searched) {
             this.cleanMap();
           }
-
-          setTimeout(() => {
-            resolve(pass);
-          }, 300);
+          resolve(pass);
         }
       },
       (error) => {
@@ -526,6 +523,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         bearing: this.currentRotation,
         pitch: this.currentPitch,
       });
+      this.auxInit();
     } 
     else {
       if (navigator.geolocation) {
@@ -539,6 +537,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               bearing: this.currentRotation,
               pitch: this.currentPitch,
             });
+            this.auxInit();
           },
           (error) => {
             this.map = new mapboxgl.Map({
@@ -550,6 +549,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               pitch: this.currentPitch,
             });
             console.log("Error geo", error);
+            this.auxInit();
           }
         );
       } 
@@ -563,11 +563,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           pitch: this.currentPitch,
         });
         console.log("Geo no compatible");
+        this.auxInit();
       }
     }
-    setTimeout(() => {
-      this.auxInit();
-    }, 300);
   }
 
   /* MAP AUX */

@@ -303,7 +303,7 @@ export class StructureComponent implements OnInit {
       this.http.put(this.postEstructure, JSON.stringify(this.estructure), httpOptions)
         .subscribe(
           (data: any) => {
-            // Manejar la respuesta aquí si es necesario
+            // Respuesta
           },
           (error) => {
             console.error("Error:", error);
