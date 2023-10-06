@@ -174,7 +174,7 @@ export class DevicesNewEditComponent implements OnInit {
         this.dataSharingService.sharedLon$.subscribe((data) => {
           this.devices.lon = data;
         });
-      }, 1000);
+      }, 1);
     }
   
     if (this.ruteAux[2] == "new") {

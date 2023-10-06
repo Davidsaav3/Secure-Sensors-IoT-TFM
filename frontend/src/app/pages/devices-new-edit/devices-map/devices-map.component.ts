@@ -76,7 +76,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   /* AUX INIT */
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
-    setTimeout(() => { // Asincrono
       if (this.ruteAux[2] == "new" && this.state == 0) {
         if (!this.divMap) throw "No hay mapa";
         if (navigator.geolocation) {
@@ -120,7 +119,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           }
         );
       }
-    }, 100);
   }
 
   auxInit() { // Auxiliar de ngOnInit
