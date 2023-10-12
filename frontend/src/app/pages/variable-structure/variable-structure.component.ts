@@ -32,7 +32,7 @@ export class VariableStructureComponent implements OnInit {
 
   actId = 0;
   id = 0;
-  state = 1;
+  state = -1;
   data: any;
   rute = "";
   charging = false;

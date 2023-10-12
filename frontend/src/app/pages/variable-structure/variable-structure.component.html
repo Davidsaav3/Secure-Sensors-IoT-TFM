@@ -19,18 +19,18 @@
 			</div>
 		</div>
 
-		<div class="row flex-row-reverse pe-3" style="height: 72vh;">
+		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
 			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div class="spinner-border text-secondary" role="status">
 					<span class="visually-hidden">{{ 'loading' | translate }}</span>
 				</div>
 			</div>
-			<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+			<div *ngIf="data.length<=0 && charging==false && this.state!=1" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div style="height: min-content;">
 					<p style="font-size: x-large;">{{ 'no_structure' | translate }}</p>
 				</div>
 			</div>
-			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;">
+			<div *ngIf="data.length>0 || this.state==1" class="col-12 pe-0 over" style="max-height: 71vh;">
 
 				<table id="miTabla" class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
@@ -73,6 +73,49 @@
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
 					</thead>
+
+					<tbody>
+						<tr *ngIf="data.length==0 && state==1" id="primera">
+							<td colspan="5" *ngIf="show" style="cursor: pointer;" class="mark">
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 pb-0 row w-100">
+
+									<div class="col-12 col-lg-3 pe-3">
+										<label for="description">{{ 'sensors.description' | translate }}</label>
+										<input maxlength="45" (ngModelChange)="change=true" value="{{ structure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="structure['description']" required>
+										<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
+											<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-6 pe-3">
+										<label for="structure">{{ 'structure.structure' | translate }}</label>
+										<input type="text" (ngModelChange)="change=true" value="{{ structure.structure }}" id="structure" class="form-control" name="structure" [(ngModel)]="structure['structure']" required>
+										<div *ngIf="form.submitted && form.controls['structure'].errors" class="text-danger">
+											<div *ngIf="form.controls['structure'].errors['required']">{{ 'structure.structure' | translate }} {{ 'required' | translate }}</div>
+										</div>
+									</div>
+									<div class="col-12 col-lg-3 pe-3">
+										<label for="initial_byte">{{ 'structure.initial_byte' | translate }}</label>
+										<input type="number" maxlength="11" min="0" (ngModelChange)="change=true" value="{{ structure.initial_byte }}" id="initial_byte" class="form-control" name="initial_byte" [(ngModel)]="structure['initial_byte']" required>
+										<div *ngIf="form.submitted && form.controls['initial_byte'].errors" class="text-danger">
+											<div *ngIf="form.controls['initial_byte'].errors['required']">{{ 'structure.initial_byte' | translate }} {{ 'required' | translate }}</div>
+										</div>
+									</div>
+
+									<div class="col-12 col-lg-12 mt-4" *ngIf="state==1 || state==0">
+										<div class="row">
+											<div class="col-6 col-lg-2" [ngClass]="{'mb-3': this.width<965}">
+												<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll();state=2" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+											</div>
+											<div class="col-6 col-lg-2">
+												<button (click)="newStructure(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state==1}">{{ 'sensors.save' | translate }}</button>
+											</div>
+										</div>
+									</div>
+
+								</form>
+							</td>
+						</tr>
+					</tbody>
 
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr *ngIf="(i+1)==actId && (state==0 || state==1)" id="primera">

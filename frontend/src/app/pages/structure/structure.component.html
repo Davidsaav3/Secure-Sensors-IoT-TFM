@@ -18,18 +18,18 @@
 			</div>
 		</div>
 
-		<div class="row flex-row-reverse pe-3" style="height: 72vh;">
+		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
 			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div class="spinner-border text-secondary" role="status">
 					<span class="visually-hidden">{{ 'loading' | translate }}</span>
 				</div>
 			</div>
-			<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+			<div *ngIf="data.length<=0 && charging==false && this.state!=1" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div style="height: min-content;">
 					<p style="font-size: x-large;">{{ 'no_structure' | translate }}</p>
 				</div>
 			</div>
-			<div *ngIf="data.length>0" class="col-12 pe-0 over" style="max-height: 71vh;">
+			<div *ngIf="data.length>0 || this.state==1" class="col-12 pe-0 over" style="max-height: 71vh;">
 
 				<table id="miTabla" class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
@@ -81,6 +81,56 @@
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
 					</thead>
+
+					<tbody>
+						<tr *ngIf="data.length==0 && state==1" id="primera">
+							<td colspan="6" *ngIf="show" style="cursor: pointer;" class="mark">
+								<form style="display: flex; justify-content: flex-end;" #form="ngForm" class="needs-validation m-0 p-3 pt-2 pb-0 row w-100">
+
+									<div class="col-12 col-lg-3 pe-3">
+										<label for="description">{{ 'sensors.description' | translate }}</label>
+										<input maxlength="45" (ngModelChange)="change=true" value="{{ estructure.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="estructure['description']">
+									</div>
+									<div class="col-12 col-lg-3 pe-3">
+										<label for="configuration">{{ 'structure.configuration' | translate }}</label>
+										<input type="text" (ngModelChange)="change=true" value="{{ estructure.configuration }}" id="configuration" class="form-control" name="configuration" [(ngModel)]="estructure['configuration']">
+									</div>
+									<div class="col-12 col-lg-2 pe-3">
+										<label for="identifier_code">{{ 'structure.identifier_code' | translate }}</label>
+										<input type="number" maxlength="11" (ngModelChange)="change=true" value="{{ estructure.identifier_code }}" id="identifier_code" class="form-control" name="identifier_code" [(ngModel)]="estructure['identifier_code']">
+									</div>
+									<div class="col-12 col-lg-4 pe-3" style="position: relative">
+										<label for="id_variable_data_structure">{{ 'structure.id_variable_data_structure' | translate }}</label>
+										<select (ngModelChange)="change=true" type="select" [value]="estructure['id_variable_data_structure']" type="text" id="id_variable_data_structure" class="form-control" name="id_variable_data_structure" [(ngModel)]="estructure['id_variable_data_structure']">
+                                            <ng-container *ngFor="let obj of estructureVariable.structure;let j=index">
+                                                <option [selected]="obj.id==estructure['id_variable_data_structure']" value="{{obj.id}}">{{obj.description}}</option>
+                                            </ng-container>
+                                        </select>
+										<div style="position: absolute; top:29px; right:29px">
+											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+                                                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+										</div>
+										<div *ngIf="form.submitted && form.controls['id_variable_data_structure'].errors" class="text-danger">
+											<div *ngIf="form.controls['id_variable_data_structure'].errors['required']">{{ 'structure.id_variable_data_structure' | translate }} {{ 'required' | translate }}</div>
+										</div>
+									</div>
+
+									<div class="col-12 col-lg-12 mt-4" *ngIf="state==1 || state==0">
+										<div class="row">
+											<div class="col-6 col-lg-2" [ngClass]="{'mb-3': this.width<965}">
+												<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll();state=2" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+											</div>
+											<div class="col-6 col-lg-2">
+												<button (click)="newStructures(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state==1}">{{ 'sensors.save' | translate }}</button>
+											</div>
+										</div>
+									</div>
+
+								</form>
+							</td>
+						</tr>
+					</tbody>
 
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr *ngIf="(i+1)==actId && (state==0 || state==1)" id="primera">

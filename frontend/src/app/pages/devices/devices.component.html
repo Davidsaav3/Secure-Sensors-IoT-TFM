@@ -211,7 +211,7 @@
 			</div>
 
 			<div *ngIf="openAux" class="row" style="background-color: #fff;">
-				<div class="col-12 col-lg-6 d-flex mt-3">
+				<div class="col-12 col-lg-6 d-flex mt-2">
 					<div>
 						<!--totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}}-->
 						<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
@@ -224,7 +224,7 @@
 				</div>
 				<div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
 					<nav aria-label="Page navigation example">
-						<ul *ngIf="data.length>0" class="pagination mt-3 mb-0">
+						<ul *ngIf="data.length>0" class="pagination mt-2 mb-0">
 							<li class="page-item">
 								<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
 									<span aria-hidden="true">{{ 'first' | translate }}</span>
@@ -261,8 +261,8 @@
 		</div>
 
 		<div class="p-4 pt-0" style="z-index: -10000;">
-			<div class="row" style="height: 76vh;">
-				<div id="map" style="position: relative;" #map style="height: 76vh;">
+			<div class="row" style="height: 75vh;">
+				<div id="map" style="position: relative;" #map style="height: 75vh;">
 					<div id="menu" style="position: absolute;">
 						<input *ngIf="colorMap=='streets-v12'" id="streets-v12" name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
 						<input *ngIf="colorMap!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()" id="streets-v12" type="radio" name="rtoggle" value="streets">
