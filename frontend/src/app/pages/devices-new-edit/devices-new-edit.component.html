@@ -3,7 +3,7 @@
 	<div class="row p-0 m-0" [ngClass]="{'flex-column': this.width<965}">
 		<div *ngIf="showForm" class="p-0" [ngClass]="{'c200': !this.showMap || this.width<965, 'c20': this.showMap || this.width>=965}">
 			<div class="cont1 pb-0" [ngClass]="{'alt': this.width>=965}" style="display: flex;flex-direction: column;">
-				<div class="row c1">
+				<div class="row c1 pb-3">
 					<div class="col-12">
 						<div class="row pb-3">
 							<div class="col-8 d-flex">
@@ -145,10 +145,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="row c2" style="flex:1">
+				<div class="row c2 pb-3" style="flex:1">
 					<div class="col-12 " style="display:flex; flex-direction:column;">
 
-						<div class="row pb-0 pb-1 d-flex" style="height: 70px;">
+						<div class="row pb-0 pb-1 d-flex">
 							<div class="col d-flex ps-3" style="justify-content: space-between;">
 								<div class="d-flex mt-2">
 									<div (click)="exp=false" class="d-flex mb-2" style="cursor: pointer;">
