@@ -1,0 +1,61 @@
+version: '3.6'
+
+services:
+  mysql-sensors:
+    image: jvberna/mysql:8.0.29
+    hostname: mysql-sensors
+    container_name: mysql-sensors
+    restart: on-failure
+    volumes:
+      - './mysql/data:/var/lib/mysql'
+      - './mysql/sensors.sql:/config/sensors.sql'
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_925873vmcdkthnkla/klgmaTRE#caba_root
+      - MYSQL_DATABASE=sensors
+      - MYSQL_USER=user_api_sensors
+      - MYSQL_PASSWORD=user_api_sensors_72435y7vsddfbre34/2bbvgasTYV90
+      - MYSQL_TCP_PORT=3306
+    networks:
+      iot:
+        ipv4_address: 15.5.0.5
+
+  api-sensors:
+    image: jvberna/project-iot-api:v1
+    hostname: api-sensors
+    container_name: api-sensors
+    restart: on-failure
+    ports:
+      - 5172:5172
+    environment:
+      - PORT_SENSORS=5172
+      - URL_BASE=http://localhost:4200
+      - HOST_MYSQL=15.5.0.5
+      - DB_MYSQL=sensors
+      - USER_MYSQL=user_api_sensors
+      - PASSWORD_MYSQL=user_api_sensors_72435y7vsddfbre34/2bbvgasTYV90
+
+    networks:
+      iot:
+        ipv4_address: 15.5.0.6
+    depends_on:
+      - mysql-sensors
+
+  frontend-sensors:
+    image: jvberna/project-iot-frontend:v1
+    hostname: frontend-sensors
+    container_name: frontend-sensors
+    restart: on-failure
+    ports:
+      - 80:80
+    networks:
+      iot:
+        ipv4_address: 15.5.0.7
+    depends_on:
+      - api-sensors
+
+networks:
+  iot:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 15.5.0.0/16

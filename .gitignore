@@ -10,8 +10,8 @@ dist
 /dist/sensors
 
 # Node
-backend/node_modules
-frontend/node_modules
+project/api/code/node_modules
+project/frontend/code/node_modules
 npm-debug.log
 yarn-error.log
 
@@ -33,7 +33,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-frontend/.angular/cache
+project/frontend/code/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
