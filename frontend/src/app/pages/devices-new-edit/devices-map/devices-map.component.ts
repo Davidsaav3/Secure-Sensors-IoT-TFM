@@ -47,7 +47,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   map?: mapboxgl.Map;
   zoom: number = 10;
   markers: MarkerAndColor[] = [];
-  colorMap = "streets-v12";
+  colorMap = environment.defaultMapsStyle;
 
   id = parseInt(this.rutaActiva.snapshot.params["id"]);
   idMax = 1;
@@ -335,7 +335,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   }
 
   readStorage() { // Recupera datos del local storage
-    this.colorMap = localStorage.getItem("colorMap") ?? "0";
+    this.colorMap = localStorage.getItem("colorMap") ?? environment.defaultMapsStyle;
   }
 
   /* SHARED */

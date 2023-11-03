@@ -118,8 +118,8 @@ router.use(express.json())
                 }
                 //
                 
-                variable+= `
-                order by ${order_by} ${ord_asc}`
+                variable+= `order by ${order_by} ${ord_asc}`
+                console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -192,6 +192,7 @@ router.use(express.json())
                   variable+= ` AND device_configurations.enable=${devices_act}`
                 }
                 variable+= ` AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
+                console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);

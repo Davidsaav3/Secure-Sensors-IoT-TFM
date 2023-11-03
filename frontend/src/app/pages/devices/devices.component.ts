@@ -216,10 +216,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     //this.deleteMarker();
     this.mark = id;
     this.ordAux = ordAux;
-    this.getDevices("0");
+    this.getDevices();
   }
 
-  getDevices(num: any) { // Obtiene los dispositivos
+  getDevices() { // Obtiene los dispositivos
     setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
@@ -591,7 +591,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     });
     this.map.on("moveend", () => {
       if (this.openAux == false) 
-        this.getDevices("0");
+        this.getDevices();
     });
 
     this.showPop = new mapboxgl.Popup({
@@ -651,7 +651,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       this.map.setStyle("mapbox://styles/mapbox/" + event);
     }
     this.searched= true;
-    this.getDevices("0");
+    this.getDevices();
   }
 
   cleanMap() {
@@ -709,20 +709,20 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         correction_time_general: null,
         id_data_structure: 1,
       });
-      this.getDevices("1");
+      this.getDevices();
     } 
     else {
       this.selectSensorsAux.sensors = [];
       for (let index = 0; index < this.selectSensors.sensors.length; index++) {
         if (this.selectSensors.sensors[index].id >= 0) {
           this.selectSensorsAux.sensors.push(this.selectSensors.sensors[index]);
-          this.getDevices("1");
+          this.getDevices();
         }
         if (this.selectSensors.sensors.length == 1 && this.selectSensors.sensors[index].id < 0) {
           this.selectSensorsAux.sensors.push(this.selectSensors.sensors[index]);
           this.selectSensors.sensors = [];
           this.selectSensors.sensors.push(this.selectSensorsAux.sensors[index] );
-          this.getDevices("1");
+          this.getDevices();
         }
         if (this.selectSensors.sensors.length > 1 && this.selectSensors.sensors[index].id < 0) {
           this.selectSensors.sensors = [];
@@ -743,7 +743,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             correction_time_general: null,
             id_data_structure: 1,
           });
-          this.getDevices("1");
+          this.getDevices();
         }
       }
     }
@@ -809,8 +809,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
       color: color,
       draggable: false,
     })
-      .setLngLat(lngLat)
-      .addTo(this.map);
+    .setLngLat(lngLat)
+    .addTo(this.map);
     marker.on("click", function () {});
 
     this.geojson = {
@@ -864,7 +864,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     var $this = this;
     this.timeout = setTimeout(function () {
       if (event.keyCode != 13) {
-        $this.getDevices("1");
+        $this.getDevices();
       }
     }, 1);
   }
@@ -902,13 +902,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   openMap() { // Abrir tarjeta mapa
     this.openAux = false;
-    this.getDevices("1");
+    this.getDevices();
     this.saveStorage();
   }
 
   openList() { // Abrir tarjeta lista dispositivos
     this.openAux = true;
-    this.getDevices("0");
+    this.getDevices();
     this.saveStorage();
   }
 
@@ -917,55 +917,55 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
-      this.getDevices("0");
+      this.getDevices();
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
-      this.getDevices("0");
+      this.getDevices();
     } 
     else {
       this.currentPage = 1;
-      this.getDevices("0");
+      this.getDevices();
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getDevices("0");
+      this.getDevices();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
-    this.getDevices("0");
+    this.getDevices();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getDevices("0");
+      this.getDevices();
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
-      this.getDevices("0");
+      this.getDevices();
     } 
     else {
       this.currentPage = this.totalPages;
-      this.getDevices("0");
+      this.getDevices();
     }
   }
 
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
-      this.getDevices("0");
+      this.getDevices();
     }
   }
 
