@@ -90,7 +90,7 @@ export class StructureComponent implements OnInit {
   estructureVariable = {
     structure: [
       {
-        id: 1,
+        id: 0,
         description: "",
         structure: "",
         initial_byte: 0,
@@ -208,13 +208,17 @@ export class StructureComponent implements OnInit {
     }
   }
 
-  getStructuresList() { // Obtiene la lista de estructuras de datos variables
+  getStructuresList() {
+ 
     this.http.get(`${this.getVariableStructureList}`)
-    .subscribe((quotesData: any) => {
-      this.estructureVariable.structure = quotesData;
-    }, (error) => {
-      console.error("Error al obtener datos de estructura variable:", error);
-    });
+      .subscribe(
+        (quotesData: any) => {
+          this.estructureVariable.structure.unshift(...quotesData);
+        },
+        (error) => {
+          console.error("Error al obtener datos de estructura variable:", error);
+        }
+      );
   }
 
   /* NEW */

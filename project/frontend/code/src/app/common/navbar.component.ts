@@ -14,6 +14,7 @@ export class NavbarComponent {
   lengName = environment.languageName;
   lengLang = environment.languageLang;
   activeLang = environment.languageLang[0];
+  AppVersion = environment.AppVersion;
   rute = "";
   ruteAux: any;
 

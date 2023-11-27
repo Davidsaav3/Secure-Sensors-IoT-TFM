@@ -83,11 +83,14 @@ router.use(express.json())
   
   router.post("", (req, res) => {  /*/  POST  /*/
     const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value } = req.body;
+    const newValuemin = valuemin !== null ? parseFloat(valuemin) : null;
+    const newValuemax = valuemax !== null ? parseFloat(valuemax) : null;
+
     if (!type || !metric) {
       return res.status(400).json({ error: 'Los campos type y metric son requeridos.' });
     }
     const query = `INSERT INTO sensors_types (type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    con.query(query, [type, metric, description, errorvalue, parseFloat(valuemax), parseFloat(valuemin), position, correction_general, correction_time_general, discard_value], (err, result) => {
+    con.query(query, [type, metric, description, errorvalue, newValuemax, newValuemin, position, correction_general, correction_time_general, discard_value], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
@@ -100,9 +103,12 @@ router.use(express.json())
   });
   
   router.put("", (req, res) => {  /*/  UPDATE  /*/  
-    const {
-      type,metric,description,errorvalue,valuemin,valuemax,id,position,correction_general,correction_time_general,discard_value
-    } = req.body;
+  const {
+    type, metric, description, errorvalue, valuemin, valuemax, id, position, correction_general, correction_time_general, discard_value
+  } = req.body;
+  const newValuemin = valuemin !== null ? parseFloat(valuemin) : null;
+  const newValuemax = valuemax !== null ? parseFloat(valuemax) : null;
+
     if (!type) {
       return res.status(400).json({ error: 'El campo type es requerido.' });
     }
@@ -115,7 +121,7 @@ router.use(express.json())
       WHERE id = ?
     `;
     const values = [
-      position,type,metric,description,errorvalue,parseFloat(valuemax),parseFloat(valuemin),correction_general,correction_time_general,discard_value,id,
+      position,type,metric,description,errorvalue,newValuemax,newValuemin,correction_general,correction_time_general,discard_value,id,
     ];
     con.query(query, values, (err, result) => {
       if (err) {

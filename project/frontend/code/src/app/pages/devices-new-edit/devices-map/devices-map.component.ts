@@ -47,7 +47,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   map?: mapboxgl.Map;
   zoom: number = 10;
   markers: MarkerAndColor[] = [];
-  colorMap = "streets-v12";
+  colorMap = environment.defaultMapsStyle;
 
   id = parseInt(this.rutaActiva.snapshot.params["id"]);
   idMax = 1;
@@ -62,6 +62,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
         } else {
           this.state = 0;
         }
+        this.ngAfterViewInit();
       },
       (error:any) => {
         console.error(error);
@@ -97,6 +98,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           );
         } 
         else {
+          console.log('hola')
           this.map = this.createMap([-3.7036360462944913, 40.41686882952129]);
           console.log("Geo no compatible");
           this.auxInit();
@@ -335,7 +337,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   }
 
   readStorage() { // Recupera datos del local storage
-    this.colorMap = localStorage.getItem("colorMap") ?? "0";
+    this.colorMap = localStorage.getItem("colorMap") ?? environment.defaultMapsStyle;
   }
 
   /* SHARED */
