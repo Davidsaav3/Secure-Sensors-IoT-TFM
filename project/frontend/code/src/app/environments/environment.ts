@@ -8,11 +8,11 @@ export const environment = {
     dataStructure: '/data_structure',
     variableDataStructure: '/variable_data_structure',
     defaultMapsStyle: 'streets-v12',
-    AppVersion: '1.0.1',
+    AppVersion: '1.0.2',
 
     // PRODUCCIÓN //
-    baseUrl: "http://localhost/api",
+    //baseUrl: "http://localhost/api",
 
     // DESARROLLO //
-    //baseUrl: "http://localhost:5172/api",
+    baseUrl: "http://localhost:5172/api",
 };

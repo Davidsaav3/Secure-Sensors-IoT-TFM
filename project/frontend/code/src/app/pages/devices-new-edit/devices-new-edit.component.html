@@ -273,7 +273,7 @@
 
 										<td class="pb-0 input-1">
 											<label style="display: none" [for]="'correction_specific'+i">{{ 'devices.sensors.specific' | translate }}</label>
-											<input (ngModelChange)="this.changed= true;" value="{{ item.correction_specific }}" type="text" class="form-control" [id]="'correction_specific'+i" [name]="'correction_specific'+i" [(ngModel)]="item['correction_specific']" type>
+											<input placeholder="ej: value+5" (ngModelChange)="this.changed= true;" value="{{ item.correction_specific }}" type="text" class="form-control" [id]="'correction_specific'+i" [name]="'correction_specific'+i" [(ngModel)]="item['correction_specific']" type>
 											<div *ngIf="form.submitted && form.controls['correction_specific'].errors" class="text-danger">
 												<div *ngIf="form.controls['correction_specific'].errors['required']">{{ 'devices.sensors.specific' | translate }} {{ 'required' | translate }}</div>
 											</div>
@@ -281,7 +281,7 @@
 
 										<td class="pb-0">
 											<label style="display: none" [for]="'correction_time_specific'+i">{{ 'devices.sensors.time_specific' | translate }}</label>
-											<input (ngModelChange)="this.changed= true;" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'correction_time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
+											<input placeholder="ej: time/2" (ngModelChange)="this.changed= true;" value="{{ item.correction_time_specific }}" type="text" class="form-control" [id]="'correction_time_specific'+i" [name]="'correction_time_specific'+i" [(ngModel)]="item['correction_time_specific']" type>
 											<div *ngIf="form.submitted && form.controls['correction_time_specific'].errors" class="text-danger">
 												<div *ngIf="form.controls['correction_time_specific'].errors['required']">{{ 'devices.sensors.time_specific' | translate }} {{ 'required' | translate }}</div>
 											</div>
