@@ -62,7 +62,7 @@ router.use(express.json())
     let xx2= parseFloat(x2);
     let yy1= parseFloat(y1);
     let yy2= parseFloat(y2);
-    console.log("---")
+    //console.log("---")
 
 
       if(search_text=='search'){ // BUSQUEDA POR TEXTO ?
@@ -77,7 +77,7 @@ router.use(express.json())
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,
             (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure,`;
             if(devices_act!=2 && array_sensors==-1){
-              console.log("LISTA ACT")
+              //console.log("LISTA ACT")
               variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations WHERE enable=${devices_act} LIMIT ${tam} OFFSET ${act}) AS subquery 
               LEFT JOIN device_configurations dc ON subquery.id = dc.id
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
@@ -93,7 +93,7 @@ router.use(express.json())
             //
             else{
               if(array_sensors!=-1 && array_sensors!=-2){
-                console.log("LISTA FILTRO TODOS Y ACT")
+                //console.log("LISTA FILTRO TODOS Y ACT")
                 if(devices_act!=2){
                   variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta} AND enable=${devices_act}) as total FROM (
                     SELECT id
@@ -127,7 +127,7 @@ router.use(express.json())
                 }); 
               }
               if(array_sensors==-2){
-                console.log("LISTA FILTRO NINGUNO Y ACT")
+                //console.log("LISTA FILTRO NINGUNO Y ACT")
                 if(devices_act!=2){
                   variable+= ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) AND device_configurations.enable=${devices_act}) as total FROM (
                     SELECT id
@@ -170,7 +170,7 @@ router.use(express.json())
             var variable= '';
             variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure FROM device_configurations `
             if(devices_act!=2 && array_sensors==-1){
-              console.log("MAPA ACT")
+              //console.log("MAPA ACT")
               variable+= `LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
               LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
               WHERE device_configurations.enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
@@ -183,7 +183,7 @@ router.use(express.json())
             //
             else{
               if(array_sensors!=-1 && array_sensors!=-2){
-                console.log("MAPA FILTRO TODOS Y ACT")
+                //console.log("MAPA FILTRO TODOS Y ACT")
                 variable+= ` 
                 LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
                 LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -199,7 +199,7 @@ router.use(express.json())
                 }); 
               }
               if(array_sensors==-2){
-                console.log("MAPA FILTRO NINGUNO Y ACT")
+                //console.log("MAPA FILTRO NINGUNO Y ACT")
                 variable+= ` 
                 LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
                 LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -219,7 +219,7 @@ router.use(express.json())
         }
         else{
           if(state=='0'){
-            console.log("LISTA SIMPLE")
+            //console.log("LISTA SIMPLE")
             con.query(` SELECT
             dc.*,
             st.id as sensor_id,
@@ -243,7 +243,7 @@ router.use(express.json())
             }); 
           }
           else{
-            console.log("MAPA SIMPLE")
+            //console.log("MAPA SIMPLE")
             con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -256,7 +256,7 @@ router.use(express.json())
       }
       else{
         if(state=='0'){
-          console.log("LISTA BUSQUEDA POR TEXTO")
+          //console.log("LISTA BUSQUEDA POR TEXTO")
             con.query(` SELECT
             dc.*, -- Aquí puedes seleccionar los campos específicos que necesitas de device_configurations
             st.id as sensor_id,
@@ -280,7 +280,7 @@ router.use(express.json())
           });
         }
         else{
-          console.log("MAPA BUSQUEDA POR TEXTO")
+          //console.log("MAPA BUSQUEDA POR TEXTO")
             con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable  
             FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 

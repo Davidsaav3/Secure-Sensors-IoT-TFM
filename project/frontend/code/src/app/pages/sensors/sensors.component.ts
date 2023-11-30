@@ -425,7 +425,7 @@ export class SensorsComponent implements OnInit {
     this.http.delete(this.postSensors, options).subscribe(
         (response: any) => {
           // Realiza acciones con la respuesta si es necesario
-          console.log('Sensors eliminados:', response);
+          //console.log('Sensors eliminados:', response);
         },
         (error: any) => {
           console.error('Error al eliminar sensores:', error);

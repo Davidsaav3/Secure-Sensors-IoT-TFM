@@ -548,7 +548,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               bearing: this.currentRotation,
               pitch: this.currentPitch,
             });
-            console.log("Error geo", error);
+            //console.log("Error geo", error);
             this.auxInit();
           }
         );
@@ -562,7 +562,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
           bearing: this.currentRotation,
           pitch: this.currentPitch,
         });
-        console.log("Geo no compatible");
+        //console.log("Geo no compatible");
         this.auxInit();
       }
     }
@@ -857,6 +857,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   /* BÚSCAR */
 
   onKeySearch(event: any) { // Busqueda por texto
+    localStorage.setItem("search", this.search.value);
     this.searched= true;
     this.currentPage = 1;
     this.deleteSearch();
@@ -917,6 +918,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     }
   }
@@ -924,10 +926,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     } 
     else {
       this.currentPage = 1;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     }
   }
@@ -935,12 +939,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
+    localStorage.setItem("currentPage", this.currentPage.toString());
     this.getDevices();
   }
 
@@ -948,16 +954,19 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.getDevices();
+      localStorage.setItem("currentPage", this.currentPage.toString());
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     } 
     else {
       this.currentPage = this.totalPages;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     }
   }
@@ -965,6 +974,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
+      localStorage.setItem("currentPage", this.currentPage.toString());
       this.getDevices();
     }
   }
@@ -979,6 +989,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   readStorage() { // Recupera datos en local storage
     this.openAux = JSON.parse(localStorage.getItem("openAux") ?? "");
     this.colorMap = localStorage.getItem("colorMap") ?? environment.defaultMapsStyle;
+    this.currentPage = parseInt(JSON.parse(localStorage.getItem("currentPage") ?? ""), 10);
+    this.search.value = localStorage.getItem("search") ?? "";
   }
 
   /* DATE */

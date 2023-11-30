@@ -92,15 +92,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
               this.map = this.createMap([
                 -3.7036360462944913, 40.41686882952129,
               ]);
-              console.log("Error geo", error);
+              //console.log("Error geo", error);
               this.auxInit();
             }
           );
         } 
         else {
-          console.log('hola')
           this.map = this.createMap([-3.7036360462944913, 40.41686882952129]);
-          console.log("Geo no compatible");
+          //sconsole.log("Geo no compatible");
           this.auxInit();
         }
       }
