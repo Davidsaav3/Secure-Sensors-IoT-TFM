@@ -220,6 +220,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
 
   getDevices() { // Obtiene los dispositivos
+    console.log(this.search.value)
     setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
@@ -897,6 +898,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   deleteText() { // Limpiar busqueda por texto
     this.search.value = "";
+    localStorage.setItem("search", this.search.value);
+    this.getDevices();
   }
 
   /* TARJETAS */
@@ -991,6 +994,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     this.colorMap = localStorage.getItem("colorMap") ?? environment.defaultMapsStyle;
     this.currentPage = parseInt(JSON.parse(localStorage.getItem("currentPage") ?? ""), 10);
     this.search.value = localStorage.getItem("search") ?? "";
+    if(this.search.value!=""){
+      this.searched= true;
+      clearTimeout(this.timeout);
+      var $this = this;
+      this.timeout = setTimeout(function () {
+        $this.getDevices();
+      }, 1);
+    }
   }
 
   /* DATE */
