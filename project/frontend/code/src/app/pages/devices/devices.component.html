@@ -67,7 +67,7 @@
 			<div class="col-12 col-lg-3 pb-3">
 				<div class="row d-flex">
 					<div class="col-6">
-						<button style="width: -webkit-fill-available;" class="btn btn-secondary" type="button" (click)="deleteSearch();this.search.value= '';">{{ 'sensors.erase' | translate }}</button>
+						<button style="width: -webkit-fill-available;" class="btn btn-secondary" type="button" (click)="deleteSearch();this.search.value= '';deleteSearch2()">{{ 'sensors.erase' | translate }}</button>
 					</div>
 					<div class="col-6">
 						<button style="width: -webkit-fill-available;" type="button" class="btn btn-info" routerLink="/devices/new/{{this.id}}">{{ 'devices.edit.new_device' | translate }}</button>

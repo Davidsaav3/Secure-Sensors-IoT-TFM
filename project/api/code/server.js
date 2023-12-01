@@ -3,8 +3,7 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
-app.use(cors({ origin: process.env.URL_BASE }));
-
+app.use(cors());
 const deviceConfigurationsRouter = require('./controllers/deviceConfigurations');
 const sensorsTypesRouter = require('./controllers/sensorsTypes');
 const dataStructureRouter = require('./controllers/dataStructure');

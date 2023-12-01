@@ -896,6 +896,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     this.Page(1);
   }
 
+  deleteSearch2(){
+    this.search.value = "";
+    localStorage.setItem("search", this.search.value);
+  }
+
   deleteText() { // Limpiar busqueda por texto
     this.search.value = "";
     localStorage.setItem("search", this.search.value);
