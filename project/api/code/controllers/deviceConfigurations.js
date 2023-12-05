@@ -74,11 +74,12 @@ router.use(express.json())
             st.id as sensor_id,
             st.type as type_name,
             sd.enable as sensor_enable,
+            sd.orden as sensor_orden,
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,
             (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure,`;
             if(devices_act!=2 && array_sensors==-1){
               //console.log("LISTA ACT")
-              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations WHERE enable=${devices_act} LIMIT ${tam} OFFSET ${act}) AS subquery 
+              variable+= ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations WHERE enable=${devices_act} LIMIT ${tam} OFFSET ${act} ) AS subquery 
               LEFT JOIN device_configurations dc ON subquery.id = dc.id
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
               LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
@@ -168,7 +169,7 @@ router.use(express.json())
           }
           else{
             var variable= '';
-            variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure FROM device_configurations `
+            variable+= ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable, sensors_devices.orden as sensor_orden,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure FROM device_configurations `
             if(devices_act!=2 && array_sensors==-1){
               //console.log("MAPA ACT")
               variable+= `LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
@@ -225,6 +226,7 @@ router.use(express.json())
             st.id as sensor_id,
             st.type as type_name,
             sd.enable as sensor_enable,
+            sd.orden as sensor_orden,
             (SELECT COUNT(*) FROM device_configurations) as total,
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure   
           FROM (
@@ -244,7 +246,7 @@ router.use(express.json())
           }
           else{
             //console.log("MAPA SIMPLE")
-            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
+            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,sensors_devices.orden as sensor_orden,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
             WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
@@ -262,6 +264,7 @@ router.use(express.json())
             st.id as sensor_id,
             st.type as type_name,
             sd.enable as sensor_enable,
+            sensors_devices.orden as sensor_orden,
             (SELECT COUNT(*) FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total,
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure 
           FROM (
@@ -281,7 +284,7 @@ router.use(express.json())
         }
         else{
           //console.log("MAPA BUSQUEDA POR TEXTO")
-            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable  
+            con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable ,sensors_devices.orden as sensor_orden 
             FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id  
@@ -324,8 +327,10 @@ router.use(express.json())
         devicesWithSensors[deviceId].sensors.push({
           type_name: row.type_name,
           enable: row.sensor_enable,
+          orden: row.sensor_orden,
         });
       }
+      devicesWithSensors[deviceId].sensors.sort((a, b) => a.orden - b.orden);
     });
     return Object.values(devicesWithSensors);
   }
@@ -346,7 +351,8 @@ router.use(express.json())
       (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
       FROM device_configurations dc
       LEFT JOIN sensors_devices s ON dc.id = s.id_device
-      WHERE dc.id = ?`
+      WHERE dc.id = ? 
+      ORDER BY s.orden;`
       var variable_configuration=-1;
       variable_configuration = result[0].variable_configuration;
 
@@ -361,9 +367,9 @@ router.use(express.json())
          FROM device_configurations dc
          INNER JOIN data_estructure de ON dc.id_data_estructure = de.id_estructure
          LEFT JOIN sensors_devices s ON dc.id = s.id_device
-         WHERE dc.id = ?
-         `; 
-       }
+         WHERE dc.id = ? 
+         ORDER BY s.orden;`
+        }
        if(variable_configuration==1){
         query =`SELECT dc.*, de.description AS structure_name,
          s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
@@ -373,9 +379,9 @@ router.use(express.json())
          FROM device_configurations dc
          INNER JOIN variable_data_structure de ON dc.id_data_estructure = de.id
          LEFT JOIN sensors_devices s ON dc.id = s.id_device
-         WHERE dc.id = ?
-         `;
-       }
+         WHERE dc.id = ? 
+         ORDER BY s.orden;`
+        }
 
        con.query(query, [id], (err, result) => {
          if (err) {
@@ -391,8 +397,8 @@ router.use(express.json())
             (SELECT position FROM sensors_types as t WHERE s.id_type_sensor = t.id) AS position
             FROM device_configurations dc
             LEFT JOIN sensors_devices s ON dc.id = s.id_device
-            WHERE dc.id = ?
-            `;
+            WHERE dc.id = ? 
+            ORDER BY s.orden;`
     
             con.query(query, [id], (err, result) => {
               if (err) {
