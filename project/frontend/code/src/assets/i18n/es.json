@@ -71,7 +71,7 @@
     "devices.list.e2" : "Error al duplicar el dispositivo",
 
     "devices.edit.e1" : "¡ Dispositivo guardado !",
-    "devices.edit.e2" : "Error al guardar el dispositivo", 
+    "devices.edit.e2" : "Ese UID ya existe", 
     "devices.edit.uid": "UID",
     "devices.edit.alias" : "Alias",
     "devices.edit.organization" : "Id de la organización",

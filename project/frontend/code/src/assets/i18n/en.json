@@ -70,7 +70,7 @@
     "devices.list.e2" : "Error duplicating device",
 
     "devices.edit.e1" : "Device saved!",
-    "devices.edit.e2" : "Error saving device",
+    "devices.edit.e2" : "That UID already exists",
     "devices.edit.uid" : "Uid",
     "devices.edit.alias" : "Aliases",
     "devices.edit.organization" : "Organization Id",

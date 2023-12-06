@@ -7,8 +7,8 @@
 					<div class="col-12">
 						<div class="row pb-3">
 							<div class="col-8 d-flex">
-								<h2 class="pe-3" *ngIf="state==0 && this.ruteAux[2]=='new'">{{ 'devices.edit.new_device' | translate }}</h2>
-								<h2 class="pe-3" *ngIf="state==1 && this.ruteAux[2]=='new'">{{ 'sensors.duplicate' | translate }} {{ devices['uid'] }}</h2>
+								<h2 class="pe-3" *ngIf="this.ruteAux[2]=='new'">{{ 'devices.edit.new_device' | translate }}</h2>
+								<h2 class="pe-3" *ngIf="this.ruteAux[2]=='duplicate'">{{ 'sensors.duplicate' | translate }} {{ devices['uid'] }}</h2>
 								<h2 class="pe-3" *ngIf="this.ruteAux[2]=='edit'">{{ 'device' | translate }} {{devices.uid}}</h2>
 							</div>
 							<div class="col-3 d-flex justify-content-end">
@@ -344,7 +344,7 @@
                         </svg>
 					</div>
 				</div>
-				<div *ngIf="this.ruteAux[2]=='new'" class="c4 d-flex justify-content-between" style="flex:0.5">
+				<div *ngIf="this.ruteAux[2]=='new' || this.ruteAux[2]=='duplicate'" class="c4 d-flex justify-content-between" style="flex:0.5">
 					<div class="col-9">
 						<h5 >{{devices.alias}}</h5>
 					</div>
@@ -490,7 +490,7 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="this.ruteAux[2]=='new'" class="row">
+			<div *ngIf="this.ruteAux[2]=='new' || this.ruteAux[2]=='duplicate'" class="row">
 				<div class="col-md-6 col-12">
 					<div class="row">
 						<div class="col-md-6 col-12 mt-1 pb-3">

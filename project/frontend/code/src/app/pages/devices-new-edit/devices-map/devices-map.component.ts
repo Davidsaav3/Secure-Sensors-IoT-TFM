@@ -49,35 +49,34 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   markers: MarkerAndColor[] = [];
   colorMap = environment.defaultMapsStyle;
 
-  id = parseInt(this.rutaActiva.snapshot.params["id"]);
-  idMax = 1;
-  state = -1; 
+  id: any;
+  state = 0; 
 
   ngOnInit(): void { // Inicialización
-    this.http.get(this.maxDevice).subscribe(
-      (data: any) => {
-        this.idMax = parseInt(data.id) - 1;
-        if (this.id <= this.idMax) {
-          this.state = 1;
-        } else {
-          this.state = 0;
-        }
-        this.ngAfterViewInit();
-      },
-      (error:any) => {
-        console.error(error);
+    this.readStorage();
+    this.rute = this.rute1.routerState.snapshot.url;
+    this.ruteAux = this.rute.split("/");
+    if (this.ruteAux[2] == "new" || this.ruteAux[2] == "duplicate") {
+      if (this.ruteAux[2] == "duplicate") {
+        this.state= 1;
+        // 1. Duplicate
+        this.id=  parseInt(this.ruteAux[3]);
       }
-    );
-
-      this.readStorage();
-      this.rute = this.rute1.routerState.snapshot.url;
-      this.ruteAux = this.rute.split("/");
+      if (this.ruteAux[3] == "new") {
+        this.state= 0;
+        // 0. New
+      }
+      this.ngAfterViewInit();
+    }
+    if (this.ruteAux[2] == "edit") {
+      this.id= parseInt(this.ruteAux[3]);
+    }
   }
 
   /* AUX INIT */
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
-      if (this.ruteAux[2] == "new" && this.state == 0) {
+      if (this.ruteAux[2] == "new") {
         if (!this.divMap) throw "No hay mapa";
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -104,8 +103,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
         }
       }
       //
-      if (this.ruteAux[2] == "edit" ||(this.ruteAux[2] == "new" && this.state == 1)) {
-        this.http.get(`${this.idDevice}/${this.ruteAux[3]}`).subscribe(
+      if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
+        this.http.get(`${this.idDevice}/${this.id}`).subscribe(
           (data: any) => {
             this.sharedLon = data[0].lon;
             this.sharedLat = data[0].lat;
@@ -307,11 +306,6 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       .setLngLat(lngLat)
       .addTo(this.map);
     this.markers.push({ color, marker });
-
-    if (this.ruteAux[2] == "new") {
-      this.saveStorage();
-      marker.on("dragend", () => this.saveStorage());
-    }
 
     this.sharedLat = lngLat.lat;
     this.sharedLon = lngLat.lng;

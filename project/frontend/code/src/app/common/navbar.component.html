@@ -1,6 +1,6 @@
 <div class="mb-0 d-flex">
 	<div class="col-lg-8 col-10 p-0">
-		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]!='edit' && ruteAux[2]!='new'">
+		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
 			<li class="nav-item">
 				<a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
 			</li>
@@ -14,7 +14,7 @@
 				<a class="nav-link" href="#" routerLink="/variable-structure" [ngClass]="{'active': this.rute=='/variable-structure'}">{{ 'variable_data_structure' | translate }}</a>
 			</li>
 		</div>
-		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]=='edit' || ruteAux[2]=='new'">
+		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]=='edit' || ruteAux[2]=='new' || ruteAux[2]=='duplicate'">
 			<li class="nav-item">
 				<a class="nav-link me-3">&nbsp;</a>
 			</li>

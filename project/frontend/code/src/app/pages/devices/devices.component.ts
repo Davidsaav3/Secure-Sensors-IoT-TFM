@@ -27,7 +27,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   constructor(private http: HttpClient,private router: Router, private translate: TranslateService) {}
 
-  maxDevice: string = environment.baseUrl+environment.deviceConfigurations+"/max";
   getDevice: string = environment.baseUrl+environment.deviceConfigurations+"/get";
   getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
 
@@ -52,7 +51,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   data: any[] = [];
   rute = "";
-  id = 1;
   timeout: any = null;
   idsParam: any;
   idsParam1: any;
@@ -220,7 +218,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
 
   getDevices() { // Obtiene los dispositivos
-    console.log(this.search.value)
+    //console.log(this.search.value)
     setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
@@ -681,14 +679,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   initFilters() { // Inicializa los filtros del mapa
     this.rute = this.router.routerState.snapshot.url;
-    this.http.get(this.maxDevice).subscribe(
-      (data: any) => {
-        this.id = parseInt(data.id);
-      },
-      (error) => {
-        console.error('Error al obtener datos:', error);
-      }
-    );
     this.orderDevices("uid", "ASC");
   }
 

@@ -509,18 +509,6 @@ router.use(express.json())
 
   });
 
-  router.get("/max/", (req, res) => {  /*/ MAX  /*/
-    const query = "SHOW TABLE STATUS LIKE 'device_configurations'";
-    con.query(query, (err, result) => {
-      if (err) {
-        console.error("Error:", err);
-        return res.status(500).json({ error: 'Error en la base de datos' });
-      }
-      const id = result[0].Auto_increment;
-      res.json({ id });
-    });
-  });
-
   router.get("/duplicate/:uid", (req, res) => {  /*/ DUPLICATE  /*/
     const uid = req.params.uid;
     let query = `SELECT uid FROM device_configurations`;
@@ -546,86 +534,81 @@ router.use(express.json())
     });
   });
 
-  router.post("", (req, res) => { /*/ POST Y DELETE  /*/
-    const { 
+  router.post("", (req, res) => { // POST Y DELETE //
+    const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
     } = req.body;
-    auxPost(req.body.sensors)
-
+  
     if (!uid) {
       return res.status(400).json({ error: 'El campo uid es requerido.' });
     }
     if (!topic_name) {
       return res.status(400).json({ error: 'El campo topic_name es requerido.' });
     }
-    const query = `
-      INSERT INTO device_configurations (
-      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    con.query( query,
-      [
-        uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure,variable_configuration,
-      ],
-      (err, result) => {
-        if (err) {
-          console.error("Error:", err);
-          return res.status(500).json({ error: 'Error en la base de datos' });
-        }
-        res.send(result);
-      }
-    );
-  });
-
-  function auxPost(sensors){
-  //router.post("", (req, res) => {  
-
-    const newRecords = sensors;
-    const deleteIdDevice = sensors;
   
+    // Consulta para verificar si el uid ya existe
+    const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ?';
+    con.query(queryCheckUid, [uid], (err, result) => {
+      if (err) {
+        console.error('Error:', err);
+        return res.status(500).json({ error: 'Error en la consulta SQL' });
+      }
+  
+      if (result.length > 0) {
+        return res.status(200).json({ found: true, message: 'Uid duplicado' });
+      } else {
+        const queryInsert = `
+          INSERT INTO device_configurations (
+            uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+  
+        con.query(queryInsert,
+          [
+            uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration,
+          ],
+          (err, result) => {
+            if (err) {
+              console.error("Error:", err);
+              return res.status(500).json({ error: 'Error en la base de datos' });
+            }
+            
+            auxPost(req.body.sensors, result.insertId);
+            
+            // Envía la respuesta de la inserción exitosa
+            res.send(result);
+          }
+        );
+      }
+    });
+  });
+  
+
+  function auxPost(sensors, id_exp){
+    const newRecords = sensors;
+    
     con.beginTransaction((err) => {
       if (err) {
         console.error("Error al iniciar la transacción:", err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
   
-      if (deleteIdDevice[0].id === -1) {
-        con.query("DELETE FROM sensors_devices WHERE id_device = ?", [deleteIdDevice[0].id_device], (err) => {
-          if (err) {
-            console.error("Error al eliminar registros existentes:", err);
-            con.rollback(() => {
-              res.status(500).json({ error: 'Error en la base de datos' });
-            });
-          } else {
-
-            con.commit((err) => {
-              if (err) {
-                console.error("Error al confirmar la transacción:", err);
-                con.rollback(() => {
-                  res.status(500).json({ error: 'Error en la base de datos' });
-                });
-              } else {
-                //res.send({ message: 'Registros eliminados exitosamente.' });
-              }
-            });
-          }
-        });
-      } else {
-        
-        if (Array.isArray(newRecords) && newRecords.length > 0) {
-          con.query("DELETE FROM sensors_devices WHERE id_device = ?", [newRecords[0].id_device], (err) => {
+        if (Array.isArray(newRecords) && newRecords.length > 0 || newRecords[0].id === -1) {
+          con.query("DELETE FROM sensors_devices WHERE id_device = ?", [id_exp], (err) => {
             if (err) {
               console.error("Error al eliminar registros existentes:", err);
               con.rollback(() => {
                 res.status(500).json({ error: 'Error en la base de datos' });
               });
-            } else {
+            } 
+            if (Array.isArray(newRecords) && newRecords.length > 0 && newRecords[0].id != -1) {
+
               const insertQueries = newRecords.map((record) => {
                 const nodataValue = record.nodata ? 1 : 0;
                 const correction_specificValue = record.correction_specific === "" ? null : record.correction_specific;
                 const correction_time_specificValue = record.correction_time_specific === "" ? null : record.correction_time_specific;
                 const topic_specificValue = record.topic_specific === "" ? null : record.topic_specific;
                 return [
-                  record.orden, record.enable, record.id_device,
+                  record.orden, record.enable, id_exp,
                   record.id_type_sensor, record.datafield, nodataValue,
                   correction_specificValue, correction_time_specificValue, topic_specificValue,
                 ];
@@ -667,35 +650,49 @@ router.use(express.json())
             }
           });
         }
-      }
+      
     });
-  //});
   }
 
-  router.put("", (req,res)=>{  /*/ UPDATE  /*/
+  router.put("", (req, res) => { // UPDATE //
     const {
-      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt,id_data_estructure,variable_configuration, id: id7,
+      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
     } = req.body;
-    auxPost(req.body.sensors)
-
+  
     if (!uid || !topic_name) {
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos.' });
     }
-    const query = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
-    con.query(
-      query,
-      [
-        uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure ,variable_configuration, id7
-      ],
-      (err, result) => {
-        if (err) {
-          console.error("Error:", err);
-          return res.status(500).json({ error: 'Error en la base de datos' });
-        }
-        res.send(result);
+  
+    const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
+    con.query(queryCheckUid, [uid, id7], (err, result) => {
+      if (err) {
+        console.error('Error:', err);
+        return res.status(500).json({ error: 'Error en la consulta SQL' });
       }
-    );
-  });
+  
+      if (result.length > 0) {
+        return res.status(200).json({ found: true, message: 'Uid duplicado' });
+      } else {
+        const queryUpdate = `
+          UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
+  
+        con.query(queryUpdate,
+          [
+            uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7
+          ],
+          (err, result) => {
+            if (err) {
+              console.error("Error:", err);
+              return res.status(500).json({ error: 'Error en la base de datos' });
+            }
+            
+            auxPost(req.body.sensors, id7);
+            res.send(result);
+          }
+        );
+      }
+    });
+  });  
 
   router.delete("", (req, res) => {  /*/ DELETE  /*/
     const id = req.body.id;

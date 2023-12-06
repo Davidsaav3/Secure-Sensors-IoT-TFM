@@ -17,6 +17,19 @@ const routes: Routes = [
         component: DevicesComponent
       },
       {
+        path: 'duplicate',
+        children: [
+          {
+            path: ':id',
+            component: DevicesNewEditComponent
+          },
+          {
+            path: '**',
+            component: DevicesNewEditComponent
+          }
+        ]
+      },
+      {
         path: 'new',
         children: [
           {

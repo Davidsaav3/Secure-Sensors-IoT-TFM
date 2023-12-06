@@ -19,7 +19,7 @@ export class DevicesNewEditComponent implements OnInit {
   
   state = 0; // 0 new // 1 duplicate // 2 edit
   rute = "";
-  ruteAux: any;
+  ruteAux: any= 0;
   cont = 0;
 
   @HostListener("window:resize", ["$event"])
@@ -28,11 +28,16 @@ export class DevicesNewEditComponent implements OnInit {
     window.resizeBy(-1, 0);
     this.resize();
   }
+  public id: any;
 
   constructor(private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.createDate();
+
+    if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
+      this.id = parseInt(this.rutaActiva.snapshot.params["id"]);
+    }
     
     if (this.ruteAux[2] == "new") {
       this.http.get(this.getStructureList).subscribe(
@@ -50,12 +55,9 @@ export class DevicesNewEditComponent implements OnInit {
 
   idDevice: string = environment.baseUrl+environment.deviceConfigurations+"/id";
   postDevice: string = environment.baseUrl+environment.deviceConfigurations;
-  maxDevice: string = environment.baseUrl+environment.deviceConfigurations+"/max";
   getStructureList: string = environment.baseUrl+environment.dataStructure+"/get_list";
   duplicateDevice: string = environment.baseUrl+environment.deviceConfigurations+"/duplicate";
   getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
-
-  id = parseInt(this.rutaActiva.snapshot.params["id"]);
 
   alt1 = true;
   alt2 = true;
@@ -68,7 +70,6 @@ export class DevicesNewEditComponent implements OnInit {
   mark = "position1";
   exp = false;
   data: any;
-  idMax = 2;
   width = 0;
 
   eraseAux = false;
@@ -177,64 +178,52 @@ export class DevicesNewEditComponent implements OnInit {
       }, 1);
     }
   
-    if (this.ruteAux[2] == "new") {
-      this.http.get(this.maxDevice).subscribe(
-        (data: any) => {
-          this.idMax = parseInt(data.id);
-          if (this.id < this.idMax) {
-            this.state = 1;
-          }
-          if (this.id >= this.idMax) {
-            this.state = 0;
-          }
-  
-          if (this.state == 1) {
-            // 1. Duplicate
-            this.http.get(`${this.idDevice}/${this.id}`).subscribe(
-              (data: any) => {
-                this.devices = data[0];
-                this.lat = this.devices.lat;
-                this.lon = this.devices.lon;
-                this.cota = this.devices.cota;
-                this.timezone = this.devices.timezone;
-  
-                this.createDate();
-                this.devices.createdAt = this.formatDateTime(this.date);
-                this.devices.updatedAt = this.formatDateTime(this.date);
-  
-                for (let index = 0; index < this.devices.sensors.length; index++) {
-                  this.devices.sensors[index].id_device = this.idMax;
-                }
+    if (this.ruteAux[2] == "new" || this.ruteAux[2] == "duplicate") {
 
-                this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text' }).subscribe(
-                  (data: string) => {
-                    this.devices.uid = data;
-                  },
-                  (error) => {
-                    console.error('Error al verificar la descripción duplicada:', error);
-                  }
-                );
+      if (this.ruteAux[2] == "duplicate") {
+        this.state= 1;
+        // 1. Duplicate
+        this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+          (data: any) => {
+            this.devices = data[0];
+            this.lat = this.devices.lat;
+            this.lon = this.devices.lon;
+            this.cota = this.devices.cota;
+            this.timezone = this.devices.timezone;
+
+            this.createDate();
+            this.devices.createdAt = this.formatDateTime(this.date);
+            this.devices.updatedAt = this.formatDateTime(this.date);
+
+            for (let index = 0; index < this.devices.sensors.length; index++) {
+              this.devices.sensors[index].id_device = this.id;
+            }
+
+            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text' }).subscribe(
+              (data: string) => {
+                this.devices.uid = data;
               },
               (error) => {
-                console.error(error);
+                console.error('Error al verificar la descripción duplicada:', error);
               }
             );
-            this.changed = true;
+          },
+          (error) => {
+            console.error(error);
           }
-  
-          if (this.state == 0) {
-            // 0. New
-            this.devices.lat = 0;
-            this.devices.lon = 0;
-            this.dataSharingService.updateSharedLon(0);
-            this.dataSharingService.updateSharedLat(0);
-          }
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-  
+        );
+        this.changed = true;
+      }
+
+      if (this.ruteAux[2] == "new") {
+        this.state= 0;
+        // 0. New
+        this.devices.lat = 0;
+        this.devices.lon = 0;
+        this.dataSharingService.updateSharedLon(0);
+        this.dataSharingService.updateSharedLat(0);
+      }
+
       this.getShared();
       this.createDate();
     }
@@ -370,13 +359,25 @@ export class DevicesNewEditComponent implements OnInit {
           },
         ];
         this.devices.sensors = sensors_aux;
-        this.http.post(this.postDevice, this.devices, {
+        this.http.post<any>(this.postDevice, this.devices, {
           headers: new HttpHeaders({
             'Content-Type': 'application/json; charset=UTF-8'
           })
         }).subscribe(
-          (response: any) => {
-            // Respuesta
+          (data: any) => {
+            if(data.found==true){
+              setTimeout(() => {
+                this.actNot = false;
+              }, 2000);
+              this.actNot= true;
+              this.devices.createdAt = '';
+              this.devices.updatedAt = '';
+            }
+            else{
+              this.id= data.insertId;
+              //console.log(data.insertId);
+              this.newSensors();
+            }
           },
           (error) => {
             console.error(error);
@@ -386,17 +387,28 @@ export class DevicesNewEditComponent implements OnInit {
       } 
       else {
         const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
-        this.http.post(this.postDevice, this.devices, httpOptions)
+        this.http.post<any>(this.postDevice, this.devices, httpOptions)
           .subscribe(
             (data) => {
-              // Respuestaa
+              if(data.found==true){
+                setTimeout(() => {
+                  this.actNot = false;
+                }, 2000);
+                this.actNot= true;        
+                this.devices.createdAt = '';
+                this.devices.updatedAt = '';     
+              }
+              else{
+                this.id= data.insertId;
+                //console.log(data.insertId);
+                this.newSensors();
+              }
             },
             (error) => {
               console.error(error);
             }
           );
       }
-      this.newSensors();
     }
   }
 
@@ -407,11 +419,11 @@ export class DevicesNewEditComponent implements OnInit {
     }
     if (this.state == 1) {
       this.devices.sensors.forEach((sensor: { id_device: number }) => {
-        sensor.id_device = this.idMax;
+        sensor.id_device = this.id;
       });
       this.devices.createdAt = this.date;
       this.changed = false;
-      this.router.navigate([`/devices/edit/${this.idMax}`]);
+      this.router.navigate([`/devices/edit/${this.id}`]);
     }
     return;
   }
@@ -444,34 +456,51 @@ export class DevicesNewEditComponent implements OnInit {
         const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
         this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
           .subscribe(
-            (response: any) => {
-              // Respuesta
-            },
+            (data: any) => {
+              if(data.found==true){
+                setTimeout(() => {
+                  this.actNot = false;
+                }, 2000);
+                this.actNot= true;             
+              }    
+              else{
+                this.actOk = true;
+                setTimeout(() => {
+                  this.actOk = false;
+                }, 2000);
+              }   
+           },
             (error) => {
               console.error("Error:", error);
             }
           );
         this.devices.sensors = [];
-      } 
+      }
       else {
         //console.log(this.devices.lat)
         //console.log(this.devices.lon)
         const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
         this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
           .subscribe(
-            (response: any) => {
-              // Respuesta
+            (data: any) => {
+              if(data.found==true){
+                setTimeout(() => {
+                  this.actNot = false;
+                }, 2000);
+                this.actNot= true;             
+              }      
+            else{
+              this.actOk = true;
+              setTimeout(() => {
+                this.actOk = false;
+              }, 2000);
+            }
             },
             (error) => {
               console.error("Error:", error);
             }
           );
       }
-      this.actOk = true;
-
-      setTimeout(() => {
-        this.actOk = false;
-      }, 2000);
 
       this.saved = true;
     }

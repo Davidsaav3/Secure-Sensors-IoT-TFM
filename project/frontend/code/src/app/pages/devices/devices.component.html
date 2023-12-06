@@ -70,7 +70,7 @@
 						<button style="width: -webkit-fill-available;" class="btn btn-secondary" type="button" (click)="deleteSearch();this.search.value= '';deleteSearch2()">{{ 'sensors.erase' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button style="width: -webkit-fill-available;" type="button" class="btn btn-info" routerLink="/devices/new/{{this.id}}">{{ 'devices.edit.new_device' | translate }}</button>
+						<button style="width: -webkit-fill-available;" type="button" class="btn btn-info" routerLink="/devices/new">{{ 'devices.edit.new_device' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -184,7 +184,7 @@
 									<td class="d-none d-lg-none d-xl-table-cell d-flex" *ngIf="quote.variable_configuration==1" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.variable_data_structure }}</td>
 									<td [routerLink]="['/devices/edit/', quote.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
 
-									<td (mouseout)="viewDup= -1" (mouseover)="viewDup=i" style="text-align: center;" routerLink="/devices/new/{{quote.id}}">
+									<td (mouseout)="viewDup= -1" (mouseover)="viewDup=i" style="text-align: center;" routerLink="/devices/duplicate/{{quote.id}}">
 										<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
                         					<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
                         					<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
