@@ -523,6 +523,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         pitch: this.currentPitch,
       });
       this.auxInit();
+      this.map.setMaxZoom(22);
+      this.map.boxZoom.disable();
     } 
     else {
       if (navigator.geolocation) {
@@ -537,6 +539,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
               pitch: this.currentPitch,
             });
             this.auxInit();
+            this.map.setMaxZoom(22);
+            this.map.boxZoom.disable();
           },
           (error) => {
             this.map = new mapboxgl.Map({
@@ -549,6 +553,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             });
             //console.log("Error geo", error);
             this.auxInit();
+            this.map.setMaxZoom(22);
+            this.map.boxZoom.disable();
           }
         );
       } 
@@ -563,6 +569,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         });
         //console.log("Geo no compatible");
         this.auxInit();
+        this.map.setMaxZoom(22);
+        this.map.boxZoom.disable();
       }
     }
   }

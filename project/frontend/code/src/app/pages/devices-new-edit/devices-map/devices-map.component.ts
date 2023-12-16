@@ -262,6 +262,8 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       center: pos,
       zoom: this.zoom,
     });
+    this.map.setMaxZoom(22);
+    this.map.boxZoom.disable();
     return this.map;
   }
 
