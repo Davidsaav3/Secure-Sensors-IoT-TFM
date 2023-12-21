@@ -190,6 +190,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
     this.createMap();
+    //console.log('Versión de Mapbox GL JS:', mapboxgl.version);
   }
 
   auxInit() { // Auxiliar de ngOnInit

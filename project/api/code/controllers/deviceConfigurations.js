@@ -37,13 +37,13 @@ router.use(express.json())
     let consulta= '';
     if(state=='0'){
       if(sensors_act==0){
-        consulta= array.join(" OR dc.id IN ")
+        consulta= array.join(" OR id IN ")
       }
       if(sensors_act==1){
-        consulta= array.join(" AND dc.id IN ")
+        consulta= array.join(" AND id IN ")
       }
       if(sensors_act==2){
-        consulta= array.join(" AND dc.id IN ")
+        consulta= array.join(" AND id IN ")
       }
     }
     else{
@@ -264,7 +264,7 @@ router.use(express.json())
             st.id as sensor_id,
             st.type as type_name,
             sd.enable as sensor_enable,
-            sensors_devices.orden as sensor_orden,
+            sd.orden as sensor_orden,
             (SELECT COUNT(*) FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total,
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure 
           FROM (
