@@ -9,7 +9,7 @@ export const environment = {
     variableDataStructure: '/variable_data_structure',
     users: '/users',
     defaultMapsStyle: 'streets-v12',
-    AppVersion: '1.0.7',
+    AppVersion: '2.0.1',
 
     // PRODUCCIÓN //
     //baseUrl: "http://localhost/api",

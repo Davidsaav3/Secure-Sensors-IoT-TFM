@@ -14,7 +14,7 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew('','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'users.nuevo_usuario' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -35,30 +35,30 @@
 				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
 						<tr style="background-color: #fff;">
-							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'position'}">
-								<svg *ngIf="alt1" (click)="alt1=false;getUsersLocal('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'email'}">
+								<svg *ngIf="alt1" (click)="alt1=false;getUsersLocal('email','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt1" (click)="alt1=true;getUsersLocal('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt1" (click)="alt1=true;getUsersLocal('email','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg> {{ 'email' | translate }}
 							</th>
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'type'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getUsersLocal('type','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'password'}">
+								<svg *ngIf="alt2" (click)="alt2=false;getUsersLocal('password','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getUsersLocal('type','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt2" (click)="alt2=true;getUsersLocal('password','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'password' | translate }}
 							</th>
-							<th scope="col" style="text-align: center;">{{ 'users.duplicate' | translate }}</th>
-							<th scope="col" style="text-align: center;">{{ 'users.edit' | translate }}</th>
+							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
+							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
 						</tr>
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
 							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.email }}</th>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.password }}</td>
+							<td class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.password }}</td>
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateUsers(quote.id,quote.type)">
 								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
@@ -140,26 +140,26 @@
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 
 					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'sensors.duplicate' | translate }} {{users.email}}</h1>
-						<h1 *ngIf="state==1" class="mb-0">{{ 'sensors.nuevo_sensor' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'sensors.of' | translate }} {{ users.email }}</h1>
+						<h1 *ngIf="state==0" class="mb-0">{{ 'users.duplicate' | translate }} {{users.email}}</h1>
+						<h1 *ngIf="state==1" class="mb-0">{{ 'users.new' | translate }}</h1>
+						<h1 *ngIf="state==2" class="mb-0">{{ 'users.of' | translate }} {{ users.email }}</h1>
 					</div>
-
+					
 					<!--<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ users.id }}" [(ngModel)]="users.id">-->
 
 					<div class="col-12 pt-2 form-group">
-						<label for="email">{{ 'sensors.email' | translate }}</label>
+						<label for="email">{{ 'users.email' | translate }}</label>
 						<!--<input maxlength="45" (ngModelChange)="change=true" value="{{ users.email }}" type="text" id="email" class="form-control" name="email" [(ngModel)]="users['email']" required type>-->
 						<div *ngIf="form.submitted && form.controls['email'].errors" class="text-danger">
-							<div *ngIf="form.controls['email'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['email'].errors['required']">{{ 'users.email' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
 					<div class="col-12 col-md-6 mt-2">
-						<label for="password">{{ 'sensors.password' | translate }}</label>
+						<label for="password">{{ 'users.password' | translate }}</label>
 						<!--<input maxlength="45" (ngModelChange)="change=true" value="{{ users.password }}" type="text" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required type>-->
 						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
-							<div *ngIf="form.controls['password'].errors['required']">{{ 'sensors.password' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['password'].errors['required']">{{ 'users.password' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 

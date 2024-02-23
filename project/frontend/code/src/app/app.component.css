@@ -470,3 +470,8 @@ table th {
   top: 0;
   z-index: 1;
 }
+
+.btn-white {
+  background-color: #fff;
+  color: #000; /* Opcional: Cambia el color del texto si es necesario */
+}

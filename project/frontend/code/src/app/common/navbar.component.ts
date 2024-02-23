@@ -18,6 +18,7 @@ export class NavbarComponent {
   rute = "";
   isActive: boolean = false;
   ruteAux: any;
+  name= "settings"
 
   constructor(private translate: TranslateService, public rutaActiva: Router) {
     this.rute = this.rutaActiva.routerState.snapshot.url;
@@ -31,6 +32,14 @@ export class NavbarComponent {
 
   toggleState() {
     this.isActive = !this.isActive;
+    if(this.isActive){
+      this.rute= "/devices";
+      this.name= "settings"
+    }
+    if(!this.isActive){
+      this.rute= "/users";
+      this.name= "management"
+    }
   }
 
   isActiveOption(option: boolean): boolean {

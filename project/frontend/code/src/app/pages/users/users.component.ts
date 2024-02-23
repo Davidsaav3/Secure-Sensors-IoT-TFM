@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AnyCatcher } from "rxjs/internal/AnyCatcher";
 
 @Component({
   selector: "app-users",

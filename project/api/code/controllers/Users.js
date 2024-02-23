@@ -38,6 +38,18 @@ router.use(express.json())
     });
   });
 
+  router.get("/id/:id", (req, res) => {  /*/ ID  /*/
+  const id = parseInt(req.params.id);
+  const query = "SELECT * FROM users WHERE id = ?";
+  con.query(query, [id,id], (err, result) => {
+    if (err) {
+      console.error("Error:", err);
+      return res.status(500).json({ error: 'Error en la base de datos' });
+    }
+    res.send(result);
+  });
+});
+
   router.get("/duplicate/:email", (req, res) => {  /*/ DUPLICATE  /*/
     const email = req.params.email;
     let query = `SELECT email FROM users`;

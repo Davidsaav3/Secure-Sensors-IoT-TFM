@@ -163,6 +163,13 @@
     "settings": "Settings",
     "edit.profile": "Edit profile",
     "log.out": "Log out",
-    "user": "User"
+    "user": "User",
+
+    "users.of": "User ",
+    "users.new": "New user ",
+    "users.duplicate": "Edit user ",
+    "users.nuevo_usuario": "New user",
+    "users.email": "Email",
+    "users.password": "Password"
 
 }

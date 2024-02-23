@@ -165,5 +165,13 @@
     "settings": "Configuración",
     "edit.profile": "Editar perfil",
     "log.out": "Cerrar sesión",
-    "user": "Usuario"
+    "user": "Usuario",
+
+    "users.of": "Usuario ",
+    "users.new": "Nuevo usuario ",
+    "users.duplicate": "Editar usuario ",
+    "users.nuevo_usuario": "Nuevo usuario",
+    "users.email": "Correo electrónico",
+    "users.password": "Contraseña"
+
 }
