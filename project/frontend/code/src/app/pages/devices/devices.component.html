@@ -43,15 +43,15 @@
 					</div>
 					<div class="col-4 col-lg-3 p-0 m-0 pb-3">
 						<select *ngIf="selectSensors.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensorsAct">
-                <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
-                <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
-                <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
-              </select>
+							<option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
+							<option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
+							<option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
+						</select>
 						<select disabled *ngIf="selectSensors.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_3" name="sensors_3" [(ngModel)]="search.sensorsAct">
-                <option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
-                <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
-                <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
-              </select>
+							<option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
+							<option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
+							<option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
+						</select>
 					</div>
 				</div>
 			</div>

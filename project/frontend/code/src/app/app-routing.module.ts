@@ -8,6 +8,12 @@ import { SensorsComponent } from './pages/sensors/sensors.component';
 import { StructureComponent } from './pages/structure/structure.component';
 import { VariableStructureComponent } from './pages/variable-structure/variable-structure.component';
 
+import { UsersComponent } from './pages/users/users.component';
+import { CredentialsComponent } from './pages/credentials/credentials.component';
+import { ScriptComponent } from './pages/script/script.component';
+import { MonitoringComponent } from './pages/monitoring/monitoring.component';
+import { LoginComponent } from './pages/login/login.component';
+
 const routes: Routes = [
   {
     path:'devices', component: DeviceComponent,
@@ -69,6 +75,21 @@ const routes: Routes = [
   },
   { 
     path:'variable-structure', component: VariableStructureComponent
+  },
+  { 
+    path:'login', component: LoginComponent
+  },
+  { 
+    path:'users', component: UsersComponent
+  },
+  { 
+    path:'credentials', component: CredentialsComponent
+  },
+  { 
+    path:'script', component: ScriptComponent
+  },
+  { 
+    path:'monitoring', component: MonitoringComponent
   },
   {
     path:'**',

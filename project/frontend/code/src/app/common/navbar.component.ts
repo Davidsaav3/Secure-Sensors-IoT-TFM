@@ -16,6 +16,7 @@ export class NavbarComponent {
   activeLang = environment.languageLang[0];
   AppVersion = environment.AppVersion;
   rute = "";
+  isActive: boolean = false;
   ruteAux: any;
 
   constructor(private translate: TranslateService, public rutaActiva: Router) {
@@ -26,6 +27,14 @@ export class NavbarComponent {
   ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
+  }
+
+  toggleState() {
+    this.isActive = !this.isActive;
+  }
+
+  isActiveOption(option: boolean): boolean {
+    return option;
   }
 
   changeLanguage() { // Cambia lenguaje

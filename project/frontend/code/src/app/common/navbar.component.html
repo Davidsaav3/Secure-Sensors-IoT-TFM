@@ -1,6 +1,6 @@
 <div class="mb-0 d-flex">
-	<div class="col-lg-8 col-10 p-0">
-		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
+	<div class="col-lg-6 col-6 p-0">
+		<div class="nav nav-tabs mb-0 p-0" *ngIf="isActive && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
 			<li class="nav-item">
 				<a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
 			</li>
@@ -14,20 +14,37 @@
 				<a class="nav-link" href="#" routerLink="/variable-structure" [ngClass]="{'active': this.rute=='/variable-structure'}">{{ 'variable_data_structure' | translate }}</a>
 			</li>
 		</div>
+		<div class="nav nav-tabs mb-0 p-0" *ngIf="!isActive && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
+			<li class="nav-item">
+				<a class="nav-link" aria-current="page" routerLink="/users" [ngClass]="{'active': this.rute=='/users'}">{{ 'users' | translate }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" routerLink="/credentials" [ngClass]="{'active': this.rute=='/credentials'}">{{ 'credentials' | translate }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}">{{ 'script' | translate }}</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" routerLink="/monitoring" [ngClass]="{'active': this.rute=='/monitoring'}">{{ 'monitoring' | translate }}</a>
+			</li>
+		</div>
 		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]=='edit' || ruteAux[2]=='new' || ruteAux[2]=='duplicate'">
 			<li class="nav-item">
 				<a class="nav-link me-3">&nbsp;</a>
 			</li>
 		</div>
 	</div>
-	<div class="col-lg-4 col-2 p-0 pt-2">
+	<div class="col-lg-6 col-6 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
 			<div class="pe-3">
+				<button type="button" class="btn" [ngClass]="{ 'active': isActive }" (click)="toggleState()">{{ 'configuration' | translate }}</button>
+			</div>
+			<div class="pe-3">
 				<select (change)="changeLanguage()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
-          <ng-container *ngFor="let quote of this.lengLang; let i = index">
-            <option value='{{quote}}' [ngClass]="{'selected': activeLang == quote}" >{{this.lengName[i]}}</option>
-          </ng-container>
-        </select>
+					<ng-container *ngFor="let quote of this.lengLang; let i = index">
+						<option value='{{quote}}' [ngClass]="{'selected': activeLang == quote}" >{{this.lengName[i]}}</option>
+					</ng-container>
+				</select>
 			</div>
 			<div class="d-none d-xxl-inline pe-3 d-flex">
 				<div class="d-flex justify-content-end">
@@ -38,6 +55,13 @@
 						<p style="font-family:'Gill Sans MT';font-size: 2vh; color: rgb(99, 99, 99);" class="ms-2 m-0">{{AppVersion}}</p>
 					</div>
 				</div>
+			</div>
+			<div class="pe-3">
+				<select isabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;"class="form-select" aria-label="Default select example" id="" name="">
+					<option [ngValue]="0">{{ 'user' | translate }}</option>
+					<option [ngValue]="1">{{ 'edit.profile' | translate }}</option>
+					<option [ngValue]="2">{{ 'log.out' | translate }}</option>
+				</select>
 			</div>
 		</div>
 	</div>

@@ -18,6 +18,13 @@ import { DevicesNewEditComponent } from './pages/devices-new-edit/devices-new-ed
 import { SensorsComponent } from './pages/sensors/sensors.component';
 import { DataSharingService } from './services/data_sharing.service';
 
+import { UsersComponent } from './pages/users/users.component';
+import { CredentialsComponent } from './pages/credentials/credentials.component';
+import { ScriptComponent } from './pages/script/script.component';
+import { MonitoringComponent } from './pages/monitoring/monitoring.component';
+import { LoginComponent } from './pages/login/login.component';
+
+
 @NgModule({
   declarations: [
     DevicesMapComponent,
@@ -29,6 +36,11 @@ import { DataSharingService } from './services/data_sharing.service';
     DeviceComponent,
     StructureComponent,
     VariableStructureComponent,
+    UsersComponent,
+    CredentialsComponent,
+    ScriptComponent,
+    MonitoringComponent,
+    LoginComponent
   ],
   imports: [
     NgSelectModule,
