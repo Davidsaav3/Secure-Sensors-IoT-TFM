@@ -153,6 +153,16 @@
     "variable": "Variable",
     "show": "Show settings", 
     "hide": "Hide settings",
-    "sensors.discard_value": "Discard value"
+    "sensors.discard_value": "Discard value",
+
+    "users": "Users",
+    "credentials": "Credentials",
+    "script": "Script",
+    "monitoring": "Monitoring",
+    "management": "Management",
+    "settings": "Settings",
+    "edit.profile": "Edit profile",
+    "log.out": "Log out",
+    "user": "User"
 
 }

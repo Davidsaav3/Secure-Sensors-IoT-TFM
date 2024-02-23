@@ -7,6 +7,7 @@ export const environment = {
     sensorsTypes: '/sensors_types',
     dataStructure: '/data_structure',
     variableDataStructure: '/variable_data_structure',
+    users: '/users',
     defaultMapsStyle: 'streets-v12',
     AppVersion: '1.0.7',
 

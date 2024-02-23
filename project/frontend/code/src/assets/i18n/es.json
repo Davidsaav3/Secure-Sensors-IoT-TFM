@@ -154,5 +154,16 @@
     "variable": "Variable",
     "show": "Mostrar configuracón",
     "hide": "Ocultar configuracón",
-    "sensors.discard_value": "Valor descartado"
+    "sensors.discard_value": "Valor descartado",
+
+    "users": "Ususarios",
+    "credentials": "Credenciales",
+    "script": "Script",
+    "monitoring": "Monitorización",
+    "sensors.buscar_usuarios": "Buscar usuarios...",
+    "management": "Administración",
+    "settings": "Configuración",
+    "edit.profile": "Editar perfil",
+    "log.out": "Cerrar sesión",
+    "user": "Usuario"
 }

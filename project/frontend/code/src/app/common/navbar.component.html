@@ -37,7 +37,7 @@
 	<div class="col-lg-6 col-6 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
 			<div class="pe-3">
-				<button type="button" class="btn" [ngClass]="{ 'active': isActive }" (click)="toggleState()">{{ 'configuration' | translate }}</button>
+				<button type="button" class="btn" [ngClass]="{ 'active': isActive }" (click)="toggleState()">{{ 'settings' | translate }}</button>
 			</div>
 			<div class="pe-3">
 				<select (change)="changeLanguage()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">

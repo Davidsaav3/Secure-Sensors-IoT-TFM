@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service'; 
 
 @Component({
-  selector: "app-sensors",
+  selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["../../app.component.css"],
 })

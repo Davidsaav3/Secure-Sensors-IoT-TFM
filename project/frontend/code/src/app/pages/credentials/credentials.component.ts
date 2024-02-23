@@ -4,7 +4,7 @@ import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
-  selector: "app-sensors",
+  selector: "app-credentials",
   templateUrl: "./credentials.component.html",
   styleUrls: ["../../app.component.css"],
 })
