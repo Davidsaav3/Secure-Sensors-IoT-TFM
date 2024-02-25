@@ -6,9 +6,8 @@
 			<div class="row d-flex">
 				<div class="col-6 col-sm-6 col-lg-3 mb-3">
 					<div class="w-100 d-flex" style="position: relative;">
-						<!--<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_usuarios' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_usuarios' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
 						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_usuarios' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
-						-->
 						<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;"   (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 					</div>
 				</div>
@@ -91,9 +90,9 @@
 					<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
 				</div>
 				<div>
-					<!--<select (change)="this.currentPage=1;getUsersLocal('position','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<select (change)="this.currentPage=1;getUsersLocal('position','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 						<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
-					</select>-->
+					</select>
 				</div>
 			</div>
 			<div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
@@ -145,11 +144,11 @@
 						<h1 *ngIf="state==2" class="mb-0">{{ 'users.of' | translate }} {{ users.email }}</h1>
 					</div>
 					
-					<!--<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ users.id }}" [(ngModel)]="users.id">-->
+					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ users.id }}" [(ngModel)]="users.id">
 
 					<div class="col-12 pt-2 form-group">
 						<label for="email">{{ 'users.email' | translate }}</label>
-						<!--<input maxlength="45" (ngModelChange)="change=true" value="{{ users.email }}" type="text" id="email" class="form-control" name="email" [(ngModel)]="users['email']" required type>-->
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.email }}" type="text" id="email" class="form-control" name="email" [(ngModel)]="users['email']" required type>
 						<div *ngIf="form.submitted && form.controls['email'].errors" class="text-danger">
 							<div *ngIf="form.controls['email'].errors['required']">{{ 'users.email' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -157,7 +156,7 @@
 
 					<div class="col-12 col-md-6 mt-2">
 						<label for="password">{{ 'users.password' | translate }}</label>
-						<!--<input maxlength="45" (ngModelChange)="change=true" value="{{ users.password }}" type="text" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required type>-->
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.password }}" type="text" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required type>
 						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
 							<div *ngIf="form.controls['password'].errors['required']">{{ 'users.password' | translate }} {{ 'required' | translate }}</div>
 						</div>
