@@ -122,6 +122,9 @@ export class VariableStructureComponent implements OnInit {
   }
 
   getStructure(id: any, ord: any) { // Obtiene todas las estructuras
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
@@ -132,7 +135,7 @@ export class VariableStructureComponent implements OnInit {
     }
     this.charging = true;
     this.data = [];
-    this.http.get(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+    this.http.get(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers} )
     .subscribe((data: any) => {
       this.charging = false;
       if (data && data.length > 0 && data[0].total) {
@@ -179,9 +182,11 @@ export class VariableStructureComponent implements OnInit {
   /* NEW */
 
   newStructure(form: any) { // Guardar los datos de una estructura nueva
+    let token = localStorage.getItem('token') ?? ''; 
+
     this.state = 1;
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postStructure, this.structure, httpOptions)
         .subscribe(
           (data: any) => {
@@ -239,8 +244,10 @@ export class VariableStructureComponent implements OnInit {
   }
 
   editStructureAux(form: any) { // Guardar datos de estructura
+    let token = localStorage.getItem('token') ?? ''; 
+
     if (form.valid) {
-    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
     this.http.put(this.postStructure, this.structure, httpOptions)
       .subscribe(
         (data) => {
@@ -277,8 +284,11 @@ export class VariableStructureComponent implements OnInit {
   /* DUPLICATE */
 
   duplicateStructure(num: any, description: any) { // Obtiene el nombre de una estructura duplicada
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateEstructure}/${description}`).subscribe(
+      this.http.get(`${this.duplicateEstructure}/${description}`, {headers}).subscribe(
         (data: any) => {
           this.structure = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
@@ -296,12 +306,15 @@ export class VariableStructureComponent implements OnInit {
   /* DELETE */
 
   deleteStructure(idActual: any) { // Elimina una estructura
+    let token = localStorage.getItem('token') ?? ''; 
+
     var structure2 = {
       id: this.id,
     };
     const httpOptions = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8' }),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`}),
       body: JSON.stringify(structure2),
+      
     };
   
     this.http.delete(this.postStructure, httpOptions).subscribe(

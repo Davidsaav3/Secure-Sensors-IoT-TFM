@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { DataSharingService } from "../../../services/data_sharing.service";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 interface MarkerAndColor {
   color: string;
@@ -76,6 +76,9 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   /* AUX INIT */
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
       if (this.ruteAux[2] == "new") {
         if (!this.divMap) throw "No hay mapa";
         if (navigator.geolocation) {
@@ -104,7 +107,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       }
       //
       if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
-        this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+        this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
           (data: any) => {
             this.sharedLon = data[0].lon;
             this.sharedLat = data[0].lat;

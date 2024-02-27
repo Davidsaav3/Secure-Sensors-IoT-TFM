@@ -4,8 +4,9 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
+const verifyToken = require('./token');
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req, res) => {  /*/ GET  /*/
+  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
     const type2 = req.params.type2;
@@ -28,7 +29,7 @@ router.use(express.json())
     });
   });
 
-  router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
+  router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/
     let query = `SELECT id, description, structure, initial_byte FROM variable_data_structure ORDER BY description ASC`;
     con.query(query, (err, result) => {
       if (err) {
@@ -38,7 +39,7 @@ router.use(express.json())
     });
   });
 
-  router.get("/duplicate/:description", (req, res) => {  /*/ DUPLICATE  /*/
+  router.get("/duplicate/:description", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const description = req.params.description;
     let query = `SELECT description FROM variable_data_structure`;
     con.query(query, (err, result) => {
@@ -62,7 +63,7 @@ router.use(express.json())
     });
   });
 
-  router.post("", (req, res) => {  /*/ POST  /*/
+  router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
     const { description, structure } = req.body;
     const initial_byte = parseInt(req.body.initial_byte);
     
@@ -83,7 +84,7 @@ router.use(express.json())
     });
   });
     
-  router.put("", (req, res) => {  /*/ UPDATE  /*/
+  router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
     const { id, description, structure, initial_byte } = req.body;
     if (!id || (!description && !structure && !initial_byte)) {
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
@@ -121,7 +122,7 @@ router.use(express.json())
     });
   });
 
-  router.delete("", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = parseInt(req.body.id);
       if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });

@@ -31,6 +31,9 @@ export class DevicesNewEditComponent implements OnInit {
   public id: any;
 
   constructor(private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.createDate();
@@ -40,7 +43,7 @@ export class DevicesNewEditComponent implements OnInit {
     }
     
     if (this.ruteAux[2] == "new") {
-      this.http.get(this.getStructureList).subscribe(
+      this.http.get(this.getStructureList, {headers}).subscribe(
         (quotesData: any) => {
           this.structures.structure = quotesData.data_estructure;
           this.auxFixed = quotesData.data_estructure[0].id_estructure;
@@ -150,12 +153,15 @@ export class DevicesNewEditComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
     this.devices.sensors = [];
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.getStructure(0);
   
-    this.http.get(this.getSensorsList).subscribe(
+    this.http.get(this.getSensorsList, {headers}).subscribe(
       (data: any) => {
         this.selectSensors.sensors = data;
       },
@@ -183,7 +189,7 @@ export class DevicesNewEditComponent implements OnInit {
       if (this.ruteAux[2] == "duplicate") {
         this.state= 1;
         // 1. Duplicate
-        this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+        this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
           (data: any) => {
             this.devices = data[0];
             this.lat = this.devices.lat;
@@ -199,7 +205,7 @@ export class DevicesNewEditComponent implements OnInit {
               this.devices.sensors[index].id_device = this.id;
             }
 
-            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text' }).subscribe(
+            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text', headers}).subscribe(
               (data: string) => {
                 this.devices.uid = data;
               },
@@ -244,7 +250,10 @@ export class DevicesNewEditComponent implements OnInit {
   /* GET */
 
   getDevices() { // Obtene el Dispositivo
-    this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
+    this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
       (data: any) => {
         this.devices = data[0];
         this.createDate();
@@ -315,7 +324,10 @@ export class DevicesNewEditComponent implements OnInit {
   }
 
   getStructure(num: any) { // Obtiene las listas de estructuras de datos
-    this.http.get(`${this.getStructureList}`).subscribe(
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
+    this.http.get(`${this.getStructureList}`, {headers}).subscribe(
       (quotesData: any) => {
         if (num === 1) {
           this.structures.structure = quotesData.variable_data_structure;
@@ -334,6 +346,9 @@ export class DevicesNewEditComponent implements OnInit {
   /* NEW */
 
   newDevices(form: any) { // Guardar la información del Dispositivo
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.createDate();
     this.devices.createdAt = this.date;
     this.devices.updatedAt = this.date;
@@ -359,11 +374,7 @@ export class DevicesNewEditComponent implements OnInit {
           },
         ];
         this.devices.sensors = sensors_aux;
-        this.http.post<any>(this.postDevice, this.devices, {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json; charset=UTF-8'
-          })
-        }).subscribe(
+        this.http.post<any>(this.postDevice, this.devices, {headers}).subscribe(
           (data: any) => {
             if(data.found==true){
               setTimeout(() => {
@@ -386,7 +397,7 @@ export class DevicesNewEditComponent implements OnInit {
         this.devices.sensors = [];
       } 
       else {
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
         this.http.post<any>(this.postDevice, this.devices, httpOptions)
           .subscribe(
             (data) => {
@@ -431,6 +442,8 @@ export class DevicesNewEditComponent implements OnInit {
   /* EDIT */
 
   editDevices(form: any) { // Edita la información del Dispositivo
+    let token = localStorage.getItem('token') ?? ''; 
+
     this.getShared();
     this.createDate();
     this.devices.updatedAt = this.date;
@@ -453,7 +466,7 @@ export class DevicesNewEditComponent implements OnInit {
           },
         ];
         this.devices.sensors = sensors_aux;
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
         this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
           .subscribe(
             (data: any) => {
@@ -479,7 +492,7 @@ export class DevicesNewEditComponent implements OnInit {
       else {
         //console.log(this.devices.lat)
         //console.log(this.devices.lon)
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
         this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
           .subscribe(
             (data: any) => {
@@ -511,11 +524,13 @@ export class DevicesNewEditComponent implements OnInit {
   /* DELET */
 
   deleteDevices(idActual: any) { // Elimina el Dispositivo
+    let token = localStorage.getItem('token') ?? ''; 
+
     var devices = {
       id: idActual,
     };
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'}),
+      headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`}),
       body: JSON.stringify(devices)
     };
     this.http.delete(this.postDevice, httpOptions)
@@ -567,7 +582,10 @@ export class DevicesNewEditComponent implements OnInit {
   /* RECHARGE */
   
   rechargeMap() { // Recargar mapa a su estado anterior a la edición sin guardado
-    this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
+    this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
       (data: any) => {
         this.devices.lat = data[0].lat;
         this.devices.lon = data[0].lon;

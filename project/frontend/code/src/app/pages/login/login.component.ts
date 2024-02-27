@@ -36,7 +36,7 @@ export class LoginComponent {
 
   id= 1;
   username= 'davidsaav';
-  auth= "false";
+  token= '';
 
   constructor(private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
@@ -50,8 +50,10 @@ export class LoginComponent {
   }
 
   login(form: any) {
+    let token = localStorage.getItem('token') ?? ''; 
+
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
         .subscribe(
           (data: any) => {
@@ -59,7 +61,7 @@ export class LoginComponent {
             this.username= data.email;
             this.id= data.id;
             this.saveStorage();
-            localStorage.setItem("auth", "true");
+            localStorage.setItem('token', data.token);
             this.router.navigate(['/devices']);
           },
           (error) => {
@@ -80,7 +82,7 @@ export class LoginComponent {
     const id: number = idString !== null ? parseInt(idString) : 1; 
     this.id = id;    
     this.username = localStorage.getItem("username") ?? "davidsaav";
-    this.auth = localStorage.getItem("auth") ?? "false";
+    this.token = localStorage.getItem('token') ?? '';
   }
 
 }

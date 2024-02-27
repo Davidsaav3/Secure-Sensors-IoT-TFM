@@ -4,8 +4,11 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
+const jwt = require('jsonwebtoken');
+const verifyToken = require('./token');
+const SECRET_KEY = 'mi_clave_secreta'; // Clave secreta para firmar JWT
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req, res) => {  /*/ GET  /*/
+  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
     const type2 = req.params.type2;
@@ -43,14 +46,15 @@ router.use(express.json())
       }
       if (result.length === 1) { 
         const user = result[0];
-        return res.status(200).json({ id: user.id, email: user.email });
+        const token = jwt.sign({ email }, SECRET_KEY);
+        return res.status(200).json({ id: user.id, email: user.email, token: token });
       }
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     });
 });
 
 
-  router.get("/id/:id", (req, res) => {  /*/ ID  /*/
+  router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
     const query = "SELECT * FROM users WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
@@ -62,7 +66,7 @@ router.use(express.json())
     });
   });
 
-  router.get("/duplicate/:email", (req, res) => {  /*/ DUPLICATE  /*/
+  router.get("/duplicate/:email", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const email = req.params.email;
     let query = `SELECT email FROM users`;
     con.query(query, (err, result) => {
@@ -86,7 +90,7 @@ router.use(express.json())
     });
   });
 
-  router.post("", (req, res) => {  /*/ POST  /*/
+  router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
     const { email, password, newpassword1 } = req.body;
     
     if (!email || !password) {
@@ -106,7 +110,7 @@ router.use(express.json())
     });
   });
     
-  router.put("/email", (req, res) => {  // UPDATE EMAIL
+  router.put("/email", verifyToken, (req, res) => {  // UPDATE EMAIL
     const { id, email } = req.body;
     if (!id || !email) {
         return res.status(400).json({ error: 'Se requiere el ID del usuario y el nuevo correo electrónico para actualizar' });
@@ -126,7 +130,7 @@ router.use(express.json())
     });
   });
 
-  router.put("/password", (req, res) => {  // UPDATE PASSWORD
+  router.put("/password", verifyToken, (req, res) => {  // UPDATE PASSWORD
     const { id, password, newpassword1, newpassword2 } = req.body;
 
     if (!id || !password || !newpassword1 || !newpassword2) {
@@ -155,7 +159,7 @@ router.use(express.json())
     });
 });
 
-router.delete("", (req, res) => {  /*/ DELETE  /*/
+router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
   const id = parseInt(req.body.id);
     if (isNaN(id)) {
     return res.status(400).json({ error: 'ID no válido' });

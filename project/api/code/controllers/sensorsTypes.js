@@ -4,8 +4,9 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
+const verifyToken = require('./token');
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", (req, res) => {  /*/ GET  /*/
+  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
     const type2 = req.params.type2;
@@ -34,7 +35,7 @@ router.use(express.json())
     });
   });
 
-  router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
+  router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/
     let query = `SELECT id, type, position FROM sensors_types ORDER BY type ASC`;
     con.query(query, (err, result) => {
       if (err) {
@@ -44,7 +45,7 @@ router.use(express.json())
     });
   });
 
-  router.get("/duplicate/:type", (req, res) => {  /*/ DUPLICATE  /*/
+  router.get("/duplicate/:type", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const type = req.params.type;
     let query = `SELECT type FROM sensors_types`;
     con.query(query, (err, result) => {
@@ -69,7 +70,7 @@ router.use(express.json())
     });
   });
   
-  router.get("/id/:id", (req, res) => {  /*/ ID  /*/
+  router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
     const query = "SELECT * FROM sensors_types WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
@@ -81,7 +82,7 @@ router.use(express.json())
     });
   });
   
-  router.post("", (req, res) => {  /*/  POST  /*/
+  router.post("", verifyToken, (req, res) => {  /*/  POST  /*/
     const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value } = req.body;
     const newValuemin = valuemin !== null ? parseFloat(valuemin) : null;
     const newValuemax = valuemax !== null ? parseFloat(valuemax) : null;
@@ -102,7 +103,7 @@ router.use(express.json())
     });
   });
   
-  router.put("", (req, res) => {  /*/  UPDATE  /*/  
+  router.put("", verifyToken, (req, res) => {  /*/  UPDATE  /*/  
   const {
     type, metric, description, errorvalue, valuemin, valuemax, id, position, correction_general, correction_time_general, discard_value
   } = req.body;
@@ -132,7 +133,7 @@ router.use(express.json())
     });
   });
 
-  router.delete("", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = req.body.id;
       if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });

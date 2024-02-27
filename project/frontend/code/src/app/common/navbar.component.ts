@@ -29,7 +29,7 @@ export class NavbarComponent {
 
   username= "davidsaav";
   id= 1;
-  auth= "false";
+  token= '';
 
   alertPassOk= false;
   alertEmailOk= false;
@@ -93,9 +93,10 @@ export class NavbarComponent {
   }
 
   changeEmail(form: any){ // Editar perfil
-    console.log("hola")
+    let token = localStorage.getItem('token') ?? ''; 
+
     //if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.put(this.postEmail, JSON.stringify(this.formuserdata), httpOptions)
         .subscribe(
           (data: any) => {
@@ -121,8 +122,10 @@ export class NavbarComponent {
   }
 
   changePassword(form: any){ // Cambiar contraseña
+    let token = localStorage.getItem('token') ?? ''; 
+
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.put(this.postPass, JSON.stringify(this.formapassword), httpOptions)
         .subscribe(
           (data: any) => {
@@ -157,14 +160,14 @@ export class NavbarComponent {
     this.id = id;    
     this.username = localStorage.getItem("username") ?? "davidsaav";
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
-    this.auth = localStorage.getItem("auth") ?? "false";
+    this.token = localStorage.getItem('token') ?? '';
   }
 
   logOut(){
     localStorage.removeItem("id");
     localStorage.removeItem("username");
     localStorage.removeItem("activeLang");
-    localStorage.setItem("auth", "false");
+    localStorage.setItem('token', '');
     this.router.navigate(['/login']);
   }
 

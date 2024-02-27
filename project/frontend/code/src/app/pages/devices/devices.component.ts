@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import * as mapboxgl from "mapbox-gl";
 import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/app/environments/environment";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 interface MarkerAndColor {
   color: string;
@@ -161,11 +161,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   };
 
   ngOnInit(): void { // Inicialización
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.initFilters();
     this.selectSensors.sensors = [];
     this.readStorage();
-
-    this.http.get(this.getSensorsList).subscribe(
+   
+    this.http.get(this.getSensorsList, {headers}).subscribe(
       (data: any) => {
         data.unshift({
           id: -3,
@@ -219,6 +222,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
 
   getDevices() { // Obtiene los dispositivos
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     //console.log(this.search.value)
     setTimeout(() => { // Asincrono
       if (this.search.value == "") {
@@ -413,7 +419,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
         // List
         this.data = [];
         this.charging = true;
-        this.http.get(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`).subscribe(
+        this.http.get(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`, {headers}).subscribe(
           (data: any) => {
             this.charging = false;
     
@@ -444,6 +450,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   }
   
   getMapDevices(num: any) { // Auxiliar de orderDevices (Map)
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.getCornerCoordinates();
     let posX1 = "0";
     let posX2 = "0";
@@ -463,7 +472,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
     this.charging = true;
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`).subscribe(
+      this.http.get(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`, {headers}).subscribe(
       (data: any) => {
         let pass = false;
         this.charging = false;

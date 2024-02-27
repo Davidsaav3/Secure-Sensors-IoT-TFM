@@ -4,8 +4,9 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
+const verifyToken = require('./token');
 
-  router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", (req,res)=>{  /*/ GET  /*/
+  router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
     let search_text= req.params.search_text;
     let order_by= req.params.order_by;
@@ -335,7 +336,7 @@ router.use(express.json())
     return Object.values(devicesWithSensors);
   }
 
-  router.get("/id/:id", (req, res) => {  /*/ ID /*/
+  router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
     const id = parseInt(req.params.id);
 
     let query1 = `SELECT variable_configuration FROM device_configurations WHERE id=?`;
@@ -509,7 +510,7 @@ router.use(express.json())
 
   });
 
-  router.get("/duplicate/:uid", (req, res) => {  /*/ DUPLICATE  /*/
+  router.get("/duplicate/:uid", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const uid = req.params.uid;
     let query = `SELECT uid FROM device_configurations`;
     con.query(query, (err, result) => {
@@ -534,7 +535,7 @@ router.use(express.json())
     });
   });
 
-  router.post("", (req, res) => { // POST Y DELETE //
+  router.post("", verifyToken, (req, res) => { // POST Y DELETE //
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
     } = req.body;
@@ -654,7 +655,7 @@ router.use(express.json())
     });
   }
 
-  router.put("", (req, res) => { // UPDATE //
+  router.put("", verifyToken, (req, res) => { // UPDATE //
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
     } = req.body;
@@ -694,7 +695,7 @@ router.use(express.json())
     });
   });  
 
-  router.delete("", (req, res) => {  /*/ DELETE  /*/
+  router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = req.body.id;
     if (isNaN(id)) {
       return res.status(400).json({ error: 'ID no válido' });

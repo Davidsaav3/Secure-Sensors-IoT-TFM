@@ -15,7 +15,10 @@ export class StructureComponent implements OnInit {
   getVariableStructureList: string =environment.baseUrl+environment.variableDataStructure+"/get_list";
 
   constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
-    this.http.get(`${this.getVariableStructureList}`)
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
+    this.http.get(`${this.getVariableStructureList}`, {headers})
     .subscribe((quotesData: any) => {
       this.aux = quotesData[0].id;
     }, (error) => {
@@ -114,6 +117,9 @@ export class StructureComponent implements OnInit {
   }
 
   getStructures(id: any, ord: any) { // Obtiene todas las estructuras de datos
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
@@ -125,7 +131,7 @@ export class StructureComponent implements OnInit {
 
     this.charging = true;
     this.data = [];
-    this.http.get(`${this.getEstructure}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
+    this.http.get(`${this.getEstructure}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
     .subscribe((data: any) => {
       this.charging = false;
       if (data && data.length > 0 && data[0].total) {
@@ -209,8 +215,10 @@ export class StructureComponent implements OnInit {
   }
 
   getStructuresList() {
- 
-    this.http.get(`${this.getVariableStructureList}`)
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
+    this.http.get(`${this.getVariableStructureList}`, {headers})
       .subscribe(
         (quotesData: any) => {
           this.estructureVariable.structure.unshift(...quotesData);
@@ -224,9 +232,11 @@ export class StructureComponent implements OnInit {
   /* NEW */
 
   newStructures(form: any) { // Guardar datos de estructura de datoss nueva
+    let token = localStorage.getItem('token') ?? ''; 
+
     this.state = 1;
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postEstructure, JSON.stringify(this.estructure), httpOptions)
         .subscribe(
           (data: any) => {
@@ -302,8 +312,10 @@ export class StructureComponent implements OnInit {
   }
 
   editStructuresAux(form: any, num: any) { // Guardar datos de estructura editada
+    let token = localStorage.getItem('token') ?? ''; 
+
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.put(this.postEstructure, JSON.stringify(this.estructure), httpOptions)
         .subscribe(
           (data: any) => {
@@ -344,8 +356,11 @@ export class StructureComponent implements OnInit {
   /* DUPLICATE */
 
   duplicateStructures(num: any, description: any) { // Obtiene nombre de estructura de datos duplicada
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateEstructure}/${description}`).subscribe(
+      this.http.get(`${this.duplicateEstructure}/${description}`, {headers}).subscribe(
       (data: any) => {
         this.openClouse();
         this.state = 0;
@@ -360,12 +375,14 @@ export class StructureComponent implements OnInit {
   /* DELETE */
 
   deleteStructures(idActual: any) { // Elimina estructura de datos
+    let token = localStorage.getItem('token') ?? ''; 
+
     var estructure2 = {
       id_estructure: this.id,
     };
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json; charset=UTF-8'
+        'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`
       }),
       body: JSON.stringify(estructure2)
     };
