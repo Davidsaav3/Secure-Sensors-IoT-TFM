@@ -187,6 +187,15 @@
     "login.e4": "Usuario o contraseña equivocados.",
     "login.e5": "El usuario no existe.",
     "login.e6": "Contraseña es requerida.",
-    "login.e7": "Contraseña debe tener al menos 6 caracteres."
+    "login.e7": "Contraseña debe tener al menos 6 caracteres.",
+
+    "users.e1" : "Error al guardar el usuario",
+    "users.e2" : "Usuario guardado!",
+    "users.e3" : "¡Usuario eliminado!",
+    "users.e4" : "¡Usuario creado!",
+    "users.e5" : "Error al crear el usuario",
+    "users.e6" : "Error al eliminar el usuario",
+    "users.e7" : "Usuario duplicado",
+    "users.e8" : "Error al duplicar el usuario"
 
 }

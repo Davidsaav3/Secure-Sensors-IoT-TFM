@@ -6,7 +6,7 @@ router.use(cors());
 router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./token');
-const SECRET_KEY = process.env.TOKEN;
+const SECRET_KEY = process.env.TOKEN; 
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -16,10 +16,10 @@ const SECRET_KEY = process.env.TOKEN;
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'search') {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM credentials) as total FROM credentials`;
       query += ` ORDER BY ${type1} ${type2}`;
     } else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM credentials WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM credentials`;
       query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -38,7 +38,7 @@ const SECRET_KEY = process.env.TOKEN;
       return res.status(400).json({ error: 'Email y Password son requeridas' });
     }
 
-    const query = "SELECT * FROM users WHERE email = ? AND password = ?";
+    const query = "SELECT * FROM credentials WHERE email = ? AND password = ?";
     //console.log(query)
     con.query(query, [email, password], (err, result) => {
       if (err) {
@@ -56,7 +56,7 @@ const SECRET_KEY = process.env.TOKEN;
 
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
-    const query = "SELECT * FROM users WHERE id = ?";
+    const query = "SELECT * FROM credentials WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
       if (err) {
         console.error("Error:", err);
@@ -68,7 +68,7 @@ const SECRET_KEY = process.env.TOKEN;
 
   router.get("/duplicate/:email", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const email = req.params.email;
-    let query = `SELECT email FROM users`;
+    let query = `SELECT email FROM credentials`;
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
@@ -97,7 +97,7 @@ const SECRET_KEY = process.env.TOKEN;
       return res.status(400).json({ error: 'Email y password  son requeridas' });
     }
 
-    const query = "INSERT INTO users (email, password, change_password) VALUES (?, ?, ?)";
+    const query = "INSERT INTO credentials (email, password, change_password) VALUES (?, ?, ?)";
     con.query(query, [email, password, change_password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
@@ -116,8 +116,7 @@ const SECRET_KEY = process.env.TOKEN;
         return res.status(400).json({ error: 'Se requiere el ID del usuario y el nuevo correo electrónico para actualizar' });
     }
 
-    const query = "UPDATE users SET email = ? WHERE id = ?";
-    console.log([email, id])
+    const query = "UPDATE credentials SET email = ? WHERE id = ?";
     con.query(query, [email, id], (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Error en la base de datos' });
@@ -136,7 +135,7 @@ const SECRET_KEY = process.env.TOKEN;
   if (!id || (!email && !password)) {
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
   }
-  let query = "UPDATE users SET";
+  let query = "UPDATE credentials SET";
   const values = [];
   if (email) {
     query += " email=?";
@@ -146,7 +145,11 @@ const SECRET_KEY = process.env.TOKEN;
     query += ", password=?";
     values.push(password);
   }
-  if (change_password!=null) {
+  if (password) {
+    query += ", password=?";
+    values.push(password);
+  }
+  if (change_password) {
     query += ", change_password=?";
     values.push(change_password);
   }
@@ -174,8 +177,7 @@ const SECRET_KEY = process.env.TOKEN;
        return res.status(400).json({ error: 'Las nuevas contraseñas no coinciden' });
     }
 
-    const query = "SELECT * FROM users WHERE id = ? AND password = ?";
-    console.log([id, password])
+    const query = "SELECT * FROM credentials WHERE id = ? AND password = ?";
     con.query(query, [id, password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
@@ -184,8 +186,7 @@ const SECRET_KEY = process.env.TOKEN;
         return res.status(404).json({ error: 'Usuario no encontrado o contraseña antigua incorrecta' });
       }
 
-      const updateQuery = "UPDATE users SET password = ? WHERE id = ?";
-      console.log(req.body)
+      const updateQuery = "UPDATE credentials SET password = ? WHERE id = ?";
       con.query(updateQuery, [newpassword1, id], (updateErr, updateResult) => {
         if (updateErr) {
           return res.status(500).json({ error: 'Error al actualizar la contraseña' });
@@ -200,7 +201,7 @@ router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     if (isNaN(id)) {
     return res.status(400).json({ error: 'ID no válido' });
   }
-  con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
+  con.query("DELETE FROM credentials WHERE id = ?", id, function (err, result) {
     if (err) {
       return res.status(500).json({ error: 'Error en la base de datos' });
     }

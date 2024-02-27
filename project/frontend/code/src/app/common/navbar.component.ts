@@ -38,6 +38,8 @@ export class NavbarComponent {
 
   postEmail: string = environment.baseUrl+environment.users+'/email';
   postPass: string = environment.baseUrl+environment.users+'/password';
+  but= false;
+  changed= false;
 
   formapassword = {
     id: this.id,
@@ -61,18 +63,6 @@ export class NavbarComponent {
     this.translate.use(this.activeLang);
   }
 
-  toggleState() {
-    this.isActive = !this.isActive;
-    if(this.isActive){
-      this.rute= "/devices";
-      this.name= "settings"
-    }
-    if(!this.isActive){
-      this.rute= "/users";
-      this.name= "management"
-    }
-  }
-
   isActiveOption(option: boolean): boolean {
     return option;
   }
@@ -94,9 +84,11 @@ export class NavbarComponent {
 
   changeEmail(form: any){ // Editar perfil
     let token = localStorage.getItem('token') ?? ''; 
+    this.formuserdata.id= this.id;
 
     //if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+      console.log(this.formuserdata)
       this.http.put(this.postEmail, JSON.stringify(this.formuserdata), httpOptions)
         .subscribe(
           (data: any) => {
@@ -123,6 +115,7 @@ export class NavbarComponent {
 
   changePassword(form: any){ // Cambiar contraseña
     let token = localStorage.getItem('token') ?? ''; 
+    this.formapassword.id= this.id;
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -157,7 +150,7 @@ export class NavbarComponent {
   readStorage() { // Recupera datos del local storage
     const idString: string | null = localStorage.getItem("id");
     const id: number = idString !== null ? parseInt(idString) : 1; 
-    this.id = id;    
+    this.id = id;
     this.username = localStorage.getItem("username") ?? "davidsaav";
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
     this.token = localStorage.getItem('token') ?? '';

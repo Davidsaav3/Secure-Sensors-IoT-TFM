@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev ps-2': this.width<965, '': this.width>=965}">
 
-	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.showAux==true || this.width<965, 'c10': this.showAux==false}">
+	<div class="cc2 cont mx-0 cont_recto" [ngClass]="{'c100': this.showAux==true || this.width<965, 'c10': this.showAux==false}">
 		<div class="p-3 pb-0 pe-2">
 			<div class="row d-flex">
 				<div class="col-6 col-sm-6 col-lg-3 mb-3">
@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'users.nuevo_usuario' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew('','','',true);this.state=1" [ngClass]="{'disabled': change || change}">{{ 'users.nuevo_usuario' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -58,7 +58,7 @@
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
 							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.email }}</th>
 							<td class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.password }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateUsers(quote.id,quote.type)">
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateUsers(quote.id,quote.email)">
 								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -139,9 +139,21 @@
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 
 					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'users.duplicate' | translate }} {{users.email.substring(0, users.email.indexOf('@'))}}</h1>
-						<h1 *ngIf="state==1" class="mb-0">{{ 'users.new' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'users.of' | translate }} {{ users.email.substring(0, users.email.indexOf('@')) }}</h1>
+						<h1 *ngIf="state==0" class="mb-0">
+							{{ 'users.duplicate' | translate }} 
+							<span *ngIf="users.email.includes('@'); else fullEmail">{{ users.email.substring(0, users.email.indexOf('@')) }}</span>
+							<ng-template #fullEmail>{{ users.email }}</ng-template>	
+						</h1>
+						<h1 *ngIf="state==1" class="mb-0">
+							{{ 'users.new' | translate }}
+							<span *ngIf="users.email.includes('@'); else fullEmail">{{ users.email.substring(0, users.email.indexOf('@')) }}</span>
+							<ng-template #fullEmail>{{ users.email }}</ng-template>	
+						</h1>
+						<h1 *ngIf="state==2" class="mb-0">
+							{{ 'users.of' | translate }} 
+							<span *ngIf="users.email.includes('@'); else fullEmail">{{ users.email.substring(0, users.email.indexOf('@')) }}</span>
+							<ng-template #fullEmail>{{ users.email }}</ng-template>	
+						</h1>
 					</div>
 					
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ users.id }}" [(ngModel)]="users.id">
@@ -165,7 +177,7 @@
 					<div class="col-12 mt-2">			
 						<div class="form-check">
 							<label style="display: none" [for]="'nodata'">{{ 'devices.sensors.nodata' | translate }}</label>
-							<input min="0" maxlength="4" (ngModelChange)="change=true" class="form-check-input" type="checkbox" value="{{ users.change_password }}" aria-label="Checkbox for following text input" id="change_password" name="change_password" [(ngModel)]="users['change_password']">
+							<input min="0" maxlength="4" (ngModelChange)="change=true" class="form-check-input" type="checkbox" [checked]="users.change_password" aria-label="Checkbox for following text input" id="change_password" name="change_password" [(ngModel)]="users['change_password']">
 							<label class="form-check-label" for="flexCheckDefault">{{ 'users.change_password' | translate }}</label>
 						</div>
 						<div *ngIf="form.submitted && form.controls['change_password'].errors" class="text-danger">
@@ -183,7 +195,7 @@
 						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button (click)="newSensor(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
+						<button (click)="newUser(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
 					</div>
 				</div>
 				<div class="row" *ngIf="state==2">
@@ -192,7 +204,7 @@
 						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button (click)="editSensor(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+						<button (click)="editUser(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>
 					<div class="col-12 mt-3">
 						<div class="row d-flex" style="justify-content: flex-end;">
@@ -263,7 +275,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e7' | translate }}
+					{{ 'users.e7' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -274,7 +286,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e8' | translate }}
+					{{ 'users.e8' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -285,7 +297,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e3' | translate }}
+					{{ 'users.e3' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -296,7 +308,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e6' | translate }}
+					{{ 'users.e6' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -307,7 +319,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e4' | translate }}
+					{{ 'users.e4' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -318,7 +330,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e5' | translate }}
+					{{ 'users.e5' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -329,7 +341,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e2' | translate }}
+					{{ 'users.e2' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -340,7 +352,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e1' | translate }}
+					{{ 'users.e1' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>

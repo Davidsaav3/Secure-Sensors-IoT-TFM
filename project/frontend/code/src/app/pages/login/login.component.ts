@@ -57,7 +57,7 @@ export class LoginComponent {
       this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
         .subscribe(
           (data: any) => {
-            console.log(data)
+            //console.log(data)
             this.username= data.email;
             this.id= data.id;
             this.saveStorage();

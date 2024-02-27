@@ -21,7 +21,7 @@ export class UsersComponent implements OnInit {
     this.resize();
   }
 
-  getSensor: string = environment.baseUrl+environment.users+"/get";
+  getUser: string = environment.baseUrl+environment.users+"/get";
   postUser: string = environment.baseUrl+environment.users;
   duplicateUser: string = environment.baseUrl+environment.users+"/duplicate";
   getId: string = environment.baseUrl+environment.users+"/id";
@@ -94,7 +94,7 @@ export class UsersComponent implements OnInit {
 
   /* GET */
 
-  getUsersVoid() { // Obtiene los sensores sin pasar arámetros
+  getUsersVoid() { // Obtiene los usuarios sin pasar arámetros
     this.getUsers(this.order, this.ordAux);
   }
 
@@ -139,7 +139,7 @@ export class UsersComponent implements OnInit {
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getUser}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -202,7 +202,7 @@ export class UsersComponent implements OnInit {
   
   /* NEW */
 
-  newSensor(form: any) {
+  newUser(form: any) {
     let token = localStorage.getItem('token') ?? ''; 
 
     this.state = 1;
@@ -241,7 +241,7 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  openNew(id:any,email:any,password:any,change_password:any) { // Abre Nuevo sensor
+  openNew(id:any,email:any,password:any,change_password:any) { // Abre Nuevo usuario
 
     this.users = {
       id: id,
@@ -257,7 +257,7 @@ export class UsersComponent implements OnInit {
 
   /* EDIT */
 
-  editSensor(form: any) { // Guardar datos del sensor editado
+  editUser(form: any) { // Guardar datos del usuario editado
     let token = localStorage.getItem('token') ?? ''; 
 
     if (form.valid) {
@@ -288,7 +288,7 @@ export class UsersComponent implements OnInit {
     this.change = false;
   }
   
-  openEdit() { // Abre Editar sensor
+  openEdit() { // Abre Editar usuario
     this.show = true;
     this.state = 2;
     this.showAux = false;
@@ -296,7 +296,7 @@ export class UsersComponent implements OnInit {
 
   /* DUPLICATE */
 
-  duplicateUsers(num: any, type: any) { // Obtiene el nombre del sensor duplicado
+  duplicateUsers(num: any, type: any) { // Obtiene el nombre del usuario duplicado
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
@@ -323,7 +323,7 @@ export class UsersComponent implements OnInit {
                 };
                 this.openNew(
                   '',
-                  this.users.email,
+                  data.duplicateEmail,
                   this.users.password,
                   this.users.change_password,
                 );
@@ -343,7 +343,7 @@ export class UsersComponent implements OnInit {
 
   /* DELETE */
 
-  deleteUsers(idActual: any) { // Elimina sensor
+  deleteUsers(idActual: any) { // Elimina usuario
     let token = localStorage.getItem('token') ?? ''; 
 
     var users2 = {
@@ -359,10 +359,10 @@ export class UsersComponent implements OnInit {
     this.http.delete(this.postUser, options).subscribe(
         (response: any) => {
           // Realiza acciones con la respuesta si es necesario
-          //console.log('Sensors eliminados:', response);
+          //console.log('Users eliminados:', response);
         },
         (error: any) => {
-          console.error('Error al eliminar sensores:', error);
+          console.error('Error al eliminar usuario:', error);
         }
       );
     this.alertDelete = true;
@@ -390,7 +390,7 @@ export class UsersComponent implements OnInit {
     }, 500);
   }
 
-  rechargeForm() { // recarga sensor a su valor anterior
+  rechargeForm() { // recarga usuario a su valor anterior
     this.users = {
       id: this.usersCopy.id,
       email: this.usersCopy.email,
@@ -412,7 +412,7 @@ export class UsersComponent implements OnInit {
 
   /* TARJETAS */
 
-  openClouse() { // Abre y cierra la tarjeta de sensores
+  openClouse() { // Abre y cierra la tarjeta de usuarios
     if (this.show == true) {
       this.showAux = false;
     } 
