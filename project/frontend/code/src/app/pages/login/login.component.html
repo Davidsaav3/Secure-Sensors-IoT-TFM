@@ -7,31 +7,28 @@
 			<h2 class="text-center">{{ 'login' | translate }}</h2>
 			<form #form="ngForm" class="row needs-validation p-3 pt-1">
 				<div class="col-12">
-					<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-		
+					<div class="row">
 						<div class="col-12 pt-2 form-group">
-							<label for="type">{{ 'login.user' | translate }}</label>
-							<input (ngModelChange)="change1=true" value="{{ formlogin.email }}" [(ngModel)]="formlogin['email']" maxlength="45" type="text" id="type" class="form-control" name="type" required type>
-							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
-								<div *ngIf="form.controls['type'].errors['required']">{{ 'login.user' | translate }} {{ 'required' | translate }}</div>
+							<label for="email">{{ 'login.user' | translate }}</label>
+							<input (ngModelChange)="change1=true" [(ngModel)]="formlogin.email" maxlength="45" type="email" id="email" class="form-control" name="email" required>
+							<div *ngIf="form.submitted && form.controls['email'].errors" class="text-danger">
+								<div *ngIf="form.controls['email'].errors['required']">{{ 'login.user' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['email'].errors['email']">{{ 'login.user' | translate }} {{ 'invalid' | translate }}</div>
 							</div>
 						</div>
-
 						<div class="col-12 pt-2 form-group">
-							<label for="type">{{ 'login.pass' | translate }}</label>
-							<input (ngModelChange)="change1=true" value="{{ formlogin.password }}" [(ngModel)]="formlogin['password']" maxlength="45" type="text" id="type" class="form-control" name="type" required type>
-							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
-								<div *ngIf="form.controls['type'].errors['required']">{{ 'login.pass' | translate }} {{ 'required' | translate }}</div>
+							<label for="password">{{ 'login.pass' | translate }}</label>
+							<input (ngModelChange)="change1=true" [(ngModel)]="formlogin.password" maxlength="45" type="password" id="password" class="form-control" name="password" required>
+							<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+								<div *ngIf="form.controls['password'].errors['required']">{{ 'login.pass' | translate }} {{ 'required' | translate }}</div>
 							</div>
 						</div>
-	
 					</div>
 				</div>
-	
 				<div class="col-12 mt-3 pt-3">
-					<button (click)="login(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-secondary d-block mx-auto" style="width: 100%">{{ 'login.access' | translate }}</button>
+					<button (click)="login(form)" ng-click="ocultar = true" type="submit" class="btn btn-secondary d-block mx-auto" style="width: 100%">{{ 'login.access' | translate }}</button>
 				</div>
-			</form>
+			</form>			
 		  </div>
 		</div>
 	  </div>

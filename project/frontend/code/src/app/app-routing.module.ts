@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 
 import { DeviceComponent } from './pages/device.component';
 import { DevicesNewEditComponent } from './pages/devices-new-edit/devices-new-edit.component';
@@ -16,22 +17,22 @@ import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   {
-    path:'devices', component: DeviceComponent,
+    path:'devices', component: DeviceComponent, canActivate: [AuthGuard] ,
     children: [
       {
         path: '',
-        component: DevicesComponent
+        component: DevicesComponent, canActivate: [AuthGuard] 
       },
       {
         path: 'duplicate',
         children: [
           {
             path: ':id',
-            component: DevicesNewEditComponent
+            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
           },
           {
             path: '**',
-            component: DevicesNewEditComponent
+            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
           }
         ]
       },
@@ -40,11 +41,11 @@ const routes: Routes = [
         children: [
           {
             path: ':id',
-            component: DevicesNewEditComponent
+            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
           },
           {
             path: '**',
-            component: DevicesNewEditComponent
+            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
           }
         ]
       },
@@ -53,43 +54,43 @@ const routes: Routes = [
         children: [
           {
             path: ':id',
-            component: DevicesNewEditComponent
+            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
           },
           {
             path: '**',
-            component: DeviceComponent
+            component: DeviceComponent, canActivate: [AuthGuard] 
           }
         ]
       },
       {
         path: '**',
-        component: DeviceComponent
+        component: DeviceComponent, canActivate: [AuthGuard] 
       },
     ]
   },
   { 
-    path:'sensors', component: SensorsComponent
+    path:'sensors', component: SensorsComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'structure', component: StructureComponent
+    path:'structure', component: StructureComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'variable-structure', component: VariableStructureComponent
+    path:'variable-structure', component: VariableStructureComponent, canActivate: [AuthGuard] 
   },
   { 
     path:'login', component: LoginComponent
   },
   { 
-    path:'users', component: UsersComponent
+    path:'users', component: UsersComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'credentials', component: CredentialsComponent
+    path:'credentials', component: CredentialsComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'script', component: ScriptComponent
+    path:'script', component: ScriptComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'monitoring', component: MonitoringComponent
+    path:'monitoring', component: MonitoringComponent, canActivate: [AuthGuard] 
   },
   {
     path:'**',
