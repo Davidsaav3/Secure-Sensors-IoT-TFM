@@ -167,9 +167,24 @@
 
     "users.of": "User ",
     "users.new": "New user ",
-    "users.duplicate": "Edit user ",
+    "users.duplicate": "Duplicate ",
     "users.nuevo_usuario": "New user",
     "users.email": "Email",
-    "users.password": "Password"
+    "users.password": "Password",
+    "users.change_password": "Change password the first time ?",
+    "edit.change": "Change password",
+
+    "login": "Login",
+    "login.user": "Email",
+    "login.pass": "Password",
+    "login.pass2": "New password",
+    "login.access": "Access",
+    "login.e1": "User is required.",
+    "login.e2": "User must be at least 3 characters.",
+    "login.e3": "User cannot be more than 20 characters.",
+    "login.e4": "Wrong username or password.",
+    "login.e5": "The user does not exist.",
+    "login.e6": "Password is required.",
+    "login.e7": "Password must be at least 6 characters."
 
 }

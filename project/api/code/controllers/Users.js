@@ -28,27 +28,39 @@ router.use(express.json())
     });
   });
 
-  router.get("/get_list", (req, res) => {  /*/ GET LIST /*/
-    let query = `SELECT id, email, password FROM users ORDER BY email ASC`;
-    con.query(query, (err, result) => {
+  router.post("/login", (req, res) => {  // POST LOGIN
+    const { email, password } = req.body;
+    console.log(req.body)
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email y Password son requeridas' });
+    }
+
+    const query = "SELECT * FROM users WHERE email = ? AND password = ?";
+    console.log(query)
+    con.query(query, [email, password], (err, result) => {
       if (err) {
-        console.error(err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      if (result.length === 1) { 
+        const user = result[0];
+        return res.status(200).json({ id: user.id, email: user.email });
+      }
+      return res.status(401).json({ error: 'Credenciales incorrectas' });
+    });
+});
+
+
+  router.get("/id/:id", (req, res) => {  /*/ ID  /*/
+    const id = parseInt(req.params.id);
+    const query = "SELECT * FROM users WHERE id = ?";
+    con.query(query, [id,id], (err, result) => {
+      if (err) {
+        console.error("Error:", err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
       }
       res.send(result);
     });
   });
-
-  router.get("/id/:id", (req, res) => {  /*/ ID  /*/
-  const id = parseInt(req.params.id);
-  const query = "SELECT * FROM users WHERE id = ?";
-  con.query(query, [id,id], (err, result) => {
-    if (err) {
-      console.error("Error:", err);
-      return res.status(500).json({ error: 'Error en la base de datos' });
-    }
-    res.send(result);
-  });
-});
 
   router.get("/duplicate/:email", (req, res) => {  /*/ DUPLICATE  /*/
     const email = req.params.email;
@@ -75,14 +87,14 @@ router.use(express.json())
   });
 
   router.post("", (req, res) => {  /*/ POST  /*/
-    const { email, password } = req.body;
+    const { email, password, newpassword1 } = req.body;
     
     if (!email || !password) {
       return res.status(400).json({ error: 'Email y password  son requeridas' });
     }
 
-    const query = "INSERT INTO users (email, password) VALUES (?, ?)";
-    con.query(query, [email, password], (err, result) => {
+    const query = "INSERT INTO users (email, password, newpassword1) VALUES (?, ?, ?)";
+    con.query(query, [email, password, newpassword1], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
@@ -94,48 +106,69 @@ router.use(express.json())
     });
   });
     
-  router.put("", (req, res) => {  /*/ UPDATE  /*/
-    const { id, email, password } = req.body;
-    if (!id || (!email && !password)) {
-      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
+  router.put("/email", (req, res) => {  // UPDATE EMAIL
+    const { id, email } = req.body;
+    if (!id || !email) {
+        return res.status(400).json({ error: 'Se requiere el ID del usuario y el nuevo correo electrónico para actualizar' });
     }
-    let query = "UPDATE users SET";
-    const values = [];
-    if (email) {
-      query += " email=?";
-      values.push(email);
-    }
-    if (password) {
-      query += " password=?";
-      values.push(password);
-    }
-    query += " WHERE id=?";
-    values.push(id);
-    con.query(query, values, (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error en la base de datos' });
-      }
-      if (result.affectedRows > 0) {
-        return res.status(200).json({ message: 'Registro actualizado con éxito' });
-      }
+
+    const query = "UPDATE users SET email = ? WHERE id = ?";
+    con.query(query, [email, id], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error en la base de datos' });
+        }
+
+        if (result.affectedRows > 0) {
+            return res.status(200).json({ email: email }); // Devolver el nuevo correo electrónico actualizado
+        }
+
         return res.status(404).json({ error: 'Registro no encontrado' });
     });
   });
 
-  router.delete("", (req, res) => {  /*/ DELETE  /*/
-    const id = parseInt(req.body.id);
-      if (isNaN(id)) {
-      return res.status(400).json({ error: 'ID no válido' });
+  router.put("/password", (req, res) => {  // UPDATE PASSWORD
+    const { id, password, newpassword1, newpassword2 } = req.body;
+
+    if (!id || !password || !newpassword1 || !newpassword2) {
+      return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
-    con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
+    if (newpassword1 !== newpassword2) {
+       return res.status(400).json({ error: 'Las nuevas contraseñas no coinciden' });
+    }
+
+    const query = "SELECT * FROM users WHERE id = ? AND password = ?";
+    con.query(query, [id, password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: 'Uusario no encontrado' });
+      if (result.length === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado o contraseña antigua incorrecta' });
       }
-      res.json({ message: 'Uusario eliminado con éxito' });
+
+      const updateQuery = "UPDATE users SET password = ? WHERE id = ?";
+      con.query(updateQuery, [newpassword1, id], (updateErr, updateResult) => {
+        if (updateErr) {
+          return res.status(500).json({ error: 'Error al actualizar la contraseña' });
+        }
+        return res.status(200).json({ message: 'Contraseña actualizada con éxito' });
+      });
     });
+});
+
+router.delete("", (req, res) => {  /*/ DELETE  /*/
+  const id = parseInt(req.body.id);
+    if (isNaN(id)) {
+    return res.status(400).json({ error: 'ID no válido' });
+  }
+  con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
+    if (err) {
+      return res.status(500).json({ error: 'Error en la base de datos' });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Uusario no encontrado' });
+    }
+    res.json({ message: 'Uusario eliminado con éxito' });
   });
+});
 
 module.exports = router;

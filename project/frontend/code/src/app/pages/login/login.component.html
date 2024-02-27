@@ -1,71 +1,36 @@
-<div class="container-fluid" style="min-height: 100vh; display: flex; justify-content: center; align-items: center;">
+<app-navbar></app-navbar>
+<div class="container-fluid" style="min-height: 90vh; display: flex; justify-content: center; align-items: center;">
 	<div class="row justify-content-center">
 	  <div class="">
 		<div class="card">
 		  <div class="card-body">
-			<h2 class="text-center">Login</h2>
-			<form [formGroup]="registerForm" (ngSubmit)="login()" *ngIf="!mostrar" class="p-3">
-			  <div class="mb-3">
-				<label for="username" class="form-label">Usuario</label>
-				<input type="text" formControlName="username" class="form-control" id="username" placeholder="Usuario">
-				<div *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)" class="text-danger">
-				  <div *ngIf="registerForm.get('username')?.errors?.['required']">
-					Usuario es requerido.
-				  </div>
-				  <div *ngIf="registerForm.get('username')?.errors?.['minlength']">
-					Usuario debe tener al menos 3 caracteres.
-				  </div>
-				  <div *ngIf="registerForm.get('username')?.errors?.['maxlength']">
-					Usuario no puede tener más de 20 caracteres.
-				  </div>
-				
+			<h2 class="text-center">{{ 'login' | translate }}</h2>
+			<form #form="ngForm" class="row needs-validation p-3 pt-1">
+				<div class="col-12">
+					<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+		
+						<div class="col-12 pt-2 form-group">
+							<label for="type">{{ 'login.user' | translate }}</label>
+							<input (ngModelChange)="change1=true" value="{{ formlogin.email }}" [(ngModel)]="formlogin['email']" maxlength="45" type="text" id="type" class="form-control" name="type" required type>
+							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
+								<div *ngIf="form.controls['type'].errors['required']">{{ 'login.user' | translate }} {{ 'required' | translate }}</div>
+							</div>
+						</div>
+
+						<div class="col-12 pt-2 form-group">
+							<label for="type">{{ 'login.pass' | translate }}</label>
+							<input (ngModelChange)="change1=true" value="{{ formlogin.password }}" [(ngModel)]="formlogin['password']" maxlength="45" type="text" id="type" class="form-control" name="type" required type>
+							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
+								<div *ngIf="form.controls['type'].errors['required']">{{ 'login.pass' | translate }} {{ 'required' | translate }}</div>
+							</div>
+						</div>
+	
+					</div>
 				</div>
-			  </div>
-			  <div *ngIf="mostrar2" style="color: red;">
-				Usuario o contraseña equivocados.
-			  </div>
-			  <div *ngIf="mostrar4" style="color: red;">
-				El usuario no existe.
-			  </div>
-			  <div class="mb-3">
-				<label for="password" class="form-label">Contraseña</label>
-				<input type="password" formControlName="password" class="form-control" id="password" placeholder="Contraseña">
-				<div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" class="text-danger">
-				  <div *ngIf="registerForm.get('password')?.errors?.['required']">
-					Contraseña es requerida.
-				  </div>
-				  <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
-					Contraseña debe tener al menos 6 caracteres.
-				  </div>
+	
+				<div class="col-12 mt-3 pt-3">
+					<button (click)="login(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-secondary d-block mx-auto" style="width: 100%">{{ 'login.access' | translate }}</button>
 				</div>
-			  </div>
-			  <button type="submit" class="btn btn-dark d-block mx-auto">Acceder</button>
-			</form>
-		  
-			<form [formGroup]="registerForm2" (ngSubmit)="comp()" *ngIf="mostrar" class="p-3">
-			  <div class="my-3">
-				<label for="fa" class="form-label">Código de verificación</label>
-				<input type="text" formControlName="fa" class="form-control" id="fa" placeholder="Código de verificación">
-				<div *ngIf="registerForm2.get('fa')?.invalid && (registerForm2.get('fa')?.dirty || registerForm2.get('fa')?.touched)" class="text-danger">
-				  <div *ngIf="registerForm2.get('fa')?.errors?.['required']">
-					Código de verificación es requerido.
-				  </div>
-				  <div *ngIf="registerForm2.get('fa')?.errors?.['minlength']">
-					Código de verificación debe tener al menos 6 dígitos.
-				  </div>
-				  <div *ngIf="registerForm2.get('fa')?.errors?.['maxlength']">
-					Código de verificación no puede tener más de 6 dígitos.
-				  </div>
-			   
-				</div>
-			  </div>
-			  <div *ngIf="mostrar3" style="color: red;">
-				Código de verificación incorrecto.
-			  </div>
-			  <div *ngIf="mostrar5" style="color: red;">
-				Demasiados intentos fallidos.
-			  </div>
-			  <button type="submit" class="btn btn-dark d-block mx-auto">Iniciar sesión</button>
 			</form>
 		  </div>
 		</div>

@@ -23,6 +23,8 @@ export class LoginComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
+  postLogin: string = environment.baseUrl+environment.users+'/login';
+
   cont: any= 0;
   mostrar: any= false;
   mostrar2: any= false;
@@ -30,121 +32,55 @@ export class LoginComponent {
   mostrar4: any= false;
   mostrar5: any= false;
   fa: string | undefined;
-  username= '';
+  change1= false;
+
+  id= 1;
+  username= 'davidsaav';
+  auth= "false";
 
   constructor(private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
+
+  formlogin = {
+    email: "",
+    password: "",
+  };
 
   get registerFormControl() {
     return this.registerForm.controls;
   }
 
-  login() {
-    if (this.registerForm.valid) {
-      console
-      const url = 'https://proteccloud.000webhostapp.com/login.php';
-      const body = { 
-        username: this.registerForm.get('username')?.value, 
-        password: this.registerForm.get('password')?.value 
-      };
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded'
-        })
-      };
-      this.http.post(url, JSON.stringify(body), httpOptions)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.error instanceof ErrorEvent) {
-            //console.error('Error del lado del cliente:', error.error.message);
-          } 
-          else {
-            if(error.status==200){
-              this.username = this.registerForm.get('username')?.value;
-              this.mostrar= true;
-            }
-          }
-          return throwError('Algo salió mal; inténtalo de nuevo más tarde.');
-        })
-      )
-      .subscribe(
-        (response: any) => {
-          if(response.code==100 || response.code==200){
-            this.username = this.registerForm.get('username')?.value;
-            this.mostrar= true;
-          }
-          if(response.code==400){
-            this.mostrar2= true;
-          }
-          if(response.code==401){
-            this.mostrar4= true;
-          }
-        },
-        (error: any) => {
-          //console.error('Error de solicitud:', error);
-        }
-      );
-    }
-    else{
-      this.registerForm.markAllAsTouched();
-    }
-}
-
-  comp() {
-    this.cont++;
-    if (this.registerForm2.valid && this.cont<3) {
-      console
-      const url = 'https://proteccloud.000webhostapp.com/code.php';
-      const body = { 
-        username: this.registerForm.get('username')?.value, 
-        fa: this.registerForm2.get('fa')?.value, 
-      };
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/x-www-form-urlencoded'
-        })
-      };
-      this.http.post(url, JSON.stringify(body), httpOptions)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.error instanceof ErrorEvent) {
-
-          } 
-          else {
-            if(error.status==200){
-              localStorage.setItem('username', this.username);
-              this.authService.setAuthenticated(true);
-              this.router.navigate(['/home']);
-            }
-          }
-          return throwError('Algo salió mal; inténtalo de nuevo más tarde.');
-        })
-      )
-      .subscribe(
-          (response: any) => {
-              if(response.code==100){
-                localStorage.setItem('username', this.username);
-                this.authService.setAuthenticated(true);
-                this.router.navigate(['/home']);
-              }
-              if(response.code==400){
-                this.mostrar3= true;
-              }
+  login(form: any) {
+    if (form.valid) {
+      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
+      this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
+        .subscribe(
+          (data: any) => {
+            console.log(data)
+            this.username= data.email;
+            this.id= data.id;
+            this.saveStorage();
+            localStorage.setItem("auth", "true");
+            this.router.navigate(['/devices']);
           },
-          (error: any) => {
-              //console.error('Error de solicitud:', error);
+          (error) => {
+            console.error("Error:", error);
           }
-      );
-    }
-    else{
-      this.registerForm.markAllAsTouched();
-    }
-    if(this.cont>=3){
-      this.mostrar5= true;
-      this.mostrar3= false;
-      setTimeout(() => {
-        this.router.navigate(['/register']);
-      }, 2000);
-      this.cont= 0;
+        );
+      this.change1 = false;
     }
   }
+
+  saveStorage() { // Guarda datos en el local storage
+    localStorage.setItem("id", this.id.toString());
+    localStorage.setItem("username", this.username);
+  }
+
+  readStorage() { // Recupera datos del local storage
+    const idString: string | null = localStorage.getItem("id");
+    const id: number = idString !== null ? parseInt(idString) : 1; 
+    this.id = id;    
+    this.username = localStorage.getItem("username") ?? "davidsaav";
+    this.auth = localStorage.getItem("auth") ?? "false";
+  }
+
 }

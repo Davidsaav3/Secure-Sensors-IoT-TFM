@@ -74,12 +74,14 @@ export class UsersComponent implements OnInit {
     id: 0,
     email: "",
     password: "",
+    change_password: true,
   };
 
   usersCopy = {
     id: 0,
     email: "",
     password: "",
+    change_password: true,
   };
 
   searchAuxArray = {
@@ -181,6 +183,7 @@ export class UsersComponent implements OnInit {
             id: users.id,
             email: users.email,
             password: users.password,
+            change_password: users.change_password,
           };
           this.openClouse();
         },
@@ -211,13 +214,13 @@ export class UsersComponent implements OnInit {
             this.users.id = data.id;
             let users = { ...this.users };
             this.data.push(users);
-            /*this.data.sort((a: { position: string }, b: { position: any }) => {
-              if (typeof a.position === "string" && typeof b.position === "string") {
-                return a.position.localeCompare(b.position);
+            this.data.sort((a: { email: string }, b: { email: any }) => {
+              if (typeof a.email === "string" && typeof b.email === "string") {
+                return a.email.localeCompare(b.email);
               } else {
                 return 1;
               }
-            });*/
+            });
             this.actId = this.id;
             this.openEdit();
             this.state = 2;
@@ -230,12 +233,13 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  openNew(id:any,email:any,password:any) { // Abre Nuevo sensor
+  openNew(id:any,email:any,password:any,change_password:any) { // Abre Nuevo sensor
 
     this.users = {
       id: id,
       email: email,
       password: password,
+      change_password: change_password
     };
 
     this.show = true;
@@ -260,7 +264,7 @@ export class UsersComponent implements OnInit {
       this.data = this.data.filter((data: { id: number }) => data.id !== this.users.id);
       let users = this.users;
       this.data.push(users);
-      //this.data.sort((a: any, b: any) => {return a.position - b.position;});
+      this.data.sort((a: any, b: any) => {return a.email - b.email;});
       this.actId = this.users.id;
       this.openEdit();
       this.state = 2;
@@ -302,11 +306,13 @@ export class UsersComponent implements OnInit {
                   id: users.id,
                   email: users.email,
                   password: users.password,
+                  change_password: users.change_password,
                 };
                 this.openNew(
                   '',
                   this.users.email,
                   this.users.password,
+                  this.users.change_password,
                 );
               },
               (error) => {
@@ -374,6 +380,7 @@ export class UsersComponent implements OnInit {
       id: this.usersCopy.id,
       email: this.usersCopy.email,
       password: this.usersCopy.password,
+      change_password: this.usersCopy.change_password,
     };
     this.change = false;
   }

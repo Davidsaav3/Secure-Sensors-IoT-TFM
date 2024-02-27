@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'users.nuevo_usuario' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew('','','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'users.nuevo_usuario' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -90,7 +90,7 @@
 					<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
 				</div>
 				<div>
-					<select (change)="this.currentPage=1;getUsersLocal('position','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<select (change)="this.currentPage=1;getUsersLocal('email','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 						<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 					</select>
 				</div>
@@ -139,9 +139,9 @@
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 
 					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'users.duplicate' | translate }} {{users.email}}</h1>
+						<h1 *ngIf="state==0" class="mb-0">{{ 'users.duplicate' | translate }} {{users.email.substring(0, users.email.indexOf('@'))}}</h1>
 						<h1 *ngIf="state==1" class="mb-0">{{ 'users.new' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'users.of' | translate }} {{ users.email }}</h1>
+						<h1 *ngIf="state==2" class="mb-0">{{ 'users.of' | translate }} {{ users.email.substring(0, users.email.indexOf('@')) }}</h1>
 					</div>
 					
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ users.id }}" [(ngModel)]="users.id">
@@ -154,11 +154,22 @@
 						</div>
 					</div>
 
-					<div class="col-12 col-md-6 mt-2">
+					<div class="col-12 mt-2">
 						<label for="password">{{ 'users.password' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.password }}" type="text" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required type>
 						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
 							<div *ngIf="form.controls['password'].errors['required']">{{ 'users.password' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+
+					<div class="col-12 mt-2">			
+						<div class="form-check">
+							<label style="display: none" [for]="'nodata'">{{ 'devices.sensors.nodata' | translate }}</label>
+							<input min="0" maxlength="4" (ngModelChange)="change=true" class="form-check-input" type="checkbox" value="{{ users.change_password }}" aria-label="Checkbox for following text input" id="change_password" name="change_password" [(ngModel)]="users['change_password']">
+							<label class="form-check-label" for="flexCheckDefault">{{ 'users.change_password' | translate }}</label>
+						</div>
+						<div *ngIf="form.submitted && form.controls['change_password'].errors" class="text-danger">
+							<div *ngIf="form.controls['change_password'].errors['required']">{{ 'users.change_password' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
