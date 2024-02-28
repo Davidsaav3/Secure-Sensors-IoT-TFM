@@ -18,9 +18,13 @@
 						</div>
 						<div class="col-12 pt-2 form-group">
 							<label for="password">{{ 'login.pass' | translate }}</label>
-							<input (ngModelChange)="change1=true" [(ngModel)]="formlogin.password" maxlength="45" type="password" id="password" class="form-control" name="password" required>
+							<input (ngModelChange)="change1=true" [(ngModel)]="formlogin.password" minlength="8" maxlength="45" type="password" id="password" class="form-control" name="password" required>
 							<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
-								<div *ngIf="form.controls['password'].errors['required']">{{ 'login.pass' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['password'].errors['required']">{{ 'pass_required' | translate }}</div>
+								<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+								<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
+									{{ 'login.pass' | translate }} {{ 'complexity' | translate }}
+								</div>							
 							</div>
 						</div>
 					</div>
@@ -33,4 +37,40 @@
 		</div>
 	  </div>
 	</div>
+</div>
+
+<div class="toast-cont position-absolute top-0 start-0">
+
+    <div *ngIf="alertCreNot" class="p-3">
+        <div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ 'login.e1' | translate }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="alertServNot" class="p-3">
+        <div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ 'login.e2' | translate }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="alertDifNot" class="p-3">
+        <div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    {{ 'login.e3' | translate }}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 </div>

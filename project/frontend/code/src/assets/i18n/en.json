@@ -179,12 +179,35 @@
     "login.pass": "Password",
     "login.pass2": "New password",
     "login.access": "Access",
-    "login.e1": "User is required.",
-    "login.e2": "User must be at least 3 characters.",
-    "login.e3": "User cannot be more than 20 characters.",
-    "login.e4": "Wrong username or password.",
-    "login.e5": "The user does not exist.",
-    "login.e6": "Password is required.",
-    "login.e7": "Password must be at least 6 characters."
+
+    "login.e1": "Invalid username or password",
+    "login.e2": "Server error",
+    "login.e3": "unknown error",
+
+    "login.a1": "User is required.",
+    "login.a2": "User must be at least 3 characters.",
+    "login.a3": "User cannot be more than 20 characters.",
+    "login.a4": "Wrong username or password.",
+    "login.a5": "The user does not exist.",
+    "login.a6": "Password is required.",
+    "login.a7": "Password must be at least 6 characters.",
+
+    "users.e1" : "Error saving user",
+    "users.e2" : "Saved user!",
+    "users.e3" : "User deleted!",
+    "users.e4" : "User created!",
+    "users.e5" : "Error creating user",
+    "users.e6" : "Error deleting user",
+    "users.e7" : "Duplicate user",
+    "users.e8" : "Error duplicating user",
+
+    "complexity" : "The password must contain a capital letter, a number, and a special character.",
+    "min_length": "The password must be at least 8 characters.",
+    "pass_required" : "Password is required.",
+
+    "user.a1" : "Email updated.",
+    "user.a2" : "Error updating email.",
+    "user.a3" : "Password updated.",
+    "user.a4": "Error updating password."
 
 }

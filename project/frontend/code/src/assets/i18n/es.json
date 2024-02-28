@@ -181,13 +181,18 @@
     "login.pass": "Contraseña",
     "login.pass2": "Nueva contraseña",
     "login.access": "Acceder",
-    "login.e1": "Usuario es requerido.",
-    "login.e2": "Usuario debe tener al menos 3 caracteres.",
-    "login.e3": "Usuario no puede tener más de 20 caracteres.",
-    "login.e4": "Usuario o contraseña equivocados.",
-    "login.e5": "El usuario no existe.",
-    "login.e6": "Contraseña es requerida.",
-    "login.e7": "Contraseña debe tener al menos 6 caracteres.",
+
+    "login.e1": "Nombre de usuario o contraseña incorrectos",
+    "login.e2": "Error del servidor",
+    "login.e3": "error desconocido",
+
+    "login.a1": "Usuario es requerido.",
+    "login.a2": "Usuario debe tener al menos 3 caracteres.",
+    "login.a3": "Usuario no puede tener más de 20 caracteres.",
+    "login.a4": "Usuario o contraseña equivocados.",
+    "login.a5": "El usuario no existe.",
+    "login.a6": "Contraseña es requerida.",
+    "login.a7": "Contraseña debe tener al menos 6 caracteres.",
 
     "users.e1" : "Error al guardar el usuario",
     "users.e2" : "Usuario guardado!",
@@ -196,6 +201,15 @@
     "users.e5" : "Error al crear el usuario",
     "users.e6" : "Error al eliminar el usuario",
     "users.e7" : "Usuario duplicado",
-    "users.e8" : "Error al duplicar el usuario"
+    "users.e8" : "Error al duplicar el usuario",
+
+    "complexity" : "La contraseña debe contener una mayúscula, un número y un carácter especial.", 
+    "min_length" : "La contraseña debe ser de al menos 8 caracteres.",
+    "pass_required" : "Contraseña es requerida.",
+
+    "user.a1" : "Correo electrónico actualizado.",
+    "user.a2" : "Error al actualizar el correo electrónico.",
+    "user.a3" : "Contraseña actualizada.",
+    "user.a4" : "Error al actualizar la contraseña."
 
 }

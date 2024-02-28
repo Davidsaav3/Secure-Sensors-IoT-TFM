@@ -103,26 +103,38 @@
 						<input (ngModelChange)="change1=true" value="{{ formapassword.id }}" [(ngModel)]="formapassword['id']" maxlength="45" type="text" id="type" class="form-control d-none" name="type">
 
 						<div class="col-12 pt-2 form-group">
-							<label for="type">{{ 'login.pass' | translate }}</label>
-							<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" type="password" id="pas" class="form-control" name="type" required>
-							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
-								<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
-							</div>
+							<label for="password">{{ 'login.pass' | translate }}</label>
+							<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="password" id="password" class="form-control" name="password" required>
+							<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+								<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+								<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
+									{{ 'login.pass' | translate }} {{ 'complexity' | translate }}
+								</div>		
+							</div>							
 						</div>
 	
 						<div class="col-12 mt-4">
-							<label for="metric">{{ 'login.pass2' | translate }}</label>
-							<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword1 }}" [(ngModel)]="formapassword['newpassword1']" maxlength="45"  type="password" id="metric" class="form-control" name="metric" required>
-							<div *ngIf="form.submitted && form.controls['metric'].errors" class="text-danger">
-								<div *ngIf="form.controls['metric'].errors['required']">{{ 'sensors.metric' | translate }} {{ 'required' | translate }}</div>
+							<label for="newpassword1">{{ 'login.pass2' | translate }}</label>
+							<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword1 }}" [(ngModel)]="formapassword['newpassword1']" maxlength="45" minlength="8" type="password" id="newpassword1" class="form-control" name="newpassword1" required>
+							<div *ngIf="form.submitted && form.controls['newpassword1'].errors" class="text-danger">
+								<div *ngIf="form.controls['newpassword1'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['newpassword1'].errors['minlength']">{{ 'min_length' | translate }}</div>
+								<div *ngIf="form.controls['newpassword1'].value && !form.controls['newpassword1'].value.match(passwordPattern)">
+									{{ 'login.pass' | translate }} {{ 'complexity' | translate }}
+								</div>		
 							</div>
 						</div>
 
-						<div class="col-12 mt-">
-							<label for="metric">{{ 'login.pass2' | translate }}</label>
-							<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword2 }}" [(ngModel)]="formapassword['newpassword2']" maxlength="45"  type="password" id="metric" class="form-control" name="metric" required>
-							<div *ngIf="form.submitted && form.controls['metric'].errors" class="text-danger">
-								<div *ngIf="form.controls['metric'].errors['required']">{{ 'sensors.metric' | translate }} {{ 'required' | translate }}</div>
+						<div class="col-12 mt-2">
+							<label for="newpassword2">{{ 'login.pass2' | translate }}</label>
+							<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword2 }}" [(ngModel)]="formapassword['newpassword2']" maxlength="45" minlength="8" type="password" id="newpassword2" class="form-control" name="newpassword2" required>
+							<div *ngIf="form.submitted && form.controls['newpassword2'].errors" class="text-danger">
+								<div *ngIf="form.controls['newpassword2'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['newpassword2'].errors['minlength']">{{ 'min_length' | translate }}</div>
+								<div *ngIf="form.controls['newpassword2'].value && !form.controls['newpassword2'].value.match(passwordPattern)">
+									{{ 'login.pass' | translate }} {{ 'complexity' | translate }}
+								</div>		
 							</div>
 						</div>
 	

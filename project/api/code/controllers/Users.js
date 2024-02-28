@@ -31,27 +31,29 @@ const SECRET_KEY = process.env.TOKEN;
     });
   });
 
-  router.post("/login", (req, res) => {  // POST LOGIN
+  router.post("/login", (req, res) => {
     const { email, password } = req.body;
-    //console.log(req.body)
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y Password son requeridas' });
+      if (!email || !password) {
+      return res.status(400).json({ error: 'El email y la contraseña son requeridos' });
     }
-
+  
     const query = "SELECT * FROM users WHERE email = ? AND password = ?";
-    //console.log(query)
     con.query(query, [email, password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      if (result.length === 1) { 
+      if (result.length === 1) {
         const user = result[0];
-        const token = jwt.sign({ email }, SECRET_KEY);
-        return res.status(200).json({ id: user.id, email: user.email, token: token });
+        const token = jwt.sign({ email: user.email }, SECRET_KEY);
+
+        return res.status(200).json({ id: user.id, email: user.email, token: token, message: 'Inicio de sesión exitoso' });
+      } 
+      else {
+        return res.status(401).json({ error: 'Credenciales incorrectas' });
       }
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
     });
-});
+  });
+  
 
 
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/

@@ -26,6 +26,7 @@ export class NavbarComponent {
   name= "settings"
   change1= false;
   change2= false;
+  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
 
   username= "davidsaav";
   id= 1;

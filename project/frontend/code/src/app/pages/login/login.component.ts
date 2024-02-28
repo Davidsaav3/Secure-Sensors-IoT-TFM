@@ -34,6 +34,11 @@ export class LoginComponent {
   fa: string | undefined;
   change1= false;
 
+  alertCreNot= false;
+  alertServNot= false;
+  alertDifNot= false;
+  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+
   id= 1;
   username= 'davidsaav';
   token= '';
@@ -49,28 +54,47 @@ export class LoginComponent {
     return this.registerForm.controls;
   }
 
-  login(form: any) {
+  login(form: any) { // LOGIN
     let token = localStorage.getItem('token') ?? ''; 
-
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
         .subscribe(
           (data: any) => {
-            //console.log(data)
             this.username= data.email;
             this.id= data.id;
             this.saveStorage();
             localStorage.setItem('token', data.token);
             this.router.navigate(['/devices']);
           },
-          (error) => {
-            console.error("Error:", error);
+          (error: any) => {
+            if (error.status === 401) {
+              console.error("Credenciales incorrectas");
+              this.alertCreNot = true;
+              setTimeout(() => {
+                this.alertCreNot = false;
+              }, 2000);
+            } 
+            else if (error.status === 500) {
+              console.error("Error en el servidor");
+              this.alertServNot = true;
+              setTimeout(() => {
+                this.alertServNot = false;
+              }, 2000);
+            } 
+            else {
+              console.error("Error desconocido:", error);
+              this.alertDifNot = true;
+              setTimeout(() => {
+                this.alertDifNot = false;
+              }, 2000);
+            }
           }
         );
       this.change1 = false;
     }
   }
+  
 
   saveStorage() { // Guarda datos en el local storage
     localStorage.setItem("id", this.id.toString());
