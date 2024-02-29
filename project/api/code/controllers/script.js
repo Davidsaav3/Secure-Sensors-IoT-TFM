@@ -18,7 +18,8 @@ const SECRET_KEY = process.env.TOKEN;
     if (type0 === 'search') {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM script) as total FROM script`;
       query += ` ORDER BY ${type1} ${type2}`;
-    } else {
+    } 
+    else {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM script WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM script`;
       query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }

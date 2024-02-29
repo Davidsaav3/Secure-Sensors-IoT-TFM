@@ -1,7 +1,7 @@
 {
     "sensors.t1" : "Dispositivos",
     "sensors.t2" : "Tipos de sensores",
-    "sensors.t3" : "Estructura de datos fija",
+    "sensors.t3" : "Estructura fija",
     "sensors.e1" : "Error al guardar el sensor",
     "sensors.e2" : "¡Sensor guardado!",
     "sensors.e3" : "¡Sensor eliminado!",
@@ -142,7 +142,7 @@
 
     "text_1" : "Todos los sensores",
     "text_2" : "Sin sensores",
-    "variable_data_structure" : "Estructura de datos variable",
+    "variable_data_structure" : "Estructura variable",
     "new_variable_data_structure" : "Nueva Estructura de datos variable",
     "search_variable_data_structure" : "Buscar estructuras de datos variable...",
     "structure.identifier_code": "Código identificador",

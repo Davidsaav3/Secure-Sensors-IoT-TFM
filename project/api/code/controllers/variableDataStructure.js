@@ -16,7 +16,8 @@ const verifyToken = require('./token');
     if (type0 === 'search') {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM variable_data_structure) as total FROM variable_data_structure`;
       query += ` ORDER BY ${type1} ${type2}`;
-    } else {
+    } 
+    else {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM variable_data_structure WHERE description LIKE '%${type0}%' OR structure LIKE '%${type0}%' OR initial_byte LIKE '%${type0}%') as total FROM variable_data_structure`;
       query += ` WHERE description LIKE '%${type0}%' OR structure LIKE '%${type0}%' OR initial_byte LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }

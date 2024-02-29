@@ -112,7 +112,8 @@ export class VariableStructureComponent implements OnInit {
           this.data.sort((a: any, b: any) =>b.initial_byte.localeCompare(a.initial_byte));
         }
       }
-    } else {
+    } 
+    else {
       this.getStructure(id, ord);
     }
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");

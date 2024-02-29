@@ -225,7 +225,8 @@ export class UsersComponent implements OnInit {
             this.data.sort((a: { email: string }, b: { email: any }) => {
               if (typeof a.email === "string" && typeof b.email === "string") {
                 return a.email.localeCompare(b.email);
-              } else {
+              } 
+              else {
                 return 1;
               }
             });
@@ -254,7 +255,10 @@ export class UsersComponent implements OnInit {
     this.openClouse();
   }
 
-
+  transformPassword(password: string): string {
+    return '*'.repeat(password.length);
+  }
+  
   /* EDIT */
 
   editUser(form: any) { // Guardar datos del usuario editado

@@ -426,7 +426,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             if (data && data.length > 0 && data[0].total) {
               this.totalPages = Math.ceil(data[0].total / this.quantPage);
               this.total = data[0].total;
-            } else {
+            } 
+            else {
               this.totalPages = 0;
               this.total = 0;
             }
@@ -437,7 +438,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     
             if (this.data.length < this.quantPage) {
               this.totalPage = this.total;
-            } else {
+            } 
+            else {
               this.totalPage = this.quantPage * this.currentPage;
             }
           },
@@ -498,7 +500,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
 
             const deviceIds = this.data.map((device) => device.id);
             this.idsParam = this.idsParam1;
-          } else {
+          } 
+          else {
             this.data = [];
             this.data = data;
             const deviceIds = this.data.map((device) => device.id);

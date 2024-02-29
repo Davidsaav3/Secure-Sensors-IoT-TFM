@@ -16,7 +16,8 @@ const verifyToken = require('./token');
     if (type0 === 'search') {
       query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure LIMIT 1) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure`;
       query += ` ORDER BY ${type1} ${type2}`;
-    } else {
+    } 
+    else {
       query += `SELECT *,(SELECT description FROM variable_data_structure WHERE id=id_variable_data_structure LIMIT 1) as variable_description,(SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%') OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' as total FROM data_estructure`;
       query += ` WHERE description LIKE '%${type0}%' OR configuration LIKE '%${type0}%' OR identifier_code LIKE '%${type0}%' OR id_variable_data_structure LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
@@ -38,7 +39,8 @@ const verifyToken = require('./token');
         con.query(query, (err, result) => {
           if (err) {
             reject(err);
-          } else {
+          } 
+          else {
             resolve(result);
           }
         });

@@ -1,6 +1,6 @@
 <div class="mb-0 d-flex">
-	<div class="col-lg-6 col-6 p-0">
-		<div class="nav nav-tabs mb-0 p-0" *ngIf="token!='' && (this.ruteAux[1]=='devices' || this.ruteAux[1]=='sensors' || this.ruteAux[1]=='structure' || this.ruteAux[1]=='variable-structure') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
+	<div class="col-lg-5 col-12 p-0">
+		<div class="nav nav-tabs mb-0 p-0 me-0" *ngIf="token!='' && (this.ruteAux[1]=='devices' || this.ruteAux[1]=='sensors' || this.ruteAux[1]=='structure' || this.ruteAux[1]=='variable-structure') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
 			<li class="nav-item">
 				<a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
 			</li>
@@ -34,7 +34,7 @@
 			</li>
 		</div>
 	</div>
-	<div class="col-lg-6 col-6 p-0 pt-2">
+	<div class="col-lg-7 col-12 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
 			<div *ngIf="token !== ''" class="pe-3">
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -60,16 +60,28 @@
 						<img src="../../assets/logo.png" width="350px">
 					</div>
 					<div>
-						<p style="font-family:'Gill Sans MT';font-size: 2vh; color: rgb(99, 99, 99);" class="ms-2 m-0">{{AppVersion}}</p>
+						<p style="font-family:'Gill Sans MT';font-size: 15px; color: rgb(99, 99, 99);" class="ms-2 m-0">{{AppVersion}}</p>
 					</div>
 				</div>
 			</div>
 			<div class="pe-3">
-				<select (change)="changeLanguage()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
+				<select style="min-width: 100px;" (change)="changeLanguage()" class="form-select" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
 					<ng-container *ngFor="let quote of this.lengLang; let i = index">
 						<option value='{{quote}}' [ngClass]="{'selected': activeLang == quote}" >{{this.lengName[i]}}</option>
 					</ng-container>
 				</select>
+			</div>	
+			<div class="pe-3" *ngIf="token!=''" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+				<button *ngIf="alerts" type="button" class="btn btn-secondary">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+						<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"></path>
+					</svg>
+				</button>
+				<button *ngIf="!alerts" type="button" class="btn btn-secondary">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+						<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"></path>
+					</svg>
+				</button>
 			</div>	
 			<div *ngIf="token!=''" class="pe-3">
 				<div class="dropdown">
@@ -157,7 +169,7 @@
     </div>
 </div>
 
-<div class="modal fade" #confirmDeleteModal3 id="confirmDeleteModal3" tabindex="-1" aria-labelledby="confirmDeleteModalLabel3" aria-hidden="true">
+<div *ngIf="change_password" class="modal fade" #confirmDeleteModal3 id="confirmDeleteModal3" tabindex="-1" aria-labelledby="confirmDeleteModalLabel3" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content pb-0">
             <div class="modal-header" style="border-bottom: 0px">
@@ -240,4 +252,41 @@
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>
 	</div>
+</div>
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasRightLabel">Alertas</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+
+	<div class="toast-container position-static">
+		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		  <div class="toast-header">
+			<img src="..." class="rounded me-2" alt="...">
+			<strong class="me-auto">Bootstrap</strong>
+			<small class="text-body-secondary">just now</small>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		  </div>
+		  <div class="toast-body">
+			See? Just like this.
+		  </div>
+		</div>
+	  
+		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		  <div class="toast-header">
+			<img src="..." class="rounded me-2" alt="...">
+			<strong class="me-auto">Bootstrap</strong>
+			<small class="text-body-secondary">2 seconds ago</small>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		  </div>
+		  <div class="toast-body">
+			Heads up, toasts will stack automatically
+		  </div>
+		</div>
+	  </div>
+
+  </div>
 </div>

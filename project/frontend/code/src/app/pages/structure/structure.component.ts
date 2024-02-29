@@ -137,14 +137,16 @@ export class StructureComponent implements OnInit {
       if (data && data.length > 0 && data[0].total) {
         this.totalPages = Math.ceil(data[0].total / this.quantPage);
         this.total = data[0].total;
-      } else {
+      } 
+      else {
         this.totalPages = 0;
         this.total = 0;
       }
       this.data = data;
       if (this.data.length < this.quantPage) {
         this.totalPage = this.total;
-      } else {
+      } 
+      else {
         this.totalPage = this.quantPage * this.currentPage;
       }
     }, (error) => {
@@ -184,7 +186,8 @@ export class StructureComponent implements OnInit {
           this.data.sort((a: any, b: any) =>b.id_variable_data_structure.localeCompare(a.id_variable_data_structure));
         }
       }
-    } else {
+    } 
+    else {
       this.getStructures(id, ord);
     }
     const sectionElement =this.elementRef.nativeElement.querySelector(".mark_select");

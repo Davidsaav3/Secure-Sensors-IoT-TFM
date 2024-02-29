@@ -27,6 +27,8 @@ export class NavbarComponent {
   change1= false;
   change2= false;
   passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+  alerts= false;
+  change_password= false;
 
   username= "davidsaav";
   id= 1;
@@ -155,6 +157,8 @@ export class NavbarComponent {
     this.username = localStorage.getItem("username") ?? "davidsaav";
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
     this.token = localStorage.getItem('token') ?? '';
+    const storedValue = localStorage.getItem('change_password');
+    this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
   }
 
   logOut(){

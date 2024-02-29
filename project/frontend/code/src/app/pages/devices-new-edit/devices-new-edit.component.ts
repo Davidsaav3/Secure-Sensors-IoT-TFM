@@ -331,7 +331,8 @@ export class DevicesNewEditComponent implements OnInit {
       (quotesData: any) => {
         if (num === 1) {
           this.structures.structure = quotesData.variable_data_structure;
-        } else {
+        } 
+        else {
           this.structures.structure = quotesData.data_estructure;
         }
         this.auxVariable = quotesData.variable_data_structure[0].id_estructure;

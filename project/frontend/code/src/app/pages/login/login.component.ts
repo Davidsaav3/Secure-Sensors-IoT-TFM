@@ -65,6 +65,7 @@ export class LoginComponent {
             this.id= data.id;
             this.saveStorage();
             localStorage.setItem('token', data.token);
+            localStorage.setItem('change_password', data.change_password);
             this.router.navigate(['/devices']);
           },
           (error: any) => {

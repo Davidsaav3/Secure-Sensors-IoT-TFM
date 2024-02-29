@@ -20,7 +20,8 @@ const bcrypt = require('bcrypt');
     if (type0 === 'search') {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
       query += ` ORDER BY ${type1} ${type2}`;
-    } else {
+    } 
+    else {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
       query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
@@ -63,14 +64,17 @@ const bcrypt = require('bcrypt');
                           id: user.id,
                           email: user.email,
                           token: token,
+                          change_password: user.change_password,
                           message: 'Inicio de sesión exitoso'
                       });
-                  } else {
+                  } 
+                  else {
                       console.warn("Credenciales incorrectas");
                       return res.status(401).json({ error: 'Credenciales incorrectas' });
                   }
               });
-          } else {
+          } 
+          else {
               console.warn("Usuario no encontrado");
               return res.status(401).json({ error: 'Credenciales incorrectas' });
           }
@@ -187,7 +191,8 @@ const bcrypt = require('bcrypt');
               // Continuar con la ejecución de la consulta después de cifrar la contraseña
               continueUpdateQuery();
           });
-      } else {
+      } 
+      else {
           // Si no se proporciona una nueva contraseña, continuar sin cifrarla
           continueUpdateQuery();
       }

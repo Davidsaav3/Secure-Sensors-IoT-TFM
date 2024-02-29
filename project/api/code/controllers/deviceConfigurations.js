@@ -557,7 +557,8 @@ const verifyToken = require('./token');
   
       if (result.length > 0) {
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
-      } else {
+      } 
+      else {
         const queryInsert = `
           INSERT INTO device_configurations (
             uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
@@ -624,14 +625,16 @@ const verifyToken = require('./token');
                   con.rollback(() => {
                     res.status(500).json({ error: 'Error en la base de datos' });
                   });
-                } else {
+                } 
+                else {
                   con.commit((err) => {
                     if (err) {
                       console.error("Error al confirmar la transacción:", err);
                       con.rollback(() => {
                         res.status(500).json({ error: 'Error en la base de datos' });
                       });
-                    } else {
+                    } 
+                    else {
                       //res.send(result);
                     }
                   });
@@ -639,14 +642,16 @@ const verifyToken = require('./token');
               });
             }
           });
-        } else {
+        } 
+        else {
           con.commit((err) => {
             if (err) {
               console.error("Error al confirmar la transacción:", err);
               con.rollback(() => {
                 res.status(500).json({ error: 'Error en la base de datos' });
               });
-            } else {
+            } 
+            else {
               //res.send({ message: 'No se insertaron nuevos registros.' });
             }
           });
@@ -673,7 +678,8 @@ const verifyToken = require('./token');
   
       if (result.length > 0) {
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
-      } else {
+      } 
+      else {
         const queryUpdate = `
           UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
   

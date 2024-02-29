@@ -285,7 +285,8 @@ export class SensorsComponent implements OnInit {
             this.data.sort((a: { position: string }, b: { position: any }) => {
               if (typeof a.position === "string" && typeof b.position === "string") {
                 return a.position.localeCompare(b.position);
-              } else {
+              } 
+              else {
                 return 1;
               }
             });
