@@ -168,7 +168,7 @@
 
 					<div class="col-12 mt-2">
 						<label for="password">{{ 'users.password' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.password }}" type="text" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required type>
+						<input maxlength="100" (ngModelChange)="change=true" value="{{ users.password }}" type="text" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required type>
 						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
 							<div *ngIf="form.controls['password'].errors['required']">{{ 'users.password' | translate }} {{ 'required' | translate }}</div>
 						</div>
