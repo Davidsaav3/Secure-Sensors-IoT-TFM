@@ -217,10 +217,10 @@ const bcrypt = require('bcrypt');
       }
   });
   
-  router.put("/password", verifyToken, (req, res) => {  // UPDATE PASSWORD
-    const { id, password, newpassword1, newpassword2 } = req.body;
+  router.put("/password", verifyToken, (req, res) => { // EDIT PASSWORD
+    const { id, password, newpassword1, newpassword2, email } = req.body;
 
-    if (!id || !password || !newpassword1 || !newpassword2) {
+    if (!id || !password || !newpassword1 || !newpassword2 || !email) {
         return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
     if (newpassword1 !== newpassword2) {
@@ -237,8 +237,15 @@ const bcrypt = require('bcrypt');
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
+        const user = result[0];
+
+        // Verificar si el email coincide
+        if (user.email !== email) {
+            return res.status(400).json({ error: 'El email proporcionado no coincide con el registrado' });
+        }
+
         // Comparar la contraseña antigua con la contraseña almacenada
-        bcrypt.compare(password, result[0].password, (compareErr, compareResult) => {
+        bcrypt.compare(password, user.password, (compareErr, compareResult) => {
             if (compareErr) {
                 return res.status(500).json({ error: 'Error al comparar contraseñas' });
             }
@@ -252,7 +259,7 @@ const bcrypt = require('bcrypt');
                     return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
                 }
 
-                const updateQuery = "UPDATE users SET password = ? WHERE id = ?";
+                const updateQuery = "UPDATE users SET password = ?, change_password = 0 WHERE id = ?";
                 con.query(updateQuery, [hashedPassword, id], (updateErr, updateResult) => {
                     if (updateErr) {
                         return res.status(500).json({ error: 'Error al actualizar la contraseña' });
@@ -263,6 +270,7 @@ const bcrypt = require('bcrypt');
         });
     });
 });
+
 
   
   

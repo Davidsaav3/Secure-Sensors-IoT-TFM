@@ -49,6 +49,7 @@ export class NavbarComponent {
     password: "",
     newpassword1: "",
     newpassword2: "",
+    email: this.username
   };
 
   formuserdata = {
@@ -119,6 +120,7 @@ export class NavbarComponent {
   changePassword(form: any){ // Cambiar contraseña
     let token = localStorage.getItem('token') ?? ''; 
     this.formapassword.id= this.id;
+    this.formapassword.email= this.username;
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -126,6 +128,8 @@ export class NavbarComponent {
         .subscribe(
           (data: any) => {
             this.alertPassOk = true;
+            this.change_password= false;
+            localStorage.setItem('change_password', "0");
             //const modal: any = this.confirmDeleteModal2.nativeElement;
             //modal.modal('hide'); 
             setTimeout(() => {
