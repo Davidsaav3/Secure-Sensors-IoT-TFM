@@ -7,6 +7,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from "@ng-select/ng-select";
+import { JwtModule } from '@auth0/angular-jwt';
 
 import { NavbarComponent } from './common/navbar.component';
 import { DevicesComponent } from './pages/devices/devices.component';
@@ -49,6 +50,15 @@ import { LoginComponent } from './pages/login/login.component';
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('token');
+        },
+        allowedDomains: ['your-api-domain.com'],
+        disallowedRoutes: ['/login', '/logout'],
+      }
+    }),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
