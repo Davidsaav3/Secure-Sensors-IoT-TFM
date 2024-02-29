@@ -89,12 +89,12 @@ export class NavbarComponent {
 
     //if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      console.log(this.formuserdata)
+      //console.log(this.formuserdata)
       this.http.put(this.postEmail, JSON.stringify(this.formuserdata), httpOptions)
         .subscribe(
           (data: any) => {
             this.alertEmailOk = true;
-            console.log(data)
+            //console.log(data)
             localStorage.setItem("username", data.email);
             //const modal: any = this.confirmDeleteModal3.nativeElement;
             //modal.modal('hide'); 

@@ -119,7 +119,7 @@ const SECRET_KEY = process.env.TOKEN;
     }
 
     const query = "UPDATE users SET email = ? WHERE id = ?";
-    console.log([email, id])
+    //console.log([email, id])
     con.query(query, [email, id], (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Error en la base de datos' });
@@ -177,7 +177,7 @@ const SECRET_KEY = process.env.TOKEN;
     }
 
     const query = "SELECT * FROM users WHERE id = ? AND password = ?";
-    console.log([id, password])
+    //console.log([id, password])
     con.query(query, [id, password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
@@ -187,7 +187,7 @@ const SECRET_KEY = process.env.TOKEN;
       }
 
       const updateQuery = "UPDATE users SET password = ? WHERE id = ?";
-      console.log(req.body)
+      //console.log(req.body)
       con.query(updateQuery, [newpassword1, id], (updateErr, updateResult) => {
         if (updateErr) {
           return res.status(500).json({ error: 'Error al actualizar la contraseña' });
