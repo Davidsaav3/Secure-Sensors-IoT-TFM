@@ -100,12 +100,12 @@
 	</div>
 </div>
 
-<div class="modal fade" #confirmDeleteModal2 id="confirmDeleteModal2" tabindex="-1" aria-labelledby="confirmDeleteModalLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content pb-0">
+<div  class="modal fade" #confirmDeleteModal2 id="confirmDeleteModal2" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmDeleteModal2" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+	  <div class="modal-content pb-0">
             <div class="modal-header" style="border-bottom: 0px">
 				<h2 class="mb-0">{{ 'edit.change' | translate }}</h2>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button *ngIf="!this.change_password" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body pt-0">
 			<form #form="ngForm" class="row needs-validation p-3 pt-1">
@@ -155,10 +155,10 @@
 
 				<div class="col-12 mt-3 pt-3">
 					<div class="row" >
-						<div class="col-6">
+						<div *ngIf="!this.change_password" class="col-6">
 							<button type="button navb" data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary text-light navb"  style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 						</div>
-						<div class="col-6">
+						<div [ngClass]="{'col-12': change_password, 'col-6': !change_password}">
 							<button (click)="changePassword(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%">{{ 'sensors.save' | translate }}</button>
 						</div>
 					</div>
@@ -210,7 +210,7 @@
     </div>
 </div>
 
-<div *ngIf="alertEmailOk" class="top-0 end-0 p-3">
+<div *ngIf="alertEmailOk" class="top-0 start-0 p-2 pt-2 ps-3" style="position: absolute;">
 	<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
@@ -221,7 +221,7 @@
 	</div>
 </div>
 
-<div *ngIf="alertEmailNot" class="top-0 end-0 p-3">
+<div *ngIf="alertEmailNot" class="top-0 start-0 p-2 pt-2 ps-3"  style="position: absolute;">
 	<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
@@ -232,7 +232,7 @@
 	</div>
 </div>
 
-<div *ngIf="alertPassOk" class="top-0 end-0 p-3">
+<div *ngIf="alertPassOk" class="top-0 start-0 p-2 pt-2 ps-3"  style="position: absolute;">
 	<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
@@ -243,22 +243,11 @@
 	</div>
 </div>
 
-<div *ngIf="alertPassNot" class="top-0 end-0 p-3">
+<div *ngIf="alertPassNot" class="top-0 start-0 p-2 pt-2 ps-3"  style="position: absolute;">
 	<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
 				{{ 'user.a4' | translate }}
-			</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-		</div>
-	</div>
-</div>
-
-<div *ngIf="change_password" class="top-0 end-0 p-3">
-	<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-		<div class="d-flex">
-			<div class="toast-body">
-				Debes cambiar la contraseña.
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>

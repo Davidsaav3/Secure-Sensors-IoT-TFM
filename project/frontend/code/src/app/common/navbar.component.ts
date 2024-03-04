@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { environment } from "../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ElementRef, ViewChild } from '@angular/core';
+import * as bootstrap from "bootstrap";
 
 @Component({
   selector: "app-navbar",
@@ -65,6 +66,26 @@ export class NavbarComponent {
   ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
+  }
+
+  setBackdropAttribute(): void {
+    const modal = document.getElementById('confirmDeleteModal2');
+    if (modal) {
+      if (this.change_password) {
+        modal.setAttribute('data-bs-backdrop', 'static');
+        
+        //modal.classList.add('show');
+        //const modalInstance = new bootstrap.Modal(modal);
+        //modalInstance.show();
+      } 
+      else {
+        modal.removeAttribute('data-bs-backdrop');
+
+        //modal.classList.remove('show');
+        //const modalInstance = new bootstrap.Modal(modal);
+        //modalInstance.hide();
+      }
+    }
   }
 
   isActiveOption(option: boolean): boolean {
@@ -132,11 +153,16 @@ export class NavbarComponent {
             localStorage.setItem('change_password', "0");
             //const modal: any = this.confirmDeleteModal2.nativeElement;
             //modal.modal('hide'); 
+
             setTimeout(() => {
               this.alertPassOk = false;
             }, 2000);
           },
           (error) => {
+            this.change_password= false;
+            localStorage.setItem('change_password', "0");
+            //this.setBackdropAttribute();
+
             console.error("Error:", error);
             this.alertPassNot = true;
             setTimeout(() => {
@@ -163,6 +189,9 @@ export class NavbarComponent {
     this.token = localStorage.getItem('token') ?? '';
     const storedValue = localStorage.getItem('change_password');
     this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
+    if(this.change_password){
+      this.setBackdropAttribute();
+    }
   }
 
   logOut(){
