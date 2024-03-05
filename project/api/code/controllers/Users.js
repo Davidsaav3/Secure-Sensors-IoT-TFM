@@ -18,11 +18,11 @@ const bcrypt = require('bcrypt');
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'search') {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
+      query += `SELECT id, email, change_password ,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
       query += ` ORDER BY ${type1} ${type2}`;
     } 
     else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
+      query += `SELECT id, email, change_password ,(SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
       query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -84,7 +84,7 @@ const bcrypt = require('bcrypt');
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
-    const query = "SELECT * FROM users WHERE id = ?";
+    const query = "SELECT id, email, change_password FROM users WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
       if (err) {
         console.error("Error:", err);
@@ -171,7 +171,7 @@ const bcrypt = require('bcrypt');
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
       const { id, email, password, change_password } = req.body;
-      if (!id || (!email && !password)) {
+      if (!id && (email || password)) {
           return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
       }
       let query = "UPDATE users SET";

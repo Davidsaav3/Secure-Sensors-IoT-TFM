@@ -51,6 +51,7 @@ export class UsersComponent implements OnInit {
   change = false;
   width = 0;
   timeout: any = null;
+  change2= false;
   
   show = false;
   showAux = true;
@@ -271,6 +272,7 @@ export class UsersComponent implements OnInit {
       this.http.put(this.postUser, JSON.stringify(this.users), httpOptions)
         .subscribe(
           (response: any) => {
+            this.openEdit();
             // Respuesta
           },
           (error) => {

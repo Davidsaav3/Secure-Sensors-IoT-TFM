@@ -59,7 +59,7 @@
 							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.email }}</th>
 							<td class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
 								<div style="font-family: monospace; letter-spacing: 1px;">
-									{{ transformPassword(quote.password) }}
+									{{ transformPassword(quote.email) }}
 								  </div>
 							</td>
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateUsers(quote.id,quote.email)">
@@ -164,22 +164,24 @@
 
 					<div class="col-12 pt-2 form-group">
 						<label for="email">{{ 'users.email' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.email }}" type="email" id="email" class="form-control" name="email" [(ngModel)]="users['email']" required >
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.email }}" type="email" id="email" class="form-control" name="email" [(ngModel)]="users['email']" >
 						<div *ngIf="form.submitted && form.controls['email'].errors" class="text-danger">
 							<div *ngIf="form.controls['email'].errors['required']">{{ 'users.email' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
-					<div class="col-12 mt-2">
-						<label for="password">{{ 'users.password' | translate }}</label>
-						<input (ngModelChange)="change=true" value="{{ users.password }}" [(ngModel)]="users['password']" maxlength="45" minlength="8" type="password" id="password" class="form-control" name="password" required>
-						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
-							<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
-							<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
-							<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
-								{{ 'complexity' | translate }}
-							</div>		
-						</div>		
+					<div *ngIf="users.password !== ''">
+						<div class="col-12 mt-2">
+							<label for="password">{{ 'users.password' | translate }}</label>
+							<input (ngModelChange)="change=true" value="{{ users.password }}" [(ngModel)]="users['password']" maxlength="45" minlength="8" type="password" id="password" class="form-control" name="password">
+							<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+								<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+								<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
+									{{ 'complexity' | translate }}
+								</div>      
+							</div>      
+						</div>
 					</div>
 
 					<div class="col-12 mt-2">			
