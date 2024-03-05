@@ -16,6 +16,7 @@ export class NavbarComponent {
   @ViewChild('confirmDeleteModal2') confirmDeleteModal2!: ElementRef;
   @ViewChild('confirmDeleteModal3') confirmDeleteModal3!: ElementRef;
   @ViewChild('openModalButton') openModalButton: ElementRef | undefined;
+  @ViewChild('clouseModalButton') clouseModalButton: ElementRef | undefined;
 
   lengName = environment.languageName;
   lengLang = environment.languageLang;
@@ -82,6 +83,12 @@ export class NavbarComponent {
     }
   }
 
+  clouseModal() {
+    if(this.clouseModalButton!=null){
+      this.renderer.selectRootElement(this.clouseModalButton.nativeElement).click();
+    }
+  }
+
   setBackdropAttribute(): void {
     const modal = document.getElementById('confirmDeleteModal2');
     if (modal) {
@@ -132,10 +139,8 @@ export class NavbarComponent {
         .subscribe(
           (data: any) => {
             this.alertEmailOk = true;
-            //console.log(data)
             localStorage.setItem("username", data.email);
-            //const modal: any = this.confirmDeleteModal3.nativeElement;
-            //modal.modal('hide'); 
+   
             setTimeout(() => {
               this.alertEmailOk = false;
             }, 2000);
@@ -165,8 +170,7 @@ export class NavbarComponent {
             this.alertPassOk = true;
             this.change_password= false;
             localStorage.setItem('change_password', "0");
-            //const modal: any = this.confirmDeleteModal2.nativeElement;
-            //modal.modal('hide'); 
+            this.clouseModal();
 
             setTimeout(() => {
               this.alertPassOk = false;
@@ -175,7 +179,6 @@ export class NavbarComponent {
           (error) => {
             this.change_password= false;
             localStorage.setItem('change_password', "0");
-            //this.setBackdropAttribute();
 
             console.error("Error:", error);
             this.alertPassNot = true;

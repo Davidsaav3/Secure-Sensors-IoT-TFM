@@ -156,7 +156,7 @@
 				<div class="col-12 mt-3 pt-3">
 					<div class="row" >
 						<div *ngIf="!this.change_password" class="col-6">
-							<button type="button navb" data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary text-light navb"  style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+							<button #clouseModalButton type="button navb" data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary text-light navb"  style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 						</div>
 						<div [ngClass]="{'col-12': change_password, 'col-6': !change_password}">
 							<button (click)="changePassword(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%">{{ 'sensors.save' | translate }}</button>

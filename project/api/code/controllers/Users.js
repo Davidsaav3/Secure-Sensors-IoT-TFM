@@ -48,15 +48,15 @@ const bcrypt = require('bcrypt');
           }
           if (result.length === 1) {
               const user = result[0];
-              console.log("Contraseña cifrada dada:", password);
-              console.log("Contraseña cifrada almacenada:", user.password);
+              //console.log("Contraseña cifrada dada:", password);
+              //console.log("Contraseña cifrada almacenada:", user.password);
               // Compara la contraseña introducida con la contraseña cifrada almacenada
               bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
                   if (bcryptErr) {
                       console.error("Error al comparar contraseñas:", bcryptErr);
                       return res.status(500).json({ error: 'Error al comparar contraseñas' });
                   }
-                  console.log("Contraseña coincidente:", bcryptResult);
+                  //console.log("Contraseña coincidente:", bcryptResult);
                   if (bcryptResult) {
                       // Si las contraseñas coinciden, genera y devuelve el token JWT
                       const token = jwt.sign({ email: user.email }, SECRET_KEY);
@@ -125,14 +125,14 @@ const bcrypt = require('bcrypt');
   if (!email || !password) {
     return res.status(400).json({ error: 'Email y password  son requeridas' });
   }
-  console.log("Lo que me llega:", password);
+  //console.log("Lo que me llega:", password);
 
   // Genera un hash de la contraseña
   bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
           return res.status(500).json({ error: 'Error al cifrar la contraseña' });
       }
-      console.log("Cifrada:", hashedPassword);
+      //console.log("Cifrada:", hashedPassword);
 
       const query = "INSERT INTO users (email, password, change_password) VALUES (?, ?, ?)";
       con.query(query, [email, hashedPassword, change_password], (err, result) => {
