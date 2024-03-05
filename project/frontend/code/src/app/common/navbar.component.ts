@@ -138,6 +138,7 @@ export class NavbarComponent {
       this.http.put(this.postEmail, JSON.stringify(this.formuserdata), httpOptions)
         .subscribe(
           (data: any) => {
+            this.formuserdata.email= '';
             this.alertEmailOk = true;
             localStorage.setItem("username", data.email);
    
@@ -209,6 +210,7 @@ export class NavbarComponent {
     if(this.change_password){
       this.setBackdropAttribute();
     }
+    this.formuserdata.email= this.username;
   }
 
   logOut(){

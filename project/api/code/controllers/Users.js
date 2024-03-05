@@ -7,7 +7,6 @@ router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./token');
 const SECRET_KEY = process.env.TOKEN;
-const saltRounds = 10; // Adjust based on security requirements
 const bcrypt = require('bcrypt');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
@@ -50,7 +49,6 @@ const bcrypt = require('bcrypt');
               const user = result[0];
               //console.log("Contraseña cifrada dada:", password);
               //console.log("Contraseña cifrada almacenada:", user.password);
-              // Compara la contraseña introducida con la contraseña cifrada almacenada
               bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
                   if (bcryptErr) {
                       console.error("Error al comparar contraseñas:", bcryptErr);
@@ -58,7 +56,6 @@ const bcrypt = require('bcrypt');
                   }
                   //console.log("Contraseña coincidente:", bcryptResult);
                   if (bcryptResult) {
-                      // Si las contraseñas coinciden, genera y devuelve el token JWT
                       const token = jwt.sign({ email: user.email }, SECRET_KEY);
                       return res.status(200).json({
                           id: user.id,
@@ -126,14 +123,11 @@ const bcrypt = require('bcrypt');
     return res.status(400).json({ error: 'Email y password  son requeridas' });
   }
   //console.log("Lo que me llega:", password);
-
-  // Genera un hash de la contraseña
   bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
           return res.status(500).json({ error: 'Error al cifrar la contraseña' });
       }
       //console.log("Cifrada:", hashedPassword);
-
       const query = "INSERT INTO users (email, password, change_password) VALUES (?, ?, ?)";
       con.query(query, [email, hashedPassword, change_password], (err, result) => {
           if (err) {
@@ -141,7 +135,7 @@ const bcrypt = require('bcrypt');
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
-              return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
+              return res.status(201).json({ id: insertedId }); // Devuelve el ID
           }
           return res.status(500).json({ error: 'No se pudo insertar el registro' });
       });
@@ -162,7 +156,7 @@ const bcrypt = require('bcrypt');
         }
 
         if (result.affectedRows > 0) {
-            return res.status(200).json({ email: email }); // Devolver el nuevo correo electrónico actualizado
+            return res.status(200).json({ email: email }); // Devolver el nuevo correo
         }
 
         return res.status(404).json({ error: 'Registro no encontrado' });
@@ -181,14 +175,13 @@ const bcrypt = require('bcrypt');
           values.push(email);
       }
       if (password) {
-          // Aplicar bcrypt.hash para cifrar la contraseña antes de almacenarla
+          // Cifrar la contraseña antes de almacenarla
           bcrypt.hash(password, 10, (err, hashedPassword) => {
               if (err) {
                   return res.status(500).json({ error: 'Error al cifrar la contraseña' });
               }
               query += ", password=?";
               values.push(hashedPassword); // Usar la contraseña cifrada
-              // Continuar con la ejecución de la consulta después de cifrar la contraseña
               continueUpdateQuery();
           });
       } 
@@ -271,9 +264,6 @@ const bcrypt = require('bcrypt');
     });
 });
 
-
-  
-  
 
 router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
   const id = parseInt(req.body.id);
