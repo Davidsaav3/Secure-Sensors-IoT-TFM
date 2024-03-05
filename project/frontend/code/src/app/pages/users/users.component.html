@@ -172,10 +172,14 @@
 
 					<div class="col-12 mt-2">
 						<label for="password">{{ 'users.password' | translate }}</label>
-						<input type="password" maxlength="100" (ngModelChange)="change=true" value="{{ users.password }}" id="password" class="form-control" name="password" [(ngModel)]="users['password']" required >
+						<input (ngModelChange)="change=true" value="{{ users.password }}" [(ngModel)]="users['password']" maxlength="45" minlength="8" type="password" id="password" class="form-control" name="password" required>
 						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
-							<div *ngIf="form.controls['password'].errors['required']">{{ 'users.password' | translate }} {{ 'required' | translate }}</div>
-						</div>
+							<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+							<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
+								{{ 'complexity' | translate }}
+							</div>		
+						</div>		
 					</div>
 
 					<div class="col-12 mt-2">			

@@ -91,7 +91,7 @@
 					</button>
 					<ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton" style="z-index: 1000000">
 					  <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal3">{{ 'edit.profile' | translate }}</a></li>
-					  <li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal2">{{ 'edit.change' | translate }}</a></li>
+					  <li><a #openModalButton class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal2">{{ 'edit.change' | translate }}</a></li>
 					  <li><a class="dropdown-item cursor-pointer" (click)="logOut()">{{ 'log.out' | translate }}</a></li>
 					</ul>
 				</div>

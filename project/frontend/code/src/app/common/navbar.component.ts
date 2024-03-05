@@ -1,10 +1,9 @@
-import { Component } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { Router } from "@angular/router";
 import { environment } from "../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ElementRef, ViewChild } from '@angular/core';
 import * as bootstrap from "bootstrap";
+import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
   selector: "app-navbar",
@@ -16,6 +15,7 @@ export class NavbarComponent {
   
   @ViewChild('confirmDeleteModal2') confirmDeleteModal2!: ElementRef;
   @ViewChild('confirmDeleteModal3') confirmDeleteModal3!: ElementRef;
+  @ViewChild('openModalButton') openModalButton: ElementRef | undefined;
 
   lengName = environment.languageName;
   lengLang = environment.languageLang;
@@ -58,7 +58,7 @@ export class NavbarComponent {
     email: "",
   };
 
-  constructor(private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -66,6 +66,20 @@ export class NavbarComponent {
   ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      if (this.change_password) {
+        this.openModal();
+      }
+    });
+  }
+
+  openModal() {
+    if(this.openModalButton!=null){
+    this.renderer.selectRootElement(this.openModalButton.nativeElement).click();
+    }
   }
 
   setBackdropAttribute(): void {
