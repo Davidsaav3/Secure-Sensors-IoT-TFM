@@ -6,14 +6,14 @@
 			<div class="row d-flex">
 				<div class="col-6 col-sm-6 col-lg-3 mb-3">
 					<div class="w-100 d-flex" style="position: relative;">
-						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
-						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'sensors.buscar_sensores' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'buscar_conexiones' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'buscar_conexiones' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
 						<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;"   (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
 					</div>
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','','',null,null,null,0,'','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew(1,'','','','','',0);this.state=1" [ngClass]="{'disabled': change || change}">{{ 'nueva_conexion' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -27,60 +27,52 @@
 			</div>
 			<div *ngIf="data.length<=0 && charging==false && this.state!=1" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div style="height: min-content;">
-					<p style="font-size: x-large;">{{ 'no_sensors' | translate }}</p>
+					<p style="font-size: x-large;">{{ 'no_conecctions' | translate }}</p>
 				</div>
 			</div>
 			<div *ngIf="data.length>0 || this.state==1" class="col-12 pe-0 over" style="max-height: 71vh;">
 				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
 						<tr style="background-color: #fff;">
-							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'position'}">
-								<svg *ngIf="alt1" (click)="alt1=false;getSensorsLocal('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'description'}">
+								<svg *ngIf="alt1" (click)="alt1=false;getConecctionsLocal('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt1" (click)="alt1=true;getSensorsLocal('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt1" (click)="alt1=true;getConecctionsLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								</svg> {{ 'sensors.order' | translate }}
+								</svg> {{ 'sensors.description' | translate }}
 							</th>
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'type'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getSensorsLocal('type','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'mqttQeue'}">
+								<svg *ngIf="alt2" (click)="alt2=false;getConecctionsLocal('mqttQeue','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getSensorsLocal('type','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt2" (click)="alt2=true;getConecctionsLocal('mqttQeue','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'sensors.type' | translate }}
+								  </svg> {{ 'conecctions.mqttQeue' | translate }}
 							</th>
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'metric'}">
-								<svg *ngIf="alt3" (click)="alt3=false;getSensorsLocal('metric','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'appID'}">
+								<svg *ngIf="alt3" (click)="alt3=false;getConecctionsLocal('appID','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt3" (click)="alt3=true;getSensorsLocal('metric','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt3" (click)="alt3=true;getConecctionsLocal('appID','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'sensors.metric' | translate }}
+								  </svg> {{ 'conecctions.appID' | translate }}
 							</th>
-							<th class="d-none d-md-none d-lg-table-cell" scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'description'}">
-								<svg *ngIf="alt4" (click)="alt4=false;getSensorsLocal('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th class="d-none d-md-none d-lg-table-cell" scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'subscribe'}">
+								<svg *ngIf="alt4" (click)="alt4=false;getConecctionsLocal('subscribe','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt4" (click)="alt4=true;getSensorsLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt4" (click)="alt4=true;getConecctionsLocal('subscribe','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'sensors.description' | translate }}
+								  </svg> {{ 'subscribe' | translate }}
 							</th>
-							<th *ngIf="show==false" scope="col" style="cursor: pointer; text-align: center;" [ngClass]="{'mark': order == 'correction_general'}">
-								<svg *ngIf="alt6" (click)="alt6=false;getSensorsLocal('correction_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th style="cursor: pointer;" scope="col" [ngClass]="{'mark': order == 'enabled'}">
+								<svg *ngIf="alt7" (click)="alt7=false;getConecctionsLocal('enabled','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt6" (click)="alt6=true;getSensorsLocal('correction_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt7" (click)="alt7=true;getConecctionsLocal('enabled','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'sensors.general' | translate }}
-							</th>
-							<th *ngIf="show==false" style="cursor: pointer;" scope="col" [ngClass]="{'mark': order == 'correction_time_general'}">
-								<svg *ngIf="alt7" (click)="alt7=false;getSensorsLocal('correction_time_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-								  </svg>
-								<svg *ngIf="!alt7" (click)="alt7=true;getSensorsLocal('correction_time_general','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'sensors.time_general' | translate }}
+								  </svg> {{ 'enabled' | translate }}
 							</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
@@ -88,16 +80,14 @@
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
-							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.position }}</th>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.description)">{{ quote.description }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.mqttQeue)">{{ quote.mqttQeue }}</td>
+							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.appID)">{{ quote.appID }}</td>
 
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.type }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.metric }}</td>
-							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.subscribe)">{{ quote.subscribe }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.enabled)">{{ quote.enabled }}</td>
 
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.correction_general }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.correction_time_general }}</td>
-
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateSensors(quote.id,quote.type)">
+							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateConecctions(quote.id,quote.description)">
 								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -130,7 +120,7 @@
 				</div>
 				<div>
 
-					<select (change)="this.currentPage=1;getSensorsLocal('position','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<select (change)="this.currentPage=1;getConecctionsLocal('description','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 				</div>
@@ -179,16 +169,16 @@
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 
 					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'sensors.duplicate' | translate }} {{sensors.type}}</h1>
-						<h1 *ngIf="state==1" class="mb-0">{{ 'sensors.nuevo_sensor' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'sensors.of' | translate }} {{ sensors.type }}</h1>
+						<h1 *ngIf="state==0" class="mb-0">{{ 'conecctions.duplicate' | translate }} {{conecctions.description}}</h1>
+						<h1 *ngIf="state==1" class="mb-0">{{ 'conecctions.nuevo' | translate }}</h1>
+						<h1 *ngIf="state==2" class="mb-0">{{ 'conecctions.of' | translate }} {{ conecctions.description }}</h1>
 					</div>
 
-					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ sensors.id }}" [(ngModel)]="sensors.id">
+					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ conecctions.id }}" [(ngModel)]="conecctions.id">
 
 					<div class="col-10 pt-2 form-group">
 						<label for="description">{{ 'description' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="sensors['type']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
 						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 							<div *ngIf="form.controls['description'].errors['required']">{{ description' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -196,42 +186,42 @@
 
 					<div class="col-2 pt-2 form-group">
 						<label for="enabled">{{ 'enabled' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="enabled" class="form-control" name="type" [(ngModel)]="sensors['type']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.enabled }}" type="text" id="enabled" class="form-control" name="enabled" [(ngModel)]="conecctions['enabled']" required>
 						<div *ngIf="form.submitted && form.controls['enabled'].errors" class="text-danger">
-							<div *ngIf="form.controls['enabled'].errors['required']">{{ 'sensors.enabled' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
 
 					<div class="col-12 pt-2 form-group">
 						<label for="mqttQeue">{{ 'mqttQeue' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="sensors['type']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.mqttQeue }}" type="text" id="mqttQeue" class="form-control" name="mqttQeue" [(ngModel)]="conecctions['mqttQeue']" required>
 						<div *ngIf="form.submitted && form.controls['mqttQeue'].errors" class="text-danger">
-							<div *ngIf="form.controls['mqttQeue'].errors['required']">{{ 'sensors.mqttQeue' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['mqttQeue'].errors['required']">{{ 'conecctions.mqttQeue' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
 					<div class="col-12 pt-2 form-group">
 						<label for="appID">{{ 'appID' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="appID" class="form-control" name="type" [(ngModel)]="sensors['type']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.appID }}" type="text" id="appID" class="form-control" name="appID" [(ngModel)]="conecctions['appID']" required>
 						<div *ngIf="form.submitted && form.controls['appID'].errors" class="text-danger">
-							<div *ngIf="form.controls['appID'].errors['required']">{{ 'sensors.appID' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['appID'].errors['required']">{{ 'conecctions.appID' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
 					<div class="col-12 pt-2 form-group">
 						<label for="accessKey">{{ 'accessKey' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="accessKey" class="form-control" name="type" [(ngModel)]="sensors['type']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctions['accessKey']" required>
 						<div *ngIf="form.submitted && form.controls['accessKey'].errors" class="text-danger">
-							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'sensors.accessKey' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'conecctions.accessKey' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
 					<div class="col-12 pt-2 form-group">
 						<label for="subscribe">{{ 'subscribe' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="subscribe" class="form-control" name="type" [(ngModel)]="sensors['type']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.subscribe }}" type="text" id="subscribe" class="form-control" name="subscribe" [(ngModel)]="conecctions['subscribe']" required>
 						<div *ngIf="form.submitted && form.controls['subscribe'].errors" class="text-danger">
-							<div *ngIf="form.controls['subscribe'].errors['required']">{{ 'sensors.subscribe' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['subscribe'].errors['required']">{{ 'conecctions.subscribe' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -246,16 +236,16 @@
 						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button (click)="newSensor(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
+						<button (click)="newConecction(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
 					</div>
 				</div>
 				<div class="row" *ngIf="state==2">
 					<div class="col-6">
 						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
+						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.data' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button (click)="editSensor(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+						<button (click)="editConecction(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>
 					<div class="col-12 mt-3">
 						<div class="row d-flex" style="justify-content: flex-end;">
@@ -275,20 +265,20 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header" style="border-bottom: 0px;">
-				<h3 class="modal-title">{{ 'sensors.m1.1' | translate }}</h3>
+				<h3 class="modal-title">{{ 'conecctions.m1.1' | translate }}</h3>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p class="not">{{ 'sensors.m1.2' | translate }}</p>
+				<p class="not">{{ 'conecctions.m1.2' | translate }}</p>
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
 					<div class="col-6">
-						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'conecctions.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteSensors(this.id)">{{ 'sensors.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteSensors(this.id)">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteconecctions(this.id)">{{ 'conecctions.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteconecctions(this.id)">{{ 'conecctions.delete' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -312,7 +302,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'conecctions.cancel' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -326,7 +316,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e7' | translate }}
+					{{ 'conecctions.e7' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -337,7 +327,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e8' | translate }}
+					{{ 'conecctions.e8' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -348,7 +338,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e3' | translate }}
+					{{ 'conecctions.e3' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -359,7 +349,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e6' | translate }}
+					{{ 'conecctions.e6' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -370,7 +360,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e4' | translate }}
+					{{ 'conecctions.e4' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -381,7 +371,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e5' | translate }}
+					{{ 'conecctions.e5' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -392,7 +382,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e2' | translate }}
+					{{ 'conecctions.e2' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
@@ -403,7 +393,7 @@
 		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="d-flex">
 				<div class="toast-body">
-					{{ 'sensors.e1' | translate }}
+					{{ 'conecctions.e1' | translate }}
 				</div>
 				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>

@@ -16,12 +16,12 @@ const SECRET_KEY = process.env.TOKEN;
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'search') {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM credentials) as total FROM credentials`;
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM conecction_read) as total FROM conecction_read`;
       query += ` ORDER BY ${type1} ${type2}`;
     } 
     else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM credentials WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM credentials`;
-      query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM conecction_read) as total FROM conecction_read`;
+      query += ` WHERE description LIKE '%${type0}%' OR mqttQeue LIKE '%${type0}%' OR appID LIKE '%${type0}%' OR accessKey LIKE '%${type0}%' OR subscribe LIKE '%${type0}%' OR enabled LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
     con.query(query, [ tam, act], (err, result) => {
@@ -32,32 +32,9 @@ const SECRET_KEY = process.env.TOKEN;
     });
   });
 
-  router.post("/login", (req, res) => {  // POST LOGIN
-    const { email, password } = req.body;
-    //console.log(req.body)
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y Password son requeridas' });
-    }
-
-    const query = "SELECT * FROM credentials WHERE email = ? AND password = ?";
-    //console.log(query)
-    con.query(query, [email, password], (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error en la base de datos' });
-      }
-      if (result.length === 1) { 
-        const user = result[0];
-        const token = jwt.sign({ email }, SECRET_KEY);
-        return res.status(200).json({ id: user.id, email: user.email, token: token });
-      }
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
-    });
-});
-
-
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
-    const query = "SELECT * FROM credentials WHERE id = ?";
+    const query = "SELECT * FROM conecction_read WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
       if (err) {
         console.error("Error:", err);
@@ -67,9 +44,9 @@ const SECRET_KEY = process.env.TOKEN;
     });
   });
 
-  router.get("/duplicate/:email", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
-    const email = req.params.email;
-    let query = `SELECT email FROM credentials`;
+  router.get("/duplicate/:description", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
+    const description = req.params.description;
+    let query = `SELECT description FROM conecction_read`;
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
@@ -79,27 +56,27 @@ const SECRET_KEY = process.env.TOKEN;
       let contador = 1;
       let nombresExistentes = new Set();
       for (let index = 0; index < result.length; index++) {
-        nombresExistentes.add(result[index].email);
+        nombresExistentes.add(result[index].description);
       }
       
-      let email_2 = email;
-      while (nombresExistentes.has(email_2)) {
-        email_2 = `${email}_${contador}`;
+      let description_2 = description;
+      while (nombresExistentes.has(description_2)) {
+        description_2 = `${description}_${contador}`;
         contador++;
       }
-      res.json({ duplicateEmail: email_2 });
+      res.json({ duplicatedescription: description_2 });
     });
   });
 
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-    const { email, password, change_password } = req.body;
+    const { description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
     
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y password  son requeridas' });
+    if (!description || !mqttQeue) {
+      return res.status(400).json({ error: 'Description es requerido' });
     }
 
-    const query = "INSERT INTO credentials (email, password, change_password) VALUES (?, ?, ?)";
-    con.query(query, [email, password, change_password], (err, result) => {
+    const query = "INSERT INTO conecction_read (description, mqttQeue, appID, accessKey, subscribe, enabled) VALUES (?, ?, ?, ?, ?, ?)";
+    con.query(query, [description, mqttQeue, appID, accessKey, subscribe, enabled], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
@@ -110,49 +87,41 @@ const SECRET_KEY = process.env.TOKEN;
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
-    
-  router.put("/email", verifyToken, (req, res) => {  // UPDATE EMAIL
-    const { id, email } = req.body;
-    if (!id || !email) {
-        return res.status(400).json({ error: 'Se requiere el ID del usuario y el nuevo correo electrónico para actualizar' });
-    }
-
-    const query = "UPDATE credentials SET email = ? WHERE id = ?";
-    con.query(query, [email, id], (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error en la base de datos' });
-        }
-
-        if (result.affectedRows > 0) {
-            return res.status(200).json({ email: email }); // Devolver el nuevo correo electrónico actualizado
-        }
-
-        return res.status(404).json({ error: 'Registro no encontrado' });
-    });
-  });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-  const { id, email, password, change_password } = req.body;
-  if (!id || (!email && !password)) {
+  const { id, description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
+  if (!id || (!description && !mqttQeue)) {
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
   }
-  let query = "UPDATE credentials SET";
+  let query = "UPDATE conecction_read SET";
   const values = [];
-  if (email) {
-    query += " email=?";
-    values.push(email);
+  if (description) {
+    query += " description=?";
+    values.push(description);
   }
-  if (password) {
-    query += ", password=?";
-    values.push(password);
+  if (mqttQeue) {
+    query += ", mqttQeue=?";
+    values.push(mqttQeue);
   }
-  if (password) {
-    query += ", password=?";
-    values.push(password);
+  if (mqttQeue) {
+    query += ", mqttQeue=?";
+    values.push(mqttQeue);
   }
-  if (change_password) {
-    query += ", change_password=?";
-    values.push(change_password);
+  if (appID) {
+    query += ", appID=?";
+    values.push(appID);
+  }
+  if (accessKey) {
+    query += ", accessKey=?";
+    values.push(accessKey);
+  }
+  if (subscribe) {
+    query += ", subscribe=?";
+    values.push(subscribe);
+  }
+  if (enabled) {
+    query += ", enabled=?";
+    values.push(enabled);
   }
   query += " WHERE id=?";
   values.push(id);
@@ -167,49 +136,19 @@ const SECRET_KEY = process.env.TOKEN;
   });
 });
 
-
-  router.put("/password", verifyToken, (req, res) => {  // UPDATE PASSWORD
-    const { id, password, newpassword1, newpassword2 } = req.body;
-
-    if (!id || !password || !newpassword1 || !newpassword2) {
-      return res.status(400).json({ error: 'Todos los campos son requeridos' });
-    }
-    if (newpassword1 !== newpassword2) {
-       return res.status(400).json({ error: 'Las nuevas contraseñas no coinciden' });
-    }
-
-    const query = "SELECT * FROM credentials WHERE id = ? AND password = ?";
-    con.query(query, [id, password], (err, result) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error en la base de datos' });
-      }
-      if (result.length === 0) {
-        return res.status(404).json({ error: 'Usuario no encontrado o contraseña antigua incorrecta' });
-      }
-
-      const updateQuery = "UPDATE credentials SET password = ? WHERE id = ?";
-      con.query(updateQuery, [newpassword1, id], (updateErr, updateResult) => {
-        if (updateErr) {
-          return res.status(500).json({ error: 'Error al actualizar la contraseña' });
-        }
-        return res.status(200).json({ message: 'Contraseña actualizada con éxito' });
-      });
-    });
-});
-
 router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
   const id = parseInt(req.body.id);
     if (isNaN(id)) {
     return res.status(400).json({ error: 'ID no válido' });
   }
-  con.query("DELETE FROM credentials WHERE id = ?", id, function (err, result) {
+  con.query("DELETE FROM conecction_read WHERE id = ?", id, function (err, result) {
     if (err) {
       return res.status(500).json({ error: 'Error en la base de datos' });
     }
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Uusario no encontrado' });
+      return res.status(404).json({ error: 'Conexion no encontrada' });
     }
-    res.json({ message: 'Uusario eliminado con éxito' });
+    res.json({ message: 'Conexion eliminada con éxito' });
   });
 });
 

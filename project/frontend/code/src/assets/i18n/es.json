@@ -210,6 +210,24 @@
     "user.a1" : "Correo electrónico actualizado.",
     "user.a2" : "Error al actualizar el correo electrónico.",
     "user.a3" : "Contraseña actualizada.",
-    "user.a4" : "Error al actualizar la contraseña."
+    "user.a4" : "Error al actualizar la contraseña.",
+
+    "conecction-read": "Adquisición",
+    "conecction-write": "Ingesta",
+    "nueva_conexion": "Nueva conexión",
+    "buscar_conexiones": "Buscar conexiones...",
+
+    "conecctions.duplicate": "Duplicar ",
+    "conecctions.nuevo": "Nueva conexión ",
+    "conecctions.of": "Conexión ",
+
+    "conecctions.authorization": "Authorization",
+    "conecctions.urlIngest": "Url Ingest ",
+    "conecctions.mqttQeue": "Mqtt Qeue", 
+    "conecctions.appID": "app Id",
+    "subscribe": "Suscribe", 
+    "enabled": "Enabled",
+    "no_conecctions": "Conexiones no encontrados, desactive filtros"
+
 
 }

@@ -208,6 +208,22 @@
     "user.a1" : "Email updated.",
     "user.a2" : "Error updating email.",
     "user.a3" : "Password updated.",
-    "user.a4": "Error updating password."
+    "user.a4": "Error updating password.",
 
+    "connection-read": "Acquisition", 
+    "connection-write": "Intake",
+    "new_connection": "New connection",
+    "search_connections": "Search for connections...",
+
+    "connections.duplicate": "Duplicate", 
+    "connections.neuvo": "New connection", 
+    "connections.of": "Connection",
+
+    "conecctions.authorization": "Authorization",
+    "conecctions.urlIngest": "Url Ingest ",
+    "conecctions.mqttQeue": "Mqtt Qeue", 
+    "conecctions.appID": "app Id",
+    "subscribe": "Suscribe", 
+    "enabled": "Enabled",
+    "no_connections": "Connections not found, disable filters"
 }

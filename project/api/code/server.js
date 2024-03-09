@@ -21,8 +21,8 @@ app.use("/api/data_structure", dataStructureRouter);
 app.use("/api/variable_data_structure",variableDataStructureRouter);
 
 app.use("/api/users",usersRouter);
-app.use("/api/conecctionRead",conecctionReadRouter);
-app.use("/api/conecctionWrite",conecctionWriteRouter);
+app.use("/api/conecction_read",conecctionReadRouter);
+app.use("/api/conecction_write",conecctionWriteRouter);
 app.use("/api/script",scriptRouter);
 app.use("/api/monitoring",monitoringRouter);
 

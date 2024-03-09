@@ -21,10 +21,10 @@ export class ConecctionWriteComponent implements OnInit {
     this.resize();
   }
 
-  getSensor: string = environment.baseUrl+environment.sensorsTypes+"/get";
-  postSensors: string = environment.baseUrl+environment.sensorsTypes;
-  duplicateSensor: string = environment.baseUrl+environment.sensorsTypes+"/duplicate";
-  getId: string = environment.baseUrl+environment.sensorsTypes+"/id";
+  getConecction: string = environment.baseUrl+environment.conecctionWrite+"/get";
+  postConecction: string = environment.baseUrl+environment.conecctionWrite;
+  duplicateConecction: string = environment.baseUrl+environment.conecctionWrite+"/duplicate";
+  getId: string = environment.baseUrl+environment.conecctionWrite+"/id";
 
   totalPages = 5;
   currentPage = 1;
@@ -60,7 +60,7 @@ export class ConecctionWriteComponent implements OnInit {
   pencilDup = -1;
 
   searchAux = "search";
-  order = "position";
+  order = "description";
   ordAux = "ASC";
 
   alertDelete: any = false;
@@ -70,32 +70,18 @@ export class ConecctionWriteComponent implements OnInit {
   saveOk: any = false;
   saveNot: any = false;
 
-  sensors = {
+  conecctions = {
     id: 0,
-    type: "",
-    metric: "",
     description: "",
-    errorvalue: null,
-    valuemax: null,
-    valuemin: null,
-    position: 0,
-    correction_general: "",
-    correction_time_general: "",
-    discard_value: "",
+    authorization: "", 
+    urlIngest: "", 
   };
 
-  sensorsCopy = {
+  conecctionsCopy = {
     id: 0,
-    type: "",
-    metric: "",
     description: "",
-    errorvalue: null,
-    valuemax: null,
-    valuemin: null,
-    position: 0,
-    correction_general: "",
-    correction_time_general: "",
-    discard_value: "",
+    authorization: "", 
+    urlIngest: "", 
   };
 
   searchAuxArray = {
@@ -103,22 +89,22 @@ export class ConecctionWriteComponent implements OnInit {
   };
 
   ngOnInit(): void { // Inicializa
-    this.getSensors(this.order, this.ordAux);
+    this.getConecctions(this.order, this.ordAux);
   }
 
   /* GET */
 
-  getSensorsVoid() { // Obtiene los sensores sin pasar arámetros
-    this.getSensors(this.order, this.ordAux);
+  getConecctionsVoid() { // Obtiene los conexiones sin pasar arámetros
+    this.getConecctions(this.order, this.ordAux);
   }
 
-  getSensorsLocal(id: any, ord: any) { // Ordena columnas en local
+  getConecctionsLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
 
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
-        if (id == "position") {
-          this.data.sort((a: any, b: any) => {return a.position - b.position;});
+        if (id == "description") {
+          this.data.sort((a: any, b: any) => {return a.description - b.description;});
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
@@ -144,8 +130,8 @@ export class ConecctionWriteComponent implements OnInit {
         }
       }
       if (ord == "DESC") {
-        if (id == "position") {
-          this.data.sort((a: any, b: any) => {return b.position - a.position;});
+        if (id == "description") {
+          this.data.sort((a: any, b: any) => {return b.description - a.description;});
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
@@ -173,7 +159,7 @@ export class ConecctionWriteComponent implements OnInit {
       }
     } 
     else {
-      this.getSensors(id, ord);
+      this.getConecctions(id, ord);
     }
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
@@ -182,7 +168,7 @@ export class ConecctionWriteComponent implements OnInit {
     }
   }
 
-  getSensors(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
+  getConecctions(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
@@ -192,7 +178,7 @@ export class ConecctionWriteComponent implements OnInit {
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getConecction}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -232,24 +218,17 @@ export class ConecctionWriteComponent implements OnInit {
       this.http.get(`${this.getId}/${idActual}`, {headers})
       .subscribe(
         (data: any) => {
-          this.sensors = data[0];
+          this.conecctions = data[0];
           this.actId = idActual;
           this.id = idActual;
           this.openEdit();
           this.state = 2;
-          let sensors = { ...this.sensors };
-          this.sensorsCopy = {
-            id: sensors.id,
-            type: sensors.type,
-            metric: sensors.metric,
-            description: sensors.description,
-            errorvalue: sensors.errorvalue,
-            valuemax: sensors.valuemax,
-            valuemin: sensors.valuemin,
-            position: sensors.position,
-            correction_general: sensors.correction_general,
-            correction_time_general: sensors.correction_time_general,
-            discard_value: sensors.discard_value,
+          let conecctions = { ...this.conecctions };
+          this.conecctionsCopy = {
+            id: conecctions.id,
+            description: conecctions.description ,
+            authorization: conecctions.authorization, 
+            urlIngest: conecctions.urlIngest, 
           };
           this.openClouse();
         },
@@ -262,13 +241,13 @@ export class ConecctionWriteComponent implements OnInit {
   
   /* NEW */
 
-  newSensor(form: any) {
+  newConecction(form: any) {
     let token = localStorage.getItem('token') ?? ''; 
 
     this.state = 1;
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+      this.http.post(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -279,12 +258,12 @@ export class ConecctionWriteComponent implements OnInit {
             }, 2000);
   
             this.openClouse();
-            this.sensors.id = data.id;
-            let sensors = { ...this.sensors };
-            this.data.push(sensors);
-            this.data.sort((a: { position: string }, b: { position: any }) => {
-              if (typeof a.position === "string" && typeof b.position === "string") {
-                return a.position.localeCompare(b.position);
+            this.conecctions.id = data.id;
+            let conecctions = { ...this.conecctions };
+            this.data.push(conecctions);
+            this.data.sort((a: { description: string }, b: { description: any }) => {
+              if (typeof a.description === "string" && typeof b.description === "string") {
+                return a.description.localeCompare(b.description);
               } 
               else {
                 return 1;
@@ -302,20 +281,13 @@ export class ConecctionWriteComponent implements OnInit {
     }
   }
 
-  openNew(id:any,type:any,metric:any,description:any,errorvalue:any,valuemax:any,valuemin:any,position:any,correction_general:any,correction_time_general:any,discard_value:any) { // Abre Nuevo sensor
+  openNew(id:any,description:any,authorization:any,urlIngest:any) { // Abre Nueva conexion
 
-    this.sensors = {
+    this.conecctions = {
       id: id,
-      type: type,
-      metric: metric,
-      description: description,
-      errorvalue: errorvalue,
-      valuemax: valuemax,
-      valuemin: valuemin,
-      position: position,
-      correction_general: correction_general,
-      correction_time_general: correction_time_general,
-      discard_value: discard_value,
+      description: description ,
+      authorization: authorization, 
+      urlIngest: urlIngest, 
     };
 
     this.show = true;
@@ -325,12 +297,12 @@ export class ConecctionWriteComponent implements OnInit {
 
   /* EDIT */
 
-  editSensor(form: any) { // Guardar datos del sensor editado
+  editConecction(form: any) { // Guardar datos de la conexión editado
     let token = localStorage.getItem('token') ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.put(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+      this.http.put(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
         .subscribe(
           (response: any) => {
             // Respuesta
@@ -339,11 +311,11 @@ export class ConecctionWriteComponent implements OnInit {
             console.error("Error:", error);
           }
         );
-      this.data = this.data.filter((data: { id: number }) => data.id !== this.sensors.id);
-      let sensors = this.sensors;
-      this.data.push(sensors);
-      this.data.sort((a: any, b: any) => {return a.position - b.position;});
-      this.actId = this.sensors.id;
+      this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
+      let conecctions = this.conecctions;
+      this.data.push(conecctions);
+      this.data.sort((a: any, b: any) => {return a.description - b.description;});
+      this.actId = this.conecctions.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
@@ -356,7 +328,7 @@ export class ConecctionWriteComponent implements OnInit {
     this.change = false;
   }
   
-  openEdit() { // Abre Editar sensor
+  openEdit() { // Abre Editar conexión
     this.show = true;
     this.state = 2;
     this.showAux = false;
@@ -364,50 +336,36 @@ export class ConecctionWriteComponent implements OnInit {
 
   /* DUPLICATE */
 
-  duplicateSensors(num: any, type: any) { // Obtiene el nombre del sensor duplicado
+  duplicateConecctions(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateSensor}/${type}`, {headers})
+      this.http.get(`${this.duplicateConecction}/${type}`, {headers})
       .subscribe(
         (data: any) => {
-          this.sensors = this.data.find((objeto: { id: any }) => objeto.id == num);
+          this.conecctions = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
     
-          this.http.get(`${this.getId}/${this.sensors.id}`, {headers})
+          this.http.get(`${this.getId}/${this.conecctions.id}`, {headers})
             .subscribe(
               (data1: any) => {
-                this.sensors = data1[0];
-                this.actId = this.sensors.id;
-                this.id = this.sensors.id;
-                let sensors = { ...this.sensors };
-                this.sensorsCopy = {
-                  id: sensors.id,
-                  type: sensors.type,
-                  metric: sensors.metric,
-                  description: sensors.description,
-                  errorvalue: sensors.errorvalue,
-                  valuemax: sensors.valuemax,
-                  valuemin: sensors.valuemin,
-                  position: sensors.position,
-                  correction_general: sensors.correction_general,
-                  correction_time_general: sensors.correction_time_general,
-                  discard_value: sensors.discard_value,
+                this.conecctions = data1[0];
+                this.actId = this.conecctions.id;
+                this.id = this.conecctions.id;
+                let conecctions = { ...this.conecctions };
+                this.conecctionsCopy = {
+                  id: conecctions.id,
+                  description: conecctions.description ,
+                  authorization: conecctions.authorization, 
+                  urlIngest: conecctions.urlIngest, 
                 };
                 this.openNew(
                   '',
-                  data.duplicatedSensor,
-                  this.sensors.metric,
-                  this.sensors.description,
-                  this.sensors.errorvalue,
-                  this.sensors.valuemax,
-                  this.sensors.valuemin,
-                  this.sensors.position,
-                  this.sensors.correction_general,
-                  this.sensors.correction_time_general,
-                  this.sensors.discard_value
+                  this.conecctions.description,
+                  this.conecctions.authorization, 
+                  this.conecctions.urlIngest, 
                 );
               },
               (error) => {
@@ -425,27 +383,27 @@ export class ConecctionWriteComponent implements OnInit {
 
   /* DELETE */
 
-  deleteSensors(idActual: any) { // Elimina sensor
+  deleteconecctions(idActual: any) { // Elimina conexión
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
-    var sensors2 = {
+    var conecctions2 = {
       id: this.id,
     };
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`
       }),
-      body: sensors2,
+      body: conecctions2,
     };
 
-    this.http.delete(this.postSensors, options).subscribe(
+    this.http.delete(this.postConecction, options).subscribe(
         (response: any) => {
           // Realiza acciones con la respuesta si es necesario
-          //console.log('Sensors eliminados:', response);
+          //console.log('conecctions eliminados:', response);
         },
         (error: any) => {
-          console.error('Error al eliminar sensores:', error);
+          console.error('Error al eliminar conexón:', error);
         }
       );
     this.alertDelete = true;
@@ -467,25 +425,18 @@ export class ConecctionWriteComponent implements OnInit {
 
     this.timeout = setTimeout(() => {
       if (event.keyCode != 13) {
-        $this.getSensors(this.order, this.ordAux);
+        $this.getConecctions(this.order, this.ordAux);
         $this.openClouse();
       }
     }, 500);
   }
 
-  rechargeForm() { // recarga sensor a su valor anterior
-    this.sensors = {
-      id: this.sensorsCopy.id,
-      type: this.sensorsCopy.type,
-      metric: this.sensorsCopy.metric,
-      description: this.sensorsCopy.description,
-      errorvalue: this.sensorsCopy.errorvalue,
-      valuemax: this.sensorsCopy.valuemax,
-      valuemin: this.sensorsCopy.valuemin,
-      position: this.sensorsCopy.position,
-      correction_general: this.sensorsCopy.correction_general,
-      correction_time_general: this.sensorsCopy.correction_time_general,
-      discard_value: this.sensorsCopy.discard_value,
+  rechargeForm() { // recarga conexión a su valor anterior
+    this.conecctions = {
+      id: this.conecctionsCopy.id,
+      description: this.conecctionsCopy.description,
+      authorization: this.conecctionsCopy.authorization,
+      urlIngest: this.conecctionsCopy.urlIngest,
     };
     this.change = false;
   }
@@ -497,12 +448,12 @@ export class ConecctionWriteComponent implements OnInit {
     this.quantPage = 15;
     this.page = 1;
     this.searchAuxArray.value = "";
-    this.getSensors(this.order, this.ordAux);
+    this.getConecctions(this.order, this.ordAux);
   }
 
   /* TARJETAS */
 
-  openClouse() { // Abre y cierra la tarjeta de sensores
+  openClouse() { // Abre y cierra la tarjeta de conexiones
     if (this.show == true) {
       this.showAux = false;
     } 
@@ -535,55 +486,55 @@ export class ConecctionWriteComponent implements OnInit {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     } 
     else {
       this.currentPage = 1;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
-    this.getSensorsVoid();
+    this.getConecctionsVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     } 
     else {
       this.currentPage = this.totalPages;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     }
   }
 
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
-      this.getSensorsVoid();
+      this.getConecctionsVoid();
     }
   }
 }
