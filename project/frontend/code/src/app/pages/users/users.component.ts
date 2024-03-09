@@ -302,52 +302,6 @@ export class UsersComponent implements OnInit {
     this.showAux = false;
   }
 
-  /* DUPLICATE */
-
-  duplicateUsers(num: any, type: any) { // Obtiene el nombre del usuario duplicado
-    let token = localStorage.getItem('token') ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
-    if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateUser}/${type}`, {headers})
-      .subscribe(
-        (data: any) => {
-          this.users = this.data.find((objeto: { id: any }) => objeto.id == num);
-          this.openClouse();
-          this.state = 0;
-    
-          this.http.get(`${this.getId}/${this.users.id}`, {headers})
-            .subscribe(
-              (data1: any) => {
-                this.users = data1[0];
-                this.actId = this.users.id;
-                this.id = this.users.id;
-                let users = { ...this.users };
-                this.usersCopy = {
-                  id: users.id,
-                  email: users.email,
-                  password: users.password,
-                  change_password: users.change_password,
-                };
-                this.openNew(
-                  '',
-                  data.duplicateEmail,
-                  this.users.password,
-                  this.users.change_password,
-                );
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
-          this.change = true;
-        },
-        (error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
-        }
-      );
-    }
-  }
 
   /* DELETE */
 

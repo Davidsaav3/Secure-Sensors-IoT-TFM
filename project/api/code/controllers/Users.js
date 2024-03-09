@@ -91,31 +91,6 @@ const bcrypt = require('bcrypt');
     });
   });
 
-  router.get("/duplicate/:email", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
-    const email = req.params.email;
-    let query = `SELECT email FROM users`;
-    con.query(query, (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send("Error en la base de datos");
-      }
-
-      let contador = 1;
-      let nombresExistentes = new Set();
-      for (let index = 0; index < result.length; index++) {
-        nombresExistentes.add(result[index].email);
-      }
-      
-      let email_2 = email;
-      while (nombresExistentes.has(email_2)) {
-        email_2 = `${email}_${contador}`;
-        contador++;
-      }
-      res.json({ duplicateEmail: email_2 });
-    });
-  });
-
-
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
   const { email, password, change_password } = req.body;
   

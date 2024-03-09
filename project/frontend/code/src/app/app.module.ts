@@ -20,7 +20,8 @@ import { SensorsComponent } from './pages/sensors/sensors.component';
 import { DataSharingService } from './services/data_sharing.service';
 
 import { UsersComponent } from './pages/users/users.component';
-import { CredentialsComponent } from './pages/credentials/credentials.component';
+import { ConecctionWriteComponent } from './pages/conecction-write/conecction-write.component';
+import { ConecctionReadComponent } from './pages/conecction-read/conecction-read.component';
 import { ScriptComponent } from './pages/script/script.component';
 import { MonitoringComponent } from './pages/monitoring/monitoring.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -38,7 +39,8 @@ import { LoginComponent } from './pages/login/login.component';
     StructureComponent,
     VariableStructureComponent,
     UsersComponent,
-    CredentialsComponent,
+    ConecctionReadComponent,
+    ConecctionWriteComponent,
     ScriptComponent,
     MonitoringComponent,
     LoginComponent

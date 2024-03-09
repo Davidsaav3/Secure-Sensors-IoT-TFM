@@ -10,7 +10,8 @@ import { StructureComponent } from './pages/structure/structure.component';
 import { VariableStructureComponent } from './pages/variable-structure/variable-structure.component';
 
 import { UsersComponent } from './pages/users/users.component';
-import { CredentialsComponent } from './pages/credentials/credentials.component';
+import { ConecctionWriteComponent } from './pages/conecction-write/conecction-write.component';
+import { ConecctionReadComponent } from './pages/conecction-read/conecction-read.component';
 import { ScriptComponent } from './pages/script/script.component';
 import { MonitoringComponent } from './pages/monitoring/monitoring.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -84,7 +85,10 @@ const routes: Routes = [
     path:'users', component: UsersComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'credentials', component: CredentialsComponent, canActivate: [AuthGuard] 
+    path:'conecction-read', component: ConecctionReadComponent, canActivate: [AuthGuard] 
+  },
+  { 
+    path:'conecction-write', component: ConecctionWriteComponent, canActivate: [AuthGuard] 
   },
   { 
     path:'script', component: ScriptComponent, canActivate: [AuthGuard] 

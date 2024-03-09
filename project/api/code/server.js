@@ -10,7 +10,8 @@ const dataStructureRouter = require('./controllers/dataStructure');
 const variableDataStructureRouter = require('./controllers/variableDataStructure');
 
 const usersRouter = require('./controllers/Users');
-const credentialsRouter = require('./controllers/credentials');
+const conecctionReadRouter = require('./controllers/conecctionRead');
+const conecctionWriteRouter = require('./controllers/conecctionWrite');
 const scriptRouter = require('./controllers/script');
 const monitoringRouter = require('./controllers/monitoring');
 
@@ -20,7 +21,8 @@ app.use("/api/data_structure", dataStructureRouter);
 app.use("/api/variable_data_structure",variableDataStructureRouter);
 
 app.use("/api/users",usersRouter);
-app.use("/api/credentials",credentialsRouter);
+app.use("/api/conecctionRead",conecctionReadRouter);
+app.use("/api/conecctionWrite",conecctionWriteRouter);
 app.use("/api/script",scriptRouter);
 app.use("/api/monitoring",monitoringRouter);
 
