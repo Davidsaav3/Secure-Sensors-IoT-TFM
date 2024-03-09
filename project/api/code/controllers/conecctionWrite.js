@@ -6,7 +6,8 @@ router.use(cors());
 router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./token');
-const SECRET_KEY = process.env.TOKEN; 
+const CryptoJS = require('crypto-js');
+const secretKey = process.env.TOKEN;
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -24,23 +25,34 @@ const SECRET_KEY = process.env.TOKEN;
       query += ` WHERE description LIKE '%${type0}%' OR authorization LIKE '%${type0}%' OR urLIngest LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
-    con.query(query, [ tam, act], (err, result) => {
+    con.query(query, [tam, act], (err, result) => {
       if (err) {
         console.error(err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      res.send(result);
+      // Descifrar el accessKey antes de enviarlo en la respuesta
+      const decryptedResult = result.map(row => ({
+        ...row,
+        authorization: decryptMessage(row.authorization, secretKey)
+      }));
+      res.send(decryptedResult);
     });
   });
 
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
     const query = "SELECT * FROM conecction_write WHERE id = ?";
-    con.query(query, [id,id], (err, result) => {
+    con.query(query, [id, id], (err, result) => {
       if (err) {
-        console.error("Error:", err);
+        console.error(err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      res.send(result);
+      // Descifrar el accessKey antes de enviarlo en la respuesta
+      const decryptedResult = result.map(row => ({
+        ...row,
+        authorization: decryptMessage(row.authorization, secretKey)
+      }));
+      res.send(decryptedResult);
     });
   });
 
@@ -75,8 +87,9 @@ const SECRET_KEY = process.env.TOKEN;
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
+    const encryptedMessage = encryptMessage(authorization, secretKey);
     const query = "INSERT INTO conecction_write (description, authorization, urlIngest) VALUES (?, ?, ?)";
-    con.query(query, [description, authorization, urlIngest], (err, result) => {
+    con.query(query, [description, encryptedMessage, urlIngest], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
@@ -100,8 +113,10 @@ const SECRET_KEY = process.env.TOKEN;
     values.push(description);
   }
   if (authorization) {
+
+    const encryptedMessage = encryptMessage(authorization, secretKey);
     query += ", authorization=?";
-    values.push(authorization);
+    values.push(encryptedMessage);
   }
   if (urlIngest) {
     query += ", urlIngest=?";
@@ -136,5 +151,19 @@ router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     res.json({ message: 'Conexion eliminada con éxito' });
   });
 });
+
+// Function to encrypt a message
+function encryptMessage(message, key) {
+  const encryptedMessage = CryptoJS.AES.encrypt(message, key).toString();
+  return encryptedMessage;
+}
+
+// Function to decrypt a message
+function decryptMessage(encryptedMessage, key) {
+  const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, key);
+  const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
+  return decryptedMessage;
+}
+
 
 module.exports = router;
