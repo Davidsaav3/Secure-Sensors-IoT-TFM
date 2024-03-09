@@ -169,13 +169,14 @@
     "users.new": "New user ",
     "users.duplicate": "Duplicate ",
     "users.nuevo_usuario": "New user",
-    "users.email": "Email",
+    "users.email": "Usename",
     "users.password": "Password",
     "users.change_password": "Change password the first time ?",
+    "users.token": "Revoke renewal token",
     "edit.change": "Change password",
 
     "login": "Login",
-    "login.user": "Email",
+    "login.user": "Username",
     "login.pass": "Password",
     "login.pass2": "New password",
     "login.access": "Access",
@@ -205,8 +206,8 @@
     "min_length": "The password must be at least 8 characters.",
     "pass_required" : "Password is required.",
 
-    "user.a1" : "Email updated.",
-    "user.a2" : "Error updating email.",
+    "user.a1" : "Username updated.",
+    "user.a2" : "Error updating username.",
     "user.a3" : "Password updated.",
     "user.a4": "Error updating password.",
 

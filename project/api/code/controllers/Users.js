@@ -92,7 +92,7 @@ const bcrypt = require('bcrypt');
   });
 
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-  const { email, password, change_password } = req.body;
+  const { email, password, change_password, token } = req.body;
   
   if (!email || !password) {
     return res.status(400).json({ error: 'Email y password  son requeridas' });
@@ -103,8 +103,8 @@ const bcrypt = require('bcrypt');
           return res.status(500).json({ error: 'Error al cifrar la contraseña' });
       }
       //console.log("Cifrada:", hashedPassword);
-      const query = "INSERT INTO users (email, password, change_password) VALUES (?, ?, ?)";
-      con.query(query, [email, hashedPassword, change_password], (err, result) => {
+      const query = "INSERT INTO users (email, password, change_password, token) VALUES (?, ?, ?, ?)";
+      con.query(query, [email, hashedPassword, change_password, token], (err, result) => {
           if (err) {
               return res.status(500).json({ error: 'Error en la base de datos' });
           }
@@ -139,7 +139,7 @@ const bcrypt = require('bcrypt');
   });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-      const { id, email, password, change_password } = req.body;
+      const { id, email, password, change_password, token } = req.body;
       if (!id && (email || password)) {
           return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
       }
@@ -149,6 +149,10 @@ const bcrypt = require('bcrypt');
           query += " email=?";
           values.push(email);
       }
+      if (token) {
+        query += " token=?";
+        values.push(token);
+    }
       if (password) {
           // Cifrar la contraseña antes de almacenarla
           bcrypt.hash(password, 10, (err, hashedPassword) => {
@@ -186,13 +190,10 @@ const bcrypt = require('bcrypt');
   });
   
   router.put("/password", verifyToken, (req, res) => { // EDIT PASSWORD
-    const { id, password, newpassword1, newpassword2, email } = req.body;
+    const { id, password, newpassword, email } = req.body;
 
-    if (!id || !password || !newpassword1 || !newpassword2 || !email) {
+    if (!id || !password || !newpassword || !email) {
         return res.status(400).json({ error: 'Todos los campos son requeridos' });
-    }
-    if (newpassword1 !== newpassword2) {
-       return res.status(400).json({ error: 'Las nuevas contraseñas no coinciden' });
     }
 
     // Buscar el usuario en la base de datos
@@ -222,7 +223,7 @@ const bcrypt = require('bcrypt');
             }
 
             // Cifrar la nueva contraseña
-            bcrypt.hash(newpassword1, 10, (hashErr, hashedPassword) => {
+            bcrypt.hash(newpassword, 10, (hashErr, hashedPassword) => {
                 if (hashErr) {
                     return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
                 }

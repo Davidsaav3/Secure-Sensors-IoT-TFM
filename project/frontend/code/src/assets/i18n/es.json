@@ -171,13 +171,14 @@
     "users.new": "Nuevo usuario ",
     "users.duplicate": "Duplicar ",
     "users.nuevo_usuario": "Nuevo usuario",
-    "users.email": "Correo electrónico",
+    "users.email": "Nombre de usuario",
     "users.password": "Contraseña",
     "users.change_password": "Cambiar la contraseña la primera vez ?",
+    "users.token": "Revocar token de renovación",
     "edit.change": "Cambiar contraseña",
 
     "login": "Inicio de sesión",
-    "login.user": "Correo electrónico",
+    "login.user": "Nombre de usuario",
     "login.pass": "Contraseña",
     "login.pass2": "Nueva contraseña",
     "login.access": "Acceder",
@@ -207,8 +208,8 @@
     "min_length" : "La contraseña debe ser de al menos 8 caracteres.",
     "pass_required" : "Contraseña es requerida.",
 
-    "user.a1" : "Correo electrónico actualizado.",
-    "user.a2" : "Error al actualizar el correo electrónico.",
+    "user.a1" : "Nombre de usuario actualizado.",
+    "user.a2" : "Error al actualizar el nombre de usuario.",
     "user.a3" : "Contraseña actualizada.",
     "user.a4" : "Error al actualizar la contraseña.",
 

@@ -50,8 +50,14 @@ export class LoginComponent {
     password: "",
   };
 
+  passwordFieldType = 'password';
+
   get registerFormControl() {
     return this.registerForm.controls;
+  }
+
+  togglePasswordType() {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
   login(form: any) { // LOGIN

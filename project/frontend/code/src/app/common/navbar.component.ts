@@ -49,8 +49,7 @@ export class NavbarComponent {
   formapassword = {
     id: this.id,
     password: "",
-    newpassword1: "",
-    newpassword2: "",
+    newpassword: "",
     email: this.username
   };
 
@@ -64,9 +63,20 @@ export class NavbarComponent {
     this.ruteAux = this.rute.split("/");
   }
 
+  passwordFieldType = 'password';
+  passwordFieldType1 = 'password';
+
   ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
+  }
+
+  togglePasswordType() {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
+  togglePasswordType1() {
+    this.passwordFieldType1 = this.passwordFieldType1 === 'password' ? 'text' : 'password';
   }
 
   ngAfterViewInit() {

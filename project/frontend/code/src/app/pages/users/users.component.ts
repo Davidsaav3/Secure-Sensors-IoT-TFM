@@ -78,6 +78,7 @@ export class UsersComponent implements OnInit {
     email: "",
     password: "",
     change_password: true,
+    token: ""
   };
 
   usersCopy = {
@@ -85,14 +86,21 @@ export class UsersComponent implements OnInit {
     email: "",
     password: "",
     change_password: true,
+    token: ""
   };
 
   searchAuxArray = {
     value: "",
   };
 
+  passwordFieldType = 'password';
+
   ngOnInit(): void { // Inicializa
     this.getUsers(this.order, this.ordAux);
+  }
+
+  togglePasswordType() {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
   /* GET */
@@ -193,6 +201,7 @@ export class UsersComponent implements OnInit {
             email: users.email,
             password: users.password,
             change_password: users.change_password,
+            token: users.token
           };
           this.openClouse();
         },
@@ -245,13 +254,14 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  openNew(id:any,email:any,password:any,change_password:any) { // Abre Nuevo usuario
+  openNew(id:any,email:any,password:any,change_password:any,token:any) { // Abre Nuevo usuario
 
     this.users = {
       id: id,
       email: email,
       password: password,
-      change_password: change_password
+      change_password: change_password,
+      token: token
     };
 
     this.show = true;
@@ -358,6 +368,7 @@ export class UsersComponent implements OnInit {
       email: this.usersCopy.email,
       password: this.usersCopy.password,
       change_password: this.usersCopy.change_password,
+      token: this.usersCopy.token
     };
     this.change = false;
   }
