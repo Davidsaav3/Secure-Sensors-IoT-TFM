@@ -64,7 +64,7 @@
 								  </svg>
 								<svg *ngIf="!alt4" (click)="alt4=true;getConecctionsLocal('subscribe','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'subscribe' | translate }}
+								  </svg> {{ 'conecctions.subscribe' | translate }}
 							</th>
 							<th style="cursor: pointer;" scope="col" [ngClass]="{'mark': order == 'enabled'}">
 								<svg *ngIf="alt7" (click)="alt7=false;getConecctionsLocal('enabled','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -72,7 +72,7 @@
 								  </svg>
 								<svg *ngIf="!alt7" (click)="alt7=true;getConecctionsLocal('enabled','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'enabled' | translate }}
+								  </svg> {{ 'conecctions.enabled' | translate }}
 							</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
 							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
@@ -80,14 +80,17 @@
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.description)">{{ quote.description }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.mqttQeue)">{{ quote.mqttQeue }}</td>
-							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.appID)">{{ quote.appID }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.mqttQeue }}</td>
+							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.id)">{{ quote.appID }}</td>
 
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.subscribe)">{{ quote.subscribe }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.enabled)">{{ quote.enabled }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.subscribe }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
+								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enabled==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
+							</td>
 
-							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateConecctions(quote.id,quote.description)">
+							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;"><!--(click)="duplicateConecctions(quote.id,quote.description)"-->
 								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -176,17 +179,23 @@
 
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ conecctions.id }}" [(ngModel)]="conecctions.id">
 
-					<div class="col-10 pt-2 form-group">
-						<label for="description">{{ 'description' | translate }}</label>
+					<div class="col-8 pt-2 form-group">
+						<label for="description">{{ 'sensors.description' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
 						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 							<div *ngIf="form.controls['description'].errors['required']">{{ description' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
-					<div class="col-2 pt-2 form-group">
-						<label for="enabled">{{ 'enabled' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.enabled }}" type="text" id="enabled" class="form-control" name="enabled" [(ngModel)]="conecctions['enabled']" required>
+					<div class="col-4 pt-2 form-group">
+						<label for="enabled">{{ 'conecctions.enabled' | translate }}</label>
+						<div class="form-check form-switch ps-0">
+							<label class="toggle tt2 t2">
+								<input maxlength="4" type="checkbox" (ngModelChange)="change=true" id="check" name="check" [(ngModel)]="conecctions['enabled']">
+								<span class="slider"></span>
+								<span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
+							</label>
+						</div>
 						<div *ngIf="form.submitted && form.controls['enabled'].errors" class="text-danger">
 							<div *ngIf="form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -194,7 +203,7 @@
 
 
 					<div class="col-12 pt-2 form-group">
-						<label for="mqttQeue">{{ 'mqttQeue' | translate }}</label>
+						<label for="mqttQeue">{{ 'conecctions.mqttQeue' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.mqttQeue }}" type="text" id="mqttQeue" class="form-control" name="mqttQeue" [(ngModel)]="conecctions['mqttQeue']" required>
 						<div *ngIf="form.submitted && form.controls['mqttQeue'].errors" class="text-danger">
 							<div *ngIf="form.controls['mqttQeue'].errors['required']">{{ 'conecctions.mqttQeue' | translate }} {{ 'required' | translate }}</div>
@@ -202,7 +211,7 @@
 					</div>
 
 					<div class="col-12 pt-2 form-group">
-						<label for="appID">{{ 'appID' | translate }}</label>
+						<label for="appID">{{ 'conecctions.appID' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.appID }}" type="text" id="appID" class="form-control" name="appID" [(ngModel)]="conecctions['appID']" required>
 						<div *ngIf="form.submitted && form.controls['appID'].errors" class="text-danger">
 							<div *ngIf="form.controls['appID'].errors['required']">{{ 'conecctions.appID' | translate }} {{ 'required' | translate }}</div>
@@ -210,7 +219,7 @@
 					</div>
 
 					<div class="col-12 pt-2 form-group">
-						<label for="accessKey">{{ 'accessKey' | translate }}</label>
+						<label for="accessKey">{{ 'conecctions.accessKey' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctions['accessKey']" required>
 						<div *ngIf="form.submitted && form.controls['accessKey'].errors" class="text-danger">
 							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'conecctions.accessKey' | translate }} {{ 'required' | translate }}</div>
@@ -218,7 +227,7 @@
 					</div>
 
 					<div class="col-12 pt-2 form-group">
-						<label for="subscribe">{{ 'subscribe' | translate }}</label>
+						<label for="subscribe">{{ 'conecctions.subscribe' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.subscribe }}" type="text" id="subscribe" class="form-control" name="subscribe" [(ngModel)]="conecctions['subscribe']" required>
 						<div *ngIf="form.submitted && form.controls['subscribe'].errors" class="text-danger">
 							<div *ngIf="form.controls['subscribe'].errors['required']">{{ 'conecctions.subscribe' | translate }} {{ 'required' | translate }}</div>
@@ -242,7 +251,7 @@
 				<div class="row" *ngIf="state==2">
 					<div class="col-6">
 						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.data' | translate }}</button>
+						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-6">
 						<button (click)="editConecction(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
@@ -274,11 +283,11 @@
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
 					<div class="col-6">
-						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'conecctions.exit' | translate }}</button>
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteconecctions(this.id)">{{ 'conecctions.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteconecctions(this.id)">{{ 'conecctions.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteconecctions(this.id)">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteconecctions(this.id)">{{ 'sensors.delete' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -302,7 +311,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'conecctions.cancel' | translate }}</button>
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
 					</div>
 				</div>
 			</div>

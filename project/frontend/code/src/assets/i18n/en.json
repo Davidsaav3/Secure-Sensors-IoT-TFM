@@ -223,7 +223,27 @@
     "conecctions.urlIngest": "Url Ingest ",
     "conecctions.mqttQeue": "Mqtt Qeue", 
     "conecctions.appID": "app Id",
-    "subscribe": "Suscribe", 
-    "enabled": "Enabled",
-    "no_connections": "Connections not found, disable filters"
+    "conecctions.ssubscribe": "Suscribe", 
+    "conecctions.enabled": "State",
+    "conecctions.accessKey": "Acces key",
+    "no_connections": "Connections not found, disable filters",
+    "no_users": "Users not found, disable filters",
+
+    "conecctions.m1.1" : "Delete conecction",
+    "conecctions.m1.2" : "Are you sure you want to remove the conecction ?",
+    "users.m1.1" : "Delete user",
+    "users.m1.2" : "Are you sure you want to remove the user ?",
+    "conecctions.m2.1" : "Conecction disabled",
+    "conecctions.m2.2" : "There are two conecctions activated in the same position.",    
+    "change_password" : "Change password",
+
+    "conecctions.e1" : "Error saving conecction",
+    "conecctions.e2" : "Saved conecction!",
+    "conecctions.e3" : "Conecction deleted!",
+    "conecctions.e4" : "Conecction created!",
+    "conecctions.e5" : "Error creating conecction",
+    "conecctions.e6" : "Error deleting conecction",
+    "conecctions.e7" : "Duplicate conecction",
+    "conecctions.e8" : "Error duplicating conecction"
+
 }

@@ -65,11 +65,11 @@
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.description)">{{ quote.description }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.authorization)">{{ quote.authorization }}</td>
-							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.urlIngest)">{{ quote.urlIngest }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.authorization }}</td>
+							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.id)">{{ quote.urlIngest }}</td>
 
-							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateConecctions(quote.id,quote.description)">
+							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;"><!--(click)="duplicateConecctions(quote.id,quote.description)"-->
 								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -159,7 +159,7 @@
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ conecctions.id }}" [(ngModel)]="conecctions.id">
 
 					<div class="col-12 pt-2 form-group">
-						<label for="description">{{ 'description' | translate }}</label>
+						<label for="description">{{ 'sensors.description' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
 						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 							<div *ngIf="form.controls['description'].errors['required']">{{ description' | translate }} {{ 'required' | translate }}</div>
@@ -167,7 +167,7 @@
 					</div>
 
 					<div class="col-12 pt-2 form-group">
-						<label for="authorization">{{ 'authorization' | translate }}</label>
+						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctions['authorization']" required>
 						<div *ngIf="form.submitted && form.controls['authorization'].errors" class="text-danger">
 							<div *ngIf="form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
@@ -175,7 +175,7 @@
 					</div>
 
 					<div class="col-12 pt-2 form-group">
-						<label for="urlIngest">{{ 'urlIngest' | translate }}</label>
+						<label for="urlIngest">{{ 'conecctions.urlIngest' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.urlIngest }}" type="text" id="urlIngest" class="form-control" name="urlIngest" [(ngModel)]="conecctions['urlIngest']" required>
 						<div *ngIf="form.submitted && form.controls['urlIngest'].errors" class="text-danger">
 							<div *ngIf="form.controls['urlIngest'].errors['required']">{{ 'conecctions.urlIngest' | translate }} {{ 'required' | translate }}</div>
@@ -199,7 +199,7 @@
 				<div class="row" *ngIf="state==2">
 					<div class="col-6">
 						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'sensors.data' | translate }}</button>
+						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-6">
 						<button (click)="editConecction(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
@@ -231,11 +231,11 @@
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
 					<div class="col-6">
-						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'conecctions.exit' | translate }}</button>
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteconecctions(this.id)">{{ 'conecctions.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteconecctions(this.id)">{{ 'conecctions.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteconecctions(this.id)">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteconecctions(this.id)">{{ 'sensors.delete' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -259,7 +259,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'conecctions.cancel' | translate }}</button>
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
 					</div>
 				</div>
 			</div>

@@ -21,7 +21,6 @@ export class NavbarComponent {
   lengName = environment.languageName;
   lengLang = environment.languageLang;
   activeLang = environment.languageLang[0];
-  AppVersion = environment.AppVersion;
   rute = "";
   isActive: boolean = false;
   ruteAux: any;
@@ -45,6 +44,7 @@ export class NavbarComponent {
   postPass: string = environment.baseUrl+environment.users+'/password';
   but= false;
   changed= false;
+  scriptEnable= false;
 
   formapassword = {
     id: this.id,

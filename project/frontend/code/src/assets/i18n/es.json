@@ -221,13 +221,32 @@
     "conecctions.nuevo": "Nueva conexión ",
     "conecctions.of": "Conexión ",
 
-    "conecctions.authorization": "Authorization",
-    "conecctions.urlIngest": "Url Ingest ",
-    "conecctions.mqttQeue": "Mqtt Qeue", 
-    "conecctions.appID": "app Id",
-    "subscribe": "Suscribe", 
-    "enabled": "Enabled",
-    "no_conecctions": "Conexiones no encontrados, desactive filtros"
+    "conecctions.authorization": "Autorización",
+    "conecctions.urlIngest": "Url ingestada ",
+    "conecctions.mqttQeue": "Cola Mqtt", 
+    "conecctions.appID": "Id de aplicación",
+    "conecctions.subscribe": "Suscripción", 
+    "conecctions.enabled": "Estado",
+    "conecctions.accessKey": "Llave de acceso",
+    "no_conecctions": "Conexiones no encontrados, desactive filtros",
+    "no_users": "usuarios no encontrados, desactive filtros",
+
+    "conecctions.m1.1": "Eliminar conexión",
+    "conecctions.m1.2": "¿Está seguro de que desea eliminar la conexión?",
+    "users.m1.1" : "Eliminar usario",
+    "users.m1.2" : "Estas seguro de que desea eliminar el usuario ?",
+    "conecctions.m2.1": "Conexión deshabilitada",
+    "conecctions.m2.2" : "Hay dos conexiones activadas en la misma posición.",
+    "change_password" : "Cambiar contraseña",
+
+    "conecctions.e1": "Error al guardar la conexión",
+    "conecctions.e2": "¡Conexión guardada!",
+    "conecctions.e3": "¡Conexión eliminada!",
+    "conecctions.e4": "¡Conexión creada!",
+    "conecctions.e5": "Error al crear la conexión",
+    "conecctions.e6": "Error al eliminar la conexión",
+    "coneccticons.e7": "Conexión duplicada",
+    "conecctions.e8": "Error al duplicar la conexión"
 
 
 }

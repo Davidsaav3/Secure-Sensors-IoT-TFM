@@ -89,8 +89,8 @@ const SECRET_KEY = process.env.TOKEN;
   });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-  const { id, description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
-  if (!id || (!description && !mqttQeue)) {
+  const { id, description, authorization, urlIngest } = req.body;
+  if (!id || (!description && !authorization && !urlIngest)) {
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
   }
   let query = "UPDATE conecction_write SET";
