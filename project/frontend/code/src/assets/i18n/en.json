@@ -161,7 +161,7 @@
     "monitoring": "Monitoring",
     "management": "Management",
     "settings": "Settings",
-    "edit.profile": "Edit profile",
+    "edit.profile": "Change username",
     "log.out": "Log out",
     "user": "User",
 
@@ -245,6 +245,8 @@
     "conecctions.e5" : "Error creating conecction",
     "conecctions.e6" : "Error deleting conecction",
     "conecctions.e7" : "Duplicate conecction",
-    "conecctions.e8" : "Error duplicating conecction"
+    "conecctions.e8" : "Error duplicating conecction",
 
+    "script_enable": "Script enabled",
+    "script_disable": "Script disabled"
 }

@@ -8,7 +8,8 @@ import { environment } from "./environments/environment"
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-
+  
+  AppVersion = environment.AppVersion;
   activeLang = environment.languageLang;
   constructor(private translate: TranslateService) {
     this.translate.setDefaultLang(this.activeLang[0]);

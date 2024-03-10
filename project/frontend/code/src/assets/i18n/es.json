@@ -163,7 +163,7 @@
     "sensors.buscar_usuarios": "Buscar usuarios...",
     "management": "Administración",
     "settings": "Configuración",
-    "edit.profile": "Editar perfil",
+    "edit.profile": "Cambiar nombre de usuario",
     "log.out": "Cerrar sesión",
     "user": "Usuario",
 
@@ -224,7 +224,7 @@
 
     "conecctions.authorization": "Autorización",
     "conecctions.urlIngest": "Url ingestada ",
-    "conecctions.mqttQeue": "Cola Mqtt", 
+    "conecctions.mqttQeue": "Cola de Mqtt", 
     "conecctions.appID": "Id de aplicación",
     "conecctions.subscribe": "Suscripción", 
     "conecctions.enabled": "Estado",
@@ -247,7 +247,11 @@
     "conecctions.e5": "Error al crear la conexión",
     "conecctions.e6": "Error al eliminar la conexión",
     "coneccticons.e7": "Conexión duplicada",
-    "conecctions.e8": "Error al duplicar la conexión"
+    "conecctions.e8": "Error al duplicar la conexión",
+
+    "script_enable": "Script activado",
+    "script_disable": "Script desactivado"
+
 
 
 }

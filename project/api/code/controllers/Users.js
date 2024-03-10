@@ -55,8 +55,9 @@ const bcrypt = require('bcrypt');
                       return res.status(500).json({ error: 'Error al comparar contraseñas' });
                   }
                   //console.log("Contraseña coincidente:", bcryptResult);
+                  const currentDate = new Date();
                   if (bcryptResult) {
-                      const token = jwt.sign({ email: user.email }, SECRET_KEY);
+                      const token = jwt.sign({ email: user.email, id: user.id, date: currentDate.toISOString()}, SECRET_KEY);
                       return res.status(200).json({
                           id: user.id,
                           email: user.email,
@@ -91,50 +92,92 @@ const bcrypt = require('bcrypt');
     });
   });
 
-  router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-  const { email, password, change_password, token } = req.body;
   
-  if (!email || !password) {
-    return res.status(400).json({ error: 'Email y password  son requeridas' });
-  }
-  //console.log("Lo que me llega:", password);
-  bcrypt.hash(password, 10, (err, hashedPassword) => {
-      if (err) {
-          return res.status(500).json({ error: 'Error al cifrar la contraseña' });
-      }
-      //console.log("Cifrada:", hashedPassword);
-      const query = "INSERT INTO users (email, password, change_password, token) VALUES (?, ?, ?, ?)";
-      con.query(query, [email, hashedPassword, change_password, token], (err, result) => {
-          if (err) {
-              return res.status(500).json({ error: 'Error en la base de datos' });
-          }
-          if (result.affectedRows === 1) {
-              const insertedId = result.insertId; // Obtiene el ID insertado
-              return res.status(201).json({ id: insertedId }); // Devuelve el ID
-          }
-          return res.status(500).json({ error: 'No se pudo insertar el registro' });
-      });
-  });
-});
-    
-  router.put("/email", verifyToken, (req, res) => {  // UPDATE EMAIL
-    const { id, email } = req.body;
-    if (!id || !email) {
-        return res.status(400).json({ error: 'Se requiere el ID del usuario y el nuevo correo electrónico para actualizar' });
+  router.put("/password", verifyToken, (req, res) => { // PUT PASSWORD //
+    const { newpassword, password } = req.body;
+    const tokenX = req.headers['authorization'];
+  
+    if (!newpassword || !password) {
+      return res.status(400).json({ error: 'Nuevo password y password actual son requeridos' });
     }
+  
+    jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
+      if (err) {
+        return res.status(401).json({ error: 'Token no válido' });
+      }
+  
+      const { id: userId, email: userEmail } = decodedToken;
+      // Verificar la contraseña actual
 
-    const query = "UPDATE users SET email = ? WHERE id = ?";
-    //console.log([email, id])
-    con.query(query, [email, id], (err, result) => {
+      const queryCheckPassword = "SELECT password FROM users WHERE id = ? AND email = ?";
+      con.query(queryCheckPassword, [userId, userEmail], (err, resultCheckPassword) => {
         if (err) {
-            return res.status(500).json({ error: 'Error en la base de datos' });
+          return res.status(500).json({ error: 'Error en la base de datos' });
         }
+  
+        if (resultCheckPassword.length === 1) {
+          const hashedCurrentPassword = resultCheckPassword[0].password;
+  
+          // Comparar la contraseña actual con la proporcionada
+          bcrypt.compare(password, hashedCurrentPassword, (err, passwordMatch) => {
+            if (err || !passwordMatch) {
+              return res.status(401).json({ error: 'La contraseña actual no es válida' });
+            }
+  
+            // La contraseña actual coincide, proceder con la actualización de la contraseña
+            bcrypt.hash(newpassword, 10, (err, hashedPassword) => {
+              if (err) {
+                return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
+              }
+  
+              const queryUpdatePassword = "UPDATE users SET password = ?, change_password = ? WHERE id = ? AND email = ?";
+              con.query(queryUpdatePassword, [hashedPassword, 1, userId, userEmail], (err, result) => {
+                if (err) {
+                  return res.status(500).json({ error: 'Error en la base de datos' });
+                }
+                if (result.affectedRows === 1) {
+                  return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+                }
+                return res.status(500).json({ error: 'No se pudo actualizar el registro' });
+              });
+            });
+          });
+        } 
+        else {
+          return res.status(401).json({ error: 'Usuario no encontrado' });
+        }
+      });
+    });
+  });
+  
+  
+    
+  router.put("/email", verifyToken, (req, res) => { // PUT EMAIL //
+    const { email: newEmail } = req.body;
+    const tokenX = req.headers['authorization'];
 
+    if (!newEmail) {
+      return res.status(400).json({ error: 'Se requiere el nuevo correo electrónico para actualizar' });
+    }
+  
+    jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
+      if (err) {
+        return res.status(401).json({ error: 'Token no válido' });
+      }
+  
+      const { id: userId, email: userEmail } = decodedToken;
+      const query = "UPDATE users SET email = ? WHERE id = ? AND email = ?";
+      con.query(query, [newEmail, userId, userEmail], (err, result) => {
+        if (err) {
+          return res.status(500).json({ error: 'Error en la base de datos' });
+        }
+  
         if (result.affectedRows > 0) {
-            return res.status(200).json({ email: email }); // Devolver el nuevo correo
+          return res.status(200).json({ email: newEmail }); // Devolver el nuevo correo
         }
-
+  
         return res.status(404).json({ error: 'Registro no encontrado' });
+      });
     });
   });
 
