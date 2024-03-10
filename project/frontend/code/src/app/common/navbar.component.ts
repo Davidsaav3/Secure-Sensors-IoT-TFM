@@ -225,10 +225,14 @@ export class NavbarComponent {
 
   logOut(){
     localStorage.removeItem("id");
+    this.deleteCookie('refresh_token');
     localStorage.removeItem("username");
     localStorage.removeItem("activeLang");
     localStorage.setItem('token', '');
     this.router.navigate(['/login']);
   }
 
+  deleteCookie(name: string): void {  // Eliminar cookie por nombre
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+  }
 }

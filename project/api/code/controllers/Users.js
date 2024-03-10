@@ -7,6 +7,7 @@ router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./token');
 const SECRET_KEY = process.env.TOKEN;
+const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const bcrypt = require('bcrypt');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
@@ -33,51 +34,61 @@ const bcrypt = require('bcrypt');
     });
   });
 
-  router.post("/login", (req, res) => { // LOGIN
-      const { email, password } = req.body;
-  
-      if (!email || !password) {
-          return res.status(400).json({ error: 'El email y la contraseña son requeridos' });
-      }
-  
-      const query = "SELECT * FROM users WHERE email = ?";
-      con.query(query, [email], (err, result) => {
-          if (err) {
-              return res.status(500).json({ error: 'Error en la base de datos' });
-          }
-          if (result.length === 1) {
-              const user = result[0];
-              //console.log("Contraseña cifrada dada:", password);
-              //console.log("Contraseña cifrada almacenada:", user.password);
-              bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
-                  if (bcryptErr) {
-                      console.error("Error al comparar contraseñas:", bcryptErr);
-                      return res.status(500).json({ error: 'Error al comparar contraseñas' });
-                  }
-                  //console.log("Contraseña coincidente:", bcryptResult);
-                  const currentDate = new Date();
-                  if (bcryptResult) {
-                      const token = jwt.sign({ email: user.email, id: user.id, date: currentDate.toISOString()}, SECRET_KEY);
-                      return res.status(200).json({
-                          id: user.id,
-                          email: user.email,
-                          token: token,
-                          change_password: user.change_password,
-                          message: 'Inicio de sesión exitoso'
-                      });
-                  } 
-                  else {
-                      console.warn("Credenciales incorrectas");
-                      return res.status(401).json({ error: 'Credenciales incorrectas' });
-                  }
-              });
-          } 
-          else {
-              console.warn("Usuario no encontrado");
-              return res.status(401).json({ error: 'Credenciales incorrectas' });
-          }
-      });
-  });
+
+  router.post("/login", (req, res) => { // LOGIN //
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'El email y la contraseña son requeridos' });
+    }
+
+    const query = "SELECT * FROM users WHERE email = ?";
+    con.query(query, [email], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error en la base de datos' });
+        }
+        if (result.length === 1) {
+            const user = result[0];
+            bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
+                if (bcryptErr) {
+                    console.error("Error al comparar contraseñas:", bcryptErr);
+                    return res.status(500).json({ error: 'Error al comparar contraseñas' });
+                }
+
+                const currentDate = new Date();
+                if (bcryptResult) {
+                    const accessToken = jwt.sign({ email: user.email, id: user.id, date: currentDate.toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+                    const refreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+
+                    // Almacenar el refreshToken en la base de datos
+                    const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
+                    con.query(updateQuery, [refreshToken, user.id], (updateErr, updateResult) => {
+                        if (updateErr) {
+                            console.error("Error al actualizar token en la base de datos:", updateErr);
+                            return res.status(500).json({ error: 'Error en la base de datos' });
+                        }
+
+                        return res.status(200).json({
+                            id: user.id,
+                            email: user.email,
+                            token: accessToken,
+                            refresh_token: refreshToken,
+                            change_password: user.change_password,
+                            message: 'Inicio de sesión exitoso'
+                        });
+                    });
+                } else {
+                    console.warn("Credenciales incorrectas");
+                    return res.status(401).json({ error: 'Credenciales incorrectas' });
+                }
+            });
+        } else {
+            console.warn("Usuario no encontrado");
+            return res.status(401).json({ error: 'Credenciales incorrectas' });
+        }
+    });
+});
+
   
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
@@ -299,5 +310,17 @@ router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     res.json({ message: 'Uusario eliminado con éxito' });
   });
 });
+
+router.post('/refresh', (req, res) => {
+  const { refreshToken, oldToken } = req.body;
+  jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
+      if (err) {
+          return res.status(401).json({ error: 'Refresh token inválido' });
+      }
+      const newAccessToken = jwt.sign({ email: decoded.email, id: decoded.id }, SECRET_KEY, { expiresIn: '15s' });
+      res.status(200).json({ token: newAccessToken });
+  });
+});
+
 
 module.exports = router;

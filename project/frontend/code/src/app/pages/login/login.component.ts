@@ -71,6 +71,7 @@ export class LoginComponent {
             this.id= data.id;
             this.saveStorage();
             localStorage.setItem('token', data.token);
+            this.setCookie('refresh_token', data.refresh_token);
             localStorage.setItem('change_password', data.change_password);
             this.router.navigate(['/devices']);
           },
@@ -116,4 +117,11 @@ export class LoginComponent {
     this.token = localStorage.getItem('token') ?? '';
   }
 
+  // Guardar cookie
+  setCookie(name: string, value: string, days: number = 1): void {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + days);
+    const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
+    document.cookie = cookieString;
+}
 }
