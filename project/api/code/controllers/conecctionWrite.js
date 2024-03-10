@@ -7,7 +7,7 @@ router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./token');
 const CryptoJS = require('crypto-js');
-const secretKey = process.env.TOKEN;
+const secretKey = process.env.PASSWORD_CIFRADO;
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -160,10 +160,12 @@ function encryptMessage(message, key) {
 
 // Function to decrypt a message
 function decryptMessage(encryptedMessage, key) {
+  console.log(encryptedMessage)
+  console.log(key)
+  
   const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, key);
   const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
   return decryptedMessage;
 }
-
 
 module.exports = router;
