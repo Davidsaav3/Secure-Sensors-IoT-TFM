@@ -1,5 +1,5 @@
 <div class="mb-0 d-flex">
-	<div class="col-lg-5 col-12 p-0">
+	<div class="col-12 col-md-5 p-0">
 		<div class="nav nav-tabs mb-0 p-0 me-0" *ngIf="token!='' && (this.ruteAux[1]=='devices' || this.ruteAux[1]=='sensors' || this.ruteAux[1]=='structure' || this.ruteAux[1]=='variable-structure') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
 			<li class="nav-item">
 				<a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
@@ -37,7 +37,7 @@
 			</li>
 		</div>
 	</div>
-	<div class="col-lg-7 col-12 p-0 pt-2">
+	<div class="col-12 col-md-7 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
 			<div *ngIf="token !== ''" class="pe-3" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
 				<span *ngIf="scriptEnable" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }}</span>
@@ -121,7 +121,7 @@
 						<div class="col-12 pt-2 form-group">
 							<label for="password">{{ 'login.pass' | translate }}</label>
 							<div class="input-group">
-								<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="{{ passwordFieldType }}" id="password" class="form-control" name="password" required>
+								<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="{{ passwordFieldType }}" id="password1" class="form-control" name="password" required autocomplete>
 								<span (click)="togglePasswordType()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">
 									<svg *ngIf="this.passwordFieldType=='password'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
 										<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
@@ -146,7 +146,7 @@
 						<div class="col-12 mt-4">
 							<label for="newpassword">{{ 'login.pass2' | translate }}</label>
 							<div class="input-group">
-								<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword }}" [(ngModel)]="formapassword['newpassword']" maxlength="45" minlength="8" type="{{ passwordFieldType1 }}" id="newpassword" class="form-control" name="newpassword" required>
+								<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword }}" [(ngModel)]="formapassword['newpassword']" maxlength="45" minlength="8" type="{{ passwordFieldType1 }}" id="newpassword" class="form-control" name="newpassword" required autocomplete>
 								<span (click)="togglePasswordType1()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">
 									<svg *ngIf="this.passwordFieldType1=='password'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
 										<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
@@ -201,11 +201,11 @@
 				<div class="col-12">
 					<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 		
-						<input (ngModelChange)="change1=true" value="{{ formuserdata.id }}" [(ngModel)]="formuserdata['id']" maxlength="45" type="text" id="type" class="form-control d-none" name="type">
+						<input (ngModelChange)="change1=true" value="{{ formuserdata.id }}" [(ngModel)]="formuserdata['id']" maxlength="45" type="text" id="id" class="form-control d-none" name="type">
 
 						<div class="col-12 pt-2 form-group">
 							<label for="type">{{ 'login.user' | translate }}</label>
-							<input (ngModelChange)="change2=true" value="{{ formuserdata.email }}" [(ngModel)]="formuserdata['email']" maxlength="45" type="email" id="type" class="form-control" name="type" required>
+							<input (ngModelChange)="change2=true" value="{{ formuserdata.email }}" [(ngModel)]="formuserdata['email']" maxlength="45" type="email" id="email1" class="form-control" name="type" required>
 							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
 								<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
 							</div>
@@ -285,7 +285,7 @@
 	<div class="toast-container position-static">
 		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 		  <div class="toast-header">
-			<img src="..." class="rounded me-2" alt="...">
+			<img class="rounded me-2" alt="...">
 			<strong class="me-auto">Bootstrap</strong>
 			<small class="text-body-secondary">just now</small>
 			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -297,7 +297,7 @@
 	  
 		<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 		  <div class="toast-header">
-			<img src="..." class="rounded me-2" alt="...">
+			<img class="rounded me-2" alt="...">
 			<strong class="me-auto">Bootstrap</strong>
 			<small class="text-body-secondary">2 seconds ago</small>
 			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>

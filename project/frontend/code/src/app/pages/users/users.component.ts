@@ -276,7 +276,6 @@ export class UsersComponent implements OnInit {
 
   editUser(form: any) { // Guardar datos del usuario editado
     let token = localStorage.getItem('token') ?? ''; 
-
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.put(this.postUser, JSON.stringify(this.users), httpOptions)

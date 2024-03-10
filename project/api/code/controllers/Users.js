@@ -35,48 +35,96 @@ const bcrypt = require('bcrypt');
   });
 
 
-  router.post("/login", (req, res) => { // LOGIN //
+  router.post("/login", (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
         return res.status(400).json({ error: 'El email y la contraseña son requeridos' });
     }
 
-    const query = "SELECT * FROM users WHERE email = ?";
-    con.query(query, [email], (err, result) => {
+    const selectQuery = "SELECT * FROM users WHERE email = ?";
+    con.query(selectQuery, [email], (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Error en la base de datos' });
         }
+
         if (result.length === 1) {
             const user = result[0];
+
             bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
                 if (bcryptErr) {
                     console.error("Error al comparar contraseñas:", bcryptErr);
                     return res.status(500).json({ error: 'Error al comparar contraseñas' });
                 }
 
-                const currentDate = new Date();
                 if (bcryptResult) {
-                    const accessToken = jwt.sign({ email: user.email, id: user.id, date: currentDate.toISOString() }, SECRET_KEY, { expiresIn: '15s' });
-                    const refreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+                    // Verificar si el token_refresh aún es válido
+                    if (user.token) {
+                        jwt.verify(user.token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
+                            if (verifyErr) {
+                                // El token ha caducado o es inválido, generar uno nuevo
+                                const newRefreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
 
-                    // Almacenar el refreshToken en la base de datos
-                    const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
-                    con.query(updateQuery, [refreshToken, user.id], (updateErr, updateResult) => {
-                        if (updateErr) {
-                            console.error("Error al actualizar token en la base de datos:", updateErr);
-                            return res.status(500).json({ error: 'Error en la base de datos' });
-                        }
+                                // Actualizar el nuevo token_refresh en la base de datos
+                                const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
+                                con.query(updateQuery, [newRefreshToken, user.id], (updateErr, updateResult) => {
+                                    if (updateErr) {
+                                        console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+                                        return res.status(500).json({ error: 'Error en la base de datos' });
+                                    }
 
-                        return res.status(200).json({
-                            id: user.id,
-                            email: user.email,
-                            token: accessToken,
-                            refresh_token: refreshToken,
-                            change_password: user.change_password,
-                            message: 'Inicio de sesión exitoso'
+                                    // Generar nuevo token de acceso
+                                    const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+
+                                    return res.status(200).json({
+                                        id: user.id,
+                                        email: user.email,
+                                        token: accessToken,
+                                        refresh_token: newRefreshToken,
+                                        change_password: user.change_password,
+                                        message: 'Inicio de sesión exitoso'
+                                    });
+                                });
+                            } 
+                            else {
+                                // El token_refresh aún es válido, usar el token actual
+                                const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+
+                                return res.status(200).json({
+                                    id: user.id,
+                                    email: user.email,
+                                    token: accessToken,
+                                    refresh_token: user.token,
+                                    change_password: user.change_password,
+                                    message: 'Inicio de sesión exitoso'
+                                });
+                            }
                         });
-                    });
+                    } else {
+                        // No hay token_refresh existente, generar uno nuevo
+                        const refreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+
+                        // Actualizar el nuevo token_refresh en la base de datos
+                        const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
+                        con.query(updateQuery, [refreshToken, user.id], (updateErr, updateResult) => {
+                            if (updateErr) {
+                                console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+                                return res.status(500).json({ error: 'Error en la base de datos' });
+                            }
+
+                            // Generar nuevo token de acceso
+                            const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+
+                            return res.status(200).json({
+                                id: user.id,
+                                email: user.email,
+                                token: accessToken,
+                                refresh_token: refreshToken,
+                                change_password: user.change_password,
+                                message: 'Inicio de sesión exitoso'
+                            });
+                        });
+                    }
                 } else {
                     console.warn("Credenciales incorrectas");
                     return res.status(401).json({ error: 'Credenciales incorrectas' });
@@ -88,8 +136,6 @@ const bcrypt = require('bcrypt');
         }
     });
 });
-
-  
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
@@ -203,10 +249,10 @@ const bcrypt = require('bcrypt');
           query += " email=?";
           values.push(email);
       }
-      if (token) {
-        query += " token=?";
-        values.push(token);
-    }
+      if (token && token==true) {
+        query += ", token=?";
+        values.push('');
+      }
       if (password) {
           // Cifrar la contraseña antes de almacenarla
           bcrypt.hash(password, 10, (err, hashedPassword) => {
@@ -230,7 +276,7 @@ const bcrypt = require('bcrypt');
           }
           query += " WHERE id=?";
           values.push(id);
-          
+
           con.query(query, values, (err, result) => {
               if (err) {
                   return res.status(500).json({ error: 'Error en la base de datos' });
