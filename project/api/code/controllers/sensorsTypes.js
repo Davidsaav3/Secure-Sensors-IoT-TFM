@@ -5,6 +5,7 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 const verifyToken = require('./token');
+const insertLog = require('./log');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -30,8 +31,10 @@ const verifyToken = require('./token');
     con.query(query, values, (err, result) => {
       if (err) {
         console.error("Error:", err);
+        //insertLog("0", "david", "ST-0", err, (err, insertedId) => { if (err) { return res.status(500).json({ error: err });} return res.status(201).json({ id: insertedId }); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
+      //insertLog("0", "david", "ST-1", result, (err, insertedId) => { if (err) { return res.status(500).json({ error: err });} return res.status(201).json({ id: insertedId }); });
       res.send(result);
     });
   });

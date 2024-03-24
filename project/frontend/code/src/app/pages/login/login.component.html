@@ -17,6 +17,7 @@
 							</div>
 						</div>
 						<div class="col-12 pt-2 form-group">
+							<label for="password">{{ 'login.pass' | translate }}</label>
 							<div class="input-group">
 								<input [(ngModel)]="formlogin.password" (ngModelChange)="change1=true" maxlength="45" minlength="8" type="{{ passwordFieldType }}" id="password" class="form-control" name="password" autocomplete>
 								<span (click)="togglePasswordType()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">

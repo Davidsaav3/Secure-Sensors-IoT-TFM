@@ -248,5 +248,14 @@
     "conecctions.e8" : "Error duplicating conecction",
 
     "script_enable": "Script enabled",
-    "script_disable": "Script disabled"
+    "script_disable": "Script disabled",
+
+    "monitoreo.id": "Identification",
+    "monitoring.user_id": "User ID",
+    "monitoring.username": "User",
+    "monitoring.log_date": "Date",
+    "monitoring.log_code": "Code",
+    "monitoring.log_message": "Message",
+    "monitoring.find": "Search registers..."
+
 }

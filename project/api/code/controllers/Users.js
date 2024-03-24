@@ -35,7 +35,7 @@ const bcrypt = require('bcrypt');
   });
 
 
-  router.post("/login", (req, res) => {
+  router.post("/login", (req, res) => { // LOGIN //
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -51,6 +51,7 @@ const bcrypt = require('bcrypt');
         if (result.length === 1) {
             const user = result[0];
 
+            // comp contraseñas
             bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
                 if (bcryptErr) {
                     console.error("Error al comparar contraseñas:", bcryptErr);
@@ -63,7 +64,7 @@ const bcrypt = require('bcrypt');
                         jwt.verify(user.token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
                             if (verifyErr) {
                                 // El token ha caducado o es inválido, generar uno nuevo
-                                const newRefreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+                                const newRefreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
 
                                 // Actualizar el nuevo token_refresh en la base de datos
                                 const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
@@ -74,7 +75,7 @@ const bcrypt = require('bcrypt');
                                     }
 
                                     // Generar nuevo token de acceso
-                                    const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+                                    const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
 
                                     return res.status(200).json({
                                         id: user.id,
@@ -88,7 +89,7 @@ const bcrypt = require('bcrypt');
                             } 
                             else {
                                 // El token_refresh aún es válido, usar el token actual
-                                const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+                                const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
 
                                 return res.status(200).json({
                                     id: user.id,
@@ -100,9 +101,10 @@ const bcrypt = require('bcrypt');
                                 });
                             }
                         });
-                    } else {
+                    } 
+                    else {
                         // No hay token_refresh existente, generar uno nuevo
-                        const refreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+                        const refreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
 
                         // Actualizar el nuevo token_refresh en la base de datos
                         const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
@@ -113,7 +115,7 @@ const bcrypt = require('bcrypt');
                             }
 
                             // Generar nuevo token de acceso
-                            const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: '15s' });
+                            const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
 
                             return res.status(200).json({
                                 id: user.id,
@@ -363,7 +365,7 @@ router.post('/refresh', (req, res) => {
       if (err) {
           return res.status(401).json({ error: 'Refresh token inválido' });
       }
-      const newAccessToken = jwt.sign({ email: decoded.email, id: decoded.id }, SECRET_KEY, { expiresIn: '15s' });
+      const newAccessToken = jwt.sign({ email: decoded.email, id: decoded.id }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
       res.status(200).json({ token: newAccessToken });
   });
 });

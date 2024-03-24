@@ -4,12 +4,13 @@ export const environment = {
     resultsPerPag: [10, 15, 50, 100],
     accessTokenMap: 'pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ',
     defaultMapsStyle: 'streets-v12',
-    AppVersion: '2.1.0',   
+    AppVersion: '2.3.0',   
 
     deviceConfigurations: '/device_configurations',
     sensorsTypes: '/sensors_types',
     dataStructure: '/data_structure',
     variableDataStructure: '/variable_data_structure',
+    log: '/log',
 
     users: '/users',
     conecctionRead: '/conecction_read',

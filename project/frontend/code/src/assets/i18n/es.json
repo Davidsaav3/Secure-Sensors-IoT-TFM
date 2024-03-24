@@ -250,7 +250,15 @@
     "conecctions.e8": "Error al duplicar la conexión",
 
     "script_enable": "Script activado",
-    "script_disable": "Script desactivado"
+    "script_disable": "Script desactivado",
+
+    "monitoring.id": "Id",	 
+    "monitoring.user_id": "Id de usuario",	 
+    "monitoring.username": "Usuario",	 
+    "monitoring.log_date": "Fecha",	 
+    "monitoring.log_code": "Código",	 
+    "monitoring.log_message": "Mensaje",
+    "monitoring.find": "Buscar registros..."
 
 
 
