@@ -21,9 +21,10 @@ router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res)
   } 
   else {
     query += `SELECT *, (SELECT COUNT(*) AS total FROM log) as total FROM log`;
-    query += ` WHERE log_message LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+    query += ` WHERE id LIKE '%${type0}%' OR user_id LIKE '%${type0}%' OR username LIKE '%${type0}%' OR log_date LIKE '%${type0}%' OR log_code LIKE '%${type0}%' OR log_message LIKE '%${type0}%' OR log_trace LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
   }
   query += ` LIMIT ? OFFSET ?`;
+
   con.query(query, [tam, act], (err, result) => {
     if (err) {
       console.error(err);
@@ -33,19 +34,4 @@ router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res)
   });
 });
 
-function insertLog(user_id, username, log_code, log_message, callback) {
-  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_message) VALUES (?, ?, ?, ?, ?)";
-  con.query(query, [user_id, username, log_date, log_code, log_message], (err, result) => {
-    if (err) {
-      return callback(err, null);
-    }
-    if (result.affectedRows === 1) {
-      const insertedId = result.insertId;
-      return callback(null, insertedId);
-    }
-    return callback('No se pudo insertar el registro', null);
-  });
-}
-
-module.exports = insertLog;
+module.exports = router;

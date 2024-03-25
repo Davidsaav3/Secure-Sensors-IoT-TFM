@@ -257,9 +257,11 @@
     "monitoring.username": "Usuario",	 
     "monitoring.log_date": "Fecha",	 
     "monitoring.log_code": "Código",	 
+    "monitoring.log_status": "Estado",
+    "monitoring.log_name": "Nombre",
+    "monitoring.log_parameters": "Parámetros",
     "monitoring.log_message": "Mensaje",
+    "monitoring.log_trace": "Traza",
     "monitoring.find": "Buscar registros..."
-
-
 
 }

@@ -6,6 +6,21 @@ router.use(cors());
 router.use(express.json())
 const verifyToken = require('./token');
 
+function insertLog(user_id, username, log_code, log_status, log_name, log_parameters, log_message, log_trace, callback) {
+  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  con.query(query, [user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace], (err, result) => {
+    if (err) {
+      return callback(err, null);
+    }
+    if (result.affectedRows === 1) {
+      const insertedId = result.insertId;
+      return callback(null, insertedId);
+    }
+    return callback('No se pudo insertar el registro', null);
+  });
+}
+
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
     let search_text= req.params.search_text;
@@ -343,6 +358,8 @@ const verifyToken = require('./token');
     con.query(query1, [id], (err, result) => {
       if (err) {
         console.error("Error:", err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       var query = `SELECT dc.*, de.description AS structure_name,
@@ -385,11 +402,13 @@ const verifyToken = require('./token');
         }
 
        con.query(query, [id], (err, result) => {
-         if (err) {
-           console.error("Error:", err);
-           return res.status(500).json({ error: 'Error en la base de datos' });
-         }
-         if (result.length === 0) {
+        if (err) {
+          console.error("Error:", err);
+          // LOG - 500 //
+          insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          return res.status(500).json({ error: 'Error en la base de datos' });
+        }
+        if (result.length === 0) {
             // Ninguna de las consultas anteriores devolvió filas, ejecuta ambas sin el LEFT JOIN
             query = `SELECT dc.*,
             s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
@@ -404,6 +423,8 @@ const verifyToken = require('./token');
             con.query(query, [id], (err, result) => {
               if (err) {
                 console.error("Error:", err);
+                // LOG - 500 //
+                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
                 return res.status(500).json({ error: 'Error en la base de datos' });
               }
               const devicesWithSensors = {};
@@ -501,6 +522,9 @@ const verifyToken = require('./token');
               }
             });
             const responseArray = Object.values(devicesWithSensors);
+
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
             res.json(responseArray);
           }
        });
@@ -516,6 +540,8 @@ const verifyToken = require('./token');
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -531,6 +557,8 @@ const verifyToken = require('./token');
         contador++;
       }
 
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.send(uid_2);
     });
   });
@@ -541,10 +569,14 @@ const verifyToken = require('./token');
     } = req.body;
   
     if (!uid) {
-      return res.status(400).json({ error: 'El campo uid es requerido.' });
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "El campo uid es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      return res.status(400).json({ error: 'El campo uid es requerido' });
     }
     if (!topic_name) {
-      return res.status(400).json({ error: 'El campo topic_name es requerido.' });
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "El campo topic_name es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      return res.status(400).json({ error: 'El campo topic_name es requerido' });
     }
   
     // Consulta para verificar si el uid ya existe
@@ -552,10 +584,14 @@ const verifyToken = require('./token');
     con.query(queryCheckUid, [uid], (err, result) => {
       if (err) {
         console.error('Error:', err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la consulta SQL", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la consulta SQL' });
       }
   
       if (result.length > 0) {
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Uid duplicado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -571,12 +607,15 @@ const verifyToken = require('./token');
           (err, result) => {
             if (err) {
               console.error("Error:", err);
+              // LOG - 500 //
+              insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
             
             auxPost(req.body.sensors, result.insertId);
             
-            // Envía la respuesta de la inserción exitosa
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
             res.send(result);
           }
         );
@@ -591,6 +630,8 @@ const verifyToken = require('./token');
     con.beginTransaction((err) => {
       if (err) {
         console.error("Error al iniciar la transacción:", err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
   
@@ -609,6 +650,9 @@ const verifyToken = require('./token');
                 const correction_specificValue = record.correction_specific === "" ? null : record.correction_specific;
                 const correction_time_specificValue = record.correction_time_specific === "" ? null : record.correction_time_specific;
                 const topic_specificValue = record.topic_specific === "" ? null : record.topic_specific;
+                
+                // LOG - 500 //
+                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
                 return [
                   record.orden, record.enable, id_exp,
                   record.id_type_sensor, record.datafield, nodataValue,
@@ -648,11 +692,16 @@ const verifyToken = require('./token');
             if (err) {
               console.error("Error al confirmar la transacción:", err);
               con.rollback(() => {
+
+                // LOG - 500 //
+                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
                 res.status(500).json({ error: 'Error en la base de datos' });
               });
             } 
             else {
-              //res.send({ message: 'No se insertaron nuevos registros.' });
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "No se insertaron nuevos registros", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              res.send({ message: 'No se insertaron nuevos registros' });
             }
           });
         }
@@ -666,34 +715,41 @@ const verifyToken = require('./token');
     } = req.body;
   
     if (!uid || !topic_name) {
-      return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos.' });
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "Los campos uid y topic_name son requeridos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos' });
     }
   
     const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
     con.query(queryCheckUid, [uid, id7], (err, result) => {
       if (err) {
         console.error('Error:', err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la consulta SQL", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la consulta SQL' });
       }
   
       if (result.length > 0) {
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Uid duplicado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
-        const queryUpdate = `
-          UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
-  
+        const queryUpdate = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
         con.query(queryUpdate,
-          [
-            uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7
-          ],
+          [uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7],
           (err, result) => {
             if (err) {
               console.error("Error:", err);
+              // LOG - 500 //
+              insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
             
             auxPost(req.body.sensors, id7);
+
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Elemento eliminado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
             res.send(result);
           }
         );
@@ -704,21 +760,29 @@ const verifyToken = require('./token');
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = req.body.id;
     if (isNaN(id)) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "ID no válido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(400).json({ error: 'ID no válido' });
     }
 
     con.beginTransaction(function (err) {
       if (err) {
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
         if (err) {
           con.rollback(function () {
+            // LOG - 500 //
+            insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
             return res.status(500).json({ error: 'Error en la base de datos' });
           });
         }
         if (result.affectedRows === 0) {
           con.rollback(function () {
+            // LOG - 404 //
+            insertLog(req.user.id, req.user.username, '001-006-404-001', "404", "Configuración de dispositivo no encontrada", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
             return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
           });
         }
@@ -726,15 +790,22 @@ const verifyToken = require('./token');
         con.query("DELETE FROM sensors_devices WHERE id_device = ?", id, function (err, result) {
           if (err) {
             con.rollback(function () {
+              // LOG - 500 //
+              insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
               return res.status(500).json({ error: 'Error en la base de datos' });
             });
           }
           con.commit(function (err) {
             if (err) {
               con.rollback(function () {
+                // LOG - 500 //
+                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
                 return res.status(500).json({ error: 'Error en la base de datos' });
               });
             }
+
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Configuración de dispositivo eliminada con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
             res.json({ message: 'Configuración de dispositivo eliminada con éxito' });
           });
         });

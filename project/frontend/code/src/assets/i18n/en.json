@@ -255,7 +255,11 @@
     "monitoring.username": "User",
     "monitoring.log_date": "Date",
     "monitoring.log_code": "Code",
+    "monitoring.log_status": "Status",
+    "monitoring.log_name": "Name",
+    "monitoring.log_parameters": "Parameters",
     "monitoring.log_message": "Message",
+    "monitoring.log_trace": "Trace",
     "monitoring.find": "Search registers..."
 
 }

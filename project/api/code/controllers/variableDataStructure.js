@@ -6,6 +6,27 @@ router.use(cors());
 router.use(express.json())
 const verifyToken = require('./token');
 
+function insertLog(user_id, username, log_code, log_status, log_name, log_parameters, log_message, log_trace, callback) {
+  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  con.query(query, [user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace], (err, result) => {
+    if (err) {
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.username, '004-001-500-001', "500", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      return callback(err, null);
+    }
+    if (result.affectedRows === 1) {
+      const insertedId = result.insertId;
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.username, '004-001-500-002', "500", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      return callback(null, insertedId);
+    }
+    // LOG - 200 //
+    insertLog(req.user.id, req.user.username, '004-001-200-001', "200", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+    return callback('No se pudo insertar el registro', null);
+  });
+}
+
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
@@ -25,7 +46,12 @@ const verifyToken = require('./token');
     con.query(query, [ tam, act], (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '004-002-500-001', "500", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       }
+
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '004-002-200-001', "200", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.send(result);
     });
   });
@@ -35,7 +61,12 @@ const verifyToken = require('./token');
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '004-003-500-001', "500", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       }
+
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '004-003-200-001', "200", "variableDataStructure-get_list", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.send(result);
     });
   });
@@ -46,6 +77,8 @@ const verifyToken = require('./token');
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '004-004-500-001', "401", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -60,6 +93,9 @@ const verifyToken = require('./token');
         description_2 = `${description}_${contador}`;
         contador++;
       }
+
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '004-004-200-001', "401", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.json({ duplicatedDescription: description_2 });
     });
   });
@@ -69,18 +105,26 @@ const verifyToken = require('./token');
     const initial_byte = parseInt(req.body.initial_byte);
     
     if (!description || !structure) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '004-005-400-001', "401", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(400).json({ error: 'Descripción, structure y initial byte son requeridas' });
     }
 
     const query = "INSERT INTO variable_data_structure (description, structure, initial_byte) VALUES (?, ?, ?)";
     con.query(query, [description, structure, initial_byte], (err, result) => {
       if (err) {
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '004-005-500-001', "500", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
+        // LOG - 201 //
+        insertLog(req.user.id, req.user.username, '004-005-201-001', "201", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.username, '004-005-500-001', "500", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
@@ -88,6 +132,8 @@ const verifyToken = require('./token');
   router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
     const { id, description, structure, initial_byte } = req.body;
     if (!id || (!description && !structure && !initial_byte)) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '004-006-400-001', "400", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
     let query = "UPDATE variable_data_structure SET";
@@ -114,27 +160,42 @@ const verifyToken = require('./token');
     values.push(id);
     con.query(query, values, (err, result) => {
       if (err) {
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '004-006-500-001', "500", "variableDataStructurevariableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows > 0) {
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.username, '004-006-200-001', "200", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(200).json({ message: 'Registro actualizado con éxito' });
       }
-        return res.status(404).json({ error: 'Registro no encontrado' });
+
+      // LOG - 404 //
+      insertLog(req.user.id, req.user.username, '004-006-404-001', "404", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      return res.status(404).json({ error: 'Registro no encontrado' });
     });
   });
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = parseInt(req.body.id);
-      if (isNaN(id)) {
+    if (isNaN(id)) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '004-007-400-001', "400", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM variable_data_structure WHERE id = ?", id, function (err, result) {
       if (err) {
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '004-007-500-001', "500", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 0) {
+        // LOG - 404 //
+        insertLog(req.user.id, req.user.username, '004-007-404-001', "404", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(404).json({ error: 'Estructura de datos no encontrada' });
       }
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '004-007-200-001', "200", "variableDataStructure-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.json({ message: 'Estructura de datos eliminada con éxito' });
     });
   });

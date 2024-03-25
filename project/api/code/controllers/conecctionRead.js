@@ -9,6 +9,21 @@ const verifyToken = require('./token');
 const CryptoJS = require('crypto-js');
 const secretKey = process.env.PASSWORD_CIFRADO;
 
+function insertLog(user_id, username, log_code, log_status, log_name, log_parameters, log_message, log_trace, callback) {
+  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  con.query(query, [user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace], (err, result) => {
+    if (err) {
+      return callback(err, null);
+    }
+    if (result.affectedRows === 1) {
+      const insertedId = result.insertId;
+      return callback(null, insertedId);
+    }
+    return callback('No se pudo insertar el registro', null);
+  });
+}
+
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
@@ -28,6 +43,8 @@ const secretKey = process.env.PASSWORD_CIFRADO;
     con.query(query, [tam, act], (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '006-001-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // Descifrar el accessKey antes de enviarlo en la respuesta
@@ -35,6 +52,9 @@ const secretKey = process.env.PASSWORD_CIFRADO;
         ...row,
         accessKey: decryptMessage(row.accessKey, secretKey)
       }));
+
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '006-001-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.send(decryptedResult);
     });
   });
@@ -45,6 +65,8 @@ const secretKey = process.env.PASSWORD_CIFRADO;
     con.query(query, [id, id], (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '006-002-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // Descifrar el accessKey antes de enviarlo en la respuesta
@@ -52,6 +74,8 @@ const secretKey = process.env.PASSWORD_CIFRADO;
         ...row,
         accessKey: decryptMessage(row.accessKey, secretKey)
       }));
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '006-002-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.send(decryptedResult);
     });
   });
@@ -62,6 +86,8 @@ const secretKey = process.env.PASSWORD_CIFRADO;
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '006-003-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -76,6 +102,9 @@ const secretKey = process.env.PASSWORD_CIFRADO;
         description_2 = `${description}_${contador}`;
         contador++;
       }
+
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '006-003-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       res.json({ duplicatedescription: description_2 });
     });
   });
@@ -84,6 +113,8 @@ const secretKey = process.env.PASSWORD_CIFRADO;
     const { description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
     
     if (!description || !mqttQeue) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.username, '006-004-400-001', "400", "Description es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
@@ -91,12 +122,18 @@ const secretKey = process.env.PASSWORD_CIFRADO;
     const query = "INSERT INTO conecction_read (description, mqttQeue, appID, accessKey, subscribe, enabled) VALUES (?, ?, ?, ?, ?, ?)";
     con.query(query, [description, mqttQeue, appID, encryptedMessage, subscribe, enabled], (err, result) => {
       if (err) {
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.username, '006-004-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
+        // LOG - 201 //
+        insertLog(req.user.id, req.user.username, '006-004-201-001', "201", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
         return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.username, '006-004-500-001', "500", "No se pudo insertar el registro", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
@@ -104,6 +141,8 @@ const secretKey = process.env.PASSWORD_CIFRADO;
   router.put("", (req, res) => {  /*/ UPDATE  /*/
   const { id, description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
   if (!id || (!description && !mqttQeue)) {
+    // LOG - 400 //
+    insertLog(req.user.id, req.user.username, '006-005-400-001', "400", "Se requiere el ID del usuario y al menos un campo para actualizar", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
   }
   let query = "UPDATE conecction_read SET";
@@ -141,11 +180,17 @@ const secretKey = process.env.PASSWORD_CIFRADO;
   values.push(id);
   con.query(query, values, (err, result) => {
     if (err) {
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.username, '006-005-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(500).json({ error: 'Error en la base de datos' });
     }
     if (result.affectedRows > 0) {
+      // LOG - 200 //
+      insertLog(req.user.id, req.user.username, '002-005-200-001', "200", "Registro actualizado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(200).json({ message: 'Registro actualizado con éxito' });
     }
+      // LOG - 404 //
+      insertLog(req.user.id, req.user.username, '006-005-404-001', "404", "Registro no encontrado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(404).json({ error: 'Registro no encontrado' });
   });
 });
@@ -153,15 +198,24 @@ const secretKey = process.env.PASSWORD_CIFRADO;
 router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
   const id = parseInt(req.body.id);
     if (isNaN(id)) {
+    // LOG - 400 //
+    insertLog(req.user.id, req.user.username, '006-006-400-001', "400", "ID no válido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
     return res.status(400).json({ error: 'ID no válido' });
   }
   con.query("DELETE FROM conecction_read WHERE id = ?", id, function (err, result) {
     if (err) {
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.username, '006-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(500).json({ error: 'Error en la base de datos' });
     }
     if (result.affectedRows === 0) {
+      // LOG - 404 //
+      insertLog(req.user.id, req.user.username, '006-006-404-001', "404", "Conexion no encontrada", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
       return res.status(404).json({ error: 'Conexion no encontrada' });
     }
+
+    // LOG - 200 //
+    insertLog(req.user.id, req.user.username, '006-006-200-001', "200", "Conexion eliminada con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
     res.json({ message: 'Conexion eliminada con éxito' });
   });
 });

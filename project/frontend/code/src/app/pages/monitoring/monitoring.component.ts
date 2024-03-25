@@ -77,7 +77,8 @@ export class MonitoringComponent implements OnInit {
     username: "",
     log_date: "",
     log_code: "",
-    log_message : ""
+    log_message: "",
+    log_trace: "",
   };
 
   conecctionsCopy = {
@@ -86,7 +87,9 @@ export class MonitoringComponent implements OnInit {
     username: "",
     log_date: "",
     log_code: "",
-    log_message : ""
+    log_message : "",
+    log_trace: "",
+
   };
 
   searchAuxArray = {
@@ -239,6 +242,8 @@ export class MonitoringComponent implements OnInit {
             log_date: conecctions.log_date, 
             log_code: conecctions.log_code, 
             log_message: conecctions.log_message, 
+            log_trace: conecctions.log_trace
+
           };
           this.openClouse();
         },
@@ -291,7 +296,7 @@ export class MonitoringComponent implements OnInit {
     }
   }
 
-  openNew(id:any,user_id:any,username:any,log_date:any,log_code:any,log_message:any) { // Abre Nueva conexion
+  openNew(id:any,user_id:any,username:any,log_date:any,log_code:any,log_message:any, log_trace:any) { // Abre Nueva conexion
 
     this.conecctions = {
       id: id,
@@ -299,7 +304,8 @@ export class MonitoringComponent implements OnInit {
       username: username, 
       log_date: log_date, 
       log_code: log_code, 
-      log_message: log_message, 
+      log_message: log_message,
+      log_trace: log_trace, 
     };
 
     this.show = true;
@@ -374,6 +380,7 @@ export class MonitoringComponent implements OnInit {
                   log_date: conecctions.log_date, 
                   log_code: conecctions.log_code, 
                   log_message: conecctions.log_message, 
+                  log_trace: conecctions.log_trace
                 };
                 this.openNew(
                   '',
@@ -381,7 +388,8 @@ export class MonitoringComponent implements OnInit {
                   this.conecctions.username, 
                   this.conecctions.log_date, 
                   this.conecctions.log_code, 
-                  this.conecctions.log_message,               
+                  this.conecctions.log_message,    
+                  this.conecctions.log_trace
                 );
               },
               (error) => {
@@ -455,6 +463,7 @@ export class MonitoringComponent implements OnInit {
       log_date: this.conecctionsCopy.log_date, 
       log_code: this.conecctionsCopy.log_code, 
       log_message: this.conecctionsCopy.log_message, 
+      log_trace: this.conecctionsCopy.log_trace
     };
     this.change = false;
   }
