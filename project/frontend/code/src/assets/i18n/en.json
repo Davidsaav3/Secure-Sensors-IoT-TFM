@@ -259,7 +259,7 @@
     "monitoring.log_name": "Name",
     "monitoring.log_parameters": "Parameters",
     "monitoring.log_message": "Message",
-    "monitoring.log_trace": "Trace",
+    "monitoring.log_trace": "Error",
     "monitoring.find": "Search registers...",
     "revoke": "Revoke Token"
 

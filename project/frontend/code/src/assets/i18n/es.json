@@ -261,7 +261,7 @@
     "monitoring.log_name": "Nombre",
     "monitoring.log_parameters": "Parámetros",
     "monitoring.log_message": "Mensaje",
-    "monitoring.log_trace": "Traza",
+    "monitoring.log_trace": "Error",
     "monitoring.find": "Buscar registros...",
     "revoke": "Revocar Token"
 
