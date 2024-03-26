@@ -450,9 +450,6 @@ export class ConecctionReadComponent implements OnInit {
   }
 
   rechargeForm() { // recarga conexión a su valor anterior
-    console.log(this.conecctions)
-    console.log(this.conecctionsCopy)
-
     this.conecctions = {
       id: this.conecctionsCopy.id,
       description: this.conecctionsCopy.description,

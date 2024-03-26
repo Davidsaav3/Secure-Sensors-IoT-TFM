@@ -5,21 +5,7 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 const verifyToken = require('./token');
-
-function insertLog(user_id, username, log_code, log_status, log_name, log_parameters, log_message, log_trace, callback) {
-  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  con.query(query, [user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace], (err, result) => {
-    if (err) {
-      return callback(err, null);
-    }
-    if (result.affectedRows === 1) {
-      const insertedId = result.insertId;
-      return callback(null, insertedId);
-    }
-    return callback('No se pudo insertar el registro', null);
-  });
-}
+const insertLog = require('./log');
 
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
@@ -359,7 +345,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error("Error:", err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       var query = `SELECT dc.*, de.description AS structure_name,
@@ -405,7 +391,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
         if (err) {
           console.error("Error:", err);
           // LOG - 500 //
-          insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
         if (result.length === 0) {
@@ -424,7 +410,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
               if (err) {
                 console.error("Error:", err);
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error en la base de datos' });
               }
               const devicesWithSensors = {};
@@ -524,7 +510,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
             const responseArray = Object.values(devicesWithSensors);
 
             // LOG - 200 //
-            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
             res.json(responseArray);
           }
        });
@@ -541,7 +527,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -558,7 +544,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       res.send(uid_2);
     });
   });
@@ -570,12 +556,12 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
   
     if (!uid) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "El campo uid es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '001-006-400-001', "400", "El campo uid es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       return res.status(400).json({ error: 'El campo uid es requerido' });
     }
     if (!topic_name) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "El campo topic_name es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '001-006-400-001', "400", "El campo topic_name es requerido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       return res.status(400).json({ error: 'El campo topic_name es requerido' });
     }
   
@@ -585,13 +571,13 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error('Error:', err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la consulta SQL", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la consulta SQL", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la consulta SQL' });
       }
   
       if (result.length > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Uid duplicado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "Uid duplicado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -608,14 +594,14 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
             if (err) {
               console.error("Error:", err);
               // LOG - 500 //
-              insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
             
             auxPost(req.body.sensors, result.insertId);
             
             // LOG - 200 //
-            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
             res.send(result);
           }
         );
@@ -631,7 +617,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error("Error al iniciar la transacción:", err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
   
@@ -652,7 +638,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                 const topic_specificValue = record.topic_specific === "" ? null : record.topic_specific;
                 
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
                 return [
                   record.orden, record.enable, id_exp,
                   record.id_type_sensor, record.datafield, nodataValue,
@@ -694,13 +680,13 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
               con.rollback(() => {
 
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
                 res.status(500).json({ error: 'Error en la base de datos' });
               });
             } 
             else {
               // LOG - 200 //
-              insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "No se insertaron nuevos registros", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "No se insertaron nuevos registros", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
               res.send({ message: 'No se insertaron nuevos registros' });
             }
           });
@@ -716,7 +702,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
   
     if (!uid || !topic_name) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "Los campos uid y topic_name son requeridos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '001-006-400-001', "400", "Los campos uid y topic_name son requeridos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos' });
     }
   
@@ -725,13 +711,13 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error('Error:', err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la consulta SQL", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la consulta SQL", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la consulta SQL' });
       }
   
       if (result.length > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Uid duplicado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "Uid duplicado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -742,14 +728,14 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
             if (err) {
               console.error("Error:", err);
               // LOG - 500 //
-              insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
             
             auxPost(req.body.sensors, id7);
 
             // LOG - 200 //
-            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Elemento eliminado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "Elemento eliminado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
             res.send(result);
           }
         );
@@ -761,28 +747,28 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     const id = req.body.id;
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '001-006-400-001', "400", "ID no válido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '001-006-400-001', "400", "ID no válido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       return res.status(400).json({ error: 'ID no válido' });
     }
 
     con.beginTransaction(function (err) {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
         if (err) {
           con.rollback(function () {
             // LOG - 500 //
-            insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
             return res.status(500).json({ error: 'Error en la base de datos' });
           });
         }
         if (result.affectedRows === 0) {
           con.rollback(function () {
             // LOG - 404 //
-            insertLog(req.user.id, req.user.username, '001-006-404-001', "404", "Configuración de dispositivo no encontrada", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog(req.user.id, req.user.email, '001-006-404-001', "404", "Configuración de dispositivo no encontrada", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
             return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
           });
         }
@@ -791,7 +777,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
           if (err) {
             con.rollback(function () {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
             });
           }
@@ -799,13 +785,13 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
             if (err) {
               con.rollback(function () {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.username, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '001-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error en la base de datos' });
               });
             }
 
             // LOG - 200 //
-            insertLog(req.user.id, req.user.username, '001-006-200-001', "200", "Configuración de dispositivo eliminada con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "Configuración de dispositivo eliminada con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
             res.json({ message: 'Configuración de dispositivo eliminada con éxito' });
           });
         });

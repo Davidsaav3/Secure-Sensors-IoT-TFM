@@ -9,21 +9,7 @@ const verifyToken = require('./token');
 const SECRET_KEY = process.env.TOKEN;
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const bcrypt = require('bcrypt');
-
-function insertLog(user_id, username, log_code, log_status, log_name, log_parameters, log_message, log_trace, callback) {
-  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  con.query(query, [user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace], (err, result) => {
-    if (err) {
-      return callback(err, null);
-    }
-    if (result.affectedRows === 1) {
-      const insertedId = result.insertId;
-      return callback(null, insertedId);
-    }
-    return callback('No se pudo insertar el registro', null);
-  });
-}
+const insertLog = require('./log');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -44,11 +30,11 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     con.query(query, [ tam, act], (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '005-001-500-001', "500", "users-get", JSON.stringify(req.params),'user', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '005-001-500-001', "500", "users-get", JSON.stringify(req.params),'user', JSON.stringify(err));
         console.error(err);
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.username, '005-001-200-001', "200", "users-get", JSON.stringify(req.params),'user', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-001-200-001', "200", "users-get", JSON.stringify(req.params),'user', JSON.stringify(err));
       res.send(result);
     });
   });
@@ -59,7 +45,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
 
     if (!email || !password) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '005-002-400-001', "400", "users-login", JSON.stringify(req.params),'El email y la contraseña son requeridos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog("0", "0", '005-002-400-001', "400", "users-login", JSON.stringify(req.params),'El email y la contraseña son requeridos', "0");
       return res.status(400).json({ error: 'El email y la contraseña son requeridos' });
     }
 
@@ -67,7 +53,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     con.query(selectQuery, [email], (err, result) => {
         if (err) {
           // LOG - 500 //
-          insertLog(req.user.id, req.user.username, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog("0", "0", '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
 
@@ -79,7 +65,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                 if (bcryptErr) {
                     console.error("Error al comparar contraseñas:", bcryptErr);
                     // LOG - 500 //
-                    insertLog(req.user.id, req.user.username, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                    insertLog(req.user.id, req.user.email, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(bcryptErr));
                     return res.status(500).json({ error: 'Error al comparar contraseñas' });
                 }
 
@@ -97,14 +83,14 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                                     if (updateErr) {
                                       console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                                       // LOG - 500 //
-                                      insertLog(req.user.id, req.user.username, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                                      insertLog(user.id, user.email, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(updateErr));
                                       return res.status(500).json({ error: 'Error en la base de datos' });
                                     }
 
                                     // Generar nuevo token de acceso
                                     const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
                                     // LOG - 200 //
-                                    insertLog(req.user.id, req.user.username, '005-002-200-001', "200", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                                    insertLog(user.id, user.email, '005-002-200-001', "200", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', "0");
                                     return res.status(200).json({
                                         id: user.id,
                                         email: user.email,
@@ -119,7 +105,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                                 // El token_refresh aún es válido, usar el token actual
                                 const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
                                 // LOG - 200 //
-                                insertLog(req.user.id, req.user.username, '005-002-200-002', "200", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                                insertLog(user.id, user.email, '005-002-200-002', "200", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', "0");
                                 return res.status(200).json({
                                     id: user.id,
                                     email: user.email,
@@ -141,7 +127,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                             if (updateErr) {
                               console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                               // LOG - 500 //
-                              insertLog(req.user.id, req.user.username, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });                                
+                              insertLog(user.id, user.email, '005-002-500-001', "500", "users-login", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(updateErr));                                
                               return res.status(500).json({ error: 'Error en la base de datos' });
                             }
 
@@ -149,7 +135,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                             const accessToken = jwt.sign({ email: user.email, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
                             
                             // LOG - 200 //
-                            insertLog(req.user.id, req.user.username, '005-002-200-003', "200", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                            insertLog(user.id, user.email, '005-002-200-003', "200", "users-login", JSON.stringify(req.params),'Inicio de sesión exitoso', "0");
                             return res.status(200).json({
                                 id: user.id,
                                 email: user.email,
@@ -164,7 +150,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                 else {
                     console.warn("Credenciales incorrectas");
                     // LOG - 401 //
-                    insertLog(req.user.id, req.user.username, '005-002-401-001', "401", "users-login", JSON.stringify(req.params),'Credenciales incorrectas', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                    insertLog("0", "0", '005-002-401-001', "401", "users-login", JSON.stringify(req.params),'Credenciales incorrectas', "0");
                     return res.status(401).json({ error: 'Credenciales incorrectas' });
                 }
             });
@@ -172,7 +158,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
         else {
             console.warn("Usuario no encontrado");
             // LOG - 401 //
-            insertLog(req.user.id, req.user.username, '005-002-401-002', "401", "users-login", JSON.stringify(req.params),'Credenciales incorrectas', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+            insertLog("0", "0", '005-002-401-002', "401", "users-login", JSON.stringify(req.params),'Credenciales incorrectas', "0");
             return res.status(401).json({ error: 'Credenciales incorrectas' });
         }
     });
@@ -185,11 +171,11 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error("Error:", err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '005-003-500-001', "500", "users-id", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '005-003-500-001', "500", "users-id", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // LOG - 500 //
-      insertLog(req.user.id, req.user.username, '005-003-200-001', "500", "users-id", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-003-200-001', "500", "users-id", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       res.send(result);
     });
   });
@@ -201,14 +187,14 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
   
     if (!newpassword || !password) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '005-004-400-001', "400", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-004-400-001', "400", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       return res.status(400).json({ error: 'Nuevo password y password actual son requeridos' });
     }
   
     jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
       if (err) {
         // LOG - 401 //
-        insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
         return res.status(401).json({ error: 'Token no válido' });
       }
   
@@ -218,7 +204,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       con.query(queryCheckPassword, [userId, userEmail], (err, resultCheckPassword) => {
         if (err) {
           // LOG - 401 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
   
@@ -229,7 +215,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
           bcrypt.compare(password, hashedCurrentPassword, (err, passwordMatch) => {
             if (err || !passwordMatch) {
               // LOG - 401 //
-              insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
               return res.status(401).json({ error: 'La contraseña actual no es válida' });
             }
   
@@ -237,7 +223,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
             bcrypt.hash(newpassword, 10, (err, hashedPassword) => {
               if (err) {
                 // LOG - 401 //
-                insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
               }
   
@@ -245,16 +231,16 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
               con.query(queryUpdatePassword, [hashedPassword, 1, userId, userEmail], (err, result) => {
                 if (err) {
                   // LOG - 401 //
-                  insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                  insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                   return res.status(500).json({ error: 'Error en la base de datos' });
                 }
                 if (result.affectedRows === 1) {
                   // LOG - 401 //
-                  insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                  insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                   return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
                 }
                 // LOG - 401 //
-                insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                 return res.status(500).json({ error: 'No se pudo actualizar el registro' });
               });
             });
@@ -262,7 +248,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
         } 
         else {
           // LOG - 401 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(401).json({ error: 'Usuario no encontrado' });
         }
       });
@@ -277,14 +263,14 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
 
     if (!newEmail) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       return res.status(400).json({ error: 'Se requiere el nuevo correo electrónico para actualizar' });
     }
   
     jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
       if (err) {
         // LOG - 401 //
-        insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
         return res.status(401).json({ error: 'Token no válido' });
       }
   
@@ -293,18 +279,18 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       con.query(query, [newEmail, userId, userEmail], (err, result) => {
         if (err) {
           // LOG - 500 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
   
         if (result.affectedRows > 0) {
           // LOG - 200 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(200).json({ email: newEmail }); // Devolver el nuevo correo
         }
   
         // LOG - 404 //
-        insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
         return res.status(404).json({ error: 'Registro no encontrado' });
       });
     });
@@ -314,7 +300,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       const { id, email, password, change_password, token } = req.body;
       if (!id && (email || password)) {
         // LOG - 400 //
-        insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
         return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
       }
       let query = "UPDATE users SET";
@@ -332,7 +318,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
           bcrypt.hash(password, 10, (err, hashedPassword) => {
               if (err) {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error al cifrar la contraseña' });
               }
               query += ", password=?";
@@ -355,16 +341,16 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
           con.query(query, values, (err, result) => {
               if (err) {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error en la base de datos' });
               }
               if (result.affectedRows > 0) {
                 // LOG - 200 //
-                insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                 return res.status(200).json({ message: 'Registro actualizado con éxito' });
               }
               // LOG - 404 //
-              insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
               return res.status(404).json({ error: 'Registro no encontrado' });
           });
       }
@@ -375,7 +361,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
 
     if (!id || !password || !newpassword || !email) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
 
@@ -384,12 +370,12 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     con.query(query, [id], (err, result) => {
         if (err) {
           // LOG - 500 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
         if (result.length === 0) {
           // LOG - 404 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(404).json({ error: 'Usuario no encontrado' });
         }
         const user = result[0];
@@ -397,7 +383,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
         // Verificar si el email coincide
         if (user.email !== email) {
           // LOG - 400 //
-          insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
           return res.status(400).json({ error: 'El email proporcionado no coincide con el registrado' });
         }
 
@@ -405,12 +391,12 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
         bcrypt.compare(password, user.password, (compareErr, compareResult) => {
             if (compareErr) {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
               return res.status(500).json({ error: 'Error al comparar contraseñas' });
             }
             if (!compareResult) {
               // LOG - 400 //
-              insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+              insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
               return res.status(400).json({ error: 'Contraseña antigua incorrecta' });
             }
 
@@ -418,7 +404,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
             bcrypt.hash(newpassword, 10, (hashErr, hashedPassword) => {
                 if (hashErr) {
                   // LOG - 500 //
-                  insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                  insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                   return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
                 }
 
@@ -426,11 +412,11 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
                 con.query(updateQuery, [hashedPassword, id], (updateErr, updateResult) => {
                     if (updateErr) {
                       // LOG - 500 //
-                      insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                       return res.status(500).json({ error: 'Error al actualizar la contraseña' });
                     }
                     // LOG - 200 //
-                    insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+                    insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
                     return res.status(200).json({ message: 'Contraseña actualizada con éxito' });
                 });
             });
@@ -443,23 +429,23 @@ router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
   const id = parseInt(req.body.id);
   if (isNaN(id)) {
     // LOG - 400 //
-    insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+    insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
     return res.status(400).json({ error: 'ID no válido' });
   }
   con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
     if (err) {
       // LOG - 500 //
-      insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       return res.status(500).json({ error: 'Error en la base de datos' });
     }
     if (result.affectedRows === 0) {
       // LOG - 404 //
-      insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       return res.status(404).json({ error: 'Uusario no encontrado' });
     }
 
     // LOG - 200 //
-    insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+    insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
     res.json({ message: 'Uusario eliminado con éxito' });
   });
 });
@@ -469,13 +455,13 @@ router.post('/refresh', (req, res) => {
   jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
       if (err) {
         // LOG - 401 //
-        insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        //insertLog("0", "0", '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
         return res.status(401).json({ error: 'Refresh token inválido' });
       }
       const newAccessToken = jwt.sign({ email: decoded.email, id: decoded.id }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
       
       // LOG - 200 //
-      insertLog(req.user.id, req.user.username, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      //insertLog("0", "0", '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
       res.status(200).json({ token: newAccessToken });
   });
 });

@@ -10,6 +10,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class MonitoringComponent implements OnInit {
+parseInt(arg0: any) {
+throw new Error('Method not implemented.');
+}
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
   onResize() {
@@ -21,10 +24,10 @@ export class MonitoringComponent implements OnInit {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl+environment.log+"/get";
-  postConecction: string = environment.baseUrl+environment.log;
-  duplicateConecction: string = environment.baseUrl+environment.log+"/duplicate";
-  getId: string = environment.baseUrl+environment.log+"/id";
+  getConecction: string = environment.baseUrl+environment.monitoring+"/get";
+  postConecction: string = environment.baseUrl+environment.monitoring;
+  duplicateConecction: string = environment.baseUrl+environment.monitoring+"/duplicate";
+  getId: string = environment.baseUrl+environment.monitoring+"/id";
   date: any;
 
   totalPages = 5;
@@ -34,13 +37,15 @@ export class MonitoringComponent implements OnInit {
   total = 0;
   totalPage = 0;
 
-  alt1 = true;
+  alt1 = false;
   alt2 = true;
   alt3 = true;
   alt4 = true;
   alt5 = true;
   alt6 = true;
   alt7 = true;
+  alt8 = true;
+  alt9 = true;
 
   actId = 0;
   id = 0;
@@ -62,7 +67,7 @@ export class MonitoringComponent implements OnInit {
 
   searchAux = "search";
   order = "log_date";
-  ordAux = "ASC";
+  ordAux = "DESC";
 
   alertDelete: any = false;
   notDelete: any = false;
@@ -201,7 +206,6 @@ export class MonitoringComponent implements OnInit {
         }
         this.data = data;
         this.data.log_date = this.formatDateTime(data.log_date);
-        console.log(this.formatDateTime(data.log_date))
 
         if (this.data.length < this.quantPage) {
           this.totalPage = this.total;

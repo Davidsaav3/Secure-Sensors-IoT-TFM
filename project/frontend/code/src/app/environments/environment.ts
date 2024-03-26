@@ -10,7 +10,6 @@ export const environment = {
     sensorsTypes: '/sensors_types',
     dataStructure: '/data_structure',
     variableDataStructure: '/variable_data_structure',
-    log: '/log',
 
     users: '/users',
     conecctionRead: '/conecction_read',

@@ -34,14 +34,22 @@
 				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
 						<tr style="background-color: #fff;">
-							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'id'}">
+							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'log_date'}">
+								<svg *ngIf="alt1" (click)="alt1=false;getConecctionsLocal('log_date','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								</svg>
+								<svg *ngIf="!alt1" (click)="alt1=true;getConecctionsLocal('log_date','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								</svg> {{ 'monitoring.log_date' | translate }}
+							</th>
+							<!--<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'id'}">
 								<svg *ngIf="alt1" (click)="alt1=false;getConecctionsLocal('id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
 								<svg *ngIf="!alt1" (click)="alt1=true;getConecctionsLocal('id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg> {{ 'monitoring.id' | translate }}
-							</th>
+							</th>-->
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'user_id'}">
 								<svg *ngIf="alt2" (click)="alt2=false;getConecctionsLocal('user_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
@@ -58,61 +66,53 @@
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.username' | translate }}
 							</th>
-							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'log_date'}">
-								<svg *ngIf="alt1" (click)="alt1=false;getConecctionsLocal('log_date','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-								</svg>
-								<svg *ngIf="!alt1" (click)="alt1=true;getConecctionsLocal('log_date','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								</svg> {{ 'monitoring.log_date' | translate }}
-							</th>
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_code'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getConecctionsLocal('log_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getConecctionsLocal('log_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'monitoring.log_code' | translate }}
-							</th>
 
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_status'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getConecctionsLocal('log_status','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getConecctionsLocal('log_status','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'monitoring.log_status' | translate }}
-							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_name'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getConecctionsLocal('log_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt4" (click)="alt4=false;getConecctionsLocal('log_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getConecctionsLocal('log_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt4" (click)="alt4=true;getConecctionsLocal('log_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.log_name' | translate }}
 							</th>
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_parameters'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getConecctionsLocal('log_parameters','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_status'}">
+								<svg *ngIf="alt5" (click)="alt5=false;getConecctionsLocal('log_status','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getConecctionsLocal('log_parameters','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt5" (click)="alt5=true;getConecctionsLocal('log_status','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'monitoring.log_parameters' | translate }}
+								  </svg> {{ 'monitoring.log_status' | translate }}
 							</th>
-
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_message'}">
-								<svg *ngIf="alt3" (click)="alt3=false;getConecctionsLocal('log_message','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_code'}">
+								<svg *ngIf="alt6" (click)="alt6=false;getConecctionsLocal('log_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt3" (click)="alt3=true;getConecctionsLocal('log_message','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt6" (click)="alt6=true;getConecctionsLocal('log_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_code' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_message'}">
+								<svg *ngIf="alt7" (click)="alt7=false;getConecctionsLocal('log_message','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt7" (click)="alt7=true;getConecctionsLocal('log_message','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.log_message' | translate }}
 							</th>
-							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_trace'}">
-								<svg *ngIf="alt3" (click)="alt3=false;getConecctionsLocal('log_trace','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_parameters'}">
+								<svg *ngIf="alt8" (click)="alt8=false;getConecctionsLocal('log_parameters','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt3" (click)="alt3=true;getConecctionsLocal('log_trace','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt8" (click)="alt8=true;getConecctionsLocal('log_parameters','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_parameters' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_trace'}">
+								<svg *ngIf="alt9" (click)="alt9=false;getConecctionsLocal('log_trace','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt9" (click)="alt9=true;getConecctionsLocal('log_trace','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.log_trace' | translate }}
 							</th>
@@ -120,18 +120,25 @@
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.id }}</td><!--(click)="orderColumn(quote.id)"-->
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.user_id }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.username }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_code }}</td>
+							<!--<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.id }}</td>-->
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
 
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_status }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_name }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_parameters }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.user_id }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.username }}</p></span>
+							</td>
 
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_message }}</td>
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_trace }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_name }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': (quote.log_status>=400 && quote.log_status<500) || (quote.log_status>=500)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+								<span class="badge rounded-pill text-bg-warning d-inline-block me-2" [class]="{'d-none': (quote.log_status>=200 && quote.log_status<400) || (quote.log_status>=500)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': (quote.log_status>=400 && quote.log_status<500) || (quote.log_status>=200 && quote.log_status<400)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+							</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_code }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_message }}</td>
+
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_parameters }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_trace }}</td>
 						</tr>
 					</tbody>
 				</table>

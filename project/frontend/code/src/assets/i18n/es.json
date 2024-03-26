@@ -253,7 +253,7 @@
     "script_disable": "Script desactivado",
 
     "monitoring.id": "Id",	 
-    "monitoring.user_id": "Id de usuario",	 
+    "monitoring.user_id": "Id",	 
     "monitoring.username": "Usuario",	 
     "monitoring.log_date": "Fecha",	 
     "monitoring.log_code": "Código",	 

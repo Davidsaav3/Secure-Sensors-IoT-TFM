@@ -251,7 +251,7 @@
     "script_disable": "Script disabled",
 
     "monitoreo.id": "Identification",
-    "monitoring.user_id": "User ID",
+    "monitoring.user_id": "ID",
     "monitoring.username": "User",
     "monitoring.log_date": "Date",
     "monitoring.log_code": "Code",

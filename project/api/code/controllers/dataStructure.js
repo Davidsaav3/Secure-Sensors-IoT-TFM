@@ -5,21 +5,7 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 const verifyToken = require('./token');
-
-function insertLog(user_id, username, log_code, log_status, log_name, log_parameters, log_message, log_trace, callback) {
-  const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
-  const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-  con.query(query, [user_id, username, log_date, log_code, log_status, log_name, log_parameters, log_message, log_trace], (err, result) => {
-    if (err) {
-      return callback(err, null);
-    }
-    if (result.affectedRows === 1) {
-      const insertedId = result.insertId;
-      return callback(null, insertedId);
-    }
-    return callback('No se pudo insertar el registro', null);
-  });
-}
+const insertLog = require('./log');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -40,12 +26,12 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     con.query(query, [ tam, act], (err, result) => {
       if (err) {
         console.error(err);
-        // LOG - 200 //
-        insertLog(req.user.id, req.user.username, '003-001-500-001', "500", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.email, '003-001-500-001', "500", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.username, '003-001-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-001-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(result));
       res.send(result);
     });
   });
@@ -77,13 +63,13 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
         };
 
         // LOG - 200 //
-        insertLog(req.user.id, req.user.username, '003-002-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-002-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(results));
         res.send(responseObj);
       })
       .catch((err) => {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '003-002-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-002-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         res.status(500).json({ error: 'Error en la base de datos' });
       });
   });
@@ -96,7 +82,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '003-004-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-004-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -113,7 +99,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.username, '003-004-200-001', "200", "Elemento eliminado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-004-200-001', "200", "Elemento eliminado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(result));
       res.json({ duplicatedDescription: description_2 });
     });
   });
@@ -126,25 +112,25 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
 
     if (!id_variable_data_structure) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '003-005-400-001', "400", "Id_variable_data_structure son requeridas", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-005-400-001', "400", "Id_variable_data_structure son requeridas", JSON.stringify(req.params),'Error en la base de datos', "0");
       return res.status(400).json({ error: 'Id_variable_data_structure son requeridas' });
     }
     const query = "INSERT INTO data_estructure (description, configuration, identifier_code, id_variable_data_structure) VALUES (?, ?, ?, ?)";
     con.query(query, [description, configuration,identifier_code, id_variable_data_structure], (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '003-005-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-005-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId;
         // LOG - 201 //
-        insertLog(req.user.id, req.user.username, '003-005-201-001', "201", "", JSON.stringify(req.params),'', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-005-201-001', "201", "", JSON.stringify(req.params),'', JSON.stringify(result));
         return res.status(201).json({ id: insertedId });
       }
 
       // LOG - 500 //
-      insertLog(req.user.id, req.user.username, '003-005-500-001', "200", "No se pudo insertar el registro", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-005-500-001', "200", "No se pudo insertar el registro", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
@@ -158,7 +144,7 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
 
     if ((!id_estructure)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '003-006-400-001', "400", "Se requiere el ID de la estructura y al menos un campo para actualizar", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-006-400-001', "400", "Se requiere el ID de la estructura y al menos un campo para actualizar", JSON.stringify(req.params),'Error en la base de datos', "0");
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
     let query = "UPDATE data_estructure SET description=?, configuration=?, identifier_code=?, id_variable_data_structure=?";
@@ -173,17 +159,17 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     con.query(query, values, (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '003-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-006-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.username, '003-006-200-001', "200", "Registro actualizado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-006-200-001', "200", "Registro actualizado con éxito", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(result));
         return res.status(200).json({ message: 'Registro actualizado con éxito' });
       }
 
       // LOG - 404 //
-      insertLog(req.user.id, req.user.username, '003-006-404-001', "404", "Registro no encontrado", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-006-404-001', "404", "Registro no encontrado", JSON.stringify(req.params),'Error en la base de datos', "0");
       return res.status(404).json({ error: 'Registro no encontrado' });
     });
   });
@@ -192,23 +178,23 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     const id_estructure = parseInt(req.body.id_estructure);
     if (isNaN(id_estructure)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.username, '003-007-400-001', "400", "ID no válido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-007-400-001', "400", "ID no válido", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM data_estructure WHERE id_estructure = ?", id_estructure, function (err, result) {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.username, '003-007-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-007-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.username, '003-007-404-001', "404", "Estructura de datos no encontrada", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+        insertLog(req.user.id, req.user.email, '003-007-404-001', "404", "Estructura de datos no encontrada", JSON.stringify(req.params),'Error en la base de datos', "0");
         return res.status(404).json({ error: 'Estructura de datos no encontrada' });
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.username, '003-007-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err), (err, insertedId) => { if (err) { console.error("Error al insertar el log:", err); } res.send(result); });
+      insertLog(req.user.id, req.user.email, '003-007-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(result));
       res.json({ message: 'Estructura de datos eliminada con éxito' });
     });
   });

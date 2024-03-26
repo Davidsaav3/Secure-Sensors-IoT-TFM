@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew(1,'','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'nueva_conexion' | translate }}</button>
+						<button type="button" class="btn btn-info" (click)="openNew(1,'','','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'nueva_conexion' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -158,11 +158,25 @@
 
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ conecctions.id }}" [(ngModel)]="conecctions.id">
 
-					<div class="col-12 pt-2 form-group">
+					<div class="col-8 pt-2 form-group">
 						<label for="description">{{ 'sensors.description' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
 						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
 							<div *ngIf="form.controls['description'].errors['required']">{{ description' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+
+					<div class="col-4 pt-2 form-group">
+						<label for="enabled">{{ 'conecctions.enabled' | translate }}</label>
+						<div class="form-check form-switch ps-0">
+							<label class="toggle tt2 t2">
+								<input maxlength="4" type="checkbox" (ngModelChange)="change=true" id="check" name="check" [(ngModel)]="conecctions['enabled']">
+								<span class="slider"></span>
+								<span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
+							</label>
+						</div>
+						<div *ngIf="form.submitted && form.controls['enabled'].errors" class="text-danger">
+							<div *ngIf="form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 

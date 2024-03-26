@@ -75,6 +75,7 @@ export class ConecctionWriteComponent implements OnInit {
     description: "",
     authorization: "", 
     urlIngest: "", 
+    enabled: true
   };
 
   conecctionsCopy = {
@@ -82,6 +83,7 @@ export class ConecctionWriteComponent implements OnInit {
     description: "",
     authorization: "", 
     urlIngest: "", 
+    enabled: true
   };
 
   searchAuxArray = {
@@ -229,6 +231,7 @@ export class ConecctionWriteComponent implements OnInit {
             description: conecctions.description ,
             authorization: conecctions.authorization, 
             urlIngest: conecctions.urlIngest, 
+            enabled: conecctions.enabled
           };
           this.openClouse();
         },
@@ -281,13 +284,14 @@ export class ConecctionWriteComponent implements OnInit {
     }
   }
 
-  openNew(id:any,description:any,authorization:any,urlIngest:any) { // Abre Nueva conexion
+  openNew(id:any,description:any,authorization:any,urlIngest:any,enabled:any) { // Abre Nueva conexion
 
     this.conecctions = {
       id: id,
       description: description ,
       authorization: authorization, 
       urlIngest: urlIngest, 
+      enabled: enabled,
     };
 
     this.show = true;
@@ -360,12 +364,14 @@ export class ConecctionWriteComponent implements OnInit {
                   description: conecctions.description ,
                   authorization: conecctions.authorization, 
                   urlIngest: conecctions.urlIngest, 
+                  enabled: conecctions.enabled
                 };
                 this.openNew(
                   '',
                   this.conecctions.description,
                   this.conecctions.authorization, 
                   this.conecctions.urlIngest, 
+                  this.conecctions.enabled
                 );
               },
               (error) => {
@@ -437,6 +443,7 @@ export class ConecctionWriteComponent implements OnInit {
       description: this.conecctionsCopy.description,
       authorization: this.conecctionsCopy.authorization,
       urlIngest: this.conecctionsCopy.urlIngest,
+      enabled: this.conecctionsCopy.enabled
     };
     this.change = false;
   }
