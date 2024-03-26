@@ -78,7 +78,8 @@ export class UsersComponent implements OnInit {
     email: "",
     password: "",
     change_password: true,
-    token: ""
+    token: "",
+    enabled: 1
   };
 
   usersCopy = {
@@ -86,7 +87,8 @@ export class UsersComponent implements OnInit {
     email: "",
     password: "",
     change_password: true,
-    token: ""
+    token: "",
+    enabled: 1
   };
 
   searchAuxArray = {
@@ -201,7 +203,8 @@ export class UsersComponent implements OnInit {
             email: users.email,
             password: users.password,
             change_password: users.change_password,
-            token: users.token
+            token: users.token,
+            enabled: users.enabled
           };
           this.openClouse();
         },
@@ -254,14 +257,15 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  openNew(id:any,email:any,password:any,change_password:any,token:any) { // Abre Nuevo usuario
+  openNew(id:any,email:any,password:any,change_password:any,token:any,enabled:any) { // Abre Nuevo usuario
 
     this.users = {
       id: id,
       email: email,
       password: password,
       change_password: change_password,
-      token: token
+      token: token,
+      enabled: enabled
     };
 
     this.show = true;
@@ -367,9 +371,14 @@ export class UsersComponent implements OnInit {
       email: this.usersCopy.email,
       password: this.usersCopy.password,
       change_password: this.usersCopy.change_password,
-      token: this.usersCopy.token
+      token: this.usersCopy.token,
+      enabled: this.usersCopy.enabled
     };
     this.change = false;
+  }
+
+  revoke(){
+    
   }
 
   deleteSearch() {// Borra texto de busqueda

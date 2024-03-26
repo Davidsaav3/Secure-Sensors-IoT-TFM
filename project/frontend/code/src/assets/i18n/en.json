@@ -260,6 +260,7 @@
     "monitoring.log_parameters": "Parameters",
     "monitoring.log_message": "Message",
     "monitoring.log_trace": "Trace",
-    "monitoring.find": "Search registers..."
+    "monitoring.find": "Search registers...",
+    "revoke": "Revoke Token"
 
 }

@@ -86,8 +86,8 @@
 
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.subscribe }}</td>
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
-								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
-								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enabled==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
+								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0 || quote.enabled==false}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enabled==1 || quote.enabled==true}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
 							</td>
 
 							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateConecctions(quote.id,quote.description)"><!--(click)="duplicateConecctions(quote.id,quote.description)"-->
@@ -220,10 +220,7 @@
 
 					<div class="col-12 pt-2 form-group">
 						<label for="accessKey">{{ 'conecctions.accessKey' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctions['accessKey']" required>
-						<div *ngIf="form.submitted && form.controls['accessKey'].errors" class="text-danger">
-							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'conecctions.accessKey' | translate }} {{ 'required' | translate }}</div>
-						</div>
+						<input data-bs-toggle="modal" data-bs-target="#exampleModal2" type="text" class="form-control" placeholder="Haz click para mostrar Acces Key" style="cursor: pointer;">
 					</div>
 
 					<div class="col-12 pt-2 form-group">
@@ -312,6 +309,39 @@
 					</div>
 					<div class="col-5">
 						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'irreversible' | translate }}</p>
+				<form #form="ngForm" class="row needs-validation p-3">
+					<div class="col-12 pt-2 form-group">
+						<label for="accessKey">{{ 'conecctions.accessKey' | translate }}</label>
+						<input data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctions['accessKey']" required>
+						<div *ngIf="form.submitted && form.controls['accessKey'].errors" class="text-danger">
+							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'conecctions.accessKey' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-7">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
+					</div>
+					<div class="col-5">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
 					</div>
 				</div>
 			</div>

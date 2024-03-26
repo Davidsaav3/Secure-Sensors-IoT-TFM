@@ -23,7 +23,7 @@ const secretKey = process.env.PASSWORD_CIFRADO;
     } 
     else {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM conecction_read) as total FROM conecction_read`;
-      query += ` WHERE description LIKE '%${type0}%' OR mqttQeue LIKE '%${type0}%' OR appID LIKE '%${type0}%' OR accessKey LIKE '%${type0}%' OR subscribe LIKE '%${type0}%' OR enabled LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+      query += ` WHERE description LIKE '%${type0}%' OR mqttQeue LIKE '%${type0}%' OR appID LIKE '%${type0}%' OR subscribe LIKE '%${type0}%' OR enabled LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
     con.query(query, [tam, act], (err, result) => {
@@ -36,7 +36,7 @@ const secretKey = process.env.PASSWORD_CIFRADO;
       // Descifrar el accessKey antes de enviarlo en la respuesta
       const decryptedResult = result.map(row => ({
         ...row,
-        accessKey: decryptMessage(row.accessKey, secretKey)
+        //accessKey: decryptMessage(row.accessKey, secretKey)
       }));
 
       // LOG - 200 //
@@ -58,7 +58,7 @@ const secretKey = process.env.PASSWORD_CIFRADO;
       // Descifrar el accessKey antes de enviarlo en la respuesta
       const decryptedResult = result.map(row => ({
         ...row,
-        accessKey: decryptMessage(row.accessKey, secretKey)
+        //accessKey: decryptMessage(row.accessKey, secretKey)
       }));
       // LOG - 200 //
       insertLog(req.user.id, req.user.email, '006-002-200-001', "200", "", JSON.stringify(req.params),'Error en la base de datos', "0");
@@ -96,7 +96,7 @@ const secretKey = process.env.PASSWORD_CIFRADO;
   });
 
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-    const { description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
+    const { description, mqttQeue, appID, subscribe, enabled } = req.body;
     
     if (!description || !mqttQeue) {
       // LOG - 400 //
@@ -104,9 +104,9 @@ const secretKey = process.env.PASSWORD_CIFRADO;
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
-    const encryptedMessage = encryptMessage(accessKey, secretKey);
-    const query = "INSERT INTO conecction_read (description, mqttQeue, appID, accessKey, subscribe, enabled) VALUES (?, ?, ?, ?, ?, ?)";
-    con.query(query, [description, mqttQeue, appID, encryptedMessage, subscribe, enabled], (err, result) => {
+    //const encryptedMessage = encryptMessage(accessKey, secretKey);
+    const query = "INSERT INTO conecction_read (description, mqttQeue, appID, subscribe, enabled) VALUES ( ?, ?, ?, ?, ?)";
+    con.query(query, [description, mqttQeue, appID, subscribe, enabled], (err, result) => {
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.email, '006-004-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
@@ -125,7 +125,7 @@ const secretKey = process.env.PASSWORD_CIFRADO;
   });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-  const { id, description, mqttQeue, appID, accessKey, subscribe, enabled } = req.body;
+  const { id, description, mqttQeue, appID, subscribe, enabled } = req.body;
   if (!id || (!description && !mqttQeue)) {
     // LOG - 400 //
     insertLog(req.user.id, req.user.email, '006-005-400-001', "400", "Se requiere el ID del usuario y al menos un campo para actualizar", JSON.stringify(req.body),'Error en la base de datos', "0");
@@ -148,11 +148,6 @@ const secretKey = process.env.PASSWORD_CIFRADO;
   if (appID) {
     query += ", appID=?";
     values.push(appID);
-  }
-  if (accessKey) {
-    const encryptedMessage = encryptMessage(accessKey, secretKey);
-    query += ", accessKey=?";
-    values.push(encryptedMessage);
   }
   if (subscribe) {
     query += ", subscribe=?";

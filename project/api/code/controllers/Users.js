@@ -19,11 +19,11 @@ const insertLog = require('./log');
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'search') {
-      query += `SELECT id, email, change_password ,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
+      query += `SELECT id, email, change_password, enabled,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
       query += ` ORDER BY ${type1} ${type2}`;
     } 
     else {
-      query += `SELECT id, email, change_password ,(SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
+      query += `SELECT id, email, change_password , enabled, (SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
       query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -97,6 +97,7 @@ const insertLog = require('./log');
                                         token: accessToken,
                                         refresh_token: newRefreshToken,
                                         change_password: user.change_password,
+                                        enabled: user.enabled,
                                         message: 'Inicio de sesión exitoso'
                                     });
                                 });
@@ -142,6 +143,7 @@ const insertLog = require('./log');
                                 token: accessToken,
                                 refresh_token: refreshToken,
                                 change_password: user.change_password,
+                                enabled: user.enabled,
                                 message: 'Inicio de sesión exitoso'
                             });
                         });
@@ -166,7 +168,7 @@ const insertLog = require('./log');
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
-    const query = "SELECT id, email, change_password FROM users WHERE id = ?";
+    const query = "SELECT id, email, change_password, enabled FROM users WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
       if (err) {
         console.error("Error:", err);
@@ -297,7 +299,7 @@ const insertLog = require('./log');
   });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-      const { id, email, password, change_password, token } = req.body;
+      const { id, email, password, change_password, enabled, token } = req.body;
       if (!id && (email || password)) {
         // LOG - 400 //
         insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
@@ -311,6 +313,10 @@ const insertLog = require('./log');
       }
       if (token && token==true) {
         query += ", token=?";
+        values.push('');
+      }
+      if (enabled && enabled==true) {
+        query += ", enabled=?";
         values.push('');
       }
       if (password) {
@@ -335,6 +341,10 @@ const insertLog = require('./log');
               query += ", change_password=?";
               values.push(change_password);
           }
+          if (enabled != null) {
+            query += ", enabled=?";
+            values.push(enabled);
+        }
           query += " WHERE id=?";
           values.push(id);
 

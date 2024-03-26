@@ -262,6 +262,7 @@
     "monitoring.log_parameters": "Parámetros",
     "monitoring.log_message": "Mensaje",
     "monitoring.log_trace": "Traza",
-    "monitoring.find": "Buscar registros..."
+    "monitoring.find": "Buscar registros...",
+    "revoke": "Revocar Token"
 
 }

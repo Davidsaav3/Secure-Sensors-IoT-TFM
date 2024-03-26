@@ -24,7 +24,7 @@ const insertLog = require('./log');
     } 
     else {
       query += `SELECT *,(SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write`;
-      query += ` WHERE description LIKE '%${type0}%' OR authorization LIKE '%${type0}%' OR urLIngest LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+      query += ` WHERE description LIKE '%${type0}%' OR urLIngest LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
     con.query(query, [tam, act], (err, result) => {
@@ -37,7 +37,7 @@ const insertLog = require('./log');
       // Descifrar el accessKey antes de enviarlo en la respuesta
       const decryptedResult = result.map(row => ({
         ...row,
-        authorization: decryptMessage(row.authorization, secretKey)
+        //authorization: decryptMessage(row.authorization, secretKey)
       }));
 
       // LOG - 200 //
@@ -60,7 +60,7 @@ const insertLog = require('./log');
       // Descifrar el accessKey antes de enviarlo en la respuesta
       const decryptedResult = result.map(row => ({
         ...row,
-        authorization: decryptMessage(row.authorization, secretKey)
+        //authorization: decryptMessage(row.authorization, secretKey)
       }));
 
       // LOG - 200 //
@@ -99,17 +99,17 @@ const insertLog = require('./log');
   });
 
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-    const { description, authorization, urlIngest, enabled } = req.body;
+    const { description, urlIngest, enabled } = req.body;
     
-    if (!description || !authorization || !urlIngest || !enabled) {
+    if (!description || !urlIngest || !enabled) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.email, '007-004-400-001', "400", "Description es requerido", JSON.stringify(req.params),'Error en la base de datos', "0");
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
-    const encryptedMessage = encryptMessage(authorization, secretKey);
-    const query = "INSERT INTO conecction_write (description, authorization, urlIngest, enabled) VALUES (?, ?, ?, ?)";
-    con.query(query, [description, encryptedMessage, urlIngest, enabled], (err, result) => {
+    //const encryptedMessage = encryptMessage(authorization, secretKey);
+    const query = "INSERT INTO conecction_write (description, urlIngest, enabled) VALUES (?, ?, ?)";
+    con.query(query, [description, urlIngest, enabled], (err, result) => {
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.email, '007-004-500-001', "500", "Error en la base de datos", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
@@ -129,8 +129,8 @@ const insertLog = require('./log');
   });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-  const { id, description, authorization, urlIngest, enabled } = req.body;
-  if (!id || (!description && !authorization && !urlIngest && !enabled)) {
+  const { id, description, urlIngest, enabled } = req.body;
+  if (!id || (!description && !urlIngest && !enabled)) {
     // LOG - 400 //
     insertLog(req.user.id, req.user.email, '007-005-400-001', "400", "Se requiere el ID del usuario y al menos un campo para actualizar", JSON.stringify(req.params),'Error en la base de datos', "0");
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
@@ -140,12 +140,6 @@ const insertLog = require('./log');
   if (description) {
     query += " description=?";
     values.push(description);
-  }
-  if (authorization) {
-
-    const encryptedMessage = encryptMessage(authorization, secretKey);
-    query += ", authorization=?";
-    values.push(encryptedMessage);
   }
   if (urlIngest) {
     query += ", urlIngest=?";
