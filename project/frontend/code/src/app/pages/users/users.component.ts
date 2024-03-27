@@ -23,6 +23,7 @@ export class UsersComponent implements OnInit {
 
   getUser: string = environment.baseUrl+environment.users+"/get";
   postUser: string = environment.baseUrl+environment.users;
+  postUserRevoke: string = environment.baseUrl+environment.users+"/revoke";
   duplicateUser: string = environment.baseUrl+environment.users+"/duplicate";
   getId: string = environment.baseUrl+environment.users+"/id";
 
@@ -377,8 +378,31 @@ export class UsersComponent implements OnInit {
     this.change = false;
   }
 
-  revoke(){
+  revoke(idActual: any){
+    let token = localStorage.getItem('token') ?? ''; 
+    let users = {
+      id: idActual,
+    };
+
+    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+    this.http.post(this.postUserRevoke, JSON.stringify(users), httpOptions)
+      .subscribe(
+        (response: any) => {
+          // Respuesta
+        },
+        (error) => {
+          console.error("Error:", error);
+        }
+      );
+    this.state = 2;
+    this.saveOk = true;
+
+    setTimeout(() => {
+      this.saveOk = false;
+    }, 2000);
     
+    this.saved = true;
+    this.change = false;
   }
 
   deleteSearch() {// Borra texto de busqueda

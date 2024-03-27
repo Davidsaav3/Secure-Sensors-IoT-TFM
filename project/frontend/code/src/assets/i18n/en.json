@@ -257,10 +257,11 @@
     "monitoring.log_code": "Code",
     "monitoring.log_status": "Status",
     "monitoring.log_name": "Name",
-    "monitoring.log_parameters": "Parameters",
+    "monitoring.log_parameters": "Input",
     "monitoring.log_message": "Message",
-    "monitoring.log_trace": "Error",
+    "monitoring.log_trace": "Output",
     "monitoring.find": "Search registers...",
-    "revoke": "Revoke Token"
+    "revoke": "Revoke Token",
+    "no_logs": "There are no log records"
 
 }

@@ -12,10 +12,10 @@ function insertLog(user_id, username, log_code, log_status, log_name, log_parame
     if (err) {
       //return callback(err, null);
     }
-    if (result.affectedRows === 1) {
-      const insertedId = result.insertId;
+    //if (result.affectedRows === 1) {
+      //const insertedId = result.insertId;
       //return callback(null, insertedId);
-    }
+    //}
     //return callback('No se pudo insertar el registro', null);
   });
 }

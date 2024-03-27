@@ -90,6 +90,8 @@ const insertLog = require('./log');
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                 const responseArray = auxGet(result);
+                // LOG - 200 //
+                insertLog(req.user.id, req.user.email, '001-001-200-001', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
                 res.json(responseArray);
               }); 
             }
@@ -126,6 +128,8 @@ const insertLog = require('./log');
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
+                  // LOG - 200 //
+                  insertLog(req.user.id, req.user.email, '001-001-200-002', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
                   res.json(responseArray);
                 }); 
               }
@@ -164,6 +168,8 @@ const insertLog = require('./log');
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
+                  // LOG - 200 //
+                  insertLog(req.user.id, req.user.email, '001-001-200-003', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
                   res.json(responseArray);
                 }); 
               }
@@ -180,6 +186,8 @@ const insertLog = require('./log');
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
                 const responseArray = auxGet(result);
+                // LOG - 200 //
+                insertLog(req.user.id, req.user.email, '001-001-200-004', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
                 res.json(responseArray);
               }); 
             }
@@ -198,6 +206,8 @@ const insertLog = require('./log');
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
+                  // LOG - 200 //
+                  insertLog(req.user.id, req.user.email, '001-001-200-005', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
                   res.json(responseArray);
                 }); 
               }
@@ -214,6 +224,8 @@ const insertLog = require('./log');
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
+                  // LOG - 200 //
+                  insertLog(req.user.id, req.user.email, '001-001-200-006', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
                   res.json(responseArray);
                 }); 
               }
@@ -243,6 +255,8 @@ const insertLog = require('./log');
           ORDER BY ${order_by} ${ord_asc};
           `, function (err, result) {
               const responseArray = auxGet(result);
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.email, '001-001-200-007', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
               res.json(responseArray);
             }); 
           }
@@ -253,6 +267,8 @@ const insertLog = require('./log');
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
             WHERE lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
               const responseArray = auxGet(result);
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.email, '001-001-200-008', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
               res.json(responseArray);
             }); 
           }
@@ -281,6 +297,8 @@ const insertLog = require('./log');
           ORDER BY ${order_by} ${ord_asc};`, function (err, result) {
             if (err) throw err;
             const responseArray = auxGet(result);
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.email, '001-001-200-009', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
             res.json(responseArray);    
           });
         }
@@ -293,6 +311,8 @@ const insertLog = require('./log');
             WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%' AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`, function (err, result) {
             if (err) throw err;
             const responseArray = auxGet(result);
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.email, '001-001-200-010', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
             res.json(responseArray);
           });
         }
@@ -410,7 +430,7 @@ const insertLog = require('./log');
               if (err) {
                 console.error("Error:", err);
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.email, '001-002-500-003', "500", "deviceConfigurations-duplicate", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+                insertLog(req.user.id, req.user.email, '001-002-500-003', "500", "deviceConfigurations-id", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error en la base de datos' });
               }
               const devicesWithSensors = {};
@@ -459,7 +479,10 @@ const insertLog = require('./log');
                 }
               });
               const responseArray = Object.values(devicesWithSensors);
-              res.json(responseArray);            });
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.email, '001-002-200-001', "200", "deviceConfigurations-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
+              res.json(responseArray);        
+            });
           }
           else{
             const devicesWithSensors = {};
@@ -510,7 +533,7 @@ const insertLog = require('./log');
             const responseArray = Object.values(devicesWithSensors);
 
             // LOG - 200 //
-            insertLog(req.user.id, req.user.email, '001-002-200-001', "200", "deviceConfigurations-duplicate", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(err));
+            insertLog(req.user.id, req.user.email, '001-001-200-001', "200", "deviceConfigurations-id", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(responseArray));
             res.json(responseArray);
           }
        });
@@ -556,12 +579,12 @@ const insertLog = require('./log');
   
     if (!uid) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '001-004-400-001', "400", "deviceConfigurations-post", JSON.stringify(req.body),'El campo uid es requerido', "0");
+      insertLog(req.user.id, req.user.email, '001-004-400-001', "400", "deviceConfigurations-post", JSON.stringify(req.body),'El campo uid es requerido', "Sin datos");
       return res.status(400).json({ error: 'El campo uid es requerido' });
     }
     if (!topic_name) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '001-004-400-002', "400", "deviceConfigurations-post", JSON.stringify(req.body),'El campo topic_name es requerido', "0");
+      insertLog(req.user.id, req.user.email, '001-004-400-002', "400", "deviceConfigurations-post", JSON.stringify(req.body),'El campo topic_name es requerido', "Sin datos");
       return res.status(400).json({ error: 'El campo topic_name es requerido' });
     }
   
@@ -577,7 +600,7 @@ const insertLog = require('./log');
   
       if (result.length > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.email, '001-004-200-001', "200", "deviceConfigurations-post", JSON.stringify(req.body),'Uid duplicado', "0");
+        insertLog(req.user.id, req.user.email, '001-004-200-001', "200", "deviceConfigurations-post", JSON.stringify(req.body),'Uid duplicado', "Sin datos");
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -601,7 +624,7 @@ const insertLog = require('./log');
             auxPost(req.body.sensors, result.insertId);
             
             // LOG - 200 //
-            insertLog(req.user.id, req.user.email, '001-004-200-001', "200", "deviceConfigurations-post", JSON.stringify(req.body),'Datos guardados', "0");
+            insertLog(req.user.id, req.user.email, '001-004-200-001', "200", "deviceConfigurations-post", JSON.stringify(req.body),'Datos guardados', "Sin datos");
             res.send(result);
           }
         );
@@ -690,7 +713,7 @@ const insertLog = require('./log');
             } 
             else {
               // LOG - 200 //
-              insertLog(req.user.id, req.user.email, '001-004-200-001', "200", "deviceConfigurations-post", JSON.stringify(req.body),'No se insertaron nuevos registros', "0");
+              insertLog(req.user.id, req.user.email, '001-004-200-001', "200", "deviceConfigurations-post", JSON.stringify(req.body),'No se insertaron nuevos registros', "Sin datos");
               res.send({ message: 'No se insertaron nuevos registros' });
             }
           });
@@ -706,7 +729,7 @@ const insertLog = require('./log');
   
     if (!uid || !topic_name) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '001-005-400-001', "400", "deviceConfigurations-update", JSON.stringify(req.body),'Los campos uid y topic_name son requeridos', "0");
+      insertLog(req.user.id, req.user.email, '001-005-400-001', "400", "deviceConfigurations-update", JSON.stringify(req.body),'Los campos uid y topic_name son requeridos', "Sin datos");
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos' });
     }
   
@@ -721,7 +744,7 @@ const insertLog = require('./log');
   
       if (result.length > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.email, '001-005-200-001', "200", "deviceConfigurations-update", JSON.stringify(req.body),'Uid duplicado', "0");
+        insertLog(req.user.id, req.user.email, '001-005-200-001', "200", "deviceConfigurations-update", JSON.stringify(req.body),'Uid duplicado', "Sin datos");
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -735,11 +758,7 @@ const insertLog = require('./log');
               insertLog(req.user.id, req.user.email, '001-005-500-002', "500", "deviceConfigurations-update", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
-            
             auxPost(req.body.sensors, id7);
-
-            // LOG - 200 //
-            insertLog(req.user.id, req.user.email, '001-005-200-001', "200", "deviceConfigurations-update", JSON.stringify(req.body),'Datos actualizados', JSON.stringify(result));
             res.send(result);
           }
         );
@@ -751,7 +770,7 @@ const insertLog = require('./log');
     const id = req.body.id;
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '001-006-400-001', "400", "deviceConfigurations-delete", JSON.stringify(req.body),'ID no válido', "0");
+      insertLog(req.user.id, req.user.email, '001-006-400-001', "400", "deviceConfigurations-delete", JSON.stringify(req.body),'ID no válido', "Sin datos");
       return res.status(400).json({ error: 'ID no válido' });
     }
 
@@ -772,7 +791,7 @@ const insertLog = require('./log');
         if (result.affectedRows === 0) {
           con.rollback(function () {
             // LOG - 404 //
-            insertLog(req.user.id, req.user.email, '001-006-404-001', "404", "deviceConfigurations-delete", JSON.stringify(req.body),'Configuración de dispositivo no encontrada', "0");
+            insertLog(req.user.id, req.user.email, '001-006-404-001', "404", "deviceConfigurations-delete", JSON.stringify(req.body),'Configuración de dispositivo no encontrada', "Sin datos");
             return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
           });
         }
@@ -781,7 +800,7 @@ const insertLog = require('./log');
           if (err) {
             con.rollback(function () {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.email, '001-006-500-003', "500", "deviceConfigurations-delete", JSON.stringify(req.body),'Error en la base de datos', "0");
+              insertLog(req.user.id, req.user.email, '001-006-500-003', "500", "deviceConfigurations-delete", JSON.stringify(req.body),'Error en la base de datos', "Sin datos");
               return res.status(500).json({ error: 'Error en la base de datos' });
             });
           }
@@ -795,8 +814,8 @@ const insertLog = require('./log');
             }
 
             // LOG - 200 //
-            insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "deviceConfigurations-delete", JSON.stringify(req.body),'Configuración de dispositivo eliminada con éxito', "0");
-            res.json({ message: 'Configuración de dispositivo eliminada con éxito' });
+            insertLog(req.user.id, req.user.email, '001-006-200-001', "200", "deviceConfigurations-delete", JSON.stringify(req.body),'Datos eliminados', "Sin datos");
+            res.json({ message: 'Datos eliminados' });
           });
         });
       });

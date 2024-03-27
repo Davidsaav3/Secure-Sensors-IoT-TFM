@@ -45,11 +45,11 @@ const insertLog = require('./log');
     con.query(query, (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.email, '002-002-500-001', "500", "sensorsTypes-get_list", "0",'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.email, '002-002-500-001', "500", "sensorsTypes-get_list", "Sin datos",'Error en la base de datos', JSON.stringify(err));
         console.error(err);
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.email, '002-002-200-001', "200", "sensorsTypes-get_list", "0",'Datos recuperados', JSON.stringify(result));
+      insertLog(req.user.id, req.user.email, '002-002-200-001', "200", "sensorsTypes-get_list", "Sin datos",'Datos recuperados', JSON.stringify(result));
       res.send(result);
     });
   });
@@ -78,7 +78,7 @@ const insertLog = require('./log');
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.email, '002-003-200-001', "200", "sensorsTypes-duplicate", JSON.stringify(req.params),'Datos duplicados', "0");
+      insertLog(req.user.id, req.user.email, '002-003-200-001', "200", "sensorsTypes-duplicate", JSON.stringify(req.params),'Datos duplicados', "Sin datos");
       res.json({ duplicatedSensor: type_2 });
     });
   });
@@ -109,7 +109,7 @@ const insertLog = require('./log');
 
     if (!type || !metric) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '002-005-400-001', "400", "sensorsTypes-post", JSON.stringify(req.body),'Los campos type y metric son requeridos', "0");
+      insertLog(req.user.id, req.user.email, '002-005-400-001', "400", "sensorsTypes-post", JSON.stringify(req.body),'Los campos type y metric son requeridos', "Sin datos");
       return res.status(400).json({ error: 'Los campos type y metric son requeridos' });
     }
     const query = `INSERT INTO sensors_types (type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -122,7 +122,7 @@ const insertLog = require('./log');
       if (result.affectedRows === 1) {
         const insertedId = result.insertId;
         // LOG - 200 //
-        insertLog(req.user.id, req.user.email, '002-005-200-001', "200", "sensorsTypes-post", JSON.stringify(req.body),'Datos guardados', "0");
+        insertLog(req.user.id, req.user.email, '002-005-200-001', "200", "sensorsTypes-post", JSON.stringify(req.body),'Datos guardados', "Sin datos");
         return res.status(200).json({ id: insertedId });
       }
     });
@@ -138,12 +138,12 @@ const insertLog = require('./log');
 
     if (!type) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '002-006-400-001', "400", "sensorsTypes-update", JSON.stringify(req.body),'El campo type es requerido', "0");
+      insertLog(req.user.id, req.user.email, '002-006-400-001', "400", "sensorsTypes-update", JSON.stringify(req.body),'El campo type es requerido', "Sin datos");
       return res.status(400).json({ error: 'El campo type es requerido' });
     }
     if (!metric) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '002-006-400-002', "400", "sensorsTypes-update", JSON.stringify(req.body),'El campo metric es requerido', "0");
+      insertLog(req.user.id, req.user.email, '002-006-400-002', "400", "sensorsTypes-update", JSON.stringify(req.body),'El campo metric es requerido', "Sin datos");
       return res.status(400).json({ error: 'El campo metric es requerido' });
     }
     const query = `
@@ -162,7 +162,7 @@ const insertLog = require('./log');
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.email, '002-006-200-001', "200", "sensorsTypes-update", JSON.stringify(req.body),'Datos actualizados', "0");
+      insertLog(req.user.id, req.user.email, '002-006-200-001', "200", "sensorsTypes-update", JSON.stringify(req.body),'Datos actualizados', "Sin datos");
       res.send(result);
     });
   });
@@ -178,12 +178,12 @@ const insertLog = require('./log');
         }
         if (result.affectedRows === 0) {
           // LOG - 400 //
-          insertLog(req.user.id, req.user.email, '002-007-400-001', "400", "sensorsTypes-delete", JSON.stringify(req.body), 'Elemento no encontrado', "0");
+          insertLog(req.user.id, req.user.email, '002-007-400-001', "400", "sensorsTypes-delete", JSON.stringify(req.body), 'Elemento no encontrado', "Sin datos");
           return res.status(400).json({ error: 'Elemento no encontrado' });
         }
         // LOG - 200 //
-        insertLog(req.user.id, req.user.email, '002-007-200-001', "200", "sensorsTypes-delete", JSON.stringify(req.body), 'Elemento eliminado con éxito', "0");
-        res.json({ message: 'Elemento eliminado con éxito' });
+        insertLog(req.user.id, req.user.email, '002-007-200-001', "200", "sensorsTypes-delete", JSON.stringify(req.body), 'Datos eliminados', "Sin datos");
+        res.json({ message: 'Datos eliminados' });
     });
 });
 

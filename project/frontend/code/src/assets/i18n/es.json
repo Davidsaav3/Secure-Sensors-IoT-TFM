@@ -156,7 +156,7 @@
     "hide": "Ocultar configuracón",
     "sensors.discard_value": "Valor descartado",
 
-    "users": "Ususarios",
+    "users": "Usuarios",
     "credentials": "Credenciales",
     "script": "Script",
     "monitoring": "Monitorización",
@@ -259,10 +259,12 @@
     "monitoring.log_code": "Código",	 
     "monitoring.log_status": "Estado",
     "monitoring.log_name": "Nombre",
-    "monitoring.log_parameters": "Parámetros",
+    "monitoring.log_parameters": "Entrada",
     "monitoring.log_message": "Mensaje",
-    "monitoring.log_trace": "Error",
+    "monitoring.log_trace": "Salida",
     "monitoring.find": "Buscar registros...",
-    "revoke": "Revocar Token"
+    "revoke": "Revocar Token",
+    "no_logs": "No hay registros de log"
+
 
 }

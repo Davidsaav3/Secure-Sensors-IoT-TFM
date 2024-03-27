@@ -27,7 +27,7 @@
 			</div>
 			<div *ngIf="data.length<=0 && charging==false && this.state!=1" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 				<div style="height: min-content;">
-					<p style="font-size: x-large;">{{ 'no_conecctions' | translate }}</p>
+					<p style="font-size: x-large;">{{ 'no_logs' | translate }}</p>
 				</div>
 			</div>
 			<div *ngIf="data.length>0 || this.state==1" class="col-12 pe-0 over" style="max-height: 71vh;">

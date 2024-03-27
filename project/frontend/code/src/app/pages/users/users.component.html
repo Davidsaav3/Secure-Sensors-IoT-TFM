@@ -73,7 +73,7 @@
 								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
 								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enabled==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
 							</td>
-							<td data-bs-toggle="modal" data-bs-target="#exampleModal2" class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseover)="pencilDup= i" (mouseout)="pencilDup= -1" style="color: black; text-align: center;">
+							<td data-bs-toggle="modal" (click)="actId= quote.id" data-bs-target="#exampleModal2" class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseover)="pencilDup= i" (mouseout)="pencilDup= -1" style="color: black; text-align: center;">
 								<svg *ngIf="pencilDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
 									<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
 									<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
@@ -334,7 +334,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-8">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" (click)="revoke()" class="btn btn-info" style="width: 100%">{{ 'revoke' | translate }}</button>
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" (click)="revoke(actId)" class="btn btn-info" style="width: 100%">{{ 'revoke' | translate }}</button>
 					</div>
 				</div>
 			</div>
