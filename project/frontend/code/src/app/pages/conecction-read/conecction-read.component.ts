@@ -25,6 +25,7 @@ export class ConecctionReadComponent implements OnInit {
   postConecction: string = environment.baseUrl+environment.conecctionRead;
   duplicateConecction: string = environment.baseUrl+environment.conecctionRead+"/duplicate";
   getId: string = environment.baseUrl+environment.conecctionRead+"/id";
+  getIdSecret: string = environment.baseUrl+environment.conecctionRead+"/secret";
 
   totalPages = 5;
   currentPage = 1;
@@ -78,6 +79,11 @@ export class ConecctionReadComponent implements OnInit {
     accessKey: "", 
     subscribe: "", 
     enabled: true
+  };
+
+  conecctionsSecret = {
+    id: 0,
+    accessKey: "", 
   };
 
   conecctionsCopy = {
@@ -247,6 +253,21 @@ export class ConecctionReadComponent implements OnInit {
       );
     }
   }
+
+  getSecret(idActual: any) { // Obtiene secreto
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    this.http.get(`${this.getIdSecret}/${idActual}`, {headers})
+    .subscribe(
+      (data: any) => {
+        this.conecctionsSecret = data[0];
+        console.log(data[0])
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
   
   /* NEW */
 
@@ -255,6 +276,7 @@ export class ConecctionReadComponent implements OnInit {
 
     this.state = 1;
     if (form.valid) {
+      console.log(this.conecctions)
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
         .subscribe(
@@ -311,34 +333,49 @@ export class ConecctionReadComponent implements OnInit {
 
   editConecction(form: any) { // Guardar datos de la conexión editado
     let token = localStorage.getItem('token') ?? ''; 
-
+  
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+      
+      // Guardar la conexión editada
+      console.log(this.conecctions)
       this.http.put(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
         .subscribe(
           (response: any) => {
-            // Respuesta
+            // Manejar la respuesta
           },
           (error) => {
             console.error("Error:", error);
           }
         );
+  
+      // Eliminar la conexión anterior del arreglo y agregar la conexión editada
       this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
       let conecctions = this.conecctions;
       this.data.push(conecctions);
-      this.data.sort((a: any, b: any) => {return a.description - b.description;});
+  
+      // Ordenar el arreglo por descripción (asumiendo que 'description' es una propiedad de 'conecctions')
+      this.data.sort((a: any, b: any) => {
+        if (a.description < b.description) return -1;
+        if (a.description > b.description) return 1;
+        return 0;
+      });
+  
+      // Establecer el ID actual y abrir el modo de edición
       this.actId = this.conecctions.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
-
+  
+      // Ocultar el mensaje de éxito después de 2 segundos
       setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
+    // Marcar que se ha guardado y desmarcar el cambio
     this.saved = true;
     this.change = false;
-  }
+  }  
   
   openEdit() { // Abre Editar conexión
     this.show = true;

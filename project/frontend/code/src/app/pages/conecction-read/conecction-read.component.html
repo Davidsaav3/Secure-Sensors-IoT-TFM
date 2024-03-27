@@ -218,9 +218,17 @@
 						</div>
 					</div>
 
-					<div class="col-12 pt-2 form-group">
+					<div class="col-9 pt-2 form-group">
 						<label for="accessKey">{{ 'conecctions.accessKey' | translate }}</label>
-						<input data-bs-toggle="modal" data-bs-target="#exampleModal2" type="text" class="form-control" placeholder="Haz click para mostrar Acces Key" style="cursor: pointer;">
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctions['accessKey']">
+						<div *ngIf="form.submitted && form.controls['accessKey'].errors" class="text-danger">
+							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'conecctions.accessKey' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+
+					<div class="col-3 pt-2 form-group">
+						<label for="accessKey"></label>
+						<input (click)="getSecret(this.id)"data-bs-toggle="modal" data-bs-target="#exampleModal2" type="text" class="form-control" placeholder="Mostrar" style="cursor: pointer;">
 					</div>
 
 					<div class="col-12 pt-2 form-group">
@@ -320,15 +328,14 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header" style="border-bottom: 0px;">
-				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+				<h3 class="modal-title">{{ 'conecctions.accessKey' | translate }}</h3>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<p class="not">{{ 'irreversible' | translate }}</p>
-				<form #form="ngForm" class="row needs-validation p-3">
+			<div class="modal-body py-0">
+				<form #form="ngForm" class="row needs-validation p-3 pt-0">
 					<div class="col-12 pt-2 form-group">
 						<label for="accessKey">{{ 'conecctions.accessKey' | translate }}</label>
-						<input data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctions['accessKey']" required>
+						<input disabled data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctionsSecret.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctionsSecret['accessKey']" required>
 						<div *ngIf="form.submitted && form.controls['accessKey'].errors" class="text-danger">
 							<div *ngIf="form.controls['accessKey'].errors['required']">{{ 'conecctions.accessKey' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -337,11 +344,11 @@
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
-					<div class="col-7">
-						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
+					<div class="col-6">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'sensors.exit' | translate }}</button>
 					</div>
-					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
+					<div class="col-6">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>
 				</div>
 			</div>

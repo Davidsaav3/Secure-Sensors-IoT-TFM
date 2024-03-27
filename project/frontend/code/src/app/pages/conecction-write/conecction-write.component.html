@@ -167,7 +167,7 @@
 						<label for="description">{{ 'sensors.description' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
 						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
-							<div *ngIf="form.controls['description'].errors['required']">{{ description' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['description'].errors['required']">{{ 'description' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -185,9 +185,17 @@
 						</div>
 					</div>
 
-					<div class="col-12 pt-2 form-group">
+					<div class="col-9 pt-2 form-group">
 						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
-						<input data-bs-toggle="modal" data-bs-target="#exampleModal2" type="text" class="form-control" placeholder="Haz click para mostrar Authorization" style="cursor: pointer;">
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctions['authorization']">
+						<div *ngIf="form.submitted && form.controls['authorization'].errors" class="text-danger">
+							<div *ngIf="form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+
+					<div class="col-3 ps-2 pt-2 form-group" (click)="getSecret(this.id)">
+						<label for="authorization"></label>
+						<input (click)="getSecret(this.id)" data-bs-toggle="modal" data-bs-target="#exampleModal2" type="text" class="form-control" placeholder="Mostrar" style="cursor: pointer;">
 					</div>
 
 					<div class="col-12 pt-2 form-group">
@@ -287,15 +295,14 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header" style="border-bottom: 0px;">
-				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+				<h3 class="modal-title">{{ 'conecctions.authorization' | translate }}</h3>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<p class="not">{{ 'irreversible' | translate }}</p>
-				<form #form="ngForm" class="row needs-validation p-3">
+			<div class="modal-body py-0">
+				<form #form="ngForm" class="row needs-validation p-3 pt-0">
 					<div class="col-12 pt-2 form-group">
 						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
-						<input data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctions['authorization']" required>
+						<input disabled data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctionsSecret.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctionsSecret['authorization']" required>
 						<div *ngIf="form.submitted && form.controls['authorization'].errors" class="text-danger">
 							<div *ngIf="form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -304,11 +311,11 @@
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
-					<div class="col-7">
-						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
+					<div class="col-6">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'sensors.exit' | translate }}</button>
 					</div>
-					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
+					<div class="col-6">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>
 				</div>
 			</div>

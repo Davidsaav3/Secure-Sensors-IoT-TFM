@@ -512,7 +512,6 @@ const insertLog = require('./log');
 
   router.post("/revoke", verifyToken, (req, res) => {  /*/ REVOKE  /*/
     const { id } = req.body;
-      console.log()
       const query = "UPDATE users SET token = '?' WHERE id = ?";
       con.query(query, ["", id], (err, result) => {
           if (err) {

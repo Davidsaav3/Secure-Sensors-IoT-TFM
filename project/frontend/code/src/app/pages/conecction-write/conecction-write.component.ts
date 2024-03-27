@@ -25,6 +25,7 @@ export class ConecctionWriteComponent implements OnInit {
   postConecction: string = environment.baseUrl+environment.conecctionWrite;
   duplicateConecction: string = environment.baseUrl+environment.conecctionWrite+"/duplicate";
   getId: string = environment.baseUrl+environment.conecctionWrite+"/id";
+  getIdSecret: string = environment.baseUrl+environment.conecctionWrite+"/secret";
 
   totalPages = 5;
   currentPage = 1;
@@ -76,6 +77,11 @@ export class ConecctionWriteComponent implements OnInit {
     authorization: "", 
     urlIngest: "", 
     enabled: true
+  };
+
+  conecctionsSecret = {
+    id: 0,
+    authorization: "", 
   };
 
   conecctionsCopy = {
@@ -240,6 +246,21 @@ export class ConecctionWriteComponent implements OnInit {
         }
       );
     }
+  }
+
+  getSecret(idActual: any) { // Obtiene secreto
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    this.http.get(`${this.getIdSecret}/${idActual}`, {headers})
+    .subscribe(
+      (data: any) => {
+        this.conecctionsSecret = data[0];
+        console.log(data[0])
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
   
   /* NEW */
