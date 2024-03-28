@@ -76,10 +76,14 @@ const insertLog = require('./log');
                             if (verifyErr) {
                                 // El token ha caducado o es inválido, generar uno nuevo
                                 const newRefreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
-                                let revoke_date= process.env.REFRESH_TOKE_TIME;
+                                
+                                const currentDate = new Date();
+                                const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+                                const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+
                                 // Actualizar el nuevo token_refresh en la base de datos
-                                const updateQuery = "UPDATE users SET token = ?, SET revoke_date = ? WHERE id = ?";
-                                con.query(updateQuery, [newRefreshToken, revoke_date, user.id], (updateErr, updateResult) => {
+                                const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
+                                con.query(updateQuery, [newRefreshToken, formattedFutureDate, user.id], (updateErr, updateResult) => {
                                     if (updateErr) {
                                       console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                                       // LOG - 500 //
@@ -122,9 +126,13 @@ const insertLog = require('./log');
                         // No hay token_refresh existente, generar uno nuevo
                         const refreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
 
+                        const currentDate = new Date();
+                        const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+                        const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+
                         // Actualizar el nuevo token_refresh en la base de datos
-                        const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
-                        con.query(updateQuery, [refreshToken, user.id], (updateErr, updateResult) => {
+                        const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
+                        con.query(updateQuery, [refreshToken, formattedFutureDate, user.id], (updateErr, updateResult) => {
                             if (updateErr) {
                               console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                               // LOG - 500 //

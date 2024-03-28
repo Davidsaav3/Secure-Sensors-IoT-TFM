@@ -80,8 +80,8 @@
 								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enabled==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
 							</td>
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
-								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.revoke_date>currentDate || quote.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{quote.revoke_date}}</p></span>
-								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.revoke_date<=currentDate || quote.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{quote.revoke_date}}</p></span>
+								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.revoke_date<=currentDate || quote.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{quote.revoke_date}}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.revoke_date>currentDate || quote.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{quote.revoke_date}}</p></span>
 								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.revoke_date!=''}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'monitoring.timed_out' | translate }}</p></span>
 							</td>
 							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
