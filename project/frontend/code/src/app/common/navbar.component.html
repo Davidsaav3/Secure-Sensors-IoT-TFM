@@ -39,11 +39,11 @@
 	</div>
 	<div class="col-12 col-md-7 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
-			<div *ngIf="token !== ''" class="pe-3" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
+			<div *ngIf="token != ''" class="pe-3" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
 				<span *ngIf="scriptEnable" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }}</span>
 				<span *ngIf="!scriptEnable" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }}</span>
-			</div>	
-			<div *ngIf="token !== ''" class="pe-3">
+			</div>
+			<div *ngIf="token != ''" class="pe-3">
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 					<input type="radio" class="btn-check visually-hidden" name="btnradio" id="btnradio2" autocomplete="off" >
 					<label class="btn btn-secondary" for="btnradio2" routerLink="/devices" [ngStyle]="{ 'background-color': ruteAux[1]=='devices' || ruteAux[1]=='sensors' || ruteAux[1]=='structure' || ruteAux[1]=='variable-structure' ? '#565e64' : '' }">{{ 'management' | translate }}</label>

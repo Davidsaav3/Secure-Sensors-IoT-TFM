@@ -27,6 +27,8 @@ export class UsersComponent implements OnInit {
   duplicateUser: string = environment.baseUrl+environment.users+"/duplicate";
   getId: string = environment.baseUrl+environment.users+"/id";
 
+  currentDate = this.getCurrentDate();
+
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;
@@ -80,7 +82,8 @@ export class UsersComponent implements OnInit {
     password: "",
     change_password: true,
     token: "",
-    enabled: 1
+    enabled: 1,
+    revoke_date: "24-02-2001"
   };
 
   usersCopy = {
@@ -89,7 +92,8 @@ export class UsersComponent implements OnInit {
     password: "",
     change_password: true,
     token: "",
-    enabled: 1
+    enabled: 1,
+    revoke_date: "24-02-2001"
   };
 
   searchAuxArray = {
@@ -100,6 +104,18 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getUsers(this.order, this.ordAux);
+  }
+
+  getCurrentDate(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = ('0' + (now.getMonth() + 1)).slice(-2);
+    const day = ('0' + now.getDate()).slice(-2);
+    const hours = ('0' + now.getHours()).slice(-2);
+    const minutes = ('0' + now.getMinutes()).slice(-2);
+    const seconds = ('0' + now.getSeconds()).slice(-2);
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
   togglePasswordType() {
@@ -205,7 +221,8 @@ export class UsersComponent implements OnInit {
             password: users.password,
             change_password: users.change_password,
             token: users.token,
-            enabled: users.enabled
+            enabled: users.enabled,
+            revoke_date: users.revoke_date
           };
           this.openClouse();
         },
@@ -258,7 +275,7 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  openNew(id:any,email:any,password:any,change_password:any,token:any,enabled:any) { // Abre Nuevo usuario
+  openNew(id:any,email:any,password:any,change_password:any,token:any,enabled:any,revoke_date:any) { // Abre Nuevo usuario
 
     this.users = {
       id: id,
@@ -266,7 +283,8 @@ export class UsersComponent implements OnInit {
       password: password,
       change_password: change_password,
       token: token,
-      enabled: enabled
+      enabled: enabled,
+      revoke_date: revoke_date
     };
 
     this.show = true;
@@ -373,7 +391,8 @@ export class UsersComponent implements OnInit {
       password: this.usersCopy.password,
       change_password: this.usersCopy.change_password,
       token: this.usersCopy.token,
-      enabled: this.usersCopy.enabled
+      enabled: this.usersCopy.enabled,
+      revoke_date: this.usersCopy.revoke_date
     };
     this.change = false;
   }

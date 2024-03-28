@@ -153,6 +153,7 @@
     "fixed": "Fijo",
     "variable": "Variable",
     "show": "Mostrar configuracón",
+    "show2": "Mostrar",
     "hide": "Ocultar configuracón",
     "sensors.discard_value": "Valor descartado",
 
@@ -255,7 +256,8 @@
     "monitoring.id": "Id",	 
     "monitoring.user_id": "Id",	 
     "monitoring.username": "Usuario",	 
-    "monitoring.log_date": "Fecha",	 
+    "monitoring.log_date": "Fecha de expiración",	 
+    "monitoring.timed_out": "Caducado",
     "monitoring.log_code": "Código",	 
     "monitoring.log_status": "Estado",
     "monitoring.log_name": "Nombre",

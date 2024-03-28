@@ -19,11 +19,11 @@ const insertLog = require('./log');
     const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
     let query = ``;
     if (type0 === 'search') {
-      query += `SELECT id, email, change_password, enabled,(SELECT COUNT(*) AS total FROM users) as total FROM users`;
+      query += `SELECT id, email, change_password, enabled, revoke_date, (SELECT COUNT(*) AS total FROM users) as total FROM users`;
       query += ` ORDER BY ${type1} ${type2}`;
     } 
     else {
-      query += `SELECT id, email, change_password , enabled, (SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
+      query += `SELECT id, email, change_password , enabled, revoke_date, (SELECT COUNT(*) AS total FROM users WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
       query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
@@ -49,8 +49,8 @@ const insertLog = require('./log');
       return res.status(400).json({ error: 'El email y la contraseña son requeridos' });
     }
 
-    const selectQuery = "SELECT * FROM users WHERE email = ?";
-    con.query(selectQuery, [email], (err, result) => {
+    const selectQuery = "SELECT * FROM users WHERE email = ? AND (SELECT enabled FROM users WHERE email = ?) = 1";
+    con.query(selectQuery, [email, email], (err, result) => {
         if (err) {
           // LOG - 500 //
           insertLog("Sin datos", email, '005-002-500-002', "500", "users-login", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
@@ -76,10 +76,10 @@ const insertLog = require('./log');
                             if (verifyErr) {
                                 // El token ha caducado o es inválido, generar uno nuevo
                                 const newRefreshToken = jwt.sign({ email: user.email, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
-
+                                let revoke_date= process.env.REFRESH_TOKE_TIME;
                                 // Actualizar el nuevo token_refresh en la base de datos
-                                const updateQuery = "UPDATE users SET token = ? WHERE id = ?";
-                                con.query(updateQuery, [newRefreshToken, user.id], (updateErr, updateResult) => {
+                                const updateQuery = "UPDATE users SET token = ?, SET revoke_date = ? WHERE id = ?";
+                                con.query(updateQuery, [newRefreshToken, revoke_date, user.id], (updateErr, updateResult) => {
                                     if (updateErr) {
                                       console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                                       // LOG - 500 //
@@ -168,7 +168,7 @@ const insertLog = require('./log');
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
-    const query = "SELECT id, email, change_password, enabled FROM users WHERE id = ?";
+    const query = "SELECT id, email, change_password, enabled , revoke_date FROM users WHERE id = ?";
     con.query(query, [id,id], (err, result) => {
       if (err) {
         console.error("Error:", err);
@@ -399,74 +399,6 @@ const insertLog = require('./log');
           });
       }
   });
-  
-  /*router.put("/password", verifyToken, (req, res) => { // EDIT PASSWORD
-    const { id, password, newpassword, email } = req.body;
-
-    if (!id || !password || !newpassword || !email) {
-      // LOG - 400 //
-      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-      return res.status(400).json({ error: 'Todos los campos son requeridos' });
-    }
-
-    // Buscar el usuario en la base de datos
-    const query = "SELECT * FROM users WHERE id = ?";
-    con.query(query, [id], (err, result) => {
-        if (err) {
-          // LOG - 500 //
-          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error en la base de datos' });
-        }
-        if (result.length === 0) {
-          // LOG - 404 //
-          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-          return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
-        const user = result[0];
-
-        // Verificar si el email coincide
-        if (user.email !== email) {
-          // LOG - 400 //
-          insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-          return res.status(400).json({ error: 'El email proporcionado no coincide con el registrado' });
-        }
-
-        // Comparar la contraseña antigua con la contraseña almacenada
-        bcrypt.compare(password, user.password, (compareErr, compareResult) => {
-            if (compareErr) {
-              // LOG - 500 //
-              insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error al comparar contraseñas' });
-            }
-            if (!compareResult) {
-              // LOG - 400 //
-              insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-              return res.status(400).json({ error: 'Contraseña antigua incorrecta' });
-            }
-
-            // Cifrar la nueva contraseña
-            bcrypt.hash(newpassword, 10, (hashErr, hashedPassword) => {
-                if (hashErr) {
-                  // LOG - 500 //
-                  insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-                  return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
-                }
-
-                const updateQuery = "UPDATE users SET password = ?, change_password = 0 WHERE id = ?";
-                con.query(updateQuery, [hashedPassword, id], (updateErr, updateResult) => {
-                    if (updateErr) {
-                      // LOG - 500 //
-                      insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-                      return res.status(500).json({ error: 'Error al actualizar la contraseña' });
-                    }
-                    // LOG - 200 //
-                    insertLog(req.user.id, req.user.email, '005-004-401-001', "401", "users-password", JSON.stringify(req.params),'Inicio de sesión exitoso', JSON.stringify(err));
-                    return res.status(200).json({ message: 'Contraseña actualizada con éxito' });
-                });
-            });
-        });
-    });
-  });*/
 
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
@@ -495,25 +427,34 @@ const insertLog = require('./log');
   });
 
   router.post('/refresh', (req, res) => {
-    const { refreshToken, oldToken } = req.body;
+    const { refreshToken } = req.body;
     jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
         if (err) {
-          // LOG - 401 //
-          //insertLog("Sin datos", "Sin datos", '005-009-401-001', "401", "users-refresh", refreshToken,'Refresh token inválido', JSON.stringify(err));
-          return res.status(401).json({ error: 'Refresh token inválido' });
+            // LOG - 401 //
+            insertLog("Sin datos", "Sin datos", '005-009-401-001', "401", "users-refresh", refreshToken,'Refresh token inválido', JSON.stringify(err));
+            return res.status(401).json({ error: 'Refresh token inválido' });
         }
-        const newAccessToken = jwt.sign({ email: decoded.email, id: decoded.id }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
-        
-        // LOG - 200 //
-        //insertLog("Sin datos", "Sin datos", '005-009-200-001', "200", "users-refresh", refreshToken,'Token refrescado', "Sin datos");
-        res.status(200).json({ token: newAccessToken });
+
+        const query = "SELECT * FROM users WHERE id = ? AND email = ? AND (SELECT enabled FROM users WHERE id = ? AND email = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
+        con.query(query, [decoded.id, decoded.email, decoded.id, decoded.email], (err, results) => {
+            if (err || results.length === 0) {
+                // LOG - 401 //
+                insertLog("Sin datos", "Sin datos", '005-009-400-001', "400", "users-refresh", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
+                return res.status(401).json({ error: 'Los datos del JWT no existen en la base de datos' });
+            }
+            // LOG - 200 //
+            //insertLog("Sin datos", "Sin datos", '005-009-200-001', "200", "users-refresh", refreshToken,'Token refrescado', "Sin datos");
+            const newAccessToken = jwt.sign({ email: decoded.email, id: decoded.id }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
+            res.status(200).json({ token: newAccessToken });
+        });
     });
   });
 
+
   router.post("/revoke", verifyToken, (req, res) => {  /*/ REVOKE  /*/
     const { id } = req.body;
-      const query = "UPDATE users SET token = '?' WHERE id = ?";
-      con.query(query, ["", id], (err, result) => {
+      const query = "UPDATE users SET token = ? , revoke_date = ? WHERE id = ?";
+      con.query(query, ["", "", id], (err, result) => {
           if (err) {
               // LOG - 500 //
               insertLog(req.user.id, req.user.email, '005-010-500-002', "500", "users-revoke", "Sin datos",'Error en la base de datos', JSON.stringify(err));
