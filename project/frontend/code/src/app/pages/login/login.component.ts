@@ -46,7 +46,7 @@ export class LoginComponent {
   constructor(private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   formlogin = {
-    email: "",
+    user: "",
     password: "",
   };
 
@@ -67,7 +67,7 @@ export class LoginComponent {
       this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
         .subscribe(
           (data: any) => {
-            this.username= data.email;
+            this.username= data.user;
             this.id= data.id;
             this.saveStorage();
             localStorage.setItem('token', data.token);
@@ -123,5 +123,9 @@ export class LoginComponent {
     expirationDate.setDate(expirationDate.getDate() + days);
     const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
     document.cookie = cookieString;
-}
+  }
+
+  removeSpaces(event: any) {
+    event.target.value = event.target.value.replace(/\s/g, ''); // Esto elimina todos los espacios en blanco
+  }
 }

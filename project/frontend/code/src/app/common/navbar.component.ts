@@ -36,26 +36,23 @@ export class NavbarComponent {
   token= '';
 
   alertPassOk= false;
-  alertEmailOk= false;
+  alertUserOk= false;
   alertPassNot= false;
-  alertEmailNot= false;
+  alertUserNot= false;
 
-  postEmail: string = environment.baseUrl+environment.users+'/email';
+  postUser: string = environment.baseUrl+environment.users+'/user';
   postPass: string = environment.baseUrl+environment.users+'/password';
   but= false;
   changed= false;
   scriptEnable= false;
 
   formapassword = {
-    id: this.id,
     password: "",
     newpassword: "",
-    email: this.username
   };
 
   formuserdata = {
-    id: this.id,
-    email: "",
+    user: "",
   };
 
   constructor(private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
@@ -94,6 +91,12 @@ export class NavbarComponent {
   }
 
   clouseModal() {
+    if(this.clouseModalButton!=null){
+      this.renderer.selectRootElement(this.clouseModalButton.nativeElement).click();
+    }
+  }
+
+  clouseModalUser() {
     if(this.clouseModalButton!=null){
       this.renderer.selectRootElement(this.clouseModalButton.nativeElement).click();
     }
@@ -138,61 +141,78 @@ export class NavbarComponent {
     }
   }
 
-  changeEmail(form: any){ // Editar perfil
+  changeUser(form: any) { // Editar perfil
     let token = localStorage.getItem('token') ?? ''; 
-    this.formuserdata.id= this.id;
-
+  
     //if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      //console.log(this.formuserdata)
-      this.http.put(this.postEmail, JSON.stringify(this.formuserdata), httpOptions)
-        .subscribe(
-          (data: any) => {
-            this.formuserdata.email= '';
-            this.alertEmailOk = true;
-            localStorage.setItem("username", data.email);
-   
-            setTimeout(() => {
-              this.alertEmailOk = false;
-            }, 2000);
-          },
-          (error) => {
-            console.error("Error:", error);
-            this.alertEmailNot = true;
-            setTimeout(() => {
-              this.alertEmailNot = false;
-            }, 2000);
-          }
-        );
-      this.change1 = false;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': `${token}`
+      })
+    };
+  
+    this.http.put(this.postUser, JSON.stringify(this.formuserdata), httpOptions)
+      .subscribe(
+        (data: any) => {
+          console.log("HOLA")
+          this.alertUserOk = true;
+          localStorage.setItem("username", data.user);
+          //this.clouseModalUser();
+  
+          setTimeout(() => {
+            this.alertUserOk = false;
+          }, 2000);
+        },
+        (error) => {
+          console.error("Error:", error);
+          this.alertUserNot = true;
+          setTimeout(() => {
+            this.alertUserNot = false;
+          }, 2000);
+        }
+      );
+    this.change1 = false;
     //}
   }
+  
 
-  changePassword(form: any){ // Cambiar contraseña
+  changePassword(form: any) { // Cambiar contraseña
     let token = localStorage.getItem('token') ?? ''; 
-    this.formapassword.id= this.id;
-    this.formapassword.email= this.username;
-
+  
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': `${token}`
+        })
+      };
+      
       this.http.put(this.postPass, JSON.stringify(this.formapassword), httpOptions)
         .subscribe(
           (data: any) => {
             this.alertPassOk = true;
-            this.change_password= false;
+            this.change_password = false;
+  
             localStorage.setItem('change_password', "0");
-            this.clouseModal();
-
+            //this.clouseModal();
+            
             setTimeout(() => {
               this.alertPassOk = false;
             }, 2000);
           },
           (error) => {
-            this.change_password= false;
+            this.change_password = false;
             localStorage.setItem('change_password', "0");
-
+  
             console.error("Error:", error);
             this.alertPassNot = true;
+            
+            if (error && error.errors) {
+              // Handle errors here
+              // For example, you can access error.errors and display appropriate error messages
+            }
+            
             setTimeout(() => {
               this.alertPassNot = false;
             }, 2000);
@@ -201,6 +221,7 @@ export class NavbarComponent {
       this.change1 = false;
     }
   }
+  
 
   saveStorage() { // Guarda datos en el local storage
     localStorage.setItem("id", this.id.toString());
@@ -220,7 +241,7 @@ export class NavbarComponent {
     if(this.change_password){
       this.setBackdropAttribute();
     }
-    this.formuserdata.email= this.username;
+    this.formuserdata.user= this.username;
   }
 
   logOut(){
@@ -235,4 +256,8 @@ export class NavbarComponent {
   deleteCookie(name: string): void {  // Eliminar cookie por nombre
     document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
   }
+
+  removeSpaces(event: any) {
+    event.target.value = event.target.value.replace(/\s/g, ''); // Esto elimina todos los espacios en blanco
+}
 }

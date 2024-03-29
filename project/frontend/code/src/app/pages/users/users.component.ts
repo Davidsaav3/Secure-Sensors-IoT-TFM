@@ -66,7 +66,7 @@ export class UsersComponent implements OnInit {
   passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
 
   searchAux = "search";
-  order = "email";
+  order = "user";
   ordAux = "ASC";
 
   alertDelete: any = false;
@@ -80,7 +80,7 @@ export class UsersComponent implements OnInit {
 
   users = {
     id: 0,
-    email: "",
+    user: "",
     password: "",
     change_password: true,
     token: "",
@@ -90,7 +90,7 @@ export class UsersComponent implements OnInit {
 
   usersCopy = {
     id: 0,
-    email: "",
+    user: "",
     password: "",
     change_password: true,
     token: "",
@@ -135,16 +135,16 @@ export class UsersComponent implements OnInit {
 
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
-        if (id == "email") {
-          this.data.sort((a: any, b: any) => {return a.email - b.email;});
+        if (id == "user") {
+          this.data.sort((a: any, b: any) => {return a.user - b.user;});
         }
         if (id == "password") {
           this.data.sort((a: any, b: any) => a.password.localeCompare(b.password));
         }
       }
       if (ord == "DESC") {
-        if (id == "email") {
-          this.data.sort((a: any, b: any) => {return b.email - a.email;});
+        if (id == "user") {
+          this.data.sort((a: any, b: any) => {return b.user - a.user;});
         }
         if (id == "password") {
           this.data.sort((a: any, b: any) => b.password.localeCompare(a.password));
@@ -161,7 +161,7 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  getUsers(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
+  getUsers(id: any, ord: any) {// Obtiene los usuarios pasando parametros de ordenación
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
@@ -219,7 +219,7 @@ export class UsersComponent implements OnInit {
           let users = { ...this.users };
           this.usersCopy = {
             id: users.id,
-            email: users.email,
+            user: users.user,
             password: users.password,
             change_password: users.change_password,
             token: users.token,
@@ -240,52 +240,52 @@ export class UsersComponent implements OnInit {
   newUser(form: any) {
     let token = localStorage.getItem('token') ?? ''; 
 
+
     this.state = 1;
-    if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postUser, JSON.stringify(this.users), httpOptions)
-        .subscribe(
-          (data: any) => {
-            this.id = data.id;
-            this.alertNew = true;
-  
-            setTimeout(() => {
-              this.alertNew = false;
-            }, 2000);
-  
-            this.openClouse();
-            this.users.id = data.id;
-            let users = { ...this.users };
-            this.data.push(users);
-            this.data.sort((a: { email: string }, b: { email: any }) => {
-              if (typeof a.email === "string" && typeof b.email === "string") {
-                return a.email.localeCompare(b.email);
-              } 
-              else {
-                return 1;
-              }
-            });
-            this.actId = this.id;
-            this.openEdit();
-            this.state = 2;
-          },
-          (error) => {
-            this.notRep = true;
-            setTimeout(() => {
-              this.notRep = false;
-            }, 2000);
-            console.error("Error:", error);
-          }
-        );
-      this.change = false;
-    }
+    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+    this.http.post(this.postUser, JSON.stringify(this.users), httpOptions)
+      .subscribe(
+        (data: any) => {
+          this.id = data.id;
+          this.alertNew = true;
+
+          setTimeout(() => {
+            this.alertNew = false;
+          }, 2000);
+
+          this.openClouse();
+          this.users.id = data.id;
+          let users = { ...this.users };
+          this.data.push(users);
+          this.data.sort((a: { user: string }, b: { user: any }) => {
+            if (typeof a.user === "string" && typeof b.user === "string") {
+              return a.user.localeCompare(b.user);
+            } 
+            else {
+              return 1;
+            }
+          });
+          this.actId = this.id;
+          this.openEdit();
+          this.state = 2;
+        },
+        (error) => {
+          this.notRep = true;
+          setTimeout(() => {
+            this.notRep = false;
+          }, 2000);
+          console.error("Error:", error);
+        }
+      );
+    this.change = false;
+    
   }
 
-  openNew(id:any,email:any,password:any,change_password:any,token:any,enabled:any,revoke_date:any) { // Abre Nuevo usuario
+  openNew(id:any,user:any,password:any,change_password:any,token:any,enabled:any,revoke_date:any) { // Abre Nuevo usuario
 
     this.users = {
       id: id,
-      email: email,
+      user: user,
       password: password,
       change_password: change_password,
       token: token,
@@ -320,7 +320,7 @@ export class UsersComponent implements OnInit {
       this.data = this.data.filter((data: { id: number }) => data.id !== this.users.id);
       let users = this.users;
       this.data.push(users);
-      this.data.sort((a: any, b: any) => {return a.email - b.email;});
+      this.data.sort((a: any, b: any) => {return a.user - b.user;});
       this.actId = this.users.id;
       this.openEdit();
       this.state = 2;
@@ -345,7 +345,6 @@ export class UsersComponent implements OnInit {
 
   deleteUsers(idActual: any) { // Elimina usuario
     let token = localStorage.getItem('token') ?? ''; 
-
     var users2 = {
       id: this.id,
     };
@@ -357,22 +356,19 @@ export class UsersComponent implements OnInit {
     };
 
     this.http.delete(this.postUser, options).subscribe(
-        (response: any) => {
-          // Realiza acciones con la respuesta si es necesario
-          //console.log('Users eliminados:', response);
-        },
-        (error: any) => {
-          console.error('Error al eliminar usuario:', error);
-        }
-      );
-    this.alertDelete = true;
-
-    setTimeout(() => {
-      this.alertDelete = false;
-    }, 2000);
-
-    this.data = this.data.filter((objeto: { id: any }) => objeto.id != idActual);
-    this.clouse();
+      (response: any) => {
+        this.alertDelete = true;
+        setTimeout(() => {
+          this.alertDelete = false;
+        }, 2000);
+    
+        this.data = this.data.filter((objeto: { id: any }) => objeto.id != idActual);
+        this.clouse();
+      },
+      (error: any) => {
+        console.error('Error al eliminar usuario:', error);
+      }
+    );
   }
 
   /* BÚSQUEDA */
@@ -381,7 +377,6 @@ export class UsersComponent implements OnInit {
     this.currentPage = 1;
     clearTimeout(this.timeout);
     var $this = this;
-
     this.timeout = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getUsers(this.order, this.ordAux);
@@ -393,7 +388,7 @@ export class UsersComponent implements OnInit {
   rechargeForm() { // recarga usuario a su valor anterior
     this.users = {
       id: this.usersCopy.id,
-      email: this.usersCopy.email,
+      user: this.usersCopy.user,
       password: this.usersCopy.password,
       change_password: this.usersCopy.change_password,
       token: this.usersCopy.token,
@@ -403,7 +398,7 @@ export class UsersComponent implements OnInit {
     this.change = false;
   }
 
-  revoke(idActual: any){
+  revokeUser(idActual: any){ // Quita token del usuario
     let token = localStorage.getItem('token') ?? ''; 
     let users = {
       id: idActual,
@@ -525,5 +520,9 @@ export class UsersComponent implements OnInit {
       this.currentPage = this.totalPages;
       this.getUsersVoid();
     }
+  }
+
+  removeSpaces(event: any) {
+    event.target.value = event.target.value.replace(/\s/g, ''); // Esto elimina todos los espacios en blanco
   }
 }

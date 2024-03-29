@@ -24,9 +24,9 @@ throw new Error('Method not implemented.');
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl+environment.monitoring+"/get";
-  postConecction: string = environment.baseUrl+environment.monitoring;
-  duplicateConecction: string = environment.baseUrl+environment.monitoring+"/duplicate";
+  getMonitorings: string = environment.baseUrl+environment.monitoring+"/get";
+  postMonitoring: string = environment.baseUrl+environment.monitoring;
+  duplicateMonitorings: string = environment.baseUrl+environment.monitoring+"/duplicate";
   getId: string = environment.baseUrl+environment.monitoring+"/id";
   date: any;
 
@@ -76,7 +76,7 @@ throw new Error('Method not implemented.');
   saveOk: any = false;
   saveNot: any = false;
 
-  conecctions = {
+  monitoring = {
     id: 0,
     user_id: "",
     username: "",
@@ -86,7 +86,7 @@ throw new Error('Method not implemented.');
     log_trace: "",
   };
 
-  conecctionsCopy = {
+  monitoringCopy = {
     id: 0,
     user_id: "",
     username: "",
@@ -102,17 +102,17 @@ throw new Error('Method not implemented.');
   };
 
   ngOnInit(): void { // Inicializa
-    this.getConecctions(this.order, this.ordAux);
+    this.getMonitoring(this.order, this.ordAux);
     this.createDate();
   }
 
   /* GET */
 
-  getConecctionsVoid() { // Obtiene los conexiones sin pasar arámetros
-    this.getConecctions(this.order, this.ordAux);
+  getMonitoringVoid() { // Obtiene los logs sin pasar arámetros
+    this.getMonitoring(this.order, this.ordAux);
   }
 
-  getConecctionsLocal(id: any, ord: any) { // Ordena columnas en local
+  getMonitoringLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
 
     if (this.totalPages <= 1 && false) {
@@ -173,7 +173,7 @@ throw new Error('Method not implemented.');
       }
     } 
     else {
-      this.getConecctions(id, ord);
+      this.getMonitoring(id, ord);
     }
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
@@ -182,7 +182,7 @@ throw new Error('Method not implemented.');
     }
   }
 
-  getConecctions(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
+  getMonitoring(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
@@ -192,7 +192,7 @@ throw new Error('Method not implemented.');
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getConecction}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getMonitorings}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -233,20 +233,20 @@ throw new Error('Method not implemented.');
       this.http.get(`${this.getId}/${idActual}`, {headers})
       .subscribe(
         (data: any) => {
-          this.conecctions = data[0];
+          this.monitoring = data[0];
           this.actId = idActual;
           this.id = idActual;
           this.openEdit();
           this.state = 2;
-          let conecctions = { ...this.conecctions };
-          this.conecctionsCopy = {
-            id: conecctions.id,
-            user_id: conecctions.user_id ,
-            username: conecctions.username, 
-            log_date: conecctions.log_date, 
-            log_code: conecctions.log_code, 
-            log_message: conecctions.log_message, 
-            log_trace: conecctions.log_trace
+          let monitoring = { ...this.monitoring };
+          this.monitoringCopy = {
+            id: monitoring.id,
+            user_id: monitoring.user_id ,
+            username: monitoring.username, 
+            log_date: monitoring.log_date, 
+            log_code: monitoring.log_code, 
+            log_message: monitoring.log_message, 
+            log_trace: monitoring.log_trace
 
           };
           this.openClouse();
@@ -260,13 +260,13 @@ throw new Error('Method not implemented.');
   
   /* NEW */
 
-  newConecction(form: any) {
+  newMonitoring(form: any) {
     let token = localStorage.getItem('token') ?? ''; 
 
     this.state = 1;
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
+      this.http.post(this.postMonitoring, JSON.stringify(this.monitoring), httpOptions)
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -277,9 +277,9 @@ throw new Error('Method not implemented.');
             }, 2000);
   
             this.openClouse();
-            this.conecctions.id = data.id;
-            let conecctions = { ...this.conecctions };
-            this.data.push(conecctions);
+            this.monitoring.id = data.id;
+            let monitoring = { ...this.monitoring };
+            this.data.push(monitoring);
             this.data.sort((a: { description: string }, b: { description: any }) => {
               if (typeof a.description === "string" && typeof b.description === "string") {
                 return a.description.localeCompare(b.description);
@@ -302,7 +302,7 @@ throw new Error('Method not implemented.');
 
   openNew(id:any,user_id:any,username:any,log_date:any,log_code:any,log_message:any, log_trace:any) { // Abre Nueva conexion
 
-    this.conecctions = {
+    this.monitoring = {
       id: id,
       user_id: user_id ,
       username: username, 
@@ -319,12 +319,12 @@ throw new Error('Method not implemented.');
 
   /* EDIT */
 
-  editConecction(form: any) { // Guardar datos de la conexión editado
+  editMonitoring(form: any) { // Guardar datos de la conexión editado
     let token = localStorage.getItem('token') ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.put(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
+      this.http.put(this.postMonitoring, JSON.stringify(this.monitoring), httpOptions)
         .subscribe(
           (response: any) => {
             // Respuesta
@@ -333,11 +333,11 @@ throw new Error('Method not implemented.');
             console.error("Error:", error);
           }
         );
-      this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
-      let conecctions = this.conecctions;
-      this.data.push(conecctions);
+      this.data = this.data.filter((data: { id: number }) => data.id !== this.monitoring.id);
+      let monitoring = this.monitoring;
+      this.data.push(monitoring);
       this.data.sort((a: any, b: any) => {return a.description - b.description;});
-      this.actId = this.conecctions.id;
+      this.actId = this.monitoring.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
@@ -358,42 +358,42 @@ throw new Error('Method not implemented.');
 
   /* DUPLICATE */
 
-  duplicateConecctions(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
+  duplicateMonitoring(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateConecction}/${type}`, {headers})
+      this.http.get(`${this.duplicateMonitorings}/${type}`, {headers})
       .subscribe(
         (data: any) => {
-          this.conecctions = this.data.find((objeto: { id: any }) => objeto.id == num);
+          this.monitoring = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
     
-          this.http.get(`${this.getId}/${this.conecctions.id}`, {headers})
+          this.http.get(`${this.getId}/${this.monitoring.id}`, {headers})
             .subscribe(
               (data1: any) => {
-                this.conecctions = data1[0];
-                this.actId = this.conecctions.id;
-                this.id = this.conecctions.id;
-                let conecctions = { ...this.conecctions };
-                this.conecctionsCopy = {
-                  id: conecctions.id,
-                  user_id: conecctions.user_id ,
-                  username: conecctions.username, 
-                  log_date: conecctions.log_date, 
-                  log_code: conecctions.log_code, 
-                  log_message: conecctions.log_message, 
-                  log_trace: conecctions.log_trace
+                this.monitoring = data1[0];
+                this.actId = this.monitoring.id;
+                this.id = this.monitoring.id;
+                let monitoring = { ...this.monitoring };
+                this.monitoringCopy = {
+                  id: monitoring.id,
+                  user_id: monitoring.user_id ,
+                  username: monitoring.username, 
+                  log_date: monitoring.log_date, 
+                  log_code: monitoring.log_code, 
+                  log_message: monitoring.log_message, 
+                  log_trace: monitoring.log_trace
                 };
                 this.openNew(
                   '',
-                  this.conecctions.user_id,
-                  this.conecctions.username, 
-                  this.conecctions.log_date, 
-                  this.conecctions.log_code, 
-                  this.conecctions.log_message,    
-                  this.conecctions.log_trace
+                  this.monitoring.user_id,
+                  this.monitoring.username, 
+                  this.monitoring.log_date, 
+                  this.monitoring.log_code, 
+                  this.monitoring.log_message,    
+                  this.monitoring.log_trace
                 );
               },
               (error) => {
@@ -411,24 +411,24 @@ throw new Error('Method not implemented.');
 
   /* DELETE */
 
-  deleteconecctions(idActual: any) { // Elimina conexión
+  deletemonitoring(idActual: any) { // Elimina conexión
     let token = localStorage.getItem('token') ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
-    var conecctions2 = {
+    var monitoring2 = {
       id: this.id,
     };
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`
       }),
-      body: conecctions2,
+      body: monitoring2,
     };
 
-    this.http.delete(this.postConecction, options).subscribe(
+    this.http.delete(this.postMonitoring, options).subscribe(
         (response: any) => {
           // Realiza acciones con la respuesta si es necesario
-          //console.log('conecctions eliminados:', response);
+          //console.log('monitoring eliminados:', response);
         },
         (error: any) => {
           console.error('Error al eliminar conexón:', error);
@@ -453,21 +453,21 @@ throw new Error('Method not implemented.');
 
     this.timeout = setTimeout(() => {
       if (event.keyCode != 13) {
-        $this.getConecctions(this.order, this.ordAux);
+        $this.getMonitoring(this.order, this.ordAux);
         $this.openClouse();
       }
     }, 500);
   }
 
   rechargeForm() { // recarga conexión a su valor anterior
-    this.conecctions = {
-      id: this.conecctionsCopy.id,
-      user_id: this.conecctionsCopy.user_id ,
-      username: this.conecctionsCopy.username, 
-      log_date: this.conecctionsCopy.log_date, 
-      log_code: this.conecctionsCopy.log_code, 
-      log_message: this.conecctionsCopy.log_message, 
-      log_trace: this.conecctionsCopy.log_trace
+    this.monitoring = {
+      id: this.monitoringCopy.id,
+      user_id: this.monitoringCopy.user_id ,
+      username: this.monitoringCopy.username, 
+      log_date: this.monitoringCopy.log_date, 
+      log_code: this.monitoringCopy.log_code, 
+      log_message: this.monitoringCopy.log_message, 
+      log_trace: this.monitoringCopy.log_trace
     };
     this.change = false;
   }
@@ -479,12 +479,12 @@ throw new Error('Method not implemented.');
     this.quantPage = 15;
     this.page = 1;
     this.searchAuxArray.value = "";
-    this.getConecctions(this.order, this.ordAux);
+    this.getMonitoring(this.order, this.ordAux);
   }
 
   /* TARJETAS */
 
-  openClouse() { // Abre y cierra la tarjeta de conexiones
+  openClouse() { // Abre y cierra la tarjeta de logs
     if (this.show == true) {
       this.showAux = false;
     } 
@@ -517,55 +517,55 @@ throw new Error('Method not implemented.');
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     } 
     else {
       this.currentPage = 1;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
-    this.getConecctionsVoid();
+    this.getMonitoringVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     } 
     else {
       this.currentPage = this.totalPages;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     }
   }
 
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
-      this.getConecctionsVoid();
+      this.getMonitoringVoid();
     }
   }
 

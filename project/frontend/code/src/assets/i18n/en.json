@@ -170,7 +170,7 @@
     "users.new": "New user ",
     "users.duplicate": "Duplicate ",
     "users.nuevo_usuario": "New user",
-    "users.email": "Usename",
+    "users.user": "Usename",
     "users.password": "Password",
     "users.change_password": "Change password the first time ?",
     "users.token": "Revoke renewal token",

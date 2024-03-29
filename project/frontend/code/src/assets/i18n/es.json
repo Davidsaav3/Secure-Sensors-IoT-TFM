@@ -172,7 +172,7 @@
     "users.new": "Nuevo usuario ",
     "users.duplicate": "Duplicar ",
     "users.nuevo_usuario": "Nuevo usuario",
-    "users.email": "Nombre de usuario",
+    "users.user": "Nombre de usuario",
     "users.password": "Contraseña",
     "users.change_password": "Cambiar la contraseña la primera vez ?",
     "users.token": "Revocar token de renovación",

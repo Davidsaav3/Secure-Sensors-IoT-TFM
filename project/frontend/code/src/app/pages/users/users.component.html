@@ -34,13 +34,13 @@
 				<table class="table" [ngClass]="{'table-hover': !change}">
 					<thead>
 						<tr style="background-color: #fff;">
-							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'email'}">
-								<svg *ngIf="alt1" (click)="alt1=false;getUsersLocal('email','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'user'}">
+								<svg *ngIf="alt1" (click)="alt1=false;getUsersLocal('user','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt1" (click)="alt1=true;getUsersLocal('email','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt1" (click)="alt1=true;getUsersLocal('user','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								</svg> {{ 'users.email' | translate }}
+								</svg> {{ 'users.user' | translate }}
 							</th>
 		
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'enabled'}">
@@ -73,7 +73,7 @@
 					</thead>
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
-							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.email }}</th>
+							<th class="d-table-cell" class="rounded-0" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.user }}</th>
 	
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
 								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
@@ -118,7 +118,7 @@
 					<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
 				</div>
 				<div>
-					<select (change)="this.currentPage=1;getUsersLocal('email','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<select (change)="this.currentPage=1;getUsersLocal('user','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 						<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 					</select>
 				</div>
@@ -169,31 +169,29 @@
 					<div class="col-12">
 						<h1 *ngIf="state==0" class="mb-0">
 							{{ 'users.duplicate' | translate }} 
-							<span>{{ users.email }}</span>
+							<span>{{ users.user }}</span>
 						</h1>
 						<h1 *ngIf="state==1" class="mb-0">
 							{{ 'users.new' | translate }}
-							<span *ngIf="users.email.includes('@'); else fullEmail">{{ users.email.substring(0, users.email.indexOf('@')) }}</span>
-							<ng-template #fullEmail>{{ users.email }}</ng-template>	
+							<span *ngIf="users.user.includes('@'); else fullUser">{{ users.user.substring(0, users.user.indexOf('@')) }}</span>
+							<ng-template #fullUser>{{ users.user }}</ng-template>	
 						</h1>
 						<h1 *ngIf="state==2" class="mb-0">
 							{{ 'users.of' | translate }} 
-							<span *ngIf="users.email.includes('@'); else fullEmail">{{ users.email.substring(0, users.email.indexOf('@')) }}</span>
-							<ng-template #fullEmail>{{ users.email }}</ng-template>	
+							<span *ngIf="users.user.includes('@'); else fullUser">{{ users.user.substring(0, users.user.indexOf('@')) }}</span>
+							<ng-template #fullUser>{{ users.user }}</ng-template>	
 						</h1>
 					</div>
 					
 					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ users.id }}" [(ngModel)]="users.id">
 
-
-
 					<div class="col-8 pt-2 form-group">
-						<label for="email">{{ 'users.email' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ users.email }}" type="email" id="email" class="form-control" name="email" [(ngModel)]="users['email']" >
-						<div *ngIf="form.submitted && form.controls['email'].errors" class="text-danger">
-							<div *ngIf="form.controls['email'].errors['required']">{{ 'users.email' | translate }} {{ 'required' | translate }}</div>
+						<label for="user">{{ 'users.user' | translate }}</label>
+						<input maxlength="45" (keyup)="removeSpaces($event)" (ngModelChange)="change=true" value="{{ users.user }}" type="text" id="user" class="form-control" name="user" [(ngModel)]="users['user']">
+						<div *ngIf="form.submitted && form.controls['user'].errors" class="text-danger">
+							<div *ngIf="form.controls['user'].errors['required']">{{ 'users.user' | translate }} {{ 'required' | translate }}</div>
 						</div>
-					</div>
+					</div>					
 
 					<div class="col-4 pt-2 form-group">
 						<label for="enabled">{{ 'conecctions.enabled' | translate }}</label>
@@ -353,7 +351,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-8">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" (click)="revoke(actId)" class="btn btn-info" style="width: 100%">{{ 'revoke' | translate }}</button>
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" (click)="revokeUser(actId)" class="btn btn-info" style="width: 100%">{{ 'revoke' | translate }}</button>
 					</div>
 				</div>
 			</div>

@@ -116,8 +116,6 @@
 				<div class="col-12">
 					<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 		
-						<input (ngModelChange)="change1=true" value="{{ formapassword.id }}" [(ngModel)]="formapassword['id']" maxlength="45"  id="type" class="form-control d-none" name="type">
-
 						<div class="col-12 pt-2 form-group">
 							<label for="password">{{ 'login.pass' | translate }}</label>
 							<div class="input-group">
@@ -201,11 +199,9 @@
 				<div class="col-12">
 					<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 		
-						<input (ngModelChange)="change1=true" value="{{ formuserdata.id }}" [(ngModel)]="formuserdata['id']" maxlength="45" type="text" id="id" class="form-control d-none" name="type">
-
 						<div class="col-12 pt-2 form-group">
 							<label for="type">{{ 'login.user' | translate }}</label>
-							<input (ngModelChange)="change2=true" value="{{ formuserdata.email }}" [(ngModel)]="formuserdata['email']" maxlength="45" type="email" id="email1" class="form-control" name="type" required>
+							<input (ngModelChange)="change2=true" (keyup)="removeSpaces($event)" value="{{ formuserdata.user }}" [(ngModel)]="formuserdata['user']" maxlength="45" type="text" id="user1" class="form-control" name="type" required>
 							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
 								<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
 							</div>
@@ -220,7 +216,7 @@
 							<button type="button navb" data-bs-dismiss="modal" aria-label="Close" class="btn btn-secondary text-light navb"  style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 						</div>
 						<div class="col-6">
-							<button (click)="changeEmail(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%">{{ 'sensors.save' | translate }}</button>
+							<button (click)="changeUser(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%">{{ 'sensors.save' | translate }}</button>
 						</div>
 					</div>
 				</div>
@@ -230,7 +226,7 @@
     </div>
 </div>
 
-<div *ngIf="alertEmailOk" class="top-0 start-0 p-2 pt-2 ps-3" style="position: absolute;">
+<div *ngIf="alertUserOk" class="top-0 start-0 p-2 pt-2 ps-3" style="position: absolute;">
 	<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
@@ -241,7 +237,7 @@
 	</div>
 </div>
 
-<div *ngIf="alertEmailNot" class="top-0 start-0 p-2 pt-2 ps-3"  style="position: absolute;">
+<div *ngIf="alertUserNot" class="top-0 start-0 p-2 pt-2 ps-3"  style="position: absolute;">
 	<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">

@@ -9,13 +9,13 @@
 				<div class="col-12">
 					<div class="row">
 						<div class="col-12 pt-2 form-group">
-							<label for="email">{{ 'login.user' | translate }}</label>
-							<input (ngModelChange)="change1=true" [(ngModel)]="formlogin.email" maxlength="45" type="email" id="email" class="form-control" name="email" required>
-							<div *ngIf="form.submitted && form.controls['email'].errors" class="text-danger">
-								<div *ngIf="form.controls['email'].errors['required']">{{ 'login.user' | translate }} {{ 'required' | translate }}</div>
-								<div *ngIf="form.controls['email'].errors['email']">{{ 'login.user' | translate }} {{ 'invalid' | translate }}</div>
+							<label for="user">{{ 'login.user' | translate }}</label>
+							<input maxlength="45" (keyup)="removeSpaces($event)" (ngModelChange)="change1=true" [(ngModel)]="formlogin.user" type="text" id="user" class="form-control" name="user" required>
+							<div *ngIf="form.submitted && form.controls['user'].errors" class="text-danger">
+								<div *ngIf="form.controls['user'].errors['required']">{{ 'login.user' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['user'].errors['user']">{{ 'login.user' | translate }} {{ 'invalid' | translate }}</div>
 							</div>
-						</div>
+						</div>						
 						<div class="col-12 pt-2 form-group">
 							<label for="password">{{ 'login.pass' | translate }}</label>
 							<div class="input-group">

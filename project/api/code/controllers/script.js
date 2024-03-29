@@ -20,8 +20,8 @@ const SECRET_KEY = process.env.TOKEN;
       query += ` ORDER BY ${type1} ${type2}`;
     } 
     else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM script WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM script`;
-      query += ` WHERE email LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+      query += `SELECT *,(SELECT COUNT(*) AS total FROM script WHERE user LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM script`;
+      query += ` WHERE user LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
     }
     query += ` LIMIT ? OFFSET ?`;
     con.query(query, [ tam, act], (err, result) => {
@@ -33,22 +33,22 @@ const SECRET_KEY = process.env.TOKEN;
   });
 
   router.post("/login", (req, res) => {  // POST LOGIN
-    const { email, password } = req.body;
+    const { user, password } = req.body;
     //console.log(req.body)
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y Password son requeridas' });
+    if (!user || !password) {
+      return res.status(400).json({ error: 'User y Password son requeridas' });
     }
 
-    const query = "SELECT * FROM script WHERE email = ? AND password = ?";
+    const query = "SELECT * FROM script WHERE user = ? AND password = ?";
     //console.log(query)
-    con.query(query, [email, password], (err, result) => {
+    con.query(query, [user, password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.length === 1) { 
         const user = result[0];
-        const token = jwt.sign({ email }, SECRET_KEY);
-        return res.status(200).json({ id: user.id, email: user.email, token: token });
+        const token = jwt.sign({ user }, SECRET_KEY);
+        return res.status(200).json({ id: user.id, user: user.user, token: token });
       }
       return res.status(401).json({ error: 'Credenciales incorrectas' });
     });
@@ -67,9 +67,9 @@ const SECRET_KEY = process.env.TOKEN;
     });
   });
 
-  router.get("/duplicate/:email", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
-    const email = req.params.email;
-    let query = `SELECT email FROM script`;
+  router.get("/duplicate/:user", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
+    const user = req.params.user;
+    let query = `SELECT user FROM script`;
     con.query(query, (err, result) => {
       if (err) {
         console.error(err);
@@ -79,27 +79,27 @@ const SECRET_KEY = process.env.TOKEN;
       let contador = 1;
       let nombresExistentes = new Set();
       for (let index = 0; index < result.length; index++) {
-        nombresExistentes.add(result[index].email);
+        nombresExistentes.add(result[index].user);
       }
       
-      let email_2 = email;
-      while (nombresExistentes.has(email_2)) {
-        email_2 = `${email}_${contador}`;
+      let user_2 = user;
+      while (nombresExistentes.has(user_2)) {
+        user_2 = `${user}_${contador}`;
         contador++;
       }
-      res.json({ duplicateEmail: email_2 });
+      res.json({ duplicateUser: user_2 });
     });
   });
 
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-    const { email, password, change_password } = req.body;
+    const { user, password, change_password } = req.body;
     
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email y password  son requeridas' });
+    if (!user || !password) {
+      return res.status(400).json({ error: 'User y password  son requeridas' });
     }
 
-    const query = "INSERT INTO script (email, password, change_password) VALUES (?, ?, ?)";
-    con.query(query, [email, password, change_password], (err, result) => {
+    const query = "INSERT INTO script (user, password, change_password) VALUES (?, ?, ?)";
+    con.query(query, [user, password, change_password], (err, result) => {
       if (err) {
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
@@ -111,20 +111,20 @@ const SECRET_KEY = process.env.TOKEN;
     });
   });
     
-  router.put("/email", verifyToken, (req, res) => {  // UPDATE EMAIL
-    const { id, email } = req.body;
-    if (!id || !email) {
+  router.put("/user", verifyToken, (req, res) => {  // UPDATE EMAIL
+    const { id, user } = req.body;
+    if (!id || !user) {
         return res.status(400).json({ error: 'Se requiere el ID del usuario y el nuevo correo electrónico para actualizar' });
     }
 
-    const query = "UPDATE script SET email = ? WHERE id = ?";
-    con.query(query, [email, id], (err, result) => {
+    const query = "UPDATE script SET user = ? WHERE id = ?";
+    con.query(query, [user, id], (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Error en la base de datos' });
         }
 
         if (result.affectedRows > 0) {
-            return res.status(200).json({ email: email }); // Devolver el nuevo correo electrónico actualizado
+            return res.status(200).json({ user: user }); // Devolver el nuevo correo electrónico actualizado
         }
 
         return res.status(404).json({ error: 'Registro no encontrado' });
@@ -132,15 +132,15 @@ const SECRET_KEY = process.env.TOKEN;
   });
 
   router.put("", (req, res) => {  /*/ UPDATE  /*/
-  const { id, email, password, change_password } = req.body;
-  if (!id || (!email && !password)) {
+  const { id, user, password, change_password } = req.body;
+  if (!id || (!user && !password)) {
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
   }
   let query = "UPDATE script SET";
   const values = [];
-  if (email) {
-    query += " email=?";
-    values.push(email);
+  if (user) {
+    query += " user=?";
+    values.push(user);
   }
   if (password) {
     query += ", password=?";
