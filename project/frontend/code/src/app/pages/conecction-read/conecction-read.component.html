@@ -228,7 +228,7 @@
 
 					<div *ngIf="state==2" class="col-4 ps-2 pt-2 form-group" style="display: flex; flex-direction: column;">
 						<label for="authorization">&nbsp;</label>
-						<button style="width: 100%; border: #e2e2e2 1px solid; " type="button" class="btn" (click)="getSecret(this.id)" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+						<button style="width: 100%; border: #e2e2e2 1px solid; " type="button" class="btn" data-bs-toggle="modal" data-bs-target="#exampleModal2">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye me-2" viewBox="0 0 16 16">
 								<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"></path>
 								<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"></path>
@@ -334,10 +334,38 @@
 		<div class="modal-content">
 			<div class="modal-header" style="border-bottom: 0px;">
 				<h3 class="modal-title">{{ 'conecctions.accessKey' | translate }}</h3>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" (click)="resetPass()" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-0">
-				<form #form="ngForm" class="row needs-validation p-3 pt-0">
+				<!---->
+				<form *ngIf="!showPass" #form="ngForm" class="row needs-validation p-3 pt-0">
+					<div class="col-12 mt-2">
+						<label for="password">{{ 'users.password' | translate }}</label>
+						<div class="input-group">
+							<input (ngModelChange)="change=true" [(ngModel)]="users['password']" maxlength="45" minlength="8" type="{{ passwordFieldType }}" id="password" class="form-control" name="password" autocomplete>
+							<span (click)="togglePasswordType()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">
+								<svg *ngIf="this.passwordFieldType=='password'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+									<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+									<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+								</svg>
+								<svg *ngIf="this.passwordFieldType=='text'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
+									<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+									<path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+									<path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+								</svg>
+							</span>
+						</div>
+						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+							<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+							<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
+								{{ 'complexity' | translate }}
+							</div>      
+						</div>  
+					</div>
+				</form>
+				<!---->
+				<form *ngIf="showPass" #form="ngForm" class="row needs-validation p-3 pt-0">
 					<div class="col-12 pt-2 form-group">
 						<label for="accessKey">{{ 'conecctions.accessKey' | translate }}</label>
 						<input disabled data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctionsSecret.accessKey }}" type="text" id="accessKey" class="form-control" name="accessKey" [(ngModel)]="conecctionsSecret['accessKey']" required>
@@ -346,14 +374,15 @@
 						</div>
 					</div>
 				</form>
+				<!---->
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
-					<!--<div class="col-6">
-						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'sensors.exit' | translate }}</button>
-					</div>-->
-					<div class="col-6">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-secondary"  style="width: max-content;">{{ 'sensors.exit' | translate }}</button>
+					<div class="col-5">
+						<button (click)="resetPass()" type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-secondary"  style="width: max-content;">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-7">
+						<button (click)="getSecret(this.id)" style="width: max-content;" type="button" class="btn btn-info pe-4" (click)="rechargeForm()">{{ 'sensors.send' | translate }}</button>
 					</div>
 				</div>
 			</div>

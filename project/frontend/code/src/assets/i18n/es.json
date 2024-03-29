@@ -22,6 +22,7 @@
     "sensors.m2.1" : "¿ Salir sin guardar ?",
     "sensors.m2.2" : "No se guardará el dispositivo editado.",
     "sensors.erase_sensor" : "Eliminar",
+    "sensors.send" : "Solicitar",
 
     "sensors.error_value" : "Valor de error",
     "sensors.value_min" : "Valor min",
@@ -258,6 +259,7 @@
     "monitoring.user_id": "Id",	 
     "monitoring.username": "Usuario",	 
     "monitoring.log_date": "Fecha de expiración",	 
+    "monitoring.date": "Fecha",	 
     "monitoring.timed_out": "Caducado",
     "monitoring.log_code": "Código",	 
     "monitoring.log_status": "Estado",

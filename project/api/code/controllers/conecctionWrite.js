@@ -7,8 +7,9 @@ router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('./token');
 const CryptoJS = require('crypto-js');
-const secretKey = process.env.PASSWORD_CIFRADO;
 const insertLog = require('./log');
+const secretKey = process.env.PASSWORD_CIFRADO;
+const bcrypt = require('bcrypt');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     
@@ -199,24 +200,45 @@ const insertLog = require('./log');
     });
   });
 
-  router.get("/secret/:id", verifyToken, (req, res) => {  /*/ SECRET  /*/
-    const id = parseInt(req.params.id);
-    const query = "SELECT authorization FROM conecction_write WHERE id = ?";
-    con.query(query, [id, id], (err, result) => {
+  router.post("/secret", verifyToken, (req, res) => {  /*/ SECRET  /*/
+  const { id, password } = req.body;
+  const query = "SELECT password FROM users WHERE id = ?";
+    con.query(query, [parseInt(req.user.id), parseInt(req.user.id)], (err, result) => {
       if (err) {
         console.error(err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "conecctionWrite-secret", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-      // Descifrar el authorization antes de enviarlo en la respuesta
-      const decryptedResult = result.map(row => ({
-        authorization: decryptMessage(row.authorization, secretKey)
-      }));
-
-      // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "conecctionWrite-secret", JSON.stringify(req.params),'Error en la base de datos', "Sin datos");
-      res.send(decryptedResult);
+      else{
+      bcrypt.compare(password, result[0].password, (bcryptErr, bcryptResult) => {
+        if (bcryptErr) {
+          console.error("Error al comparar contraseñas:", bcryptErr);
+          // LOG - 500 //
+          insertLog(req.user.id, req.user.user, '007-007-500-003', "500", "conecctionWrite-secret", JSON.stringify(req.body),'Error al comparar contraseñas', JSON.stringify(bcryptErr));
+          return res.status(500).json({ error: 'Error al comparar contraseñas' });
+        }
+        if(bcryptResult){
+          const query = "SELECT authorization FROM conecction_write WHERE id = ?";
+          con.query(query, [id, id], (err, result) => {
+            if (err) {
+              console.error(err);
+              // LOG - 500 //
+              insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "conecctionWrite-secret", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+              return res.status(500).json({ error: 'Error en la base de datos' });
+            }
+            // Descifrar el accessKey antes de enviarlo en la respuesta
+            const decryptedResult = result.map(row => ({
+              authorization: decryptMessage(row.authorization, secretKey)
+            }));
+              
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "conecctionWrite-secret", JSON.stringify(req.params),'Error en la base de datos', "Sin datos");
+            return res.send(decryptedResult);
+          });
+        }
+      })
+      }
     });
   });
 

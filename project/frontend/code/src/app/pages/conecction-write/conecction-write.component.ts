@@ -27,6 +27,9 @@ export class ConecctionWriteComponent implements OnInit {
   getId: string = environment.baseUrl+environment.conecctionWrite+"/id";
   getIdSecret: string = environment.baseUrl+environment.conecctionWrite+"/secret";
 
+  passwordFieldType = 'password';
+  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;
@@ -59,6 +62,7 @@ export class ConecctionWriteComponent implements OnInit {
   dupNot = false;
   viewDup = -1;
   pencilDup = -1;
+  showPass= false;
 
   searchAux = "search";
   order = "description";
@@ -94,6 +98,11 @@ export class ConecctionWriteComponent implements OnInit {
 
   searchAuxArray = {
     value: "",
+  };
+
+  users = {
+    id: this.id,
+    password: "",
   };
 
   ngOnInit(): void { // Inicializa
@@ -249,13 +258,16 @@ export class ConecctionWriteComponent implements OnInit {
   }
 
   getSecret(idActual: any) { // Obtiene secreto
+    this.users.id= this.id;
     let token = localStorage.getItem('token') ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-    this.http.get(`${this.getIdSecret}/${idActual}`, {headers})
+    
+    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+    this.http.post(this.getIdSecret, JSON.stringify(this.users), httpOptions)
     .subscribe(
       (data: any) => {
         this.conecctionsSecret = data[0];
         console.log(data[0])
+        this.showPass= true;
       },
       (error) => {
         console.error(error);
@@ -564,5 +576,14 @@ export class ConecctionWriteComponent implements OnInit {
       this.currentPage = this.totalPages;
       this.getConecctionsVoid();
     }
+  }
+  
+  togglePasswordType() {
+    this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
+  resetPass(){
+    this.showPass= false;
+    this.users.password= "";
   }
 }

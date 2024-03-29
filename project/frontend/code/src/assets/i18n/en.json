@@ -22,6 +22,7 @@
     "sensors.m2.1" : "Exit without saving ?",
     "sensors.m2.2" : "The edited device will not be saved.",
     "sensors.erase_sensor" : "Delete",
+    "sensors.send" : "Request",
 
     "sensors.error_value" : "Error value",
     "sensors.value_min" : "Value min",
@@ -256,6 +257,7 @@
     "monitoring.user_id": "ID",
     "monitoring.username": "User",
     "monitoring.log_date": "Expiration date",
+    "monitoring.date": "Date",	 
     "monitoring.timed_out": "Timed_out",
     "monitoring.log_code": "Code",
     "monitoring.log_status": "Status",
