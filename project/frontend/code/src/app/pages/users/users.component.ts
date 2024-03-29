@@ -75,6 +75,8 @@ export class UsersComponent implements OnInit {
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
+  alertRep: any = false;
+  notRep: any = false;
 
   users = {
     id: 0,
@@ -268,6 +270,10 @@ export class UsersComponent implements OnInit {
             this.state = 2;
           },
           (error) => {
+            this.notRep = true;
+            setTimeout(() => {
+              this.notRep = false;
+            }, 2000);
             console.error("Error:", error);
           }
         );

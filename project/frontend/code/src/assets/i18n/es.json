@@ -180,8 +180,8 @@
 
     "login": "Inicio de sesión",
     "login.user": "Nombre de usuario",
-    "login.pass": "Contraseña",
-    "login.pass2": "Nueva contraseña",
+    "login.pass": "Contraseña actual",
+    "login.pass2": "Nueva contraseña nueva",
     "login.access": "Acceder",
 
     "login.e1": "Nombre de usuario o contraseña incorrectos",
@@ -204,7 +204,8 @@
     "users.e6" : "Error al eliminar el usuario",
     "users.e7" : "Usuario duplicado",
     "users.e8" : "Error al duplicar el usuario",
-
+    "users.e9" : "Username must be unique",
+    
     "complexity" : "La contraseña debe contener una mayúscula, un número y un carácter especial.", 
     "min_length" : "La contraseña debe ser de al menos 8 caracteres.",
     "pass_required" : "Contraseña es requerida.",

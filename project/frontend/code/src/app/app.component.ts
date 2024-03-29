@@ -29,26 +29,31 @@ export class AppComponent {
 
   async renewToken(refreshToken: string): Promise<string | null> {
     try {
-      let token = localStorage.getItem('token') ?? '';
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8','Authorization': `${token}`,}),};
-      const body = { refreshToken };
-      //console.log(oldToken) //console.log(refreshToken)
-      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
-      if (!response) {
-        console.error('Error al renovar el token');
-        return null;
-      }
-      const newToken = response.token;
-      console.log(newToken)
-      localStorage.setItem('token', newToken);
-      return newToken;
+        let token = localStorage.getItem('token') ?? '';
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Authorization': `${token}`,
+            }),
+            //withCredentials: true // Permitir el envío de cookies
+        };
+        const body = { refreshToken };
+        const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
+        if (!response) {
+            console.error('Error al renovar el token');
+            return null;
+        }
+        const newToken = response.token;
+        console.log(newToken);
+        localStorage.setItem('token', newToken);
+        return newToken;
     } 
     catch (error) {
-      this.logOut();
-      console.error('Error al renovar el token:', error);
-      return null;
+        this.logOut();
+        console.error('Error al renovar el token:', error);
+        return null;
     }
-  }
+}
 
   logOut(){
     localStorage.removeItem("id");

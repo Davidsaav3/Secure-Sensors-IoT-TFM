@@ -10,6 +10,8 @@ const SECRET_KEY = process.env.TOKEN;
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const bcrypt = require('bcrypt');
 const insertLog = require('./log');
+const cookieParser = require('cookie-parser');
+router.use(cookieParser());
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
@@ -435,7 +437,11 @@ const insertLog = require('./log');
   });
 
   router.post('/refresh', (req, res) => {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.body;    
+    //const refreshToken = req.cookies.refresh_token;
+    //npm install cookie-parser
+
+
     jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
         if (err) {
             // LOG - 401 //

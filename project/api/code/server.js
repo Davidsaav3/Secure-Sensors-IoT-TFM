@@ -3,7 +3,13 @@ const cors = require('cors');
 const app = express();
 require('dotenv').config();
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  credentials: true // Permitir solicitudes con credenciales
+};
+
+app.use(cors(corsOptions));
+
 const deviceConfigurationsRouter = require('./controllers/deviceConfigurations');
 const sensorsTypesRouter = require('./controllers/sensorsTypes');
 const dataStructureRouter = require('./controllers/dataStructure');

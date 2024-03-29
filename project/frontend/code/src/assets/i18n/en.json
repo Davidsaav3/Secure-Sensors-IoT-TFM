@@ -178,7 +178,7 @@
 
     "login": "Login",
     "login.user": "Username",
-    "login.pass": "Password",
+    "login.pass": "Current password",
     "login.pass2": "New password",
     "login.access": "Access",
 
@@ -202,6 +202,7 @@
     "users.e6" : "Error deleting user",
     "users.e7" : "Duplicate user",
     "users.e8" : "Error duplicating user",
+    "users.e9" : "El nombre de usuario debe ser único",
 
     "complexity" : "The password must contain a capital letter, a number, and a special character.",
     "min_length": "The password must be at least 8 characters.",
