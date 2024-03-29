@@ -16,8 +16,10 @@ function verifyToken(req, res, next) {
             //insertLog(req.user.id, req.user.email, '011-001-401-001', "401", "token", token,'Token inválido', JSON.stringify(err));
             return res.status(401).json({ error: 'Token inválido' });
         }
-        const query = "SELECT * FROM users WHERE id = ? AND email = ? AND (SELECT enabled FROM users WHERE id = ? AND email = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
-        con.query(query, [decoded.id, decoded.email, decoded.id, decoded.email], (err, results) => {
+
+        //console.log(decoded.email)
+        const query = "SELECT * FROM users WHERE id = ? AND (SELECT enabled FROM users WHERE id = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
+        con.query(query, [decoded.id, decoded.id], (err, results) => {
             if (err || results.length === 0) {
                 // LOG - 401 //
                 //insertLog("Sin datos", "Sin datos", '011-001-400-002', "400", "token", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");

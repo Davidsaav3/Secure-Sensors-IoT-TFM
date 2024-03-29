@@ -330,14 +330,30 @@ router.use(cookieParser());
         }
   
         if (result.affectedRows === 1) {
-          // LOG - 200 //
-          insertLog(req.user.id, req.user.email, '005-006-200-004', "200", "users-email", JSON.stringify(req.body),'Datos actualizados', "Sin datos");
-          return res.status(200).json({ email: newEmail }); // Devolver el nuevo correo
+
+          // No hay token_refresh existente, generar uno nuevo
+          const refreshToken = jwt.sign({ email: newEmail, id: userId }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
+
+          const currentDate = new Date();
+          const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+          const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+
+          // Actualizar el nuevo token_refresh en la base de datos
+          const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
+          con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
+              if (updateErr) {
+                console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+                // LOG - 500 //
+                insertLog(user.id, user.email, '005-006-500-005', "500", "users-email", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(updateErr));                                
+                return res.status(500).json({ error: 'Error en la base de datos' });
+              }
+              
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.email, '005-006-200-004', "200", "users-email", JSON.stringify(req.body),'Datos actualizados', "Sin datos");
+              return res.status(200).json({ email: newEmail }); // Devolver el nuevo correo
+          });
         }
   
-        // LOG - 404 //
-        insertLog(req.user.id, req.user.email, '005-006-401-005', "401", "users-email", JSON.stringify(req.body),'Registro no encontrado', "Sin datos");
-        return res.status(404).json({ error: 'Registro no encontrado' });
       });
     });
   });
@@ -449,12 +465,14 @@ router.use(cookieParser());
             return res.status(401).json({ error: 'Refresh token inválido' });
         }
 
-        const query = "SELECT * FROM users WHERE id = ? AND email = ? AND (SELECT enabled FROM users WHERE id = ? AND email = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
-        con.query(query, [decoded.id, decoded.email, decoded.id, decoded.email], (err, results) => {
+        //console.log(decoded.email)
+        const query = "SELECT * FROM users WHERE id = ? AND (SELECT enabled FROM users WHERE id = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
+        con.query(query, [decoded.id, decoded.id], (err, results) => {
             if (err || results.length === 0) {
-                // LOG - 401 //
+
+                // LOG - 400 //
                 insertLog("Sin datos", "Sin datos", '005-009-400-001', "400", "users-refresh", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
-                return res.status(401).json({ error: 'Los datos del JWT no existen en la base de datos' });
+                return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
             }
             // LOG - 200 //
             //insertLog("Sin datos", "Sin datos", '005-009-200-001', "200", "users-refresh", refreshToken,'Token refrescado', "Sin datos");
