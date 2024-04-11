@@ -263,7 +263,7 @@
     "monitoring.timed_out": "Caducado",
     "monitoring.log_code": "Código",	 
     "monitoring.log_status": "Estado",
-    "monitoring.log_name": "Nombre",
+    "monitoring.log_name": "Método",
     "monitoring.log_parameters": "Entrada",
     "monitoring.log_message": "Mensaje",
     "monitoring.log_trace": "Salida",

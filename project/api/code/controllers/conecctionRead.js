@@ -31,7 +31,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-001-500-001', "500", "coneccionRead-get", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-001-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // Descifrar el accessKey antes de enviarlo en la respuesta
@@ -41,7 +41,7 @@ const bcrypt = require('bcrypt');
       }));
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '006-001-200-001', "200", "coneccionRead-get", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(decryptedResult));
+      insertLog(req.user.id, req.user.user, '006-001-200-001', "200", "GET", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(decryptedResult));
       res.send(decryptedResult);
     });
   });
@@ -53,7 +53,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-002-500-001', "500", "coneccionRead-id", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-002-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // Descifrar el accessKey antes de enviarlo en la respuesta
@@ -62,7 +62,7 @@ const bcrypt = require('bcrypt');
         //accessKey: decryptMessage(row.accessKey, secretKey)
       }));
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '006-002-200-001', "200", "coneccionRead-id", JSON.stringify(req.params),'Datos recuperados', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-002-200-001', "200", "GET", JSON.stringify(req.params),'Datos recuperados', "Sin datos");
       res.send(decryptedResult);
     });
   });
@@ -74,7 +74,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-003-500-001', "500", "coneccionRead-duplicate", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-003-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -91,7 +91,7 @@ const bcrypt = require('bcrypt');
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '006-003-200-001', "200", "coneccionRead-duplicate", JSON.stringify(req.params),'Datos duplicados', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-003-200-001', "200", "GET", JSON.stringify(req.params),'Datos duplicados', "Sin datos");
       res.json({ duplicatedescription: description_2 });
     });
   });
@@ -101,7 +101,7 @@ const bcrypt = require('bcrypt');
     
     if (!description || !mqttQeue) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '006-004-400-001', "400", "coneccionRead-post", JSON.stringify(req.parabodyms),'Description es requerido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-004-400-001', "400", "POST", JSON.stringify(req.parabodyms),'Description es requerido', "Sin datos");
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
@@ -110,17 +110,17 @@ const bcrypt = require('bcrypt');
     con.query(query, [description, mqttQeue, appID, subscribe, enabled, encryptedMessage], (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-004-500-001', "500", "coneccionRead-post", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-004-500-001', "500", "POST", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
         // LOG - 201 //
-        insertLog(req.user.id, req.user.user, '006-004-201-001', "201", "coneccionRead-post", JSON.stringify(req.body),'Datos guardados', "Sin datos");
+        insertLog(req.user.id, req.user.user, '006-004-201-001', "201", "POST", JSON.stringify(req.body),'Datos guardados', "Sin datos");
         return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
       // LOG - 500 //
-      insertLog(req.user.id, req.user.user, '006-004-500-002', "500", "coneccionRead-post", JSON.stringify(req.body),'No se pudo insertar el registro', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-004-500-002', "500", "POST", JSON.stringify(req.body),'No se pudo insertar el registro', "Sin datos");
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
@@ -129,7 +129,7 @@ const bcrypt = require('bcrypt');
     const { id, description, mqttQeue, appID, subscribe, enabled, accessKey} = req.body;
     if (!id || (!description && !mqttQeue)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '006-005-400-001', "400", "coneccionRead-update", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para actualizar', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para actualizar', "Sin datos");
       return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
     }
     let query = "UPDATE conecction_read SET";
@@ -168,16 +168,16 @@ const bcrypt = require('bcrypt');
     con.query(query, values, (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-005-500-001', "500", "coneccionRead-update", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '002-005-200-001', "200", "coneccionRead-update", JSON.stringify(req.body),"Registro actualizado con éxito", "Sin datos");
+        insertLog(req.user.id, req.user.user, '002-005-200-001', "200", "PUT", JSON.stringify(req.body),"Registro actualizado con éxito", "Sin datos");
         return res.status(200).json({ message: 'Registro actualizado con éxito' });
       }
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '006-005-404-001', "404", "coneccionRead-update", JSON.stringify(req.body),'Registro no encontrado', "Sin datos");
+        insertLog(req.user.id, req.user.user, '006-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado', "Sin datos");
         return res.status(404).json({ error: 'Registro no encontrado' });
     });
   });
@@ -186,23 +186,23 @@ const bcrypt = require('bcrypt');
     const id = parseInt(req.body.id);
       if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '006-006-400-001', "400", "coneccionRead-delete", JSON.stringify(req.body),'ID no válido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-006-400-001', "400", "DELETE", JSON.stringify(req.body),'ID no válido', "Sin datos");
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM conecction_read WHERE id = ?", id, function (err, result) {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-006-500-001', "500", "coneccionRead-delete", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '006-006-404-001', "404", "coneccionRead-delete", JSON.stringify(req.body),'Conexion no encontrada', "Sin datos");
+        insertLog(req.user.id, req.user.user, '006-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Conexion no encontrada', "Sin datos");
         return res.status(404).json({ error: 'Conexion no encontrada' });
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '006-006-200-001', "200", "coneccionRead-delete", JSON.stringify(req.body),'Conexion eliminada con éxito', "Sin datos");
+      insertLog(req.user.id, req.user.user, '006-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Conexion eliminada con éxito', "Sin datos");
       res.json({ message: 'Conexion eliminada con éxito' });
     });
   });
@@ -214,7 +214,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '006-007-500-001', "500", "conecctionRead-secret", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '006-007-500-001', "500", "POST", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       else{
@@ -222,7 +222,7 @@ const bcrypt = require('bcrypt');
         if (bcryptErr) {
           console.error("Error al comparar contraseñas:", bcryptErr);
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '006-007-500-003', "500", "conecctionRead-secret", JSON.stringify(req.body),'Error al comparar contraseñas', JSON.stringify(bcryptErr));
+          insertLog(req.user.id, req.user.user, '006-007-500-003', "500", "POST", JSON.stringify(req.body),'Error al comparar contraseñas', JSON.stringify(bcryptErr));
           return res.status(500).json({ error: 'Error al comparar contraseñas' });
         }
         if(bcryptResult){
@@ -231,7 +231,7 @@ const bcrypt = require('bcrypt');
             if (err) {
               console.error(err);
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '006-007-500-001', "500", "conecctionRead-secret", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '006-007-500-001', "500", "POST", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
             // Descifrar el accessKey antes de enviarlo en la respuesta
@@ -240,7 +240,7 @@ const bcrypt = require('bcrypt');
             }));
               
             // LOG - 200 //
-            insertLog(req.user.id, req.user.user, '006-007-200-001', "200", "conecctionRead-secret", JSON.stringify(req.params),'Error en la base de datos', "Sin datos");
+            insertLog(req.user.id, req.user.user, '006-007-200-001', "200", "POST", JSON.stringify(req.params),'Secreto obtenido', "Sin datos");
             return res.send(decryptedResult);
           });
         }
@@ -249,13 +249,13 @@ const bcrypt = require('bcrypt');
     });
   });
 
-  // Function to encrypt a message
+  // Cifrado
   function encryptMessage(message, key) {
     const encryptedMessage = CryptoJS.AES.encrypt(message, key).toString();
     return encryptedMessage;
   }
 
-  // Function to decrypt a message
+  // Descifrado
   function decryptMessage(encryptedMessage, key) {
     const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, key);
     const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);

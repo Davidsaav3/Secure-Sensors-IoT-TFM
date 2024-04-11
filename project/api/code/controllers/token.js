@@ -7,13 +7,13 @@ function verifyToken(req, res, next) {
     const token = req.headers['authorization'];
     if (!token) {
         // LOG - 400 //
-        //insertLog(req.user.id, req.user.user, '011-001-400-001', "400", "token", token,'Token no proporcionado', "Sin datos");
+        insertLog(req.user.id, req.user.user, '009-001-400-001', "400", "TOKEN", token,'Token no proporcionado', "Sin datos");
         return res.status(400).json({ error: 'Token no proporcionado' });
     }
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) {
             // LOG - 401 //
-            //insertLog(req.user.id, req.user.user, '011-001-401-001', "401", "token", token,'Token inválido', JSON.stringify(err));
+            insertLog(req.user.id, req.user.user, '009-001-401-001', "401", "TOKEN", token,'Token inválido', JSON.stringify(err));
             return res.status(401).json({ error: 'Token inválido' });
         }
 
@@ -22,7 +22,7 @@ function verifyToken(req, res, next) {
         con.query(query, [decoded.id, decoded.id], (err, results) => {
             if (err || results.length === 0) {
                 // LOG - 401 //
-                //insertLog("Sin datos", "Sin datos", '011-001-400-002', "400", "token", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
+                insertLog("Sin datos", "Sin datos", '009-001-400-002', "400", "TOKEN", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
                 return res.status(401).json({ error: 'Los datos del JWT no existen en la base de datos' });
             }
             //console.log(results[0].token);
@@ -36,7 +36,7 @@ function verifyToken(req, res, next) {
                 }
                 else{
                     // LOG - 500 //
-                    //insertLog("Sin datos", "Sin datos", '011-001-500-002', "400", "token", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
+                    insertLog("Sin datos", "Sin datos", '009-001-500-002', "400", "TOKEN", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
                     return res.status(500).json({ error: 'Token de refresco expirado' });
                 }
                 if (isNaN(req.user.id)) {
@@ -44,7 +44,7 @@ function verifyToken(req, res, next) {
                 }
             });
             // LOG - 200 //
-            //insertLog(req.user.id, req.user.user, '011-001-200-001', "200", "token", token,'Token validado', "Sin datos");
+            //insertLog(req.user.id, req.user.user, '009-001-200-001', "200", "TOKEN", token,'Token validado', "Sin datos");
             next();
         });
     });

@@ -30,6 +30,7 @@ throw new Error('Method not implemented.');
   getId: string = environment.baseUrl+environment.monitoring+"/id";
   date: any;
 
+  mostrarTooltip = false;
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;

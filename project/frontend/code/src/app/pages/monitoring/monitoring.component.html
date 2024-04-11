@@ -139,8 +139,16 @@
 
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_parameters }}</td>
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_trace }}</td>
+
 						</tr>
+
+						<!--<ng-template [ngTemplateOutlet]="outlet" [ngOutletContext]="context"></ng-template><div class="texto-tooltip" (mouseenter)="mostrarTooltip = true" (mouseleave)="mostrarTooltip = false">
+							{{ quote.log_trace }}
+							<div *ngIf="mostrarTooltip" class="tooltip">{{ quote.log_trace }}</div>
+						</div>-->
+						
 					</tbody>
+					
 				</table>
 			</div>
 		</div>

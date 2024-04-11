@@ -243,8 +243,11 @@
 						</div>
 					</div>
 
-					<div class="col-12 mt-2">			
-						<label for="password">{{ 'monitoring.log_date' | translate }}&nbsp; {{users['revoke_date']}}</label>
+					<div class="col-12 mt-2">
+						{{ 'monitoring.log_date' | translate }}&nbsp;		
+						<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': users.revoke_date<=currentDate || users.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{users.revoke_date}}</p></span>
+						<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': users.revoke_date>currentDate || users.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{users.revoke_date}}</p></span>
+						<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': users.revoke_date!=''}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'monitoring.timed_out' | translate }}</p></span>
 					</div>
 
 				</div>
