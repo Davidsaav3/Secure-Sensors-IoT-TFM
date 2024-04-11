@@ -229,82 +229,6 @@ router.use(cookieParser());
   });
 });
 
-  
-  router.put("/password", verifyToken, (req, res) => { // PUT PASSWORD //
-    const { newpassword, password } = req.body;
-    const tokenX = req.headers['authorization'];
-  
-    if (!newpassword || !password) {
-      // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-005-400-001', "400", "PUT", "",'Nuevo password y password actual son requeridos', "");
-      return res.status(400).json({ error: 'Nuevo password y password actual son requeridos' });
-    }
-  
-    jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
-      if (err) {
-        // LOG - 401 //
-        insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "",'Token no válido', JSON.stringify(err));
-        return res.status(401).json({ error: 'Token no válido' });
-      }
-  
-      const { id: userId, user: userUser } = decodedToken;
-      // Verificar la contraseña actual
-      const queryCheckPassword = "SELECT password FROM users WHERE id = ? AND user = ?";
-      con.query(queryCheckPassword, [userId, userUser], (err, resultCheckPassword) => {
-        if (err) {
-          // LOG - 401 //
-          insertLog(req.user.id, req.user.user, '005-005-401-002', "401", "PUT", "",'Error en la base de datos', "");
-          return res.status(500).json({ error: 'Error en la base de datos' });
-        }
-  
-        if (resultCheckPassword.length === 1) {
-          const hashedCurrentPassword = resultCheckPassword[0].password;
-  
-          // Comparar la contraseña actual con la proporcionada
-          bcrypt.compare(password, hashedCurrentPassword, (err, passwordMatch) => {
-            if (err || !passwordMatch) {
-              // LOG - 401 //
-              insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "",'La contraseña actual no es válida', JSON.stringify(err));
-              return res.status(401).json({ error: 'La contraseña actual no es válida' });
-            }
-  
-            // La contraseña actual coincide, proceder con la actualización de la contraseña
-            bcrypt.hash(newpassword, 10, (err, hashedPassword) => {
-              if (err) {
-                // LOG - 401 //
-                insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "",'Error al cifrar la nueva contraseña', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
-              }
-  
-              const queryUpdatePassword = "UPDATE users SET password = ?, change_password = ? WHERE id = ? AND user = ?";
-              con.query(queryUpdatePassword, [hashedPassword, 0, userId, userUser], (err, result) => {
-                if (err) {
-                  // LOG - 401 //
-                  insertLog(req.user.id, req.user.user, '005-005-401-002', "401", "PUT", "",'Error en la base de datos', JSON.stringify(err));
-                  return res.status(500).json({ error: 'Error en la base de datos' });
-                }
-                if (result.affectedRows > 0) {
-                  // LOG - 200 //
-                  insertLog(req.user.id, req.user.user, '005-005-200-003', "200", "PUT", "",'Contraseña actualizada correctamente', "");
-                  return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
-                }
-                // LOG - 401 //
-                insertLog(req.user.id, req.user.user, '005-005-401-004', "401", "PUT", "",'No se pudo actualizar el registro', "");
-                return res.status(500).json({ error: 'No se pudo actualizar el registro' });
-              });
-            });
-          });
-        } 
-        else {
-          // LOG - 401 //
-          insertLog(req.user.id, req.user.user, '005-005-401-005', "401", "PUT", "",'Usuario no encontrado', "");
-          return res.status(401).json({ error: 'Usuario no encontrado' });
-        }
-      });
-    });
-  });
-  
-  
     
   router.put("/user", verifyToken, (req, res) => { // PUT EMAIL //
     const { user: newUser } = req.body;
@@ -361,73 +285,131 @@ router.use(cookieParser());
     });
   });
 
-  router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
-      const { id, user, password, change_password, enabled, token } = req.body;
-      if (!id && (user || password)) {
-        // LOG - 400 //
-        insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Se requiere el ID del usuario y al menos un campo para actualizar', "");
-        return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
-      }
-      let query = "UPDATE users SET";
-      const values = [];
-      if (user) {
-          query += " user=?";
-          values.push(user);
-      }
-      if (token && token==true) {
-        query += ", token=?";
-        values.push('');
-      }
-      if (enabled && enabled==true) {
-        query += ", enabled=?";
-        values.push('');
-      }
-      if (password) {
-          // Cifrar la contraseña antes de almacenarla
-          bcrypt.hash(password, 10, (err, hashedPassword) => {
-              if (err) {
-                // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error al cifrar la contraseña', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error al cifrar la contraseña' });
-              }
-              query += ", password=?";
-              values.push(hashedPassword); // Usar la contraseña cifrada
-              continueUpdateQuery();
-          });
-      } 
-      else {
-        // Si no se proporciona una nueva contraseña, continuar sin cifrarla
-        continueUpdateQuery();
-      }
-      function continueUpdateQuery() {
-          if (change_password != null) {
-              query += ", change_password=?";
-              values.push(change_password);
-          }
-          if (enabled != null) {
-            query += ", enabled=?";
-            values.push(enabled);
-        }
-          query += " WHERE id=?";
-          values.push(id);
+  let token2= '';
 
-          con.query(query, values, (err, result) => {
-              if (err) {
+  router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
+  const { id, user, password, change_password, enabled, token } = req.body;
+  const tokenX = req.headers['authorization'];
+
+  const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
+  const currentDate = new Date();
+  const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+  const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+
+  if (!id && (user || password)) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Se requiere el ID del usuario y al menos un campo para actualizar', "");
+      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
+  }
+  let query = "UPDATE users SET";
+  const values = [];
+  let commaNeeded = false;
+
+  if (user) {
+      query += " user=?";
+      values.push(user);
+      commaNeeded = true;
+
+      jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
+        if (err) {
+          // LOG - 401 //
+          insertLog(req.user.id, req.user.user, '005-006-401-002', "401", "PUT", JSON.stringify(req.body),'Token no válido', JSON.stringify(err));
+          return res.status(401).json({ error: 'Token no válido' });
+        }
+    
+        const { id: userId, user: userUser } = decodedToken;
+        console.log(userId+id)
+        if(userId==id){
+          // No hay token_refresh existente, generar uno nuevo
+
+          // Actualizar el nuevo token_refresh en la base de datos
+          const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
+          con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
+              if (updateErr) {
+                console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '005-007-401-003', "401", "PUT", "",'Error en la base de datos', JSON.stringify(err));
+                insertLog(user.id, user.user, '005-006-500-005', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(updateErr));                                
                 return res.status(500).json({ error: 'Error en la base de datos' });
               }
-              if (result.affectedRows > 0) {
-                // LOG - 200 //
-                insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Registro actualizado con éxito', "");
-                return res.status(200).json({ message: 'Registro actualizado con éxito' });
-              }
-              // LOG - 404 //
-              insertLog(req.user.id, req.user.user, '005-007-401-001', "401", "PUT", "",'Registro no encontrado', "");
-              return res.status(404).json({ error: 'Registro no encontrado' });
+              
+              // LOG - 200 //
+              //insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
+              //return res.status(200).json({ user: user, refresh_token: refreshToken }); // Devolver el nuevo correo
           });
+        }
+      });
+  }
+  
+
+  if (token && token==true) {
+      if (commaNeeded) query += ",";
+      query += " token=?";
+      values.push('');
+      commaNeeded = true;
+  }
+
+  if (enabled && enabled==true) {
+      if (commaNeeded) query += ",";
+      query += " enabled=?";
+      values.push('');
+      commaNeeded = true;
+  }
+
+  if (password) {
+      // Cifrar la contraseña antes de almacenarla
+      bcrypt.hash(password, 10, (err, hashedPassword) => {
+          if (err) {
+              // LOG - 500 //
+              insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error al cifrar la contraseña', JSON.stringify(err));
+              return res.status(500).json({ error: 'Error al cifrar la contraseña' });
+          }
+          if (commaNeeded) query += ",";
+          query += " password=?";
+          values.push(hashedPassword); // Usar la contraseña cifrada
+          commaNeeded = true;
+          continueUpdateQuery();
+      });
+  } else {
+      // Si no se proporciona una nueva contraseña, continuar sin cifrarla
+      continueUpdateQuery();
+  }
+
+  function continueUpdateQuery() {
+      if (change_password != null) {
+          if (commaNeeded) query += ",";
+          query += " change_password=?";
+          values.push(change_password);
+          commaNeeded = true;
       }
-  });
+      if (enabled != null) {
+          if (commaNeeded) query += ",";
+          query += " enabled=?";
+          values.push(enabled);
+          commaNeeded = true;
+      }
+      query += " WHERE id=?";
+      values.push(id);
+
+      con.query(query, values, (err, result) => {
+          if (err) {
+              // LOG - 500 //
+              insertLog(req.user.id, req.user.user, '005-007-401-003', "401", "PUT", "",'Error en la base de datos', JSON.stringify(err));
+              return res.status(500).json({ error: 'Error en la base de datos xd' });
+          }
+          if (result.affectedRows > 0) {
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Registro actualizado con éxito', "");
+              console.log(refreshToken)
+              return res.status(200).json({ refresh_token: refreshToken, user: user });
+          }
+          // LOG - 404 //
+          insertLog(req.user.id, req.user.user, '005-007-401-001', "401", "PUT", "",'Registro no encontrado', "");
+          return res.status(404).json({ error: 'Registro no encontrado' });
+      });
+  }
+});
+
+
 
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/

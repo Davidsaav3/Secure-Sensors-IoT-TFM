@@ -40,18 +40,18 @@ export class NavbarComponent {
   alertPassNot= false;
   alertUserNot= false;
 
-  postUser: string = environment.baseUrl+environment.users+'/user';
-  postPass: string = environment.baseUrl+environment.users+'/password';
+  postUser: string = environment.baseUrl+environment.users;
   but= false;
   changed= false;
   scriptEnable= false;
 
   formapassword = {
+    id: this.id,
     password: "",
-    newpassword: "",
   };
 
   formuserdata = {
+    id: this.id,
     user: "",
   };
 
@@ -151,15 +151,18 @@ export class NavbarComponent {
         'Authorization': `${token}`
       })
     };
-  
+    this.formuserdata.id= this.id;
+
     this.http.put(this.postUser, JSON.stringify(this.formuserdata), httpOptions)
       .subscribe(
         (data: any) => {
-          console.log("HOLA")
           this.alertUserOk = true;
-          localStorage.setItem("username", data.user);
           //this.clouseModalUser();
-  
+          console.log(data.user)
+          this.setCookie('refresh_token', data.refresh_token);
+          localStorage.setItem("username", data.user);
+          
+
           setTimeout(() => {
             this.alertUserOk = false;
           }, 2000);
@@ -176,6 +179,13 @@ export class NavbarComponent {
     //}
   }
   
+    // Guardar cookie
+    setCookie(name: string, value: string, days: number = 1): void {
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + days);
+      const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
+      document.cookie = cookieString;
+    }
 
   changePassword(form: any) { // Cambiar contraseña
     let token = localStorage.getItem('token') ?? ''; 
@@ -187,8 +197,9 @@ export class NavbarComponent {
           'Authorization': `${token}`
         })
       };
+      this.formapassword.id= this.id;
       
-      this.http.put(this.postPass, JSON.stringify(this.formapassword), httpOptions)
+      this.http.put(this.postUser, JSON.stringify(this.formapassword), httpOptions)
         .subscribe(
           (data: any) => {
             this.alertPassOk = true;

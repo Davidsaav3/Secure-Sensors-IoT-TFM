@@ -182,7 +182,7 @@
     "login": "Inicio de sesión",
     "login.user": "Nombre de usuario",
     "login.pass": "Contraseña actual",
-    "login.pass2": "Nueva contraseña nueva",
+    "login.pass2": "Nueva contraseña",
     "login.access": "Acceder",
 
     "login.e1": "Nombre de usuario o contraseña incorrectos",

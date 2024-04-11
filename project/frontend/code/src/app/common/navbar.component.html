@@ -116,7 +116,7 @@
 				<div class="col-12">
 					<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 		
-						<div class="col-12 pt-2 form-group">
+						<!--<div class="col-12 pt-2 form-group">
 							<label for="password">{{ 'login.pass' | translate }}</label>
 							<div class="input-group">
 								<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="{{ passwordFieldType }}" id="password1" class="form-control" name="password" required autocomplete>
@@ -139,12 +139,12 @@
 									{{ 'complexity' | translate }}
 								</div>		
 							</div>							
-						</div>
+						</div>-->
 	
-						<div class="col-12 mt-4">
-							<label for="newpassword">{{ 'login.pass2' | translate }}</label>
+						<div class="col-12 mt-2">
+							<label for="password">{{ 'login.pass2' | translate }}</label>
 							<div class="input-group">
-								<input (ngModelChange)="change1=true" value="{{ formapassword.newpassword }}" [(ngModel)]="formapassword['newpassword']" maxlength="45" minlength="8" type="{{ passwordFieldType1 }}" id="newpassword" class="form-control" name="newpassword" required autocomplete>
+								<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="{{ passwordFieldType1 }}" id="password" class="form-control" name="password" required autocomplete>
 								<span (click)="togglePasswordType1()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">
 									<svg *ngIf="this.passwordFieldType1=='password'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
 										<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
@@ -157,10 +157,10 @@
 									</svg>
 								</span>
 							</div>
-							<div *ngIf="form.submitted && form.controls['newpassword'].errors" class="text-danger">
-								<div *ngIf="form.controls['newpassword'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
-								<div *ngIf="form.controls['newpassword'].errors['minlength']">{{ 'min_length' | translate }}</div>
-								<div *ngIf="form.controls['newpassword'].value && !form.controls['newpassword'].value.match(passwordPattern)">
+							<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+								<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+								<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+								<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
 									{{ 'complexity' | translate }}
 								</div>		
 							</div>
