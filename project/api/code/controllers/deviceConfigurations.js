@@ -579,12 +579,12 @@ const insertLog = require('./log');
   
     if (!uid) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '001-004-400-001', "400", "POST", JSON.stringify(req.body),'El campo uid es requerido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '001-004-400-001', "400", "POST", JSON.stringify(req.body),'El campo uid es requerido', "");
       return res.status(400).json({ error: 'El campo uid es requerido' });
     }
     if (!topic_name) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '001-004-400-002', "400", "POST", JSON.stringify(req.body),'El campo topic_name es requerido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '001-004-400-002', "400", "POST", JSON.stringify(req.body),'El campo topic_name es requerido', "");
       return res.status(400).json({ error: 'El campo topic_name es requerido' });
     }
   
@@ -600,7 +600,7 @@ const insertLog = require('./log');
   
       if (result.length > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'Uid duplicado', "Sin datos");
+        insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'Uid duplicado', "");
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -624,7 +624,7 @@ const insertLog = require('./log');
             auxPost(req.body.sensors, result.insertId);
             
             // LOG - 200 //
-            insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'Datos guardados', "Sin datos");
+            insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'Datos guardados', "");
             res.send(result);
           }
         );
@@ -713,7 +713,7 @@ const insertLog = require('./log');
             } 
             else {
               // LOG - 200 //
-              insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'No se insertaron nuevos registros', "Sin datos");
+              insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'No se insertaron nuevos registros', "");
               res.send({ message: 'No se insertaron nuevos registros' });
             }
           });
@@ -729,7 +729,7 @@ const insertLog = require('./log');
   
     if (!uid || !topic_name) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '001-005-400-001', "400", "PUT", JSON.stringify(req.body),'Los campos uid y topic_name son requeridos', "Sin datos");
+      insertLog(req.user.id, req.user.user, '001-005-400-001', "400", "PUT", JSON.stringify(req.body),'Los campos uid y topic_name son requeridos', "");
       return res.status(400).json({ error: 'Los campos uid y topic_name son requeridos' });
     }
   
@@ -744,7 +744,7 @@ const insertLog = require('./log');
   
       if (result.length > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '001-005-200-001', "200", "PUT", JSON.stringify(req.body),'Uid duplicado', "Sin datos");
+        insertLog(req.user.id, req.user.user, '001-005-200-001', "200", "PUT", JSON.stringify(req.body),'Uid duplicado', "");
         return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
@@ -770,7 +770,7 @@ const insertLog = require('./log');
     const id = req.body.id;
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '001-006-400-001', "400", "DELETE", JSON.stringify(req.body),'ID no válido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '001-006-400-001', "400", "DELETE", JSON.stringify(req.body),'ID no válido', "");
       return res.status(400).json({ error: 'ID no válido' });
     }
 
@@ -791,7 +791,7 @@ const insertLog = require('./log');
         if (result.affectedRows === 0) {
           con.rollback(function () {
             // LOG - 404 //
-            insertLog(req.user.id, req.user.user, '001-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Configuración de dispositivo no encontrada', "Sin datos");
+            insertLog(req.user.id, req.user.user, '001-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Configuración de dispositivo no encontrada', "");
             return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
           });
         }
@@ -800,7 +800,7 @@ const insertLog = require('./log');
           if (err) {
             con.rollback(function () {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '001-006-500-003', "500", "DELETE", JSON.stringify(req.body),'Error en la base de datos', "Sin datos");
+              insertLog(req.user.id, req.user.user, '001-006-500-003', "500", "DELETE", JSON.stringify(req.body),'Error en la base de datos', "");
               return res.status(500).json({ error: 'Error en la base de datos' });
             });
           }
@@ -814,7 +814,7 @@ const insertLog = require('./log');
             }
 
             // LOG - 200 //
-            insertLog(req.user.id, req.user.user, '001-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Datos eliminados', "Sin datos");
+            insertLog(req.user.id, req.user.user, '001-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Datos eliminados', "");
             res.json({ message: 'Datos eliminados' });
           });
         });

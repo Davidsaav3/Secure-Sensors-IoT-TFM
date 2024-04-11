@@ -382,7 +382,7 @@
 						<button (click)="resetPass()" type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-secondary"  style="width: max-content;">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-7">
-						<button (click)="getSecret(this.id)" style="width: max-content;" type="button" class="btn btn-info pe-4" (click)="rechargeForm()">{{ 'sensors.send' | translate }}</button>
+						<button (click)="getSecret(this.id)" [ngClass]="{'disabled': showPass}" style="width: max-content;" type="button" class="btn btn-info pe-4" (click)="rechargeForm()">{{ 'sensors.send' | translate }}</button>
 					</div>
 				</div>
 			</div>

@@ -478,21 +478,9 @@ table th {
 
 /*////*/
 
-.texto-tooltip {
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  cursor: pointer;
-  position: relative; 
-}
-
-.tooltip {
-  position: absolute; 
-  top: 100%; 
-  left: 0; 
-  background-color: #f9f9f9; 
-  padding: 5px;
-  border: 1px solid #ccc; 
-  border-radius: 4px;
-  z-index: 1;
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
 }

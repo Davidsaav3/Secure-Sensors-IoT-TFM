@@ -65,7 +65,7 @@ const bcrypt = require('bcrypt');
       }));
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-002-200-001', "200", "GET", JSON.stringify(req.params),'Error en la base de datos', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-002-200-001', "200", "GET", JSON.stringify(req.params),'Error en la base de datos', "");
       res.send(decryptedResult);
     });
   });
@@ -94,7 +94,7 @@ const bcrypt = require('bcrypt');
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-003-200-001', "500", "GET", JSON.stringify(req.body),'Error en la base de datos', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-003-200-001', "500", "GET", JSON.stringify(req.body),'Error en la base de datos', "");
       res.json({ duplicatedescription: description_2 });
     });
   });
@@ -104,7 +104,7 @@ const bcrypt = require('bcrypt');
     
     if (!description || !urlIngest) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body),'Error en la base de datos', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body),'Error en la base de datos', "");
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
@@ -119,12 +119,12 @@ const bcrypt = require('bcrypt');
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
         // LOG - 201 //
-        insertLog(req.user.id, req.user.user, '007-004-201-001', "201", "POST", JSON.stringify(req.body),'Error en la base de datos', "Sin datos");
+        insertLog(req.user.id, req.user.user, '007-004-201-001', "201", "POST", JSON.stringify(req.body),'Error en la base de datos', "");
         return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
 
       // LOG - 500 //
-      insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body),'Error en la base de datos', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body),'Error en la base de datos', "");
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
@@ -133,7 +133,7 @@ const bcrypt = require('bcrypt');
     const { id, description, urlIngest, enabled, authorization } = req.body;
     if (!id || (!description && !urlIngest)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '007-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para actualizar', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para actualizar', "");
       return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
     }
     let query = "UPDATE conecction_write SET";
@@ -165,12 +165,12 @@ const bcrypt = require('bcrypt');
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '007-005-200-001', "200", "PUT", JSON.stringify(req.body),'Registro actualizado con éxito', "Sin datos");
+        insertLog(req.user.id, req.user.user, '007-005-200-001', "200", "PUT", JSON.stringify(req.body),'Registro actualizado con éxito', "");
         return res.status(200).json({ message: 'Registro actualizado con éxito' });
       }
 
       // LOG - 404 //
-      insertLog(req.user.id, req.user.user, '007-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado', "");
       return res.status(404).json({ error: 'Registro no encontrado' });
     });
   });
@@ -179,7 +179,7 @@ const bcrypt = require('bcrypt');
     const id = parseInt(req.body.id);
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "ID no válido", JSON.stringify(req.body),'ID no válido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "ID no válido", JSON.stringify(req.body),'ID no válido', "");
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM conecction_write WHERE id = ?", id, function (err, result) {
@@ -190,12 +190,12 @@ const bcrypt = require('bcrypt');
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '007-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Conexion no encontrada', "Sin datos");
+        insertLog(req.user.id, req.user.user, '007-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Conexion no encontrada', "");
         return res.status(404).json({ error: 'Conexion no encontrada' });
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Conexion eliminada con éxito', "Sin datos");
+      insertLog(req.user.id, req.user.user, '007-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Conexion eliminada con éxito', "");
       res.json({ message: 'Conexion eliminada con éxito' });
     });
   });
@@ -233,7 +233,7 @@ const bcrypt = require('bcrypt');
             }));
               
             // LOG - 200 //
-            insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "POST", JSON.stringify(req.params),'Secreto obtenido', "Sin datos");
+            insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "POST", JSON.stringify(req.params),'Secreto obtenido', "");
             return res.send(decryptedResult);
           });
         }

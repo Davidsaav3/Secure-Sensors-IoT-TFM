@@ -261,7 +261,7 @@
     "monitoring.timed_out": "Timed_out",
     "monitoring.log_code": "Code",
     "monitoring.log_status": "Status",
-    "monitoring.log_name": "Method",
+    "monitoring.log_method": "Method",
     "monitoring.log_parameters": "Input",
     "monitoring.log_message": "Message",
     "monitoring.log_trace": "Output",

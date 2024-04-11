@@ -4,6 +4,7 @@
   "description": "Backend server",
   "main": "server.js",
   "dependencies": {
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@popperjs/core": "^2.11.7",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",

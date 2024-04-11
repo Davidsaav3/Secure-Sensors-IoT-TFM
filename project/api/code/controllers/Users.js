@@ -47,7 +47,7 @@ router.use(cookieParser());
 
     if (!user || !password) {
       // LOG - 400 //
-      insertLog("Sin datos", user, '005-002-400-001', "400", "POSTn", JSON.stringify(req.body),'El user y la contraseña son requeridos', "Sin datos");
+      insertLog("", user, '005-002-400-001', "400", "POSTn", JSON.stringify(req.body),'El user y la contraseña son requeridos', "");
       return res.status(400).json({ error: 'El user y la contraseña son requeridos' });
     }
 
@@ -55,7 +55,7 @@ router.use(cookieParser());
     con.query(selectQuery, [user, user], (err, result) => {
         if (err) {
           // LOG - 500 //
-          insertLog("Sin datos", user, '005-002-500-002', "500", "POSTn", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+          insertLog("", user, '005-002-500-002', "500", "POSTn", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
 
@@ -96,7 +96,7 @@ router.use(cookieParser());
                                     // Generar nuevo token de acceso
                                     const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
                                     // LOG - 200 //
-                                    insertLog(user.id, user.user, '005-002-200-001', "200", "POSTn", JSON.stringify(req.body),'Inicio de sesión exitoso', "Sin datos");
+                                    insertLog(user.id, user.user, '005-002-200-001', "200", "POSTn", JSON.stringify(req.body),'Inicio de sesión exitoso', "");
                                     return res.status(200).json({
                                         id: user.id,
                                         user: user.user,
@@ -112,7 +112,7 @@ router.use(cookieParser());
                                 // El token_refresh aún es válido, usar el token actual
                                 const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
                                 // LOG - 200 //
-                                insertLog(user.id, user.user, '005-002-200-002', "200", "POSTn", JSON.stringify(req.body),'Inicio de sesión exitoso', "Sin datos");
+                                insertLog(user.id, user.user, '005-002-200-002', "200", "POSTn", JSON.stringify(req.body),'Inicio de sesión exitoso', "");
                                 return res.status(200).json({
                                     id: user.id,
                                     user: user.user,
@@ -146,7 +146,7 @@ router.use(cookieParser());
                             const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
                             
                             // LOG - 200 //
-                            insertLog(user.id, user.user, '005-002-200-003', "200", "POSTn", JSON.stringify(req.body),'Inicio de sesión exitoso', "Sin datos");
+                            insertLog(user.id, user.user, '005-002-200-003', "200", "POSTn", JSON.stringify(req.body),'Inicio de sesión exitoso', "");
                             return res.status(200).json({
                                 id: user.id,
                                 user: user.user,
@@ -162,7 +162,7 @@ router.use(cookieParser());
                 else {
                     console.warn("Credenciales incorrectas");
                     // LOG - 401 //
-                    insertLog("Sin datos", "Sin datos", '005-002-401-001', "401", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "Sin datos");
+                    insertLog("", "", '005-002-401-001', "401", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "");
                     return res.status(401).json({ error: 'Credenciales incorrectas' });
                 }
             });
@@ -170,7 +170,7 @@ router.use(cookieParser());
         else {
             console.warn("Usuario no encontrado");
             // LOG - 401 //
-            insertLog("Sin datos", "Sin datos", '005-002-401-002', "401", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "Sin datos");
+            insertLog("", "", '005-002-401-002', "401", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "");
             return res.status(401).json({ error: 'Credenciales incorrectas' });
         }
     });
@@ -202,7 +202,7 @@ router.use(cookieParser());
   bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err) {
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "Sin datos",'Error al cifrar la contraseña', JSON.stringify(err));
+          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "",'Error al cifrar la contraseña', JSON.stringify(err));
           return res.status(500).json({ error: 'Error al cifrar la contraseña' });
       }
       //console.log("Cifrada:", hashedPassword);
@@ -213,17 +213,17 @@ router.use(cookieParser());
       con.query(query, [user, hashedPassword, change_password, enabled, formattedFutureDate], (err, result) => {
           if (err) {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-004-500-002', "500", "POST", "Sin datos",'Error en la base de datos', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '005-004-500-002', "500", "POST", "",'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
               // LOG - 201 //
-              insertLog(req.user.id, req.user.user, '005-004-201-001', "201", "POST", "Sin datos",'Datos guardados', "Sin datos");
+              insertLog(req.user.id, req.user.user, '005-004-201-001', "201", "POST", "",'Datos guardados', "");
               return res.status(201).json({ id: insertedId }); // Devuelve el ID
           }
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "Sin datos",'No se pudo insertar el registro', "Sin datos");
+          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "",'No se pudo insertar el registro', "");
           return res.status(500).json({ error: 'No se pudo insertar el registro' });
       });
   });
@@ -236,14 +236,14 @@ router.use(cookieParser());
   
     if (!newpassword || !password) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-005-400-001', "400", "PUT", "Sin datos",'Nuevo password y password actual son requeridos', "Sin datos");
+      insertLog(req.user.id, req.user.user, '005-005-400-001', "400", "PUT", "",'Nuevo password y password actual son requeridos', "");
       return res.status(400).json({ error: 'Nuevo password y password actual son requeridos' });
     }
   
     jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
       if (err) {
         // LOG - 401 //
-        insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "Sin datos",'Token no válido', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "",'Token no válido', JSON.stringify(err));
         return res.status(401).json({ error: 'Token no válido' });
       }
   
@@ -253,7 +253,7 @@ router.use(cookieParser());
       con.query(queryCheckPassword, [userId, userUser], (err, resultCheckPassword) => {
         if (err) {
           // LOG - 401 //
-          insertLog(req.user.id, req.user.user, '005-005-401-002', "401", "PUT", "Sin datos",'Error en la base de datos', "Sin datos");
+          insertLog(req.user.id, req.user.user, '005-005-401-002', "401", "PUT", "",'Error en la base de datos', "");
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
   
@@ -264,7 +264,7 @@ router.use(cookieParser());
           bcrypt.compare(password, hashedCurrentPassword, (err, passwordMatch) => {
             if (err || !passwordMatch) {
               // LOG - 401 //
-              insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "Sin datos",'La contraseña actual no es válida', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "",'La contraseña actual no es válida', JSON.stringify(err));
               return res.status(401).json({ error: 'La contraseña actual no es válida' });
             }
   
@@ -272,7 +272,7 @@ router.use(cookieParser());
             bcrypt.hash(newpassword, 10, (err, hashedPassword) => {
               if (err) {
                 // LOG - 401 //
-                insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "Sin datos",'Error al cifrar la nueva contraseña', JSON.stringify(err));
+                insertLog(req.user.id, req.user.user, '005-005-401-001', "401", "PUT", "",'Error al cifrar la nueva contraseña', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error al cifrar la nueva contraseña' });
               }
   
@@ -280,16 +280,16 @@ router.use(cookieParser());
               con.query(queryUpdatePassword, [hashedPassword, 0, userId, userUser], (err, result) => {
                 if (err) {
                   // LOG - 401 //
-                  insertLog(req.user.id, req.user.user, '005-005-401-002', "401", "PUT", "Sin datos",'Error en la base de datos', JSON.stringify(err));
+                  insertLog(req.user.id, req.user.user, '005-005-401-002', "401", "PUT", "",'Error en la base de datos', JSON.stringify(err));
                   return res.status(500).json({ error: 'Error en la base de datos' });
                 }
                 if (result.affectedRows > 0) {
                   // LOG - 200 //
-                  insertLog(req.user.id, req.user.user, '005-005-200-003', "200", "PUT", "Sin datos",'Contraseña actualizada correctamente', "Sin datos");
+                  insertLog(req.user.id, req.user.user, '005-005-200-003', "200", "PUT", "",'Contraseña actualizada correctamente', "");
                   return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
                 }
                 // LOG - 401 //
-                insertLog(req.user.id, req.user.user, '005-005-401-004', "401", "PUT", "Sin datos",'No se pudo actualizar el registro', "Sin datos");
+                insertLog(req.user.id, req.user.user, '005-005-401-004', "401", "PUT", "",'No se pudo actualizar el registro', "");
                 return res.status(500).json({ error: 'No se pudo actualizar el registro' });
               });
             });
@@ -297,7 +297,7 @@ router.use(cookieParser());
         } 
         else {
           // LOG - 401 //
-          insertLog(req.user.id, req.user.user, '005-005-401-005', "401", "PUT", "Sin datos",'Usuario no encontrado', "Sin datos");
+          insertLog(req.user.id, req.user.user, '005-005-401-005', "401", "PUT", "",'Usuario no encontrado', "");
           return res.status(401).json({ error: 'Usuario no encontrado' });
         }
       });
@@ -312,7 +312,7 @@ router.use(cookieParser());
 
     if (!newUser) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-006-401-001', "401", "PUT", JSON.stringify(req.body),'Se requiere el nuevo correo electrónico para actualizar', "Sin datos");
+      insertLog(req.user.id, req.user.user, '005-006-401-001', "401", "PUT", JSON.stringify(req.body),'Se requiere el nuevo correo electrónico para actualizar', "");
       return res.status(400).json({ error: 'Se requiere el nuevo correo electrónico para actualizar' });
     }
   
@@ -352,7 +352,7 @@ router.use(cookieParser());
               }
               
               // LOG - 200 //
-              insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "Sin datos");
+              insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
               return res.status(200).json({ user: newUser }); // Devolver el nuevo correo
           });
         }
@@ -365,7 +365,7 @@ router.use(cookieParser());
       const { id, user, password, change_password, enabled, token } = req.body;
       if (!id && (user || password)) {
         // LOG - 400 //
-        insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "Sin datos",'Se requiere el ID del usuario y al menos un campo para actualizar', "Sin datos");
+        insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Se requiere el ID del usuario y al menos un campo para actualizar', "");
         return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
       }
       let query = "UPDATE users SET";
@@ -387,7 +387,7 @@ router.use(cookieParser());
           bcrypt.hash(password, 10, (err, hashedPassword) => {
               if (err) {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "Sin datos",'Error al cifrar la contraseña', JSON.stringify(err));
+                insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error al cifrar la contraseña', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error al cifrar la contraseña' });
               }
               query += ", password=?";
@@ -414,16 +414,16 @@ router.use(cookieParser());
           con.query(query, values, (err, result) => {
               if (err) {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '005-007-401-003', "401", "PUT", "Sin datos",'Error en la base de datos', JSON.stringify(err));
+                insertLog(req.user.id, req.user.user, '005-007-401-003', "401", "PUT", "",'Error en la base de datos', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error en la base de datos' });
               }
               if (result.affectedRows > 0) {
                 // LOG - 200 //
-                insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "Sin datos",'Registro actualizado con éxito', "Sin datos");
+                insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Registro actualizado con éxito', "");
                 return res.status(200).json({ message: 'Registro actualizado con éxito' });
               }
               // LOG - 404 //
-              insertLog(req.user.id, req.user.user, '005-007-401-001', "401", "PUT", "Sin datos",'Registro no encontrado', "Sin datos");
+              insertLog(req.user.id, req.user.user, '005-007-401-001', "401", "PUT", "",'Registro no encontrado', "");
               return res.status(404).json({ error: 'Registro no encontrado' });
           });
       }
@@ -434,7 +434,7 @@ router.use(cookieParser());
     const id = parseInt(req.body.id);
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-008-400-001', "400", "DELETE", JSON.stringify(req.params),'ID no válido', "Sin datos");
+      insertLog(req.user.id, req.user.user, '005-008-400-001', "400", "DELETE", JSON.stringify(req.params),'ID no válido', "");
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
@@ -445,12 +445,12 @@ router.use(cookieParser());
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '005-008-404-003', "404", "DELETE", JSON.stringify(req.params),'Usuario no encontrado', "Sin datos");
+        insertLog(req.user.id, req.user.user, '005-008-404-003', "404", "DELETE", JSON.stringify(req.params),'Usuario no encontrado', "");
         return res.status(404).json({ error: 'Usuario no encontrado' });
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '005-008-200-001', "200", "DELETE", JSON.stringify(req.params),'Usuario eliminado con éxito', "Sin datos");
+      insertLog(req.user.id, req.user.user, '005-008-200-001', "200", "DELETE", JSON.stringify(req.params),'Usuario eliminado con éxito', "");
       res.json({ message: 'Usuario eliminado con éxito' });
     });
   });
@@ -463,7 +463,7 @@ router.use(cookieParser());
     jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
         if (err) {
             // LOG - 401 //
-            //insertLog("Sin datos", "Sin datos", '005-009-401-001', "401", "POST", refreshToken,'Refresh token inválido', JSON.stringify(err));
+            //insertLog("", "", '005-009-401-001', "401", "POST", refreshToken,'Refresh token inválido', JSON.stringify(err));
             return res.status(401).json({ error: 'Refresh token inválido' });
         }
 
@@ -473,11 +473,11 @@ router.use(cookieParser());
             if (err || results.length === 0) {
 
                 // LOG - 400 //
-                insertLog("Sin datos", "Sin datos", '005-009-400-001', "400", "POST", refreshToken,'Los datos del JWT no existen en la base de datos', "Sin datos");
+                insertLog("", "", '005-009-400-001', "400", "POST", refreshToken,'Los datos del JWT no existen en la base de datos', "");
                 return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
             }
             // LOG - 200 //
-            //insertLog("Sin datos", "Sin datos", '005-009-200-001', "200", "POST", refreshToken,'Token refrescado', "Sin datos");
+            //insertLog("", "", '005-009-200-001', "200", "POST", refreshToken,'Token refrescado', "");
             const newAccessToken = jwt.sign({ user: results[0].user, id: decoded.id }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
             res.status(200).json({ token: newAccessToken });
         });
@@ -491,17 +491,17 @@ router.use(cookieParser());
       con.query(query, ["", "", id], (err, result) => {
           if (err) {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-010-500-002', "500", "POST", "Sin datos",'Error en la base de datos', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '005-010-500-002', "500", "POST", "",'Error en la base de datos', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
               // LOG - 201 //
-              insertLog(req.user.id, req.user.user, '005-010-201-001', "201", "POST", "Sin datos",'Datos guardados', "Sin datos");
+              insertLog(req.user.id, req.user.user, '005-010-201-001', "201", "POST", "",'Datos guardados', "");
               return res.status(201).json({ id: insertedId }); // Devuelve el ID
           }
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-010-500-001', "500", "POST", "Sin datos",'No se pudo insertar el registro', "Sin datos");
+          insertLog(req.user.id, req.user.user, '005-010-500-001', "500", "POST", "",'No se pudo insertar el registro', "");
           return res.status(500).json({ error: 'No se pudo insertar el registro' });
       });
   });

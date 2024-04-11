@@ -42,11 +42,11 @@ const insertLog = require('./log');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '004-002-500-001', "500", "GET", "Sin datos",'Datos recuperados', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '004-002-500-001', "500", "GET", "",'Datos recuperados', JSON.stringify(err));
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '004-002-200-001', "200", "GET", "Sin datos",'Datos recuperados', JSON.stringify(result));
+      insertLog(req.user.id, req.user.user, '004-002-200-001', "200", "GET", "",'Datos recuperados', JSON.stringify(result));
       res.send(result);
     });
   });
@@ -75,7 +75,7 @@ const insertLog = require('./log');
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '004-003-200-001', "200", "GET", JSON.stringify(req.params),'Inicio de sesión exitoso', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-003-200-001', "200", "GET", JSON.stringify(req.params),'Inicio de sesión exitoso', "");
       res.json({ duplicatedDescription: description_2 });
     });
   });
@@ -86,7 +86,7 @@ const insertLog = require('./log');
     
     if (!description || !structure) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '004-004-400-001', "400", "POST", JSON.stringify(req.body),'Faltan parámetros de entrada', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-004-400-001', "400", "POST", JSON.stringify(req.body),'Faltan parámetros de entrada', "");
       return res.status(400).json({ error: 'Faltan parámetros de entrada' });
     }
 
@@ -100,11 +100,11 @@ const insertLog = require('./log');
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
         // LOG - 201 //
-        insertLog(req.user.id, req.user.user, '004-004-201-001', "201", "POST", JSON.stringify(req.body),'Datos guardados', "Sin datos");
+        insertLog(req.user.id, req.user.user, '004-004-201-001', "201", "POST", JSON.stringify(req.body),'Datos guardados', "");
         return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
       // LOG - 500 //
-      insertLog(req.user.id, req.user.user, '004-004-500-002', "500", "POST", JSON.stringify(req.body),'No se pudo insertar el registro', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-004-500-002', "500", "POST", JSON.stringify(req.body),'No se pudo insertar el registro', "");
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });
   });
@@ -113,7 +113,7 @@ const insertLog = require('./log');
     const { id, description, structure, initial_byte } = req.body;
     if (!id || (!description && !structure && !initial_byte)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '004-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID de la estructura y al menos un campo para actualizar', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID de la estructura y al menos un campo para actualizar', "");
       return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
     }
     let query = "UPDATE variable_data_structure SET";
@@ -146,12 +146,12 @@ const insertLog = require('./log');
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '004-005-200-001', "200", "PUT", JSON.stringify(req.body),'Registro actualizado con éxito', "Sin datos");
+        insertLog(req.user.id, req.user.user, '004-005-200-001', "200", "PUT", JSON.stringify(req.body),'Registro actualizado con éxito', "");
         return res.status(200).json({ message: 'Registro actualizado con éxito' });
       }
 
       // LOG - 404 //
-      insertLog(req.user.id, req.user.user, '004-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado', "");
       return res.status(404).json({ error: 'Registro no encontrado' });
     });
   });
@@ -160,7 +160,7 @@ const insertLog = require('./log');
     const id = parseInt(req.body.id);
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '004-006-400-001', "400", "DELETE", JSON.stringify(req.body),'Faltan parámetros de entrada', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-006-400-001', "400", "DELETE", JSON.stringify(req.body),'Faltan parámetros de entrada', "");
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM variable_data_structure WHERE id = ?", id, function (err, result) {
@@ -171,11 +171,11 @@ const insertLog = require('./log');
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '004-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Estructura de datos no encontrada', "Sin datos");
+        insertLog(req.user.id, req.user.user, '004-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Estructura de datos no encontrada', "");
         return res.status(404).json({ error: 'Estructura de datos no encontrada' });
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '004-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Datos eliminados', "Sin datos");
+      insertLog(req.user.id, req.user.user, '004-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Datos eliminados', "");
       res.json({ message: 'Datos eliminados' });
     });
   });
