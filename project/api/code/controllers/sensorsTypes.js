@@ -30,11 +30,11 @@ const insertLog = require('./log');
       if (err) {
         console.error("Error:", err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '002-001-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '002-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener los tipos de sensores', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '002-001-200-001', "200", "GET", JSON.stringify(req.params), 'Datos recuperados', JSON.stringify(result));
+      insertLog(req.user.id, req.user.user, '002-001-200-001', "200", "GET", JSON.stringify(req.params), 'Tipos de sensores recuperados', JSON.stringify(result));
       res.send(result);
     });
   });
@@ -45,11 +45,11 @@ const insertLog = require('./log');
     con.query(query, (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '002-002-500-001', "500", "GET", "",'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '002-002-500-001', "500", "GET", "",'Error al obtener la lista de tipos de sensores ', JSON.stringify(err));
         console.error(err);
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '002-002-200-001', "200", "GET", "",'Datos recuperados', JSON.stringify(result));
+      insertLog(req.user.id, req.user.user, '002-002-200-001', "200", "GET", "",'Lista de tipos de sensores recuperada', JSON.stringify(result));
       res.send(result);
     });
   });
@@ -62,7 +62,7 @@ const insertLog = require('./log');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '002-003-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '002-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar el tipo de sensor', JSON.stringify(err));
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -78,7 +78,7 @@ const insertLog = require('./log');
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '002-003-200-001', "200", "GET", JSON.stringify(req.params),'Datos duplicados', "");
+      insertLog(req.user.id, req.user.user, '002-003-200-001', "200", "GET", JSON.stringify(req.params),'Tipo de sensor duplicado', "");
       res.json({ duplicatedSensor: type_2 });
     });
   });
@@ -92,11 +92,11 @@ const insertLog = require('./log');
       if (err) {
         console.error("Error:", err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '002-004-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '002-004-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener los tipo de sensor', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '002-004-200-001', "200", "GET", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(result));
+      insertLog(req.user.id, req.user.user, '002-004-200-001', "200", "GET", JSON.stringify(req.params),'Tipos de sensor recuperado', JSON.stringify(result));
       res.send(result);
     });
   });
@@ -109,20 +109,20 @@ const insertLog = require('./log');
 
     if (!type || !metric) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '002-005-400-001', "400", "POST", JSON.stringify(req.body),'Los campos type y metric son requeridos', "");
+      insertLog(req.user.id, req.user.user, '002-005-400-001', "400", "POST", JSON.stringify(req.body),'Type y Metric son requeridos al crear el tipo de sensor', "");
       return res.status(400).json({ error: 'Los campos type y metric son requeridos' });
     }
     const query = `INSERT INTO sensors_types (type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     con.query(query, [type, metric, description, errorvalue, newValuemax, newValuemin, position, correction_general, correction_time_general, discard_value], (err, result) => {
       if (err) {
         // LOG - 500 //
-        nsertLog(req.user.id, req.user.user, '002-004-500-001', "500", "POST", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        nsertLog(req.user.id, req.user.user, '002-004-500-001', "500", "POST", JSON.stringify(req.params),'Error 1 al crear el tipo de sensor', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId;
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '002-005-200-001', "200", "POST", JSON.stringify(req.body),'Datos guardados', "");
+        insertLog(req.user.id, req.user.user, '002-005-200-001', "200", "POST", JSON.stringify(req.body),'Tipo de sensor creado', "");
         return res.status(200).json({ id: insertedId });
       }
     });
@@ -138,12 +138,12 @@ const insertLog = require('./log');
 
     if (!type) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '002-006-400-001', "400", "PUT", JSON.stringify(req.body),'El campo type es requerido', "");
+      insertLog(req.user.id, req.user.user, '002-006-400-001', "400", "PUT", JSON.stringify(req.body),'Error 2 al crear el tipo de sensor', "");
       return res.status(400).json({ error: 'El campo type es requerido' });
     }
     if (!metric) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '002-006-400-002', "400", "PUT", JSON.stringify(req.body),'El campo metric es requerido', "");
+      insertLog(req.user.id, req.user.user, '002-006-400-002', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para editar el tipo de sensor', "");
       return res.status(400).json({ error: 'El campo metric es requerido' });
     }
     const query = `
@@ -158,11 +158,11 @@ const insertLog = require('./log');
       if (err) {
         console.error("Error:", err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '002-006-500-001', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '002-006-500-001', "500", "PUT", JSON.stringify(req.body),'Error en la base de datosError al editar  el tipo de sensor', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '002-006-200-001', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
+      insertLog(req.user.id, req.user.user, '002-006-200-001', "200", "PUT", JSON.stringify(req.body),'Tipo de sensor editado', "");
       res.send(result);
     });
   });
@@ -173,16 +173,16 @@ const insertLog = require('./log');
     con.query("DELETE FROM sensors_types WHERE id = ?", id, function (err, result) {
         if (err) {
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '002-007-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error en la base de datos', JSON.stringify(err));
+          insertLog(req.user.id, req.user.user, '002-007-500-001', "500", "DELETE", JSON.stringify(req.body), 'Registro no encontrado al editar la estructura de datos variable ', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos' });
         }
         if (result.affectedRows === 0) {
           // LOG - 400 //
-          insertLog(req.user.id, req.user.user, '002-007-400-001', "400", "DELETE", JSON.stringify(req.body), 'Elemento no encontrado', "");
+          insertLog(req.user.id, req.user.user, '002-007-400-001', "400", "DELETE", JSON.stringify(req.body), 'ID no válido al borrar un tipo de sensor', "");
           return res.status(400).json({ error: 'Elemento no encontrado' });
         }
         // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '002-007-200-001', "200", "DELETE", JSON.stringify(req.body), 'Datos eliminados', "");
+        insertLog(req.user.id, req.user.user, '002-007-200-001', "200", "DELETE", JSON.stringify(req.body), 'Tipo de sensor eliminado con éxito', "");
         res.json({ message: 'Datos eliminados' });
     });
 });
