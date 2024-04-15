@@ -70,7 +70,7 @@ const insertLog = require('./log');
         console.error(err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '003-002-500-001', "500", "GET", "",'Lista de estructura de datos recuperada', JSON.stringify(err));
-        res.status(500).json({ error: 'Error en la base de datos' });
+        res.status(500).json({ error: 'Lista de estructura de datos recuperada' });
       });
   });
 
@@ -83,7 +83,7 @@ const insertLog = require('./log');
         console.error(err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '003-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar la estructura de datos', JSON.stringify(err));
-        return res.status(500).send("Error en la base de datos");
+        return res.status(500).send("Error al duplicar la estructura de datos");
       }
 
       let contador = 1;
@@ -113,14 +113,14 @@ const insertLog = require('./log');
     if (!id_variable_data_structure) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '003-004-400-001', "400", "POST", JSON.stringify(req.body),"Description es requerido al crear una estructura de datos", "");
-      return res.status(400).json({ error: 'Id_variable_data_structure son requeridas' });
+      return res.status(400).json({ error: 'Description es requerido al crear una estructura de datos' });
     }
     const query = "INSERT INTO data_estructure (description, configuration, identifier_code, id_variable_data_structure) VALUES (?, ?, ?, ?)";
     con.query(query, [description, configuration,identifier_code, id_variable_data_structure], (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '003-004-500-001', "500", "POST", JSON.stringify(req.body),'Error 1 al crear una estructura de datos ', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        insertLog(req.user.id, req.user.user, '003-004-500-001', "500", "POST", JSON.stringify(req.body),'Error 1 al crear una estructura de datos', JSON.stringify(err));
+        return res.status(500).json({ error: 'Error 1 al crear una estructura de datos' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId;
@@ -130,8 +130,8 @@ const insertLog = require('./log');
       }
 
       // LOG - 500 //
-      insertLog(req.user.id, req.user.user, '003-004-500-002', "200", "POST", JSON.stringify(req.body),"Error 2 al crear una estructura de datos ", "");
-      return res.status(500).json({ error: 'No se pudo insertar el registro' });
+      insertLog(req.user.id, req.user.user, '003-004-500-002', "200", "POST", JSON.stringify(req.body),"Error 2 al crear una estructura de datos", "");
+      return res.status(500).json({ error: 'Error 2 al crear una estructura de datos' });
     });
   });
   
@@ -144,8 +144,8 @@ const insertLog = require('./log');
 
     if ((!id_estructure)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '003-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos ', "");
-      return res.status(400).json({ error: 'Se requiere el ID de la estructura y al menos un campo para actualizar' });
+      insertLog(req.user.id, req.user.user, '003-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos', "");
+      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos' });
     }
     let query = "UPDATE data_estructure SET description=?, configuration=?, identifier_code=?, id_variable_data_structure=?";
     const values = [];
@@ -159,18 +159,18 @@ const insertLog = require('./log');
     con.query(query, values, (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '003-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error al editar la estructura de datos ', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        insertLog(req.user.id, req.user.user, '003-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error al editar la estructura de datos', JSON.stringify(err));
+        return res.status(500).json({ error: 'Error al editar la estructura de datos' });
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '003-005-200-001', "200", "PUT", JSON.stringify(req.body),'Estructura de datos editada', "");
-        return res.status(200).json({ message: 'Registro actualizado con éxito' });
+        return res.status(200).json({ message: 'Estructura de datos editada' });
       }
 
       // LOG - 404 //
-      insertLog(req.user.id, req.user.user, '003-005-404-001', "404", "PUT", JSON.stringify(req.body),'Description es requerido al crear una estructura de datos ', "");
-      return res.status(404).json({ error: 'Registro no encontrado' });
+      insertLog(req.user.id, req.user.user, '003-005-404-001', "404", "PUT", JSON.stringify(req.body),'Description es requerido al crear una estructura de datos', "");
+      return res.status(404).json({ error: 'Description es requerido al crear una estructura de datos' });
     });
   });
 
@@ -179,23 +179,23 @@ const insertLog = require('./log');
     if (isNaN(id_estructure)) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '003-006-400-001', "400", "DELETE", JSON.stringify(req.body),'ID no válido al borrar una estructura de datos', "");
-      return res.status(400).json({ error: 'ID no válido' });
+      return res.status(400).json({ error: 'ID no válido al borrar una estructura de datos' });
     }
     con.query("DELETE FROM data_estructure WHERE id_estructure = ?", id_estructure, function (err, result) {
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '003-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar la  estructura de datos', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al eliminar la  estructura de datos' });
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
         insertLog(req.user.id, req.user.user, '003-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Estructura de datos no encontrada al eliminarla', "");
-        return res.status(404).json({ error: 'Estructura de datos no encontrada' });
+        return res.status(404).json({ error: 'Estructura de datos no encontrada al eliminarla' });
       }
 
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '003-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Estructura de datos eliminada con éxito', "");
-      res.json({ message: 'Datos eliminados con éxito' });
+      res.json({ message: 'Estructura de datos eliminada con éxito' });
     });
   });
 

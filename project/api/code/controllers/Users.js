@@ -48,15 +48,15 @@ router.use(cookieParser());
     if (!user || !password) {
       // LOG - 400 //
       insertLog("", user, '005-002-400-001', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 1', "");
-      return res.status(400).json({ error: 'El user y la contraseña son requeridos' });
+      return res.status(400).json({ error: 'Faltan datos para hacer login 1' });
     }
 
     const selectQuery = "SELECT * FROM users WHERE user = ? AND (SELECT enabled FROM users WHERE user = ?) = 1";
     con.query(selectQuery, [user, user], (err, result) => {
         if (err) {
           // LOG - 500 //
-          insertLog("", user, '005-002-500-002', "500", "POST", JSON.stringify(req.body),'Error 1 al hacer login', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error en la base de datos' });
+          insertLog("", user, '005-002-500-001', "500", "POST", JSON.stringify(req.body),'Error 1 al hacer login', JSON.stringify(err));
+          return res.status(500).json({ error: 'Error 1 al hacer login' });
         }
 
         if (result.length === 1) {
@@ -67,8 +67,8 @@ router.use(cookieParser());
                 if (bcryptErr) {
                     console.error("Error al comparar contraseñas:", bcryptErr);
                     // LOG - 500 //
-                    insertLog(req.user.id, req.user.user, '005-002-500-003', "500", "POST", JSON.stringify(req.body),'Error 2 al hacer login', JSON.stringify(bcryptErr));
-                    return res.status(500).json({ error: 'Error al comparar contraseñas' });
+                    insertLog(req.user.id, req.user.user, '005-002-500-002', "500", "POST", JSON.stringify(req.body),'Error 2 al hacer login', JSON.stringify(bcryptErr));
+                    return res.status(500).json({ error: 'Error 2 al hacer login' });
                 }
 
                 if (bcryptResult) {
@@ -89,8 +89,8 @@ router.use(cookieParser());
                                     if (updateErr) {
                                       console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                                       // LOG - 500 //
-                                      insertLog(user.id, user.user, '005-002-500-004', "500", "POST", JSON.stringify(req.body),'Error 3 al hacer login', JSON.stringify(updateErr));
-                                      return res.status(500).json({ error: 'Error en la base de datos' });
+                                      insertLog(user.id, user.user, '005-002-500-003', "500", "POST", JSON.stringify(req.body),'Error 3 al hacer login', JSON.stringify(updateErr));
+                                      return res.status(500).json({ error: 'Error 3 al hacer login' });
                                     }
 
                                     // Generar nuevo token de acceso
@@ -104,7 +104,7 @@ router.use(cookieParser());
                                         refresh_token: newRefreshToken,
                                         change_password: user.change_password,
                                         enabled: user.enabled,
-                                        message: 'Inicio de sesión exitoso'
+                                        message: 'Login hecho 1'
                                     });
                                 });
                             } 
@@ -119,7 +119,7 @@ router.use(cookieParser());
                                     token: accessToken,
                                     refresh_token: user.token,
                                     change_password: user.change_password,
-                                    message: 'Inicio de sesión exitoso'
+                                    message: 'Login hecho 2'
                                 });
                             }
                         });
@@ -138,8 +138,8 @@ router.use(cookieParser());
                             if (updateErr) {
                               console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                               // LOG - 500 //
-                              insertLog(user.id, user.user, '005-002-500-005', "500", "POST", JSON.stringify(req.body),'Error 4 al hacer login', JSON.stringify(updateErr));                                
-                              return res.status(500).json({ error: 'Error en la base de datos' });
+                              insertLog(user.id, user.user, '005-002-500-004', "500", "POST", JSON.stringify(req.body),'Error 4 al hacer login', JSON.stringify(updateErr));                                
+                              return res.status(500).json({ error: 'Error 4 al hacer login' });
                             }
 
                             // Generar nuevo token de acceso
@@ -154,7 +154,7 @@ router.use(cookieParser());
                                 refresh_token: refreshToken,
                                 change_password: user.change_password,
                                 enabled: user.enabled,
-                                message: 'Inicio de sesión exitoso'
+                                message: 'Login hecho 3'
                             });
                         });
                     }
@@ -163,7 +163,7 @@ router.use(cookieParser());
                     console.warn("Credenciales incorrectas");
                     // LOG - 400 //
                     insertLog("", "", '005-002-400-001', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 2', "");
-                    return res.status(400).json({ error: 'Credenciales incorrectas' });
+                    return res.status(400).json({ error: 'Faltan datos para hacer login 2' });
                 }
             });
         } 
@@ -171,7 +171,7 @@ router.use(cookieParser());
             console.warn("Usuario no encontrado");
             // LOG - 400 //
             insertLog("", "", '005-002-400-002', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 3', "");
-            return res.status(400).json({ error: 'Credenciales incorrectas' });
+            return res.status(400).json({ error: 'Faltan datos para hacer login 3' });
         }
     });
 });
@@ -184,7 +184,7 @@ router.use(cookieParser());
         console.error("Error:", err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '005-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener usuario', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al obtener usuario' });
       }
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '005-003-200-001', "200", "GET", JSON.stringify(req.params),'Usuario obtenido', JSON.stringify(result));
@@ -203,7 +203,7 @@ router.use(cookieParser());
       if (err) {
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "",'Username es requerido al crear un usuario', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error al cifrar la contraseña' });
+          return res.status(500).json({ error: 'Username es requerido al crear un usuario' });
       }
       //console.log("Cifrada:", hashedPassword);
       const currentDate = new Date();
@@ -214,7 +214,7 @@ router.use(cookieParser());
           if (err) {
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '005-004-500-002', "500", "POST", "",'Error 1 al crear usuario', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error en la base de datos' });
+              return res.status(500).json({ error: 'Error 1 al crear usuario' });
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
@@ -223,7 +223,7 @@ router.use(cookieParser());
               return res.status(200).json({ id: insertedId }); // Devuelve el ID
           }
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "",'Error 2 al  crear usuario', "");
+          insertLog(req.user.id, req.user.user, '005-004-500-005', "500", "POST", "",'Error 2 al  crear usuario', "");
           return res.status(500).json({ error: 'Error 2 al  crear usuario' });
       });
   });
@@ -241,7 +241,7 @@ router.use(cookieParser());
     if (!id && (user || password)) {
         // LOG - 400 //
         insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Faltan datos para actualizar usuario 1', "");
-        return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
+        return res.status(400).json({ error: 'Faltan datos para actualizar usuario 1' });
     }
     let query = "UPDATE users SET";
     const values = [];
@@ -256,7 +256,7 @@ router.use(cookieParser());
           if (err) {
             // LOG - 400 //
             insertLog(req.user.id, req.user.user, '005-006-400-002', "400", "PUT", JSON.stringify(req.body),'Faltan datos para actualizar usuario 2', JSON.stringify(err));
-            return res.status(400).json({ error: 'Token no válido' });
+            return res.status(400).json({ error: 'Faltan datos para actualizar usuario 2' });
           }
       
           const { id: userId, user: userUser } = decodedToken;
@@ -270,12 +270,12 @@ router.use(cookieParser());
                 if (updateErr) {
                   console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                   // LOG - 500 //
-                  insertLog(user.id, user.user, '005-006-500-005', "500", "PUT", JSON.stringify(req.body),'Error 1 al editar usuario', JSON.stringify(updateErr));                                
-                  return res.status(500).json({ error: 'Error en la base de datos' });
+                  insertLog(user.id, user.user, '005-006-500-001', "500", "PUT", JSON.stringify(req.body),'Error 1 al editar usuario', JSON.stringify(updateErr));                                
+                  return res.status(500).json({ error: 'Error 1 al editar usuario' });
                 }
                 
                 // LOG - 200 //
-                //insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
+                //insertLog(req.user.id, req.user.user, '005-006-200-001', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
                 //return res.status(200).json({ user: user, refresh_token: refreshToken }); // Devolver el nuevo correo
             });
           }
@@ -303,7 +303,7 @@ router.use(cookieParser());
             if (err) {
                 // LOG - 500 //
                 insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error 2 al editar usuario', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error al cifrar la contraseña' });
+                return res.status(500).json({ error: 'Error 2 al editar usuario' });
             }
             if (commaNeeded) query += ",";
             query += " password=?";
@@ -336,7 +336,7 @@ router.use(cookieParser());
             if (err) {
                 // LOG - 500 //
                 insertLog(req.user.id, req.user.user, '005-007-500-003', "500", "PUT", "",'Error 3 al editar usuario', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error en la base de datos xd' });
+                return res.status(500).json({ error: 'Error 3 al editar usuario' });
             }
             if (result.affectedRows > 0) {
                 // LOG - 200 //
@@ -346,7 +346,7 @@ router.use(cookieParser());
             }
             // LOG - 404 //
             insertLog(req.user.id, req.user.user, '005-007-404-001', "404", "PUT", "",'Faltan datos para actualizar usuario 3', "");
-            return res.status(404).json({ error: 'Registro no encontrado' });
+            return res.status(404).json({ error: 'Faltan datos para actualizar usuario 3' });
         });
     }
   });
@@ -357,23 +357,23 @@ router.use(cookieParser());
     if (isNaN(id)) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '005-008-400-001', "400", "DELETE", JSON.stringify(req.params),'ID no válido al borrar el usuario', "");
-      return res.status(400).json({ error: 'ID no válido' });
+      return res.status(400).json({ error: 'ID no válido al borrar el usuario' });
     }
     con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '005-008-500-001', "500", "DELETE", JSON.stringify(req.params),'Error al eliminar el usuario', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al eliminar el usuario' });
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
         insertLog(req.user.id, req.user.user, '005-008-404-003', "404", "DELETE", JSON.stringify(req.params),'Usuario no encontrado al eliminarlo', "");
-        return res.status(404).json({ error: 'Usuario no encontrado' });
+        return res.status(404).json({ error: 'Usuario no encontrado al eliminarlo' });
       }
 
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '005-008-200-001', "200", "DELETE", JSON.stringify(req.params),'Usuario eliminado', "");
-      res.json({ message: 'Usuario eliminado con éxito' });
+      res.json({ message: 'Usuario eliminado' });
     });
   });
 
@@ -414,7 +414,7 @@ router.use(cookieParser());
           if (err) {
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '005-010-500-002', "500", "POST", "",'Error 1 al revocar el token', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error en la base de datos' });
+              return res.status(500).json({ error: 'Error 1 al revocar el token' });
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
@@ -424,7 +424,7 @@ router.use(cookieParser());
           }
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '005-010-500-001', "500", "POST", "",'Error 2 al revocar el token', "");
-          return res.status(500).json({ error: 'No se pudo insertar el registro' });
+          return res.status(500).json({ error: 'Error 2 al revocar el token' });
       });
   });
 

@@ -59,7 +59,7 @@ const insertLog = require('./log');
         console.error(err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '004-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar la estructura de datos variable', JSON.stringify(err));
-        return res.status(500).send("Error en la base de datos");
+        return res.status(500).send("Error al duplicar la estructura de datos variable");
       }
 
       let contador = 1;
@@ -87,15 +87,15 @@ const insertLog = require('./log');
     if (!description || !structure) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '004-004-400-001', "400", "POST", JSON.stringify(req.body),'Description es requerido al crear una estructura de datos variable', "");
-      return res.status(400).json({ error: 'Faltan parámetros de entrada' });
+      return res.status(400).json({ error: 'Description es requerido al crear una estructura de datos variable' });
     }
 
     const query = "INSERT INTO variable_data_structure (description, structure, initial_byte) VALUES (?, ?, ?)";
     con.query(query, [description, structure, initial_byte], (err, result) => {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '004-004-500-001', "500", "POST", JSON.stringify(req.body),'Error 1 al crear una estructura de datos variable ', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        insertLog(req.user.id, req.user.user, '004-004-500-001', "500", "POST", JSON.stringify(req.body),'Error 1 al crear una estructura de datos variable', JSON.stringify(err));
+        return res.status(500).json({ error: 'Error 1 al crear una estructura de datos variable' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
@@ -105,7 +105,7 @@ const insertLog = require('./log');
       }
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '004-004-500-002', "500", "POST", JSON.stringify(req.body),'Error 2 al crear una estructura de datos variable', "");
-      return res.status(500).json({ error: 'No se pudo insertar el registro' });
+      return res.status(500).json({ error: 'Error 2 al crear una estructura de datos variable' });
     });
   });
     
@@ -113,8 +113,8 @@ const insertLog = require('./log');
     const { id, description, structure, initial_byte } = req.body;
     if (!id || (!description && !structure && !initial_byte)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '004-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID de la estructura y al menos un campo para actualizar', "");
-      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos variable ' });
+      insertLog(req.user.id, req.user.user, '004-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos variable', "");
+      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos variable' });
     }
     let query = "UPDATE variable_data_structure SET";
     const values = [];
@@ -142,17 +142,17 @@ const insertLog = require('./log');
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '004-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error al editar la estructura de datos variable', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al editar la estructura de datos variable' });
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '004-005-200-001', "200", "PUT", JSON.stringify(req.body),'Estructura de datos variable editada', "");
-        return res.status(200).json({ message: 'Registro actualizado con éxito' });
+        return res.status(200).json({ message: 'Estructura de datos variable editada' });
       }
 
       // LOG - 404 //
       insertLog(req.user.id, req.user.user, '004-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado al editar la estructura de datos variable', "");
-      return res.status(404).json({ error: 'Registro no encontrado' });
+      return res.status(404).json({ error: 'Registro no encontrado al editar la estructura de datos variable' });
     });
   });
 
@@ -161,22 +161,22 @@ const insertLog = require('./log');
     if (isNaN(id)) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '004-006-400-001', "400", "DELETE", JSON.stringify(req.body),'ID no válido al borrar una estructura de datos variable', "");
-      return res.status(400).json({ error: 'ID no válido' });
+      return res.status(400).json({ error: 'ID no válido al borrar una estructura de datos variable' });
     }
     con.query("DELETE FROM variable_data_structure WHERE id = ?", id, function (err, result) {
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '004-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar la  estructura de datos variable', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al eliminar la  estructura de datos variable' });
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
         insertLog(req.user.id, req.user.user, '004-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Estructura de datos variable no encontrada al eliminarla', "");
-        return res.status(404).json({ error: 'Estructura de datos no encontrada' });
+        return res.status(404).json({ error: 'Estructura de datos variable no encontrada al eliminarla' });
       }
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '004-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Estructura de datos variable eliminada con éxito', "");
-      res.json({ message: 'Datos eliminados' });
+      res.json({ message: 'Estructura de datos variable eliminada con éxito' });
     });
   });
 

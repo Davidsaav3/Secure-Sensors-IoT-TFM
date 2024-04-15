@@ -366,7 +366,7 @@ const insertLog = require('./log');
         console.error("Error:", err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '001-002-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos 1', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error en la base de datos 1' });
       }
       var query = `SELECT dc.*, de.description AS structure_name,
       s.orden, s.enable as sensor_enable, s.id_device, s.id_type_sensor, s.id AS sensor_id, s.datafield, s.nodata,
@@ -412,7 +412,7 @@ const insertLog = require('./log');
           console.error("Error:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-002-500-002', "500", "GET", JSON.stringify(req.params),'Error en la base de datos 2', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error en la base de datos' });
+          return res.status(500).json({ error: 'Error en la base de datos 2' });
         }
         if (result.length === 0) {
             // Ninguna de las consultas anteriores devolvió filas, ejecuta ambas sin el LEFT JOIN
@@ -431,7 +431,7 @@ const insertLog = require('./log');
                 console.error("Error:", err);
                 // LOG - 500 //
                 insertLog(req.user.id, req.user.user, '001-002-500-003', "500", "GET", JSON.stringify(req.params),'Error en la base de datos 3', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error en la base de datos' });
+                return res.status(500).json({ error: 'Error en la base de datos 3' });
               }
               const devicesWithSensors = {};
               result.forEach((row) => {
@@ -551,7 +551,7 @@ const insertLog = require('./log');
         console.error(err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '001-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar dispositivo 1', JSON.stringify(err));
-        return res.status(500).send("Error en la base de datos");
+        return res.status(500).send("Error al duplicar dispositivo 1");
       }
 
       let contador = 1;
@@ -580,12 +580,12 @@ const insertLog = require('./log');
     if (!uid) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '001-004-400-001', "400", "POST", JSON.stringify(req.body),'Uid es requerido', "");
-      return res.status(400).json({ error: 'El campo uid es requerido' });
+      return res.status(400).json({ error: 'Uid es requerido' });
     }
     if (!topic_name) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '001-004-400-002', "400", "POST", JSON.stringify(req.body),'Topic_name es requerido', "");
-      return res.status(400).json({ error: 'El campo topic_name es requerido' });
+      return res.status(400).json({ error: 'Topic_name es requerido' });
     }
   
     // Consulta para verificar si el uid ya existe
@@ -595,13 +595,13 @@ const insertLog = require('./log');
         console.error('Error:', err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '001-004-500-001', "500", "POST", JSON.stringify(req.body),'Error al crear el dispositivo 1', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la consulta SQL' });
+        return res.status(500).json({ error: 'Error al crear el dispositivo 1' });
       }
   
       if (result.length > 0) {
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '001-004-200-001', "200", "POST", JSON.stringify(req.body),'Dispositivo creado 1', "");
-        return res.status(200).json({ found: true, message: 'Uid duplicado' });
+        return res.status(200).json({ found: true, message: 'Dispositivo creado 1' });
       } 
       else {
         const queryInsert = `
@@ -618,7 +618,7 @@ const insertLog = require('./log');
               console.error("Error:", err);
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '001-004-500-002', "500", "POST", JSON.stringify(req.body),'Error al crear el dispositivo 2', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error en la base de datos' });
+              return res.status(500).json({ error: 'Error al crear el dispositivo 2' });
             }
             
             auxPost(req.body.sensors, result.insertId);
@@ -641,7 +641,7 @@ const insertLog = require('./log');
         console.error("Error al iniciar la transacción:", err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '001-004-500-003', "500", "POST", JSON.stringify(req.body),'Error al crear el dispositivo 3', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al crear el dispositivo 3' });
       }
   
         if (Array.isArray(newRecords) && newRecords.length > 0 || newRecords[0].id === -1) {
@@ -651,7 +651,7 @@ const insertLog = require('./log');
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '001-004-500-004', "500", "POST", JSON.stringify(req.body),'Error al crear el dispositivo 4', JSON.stringify(err));
               con.rollback(() => {
-                res.status(500).json({ error: 'Error en la base de datos' });
+                res.status(500).json({ error: 'Error al crear el dispositivo 4' });
               });
             } 
             if (Array.isArray(newRecords) && newRecords.length > 0 && newRecords[0].id != -1) {
@@ -708,13 +708,13 @@ const insertLog = require('./log');
 
                 // LOG - 500 //
                 insertLog(req.user.id, req.user.user, '001-004-500-007', "500", "POST", JSON.stringify(req.body),'Error al crear el dispositivo 7', JSON.stringify(err));
-                res.status(500).json({ error: 'Error en la base de datos' });
+                res.status(500).json({ error: 'Error al crear el dispositivo 7' });
               });
             } 
             else {
               // LOG - 200 //
               insertLog(req.user.id, req.user.user, '001-004-200-003', "200", "POST", JSON.stringify(req.body),'Dispositivo creado 3', "");
-              res.send({ message: 'No se insertaron nuevos registros' });
+              res.send({ message: 'Dispositivo creado 3' });
             }
           });
         }
@@ -739,13 +739,13 @@ const insertLog = require('./log');
         console.error('Error:', err);
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '001-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error al actualizar el dispositivo 1', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la consulta SQL' });
+        return res.status(500).json({ error: 'Error al actualizar el dispositivo 1' });
       }
   
       if (result.length > 0) {
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '001-005-200-001', "200", "PUT", JSON.stringify(req.body),'Uid duplicado', "");
-        return res.status(200).json({ found: true, message: 'Dispositivo actualizado' });
+        return res.status(200).json({ found: true, message: 'Uid duplicado' });
       } 
       else {
         const queryUpdate = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
@@ -755,7 +755,7 @@ const insertLog = require('./log');
             if (err) {
               console.error("Error:", err);
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '001-005-500-002', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '001-005-500-002', "500", "PUT", JSON.stringify(req.body),'Error al actualizar el dispositivo 2', JSON.stringify(err));
               return res.status(500).json({ error: 'Error al actualizar el dispositivo 2' });
             }
             auxPost(req.body.sensors, id7);
@@ -778,21 +778,21 @@ const insertLog = require('./log');
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '001-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 1', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al eliminar dispositivo 1' });
       }
       con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
         if (err) {
           con.rollback(function () {
             // LOG - 500 //
             insertLog(req.user.id, req.user.user, '001-006-500-002', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 2', JSON.stringify(err));
-            return res.status(500).json({ error: 'Error en la base de datos' });
+            return res.status(500).json({ error: 'Error al eliminar dispositivo 2' });
           });
         }
         if (result.affectedRows === 0) {
           con.rollback(function () {
             // LOG - 404 //
             insertLog(req.user.id, req.user.user, '001-006-404-001', "404", "DELETE", JSON.stringify(req.body),'No encontrado al eliminar dispositivo', "");
-            return res.status(404).json({ error: 'Configuración de dispositivo no encontrada' });
+            return res.status(404).json({ error: 'No encontrado al eliminar dispositivo' });
           });
         }
         
@@ -801,7 +801,7 @@ const insertLog = require('./log');
             con.rollback(function () {
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '001-006-500-003', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 3', "");
-              return res.status(500).json({ error: 'Error en la base de datos' });
+              return res.status(500).json({ error: 'Error al eliminar dispositivo 3' });
             });
           }
           con.commit(function (err) {
@@ -809,13 +809,13 @@ const insertLog = require('./log');
               con.rollback(function () {
                 // LOG - 500 //
                 insertLog(req.user.id, req.user.user, '001-006-500-004', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 4', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error en la base de datos' });
+                return res.status(500).json({ error: 'Error al eliminar dispositivo 4' });
               });
             }
 
             // LOG - 200 //
             insertLog(req.user.id, req.user.user, '001-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Dispositivo eliminado', "");
-            res.json({ message: 'Datos eliminados' });
+            res.json({ message: 'Dispositivo eliminado' });
           });
         });
       });
