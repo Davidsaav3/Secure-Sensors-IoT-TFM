@@ -99,9 +99,9 @@ const insertLog = require('./log');
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
-        // LOG - 201 //
-        insertLog(req.user.id, req.user.user, '004-004-201-001', "201", "POST", JSON.stringify(req.body),'Datos guardados', "");
-        return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '004-004-200-001', "200", "POST", JSON.stringify(req.body),'Datos guardados', "");
+        return res.status(200).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '004-004-500-002', "500", "POST", JSON.stringify(req.body),'No se pudo insertar el registro', "");

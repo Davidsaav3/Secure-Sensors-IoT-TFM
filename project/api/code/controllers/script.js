@@ -50,7 +50,7 @@ const SECRET_KEY = process.env.TOKEN;
         const token = jwt.sign({ user }, SECRET_KEY);
         return res.status(200).json({ id: user.id, user: user.user, token: token });
       }
-      return res.status(401).json({ error: 'Credenciales incorrectas' });
+      return res.status(400).json({ error: 'Credenciales incorrectas' });
     });
 });
 
@@ -105,7 +105,7 @@ const SECRET_KEY = process.env.TOKEN;
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
-        return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
+        return res.status(200).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
       return res.status(500).json({ error: 'No se pudo insertar el registro' });
     });

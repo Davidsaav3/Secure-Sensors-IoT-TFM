@@ -12,18 +12,18 @@ function verifyToken(req, res, next) {
     }
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
         if (err) {
-            // LOG - 401 //
-            insertLog(req.user.id, req.user.user, '009-001-401-001', "401", "TOKEN", token,'Token inválido', JSON.stringify(err));
-            return res.status(401).json({ error: 'Token inválido' });
+            // LOG - 400 //
+            insertLog(req.user.id, req.user.user, '009-001-400-001', "400", "TOKEN", token,'Token inválido', JSON.stringify(err));
+            return res.status(400).json({ error: 'Token inválido' });
         }
 
         //console.log(decoded.user)
         const query = "SELECT * FROM users WHERE id = ? AND (SELECT enabled FROM users WHERE id = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
         con.query(query, [decoded.id, decoded.id], (err, results) => {
             if (err || results.length === 0) {
-                // LOG - 401 //
+                // LOG - 400 //
                 insertLog("", "", '009-001-400-002', "400", "TOKEN", refreshToken,'Los datos del JWT no existen en la base de datos', "");
-                return res.status(401).json({ error: 'Los datos del JWT no existen en la base de datos' });
+                return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
             }
             //console.log(results[0].token);
             console.log(results[0].token)
@@ -37,7 +37,7 @@ function verifyToken(req, res, next) {
                 }
                 else{
                     // LOG - 500 //
-                    insertLog("", "", '009-001-500-002', "400", "TOKEN", refreshToken,'Los datos del JWT no existen en la base de datos', "");
+                    insertLog("", "", '009-001-500-002', "400", "TOKEN", refreshToken,'Error al validar token', "");
                     return res.status(500).json({ error: 'Token de refresco expirado' });
                 }
                 if (isNaN(req.user.id)) {

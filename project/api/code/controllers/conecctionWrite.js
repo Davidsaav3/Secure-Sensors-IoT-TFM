@@ -32,7 +32,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '007-001-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '007-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener la conexión de escritura', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // Descifrar el authorization antes de enviarlo en la respuesta
@@ -42,7 +42,7 @@ const bcrypt = require('bcrypt');
       }));
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-001-200-001', "200", "GET", JSON.stringify(req.params),'Datos recuperados', JSON.stringify(decryptedResult));
+      insertLog(req.user.id, req.user.user, '007-001-200-001', "200", "GET", JSON.stringify(req.params),'Conexión de escritura recuperada', JSON.stringify(decryptedResult));
       res.send(decryptedResult);
     });
   });
@@ -55,7 +55,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '007-002-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '007-002-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar la conexión de escritura', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       // Descifrar el authorization antes de enviarlo en la respuesta
@@ -65,7 +65,7 @@ const bcrypt = require('bcrypt');
       }));
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-002-200-001', "200", "GET", JSON.stringify(req.params),'Error en la base de datos', "");
+      insertLog(req.user.id, req.user.user, '007-002-200-001', "200", "GET", JSON.stringify(req.params),'Conexión de escritura duplicada', "");
       res.send(decryptedResult);
     });
   });
@@ -77,7 +77,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '007-003-500-001', "500", "GET", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '007-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar la conexión de escritura', JSON.stringify(err));
         return res.status(500).send("Error en la base de datos");
       }
 
@@ -94,7 +94,7 @@ const bcrypt = require('bcrypt');
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-003-200-001', "500", "GET", JSON.stringify(req.body),'Error en la base de datos', "");
+      insertLog(req.user.id, req.user.user, '007-003-200-001', "500", "GET", JSON.stringify(req.body),'Conexión de escritura duplicada', "");
       res.json({ duplicatedescription: description_2 });
     });
   });
@@ -104,7 +104,7 @@ const bcrypt = require('bcrypt');
     
     if (!description || !urlIngest) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body),'Error en la base de datos', "");
+      insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body),'Description es requerido al crear una conexión de escritura', "");
       return res.status(400).json({ error: 'Description es requerido' });
     }
 
@@ -114,18 +114,18 @@ const bcrypt = require('bcrypt');
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error 1 al crear una conexión de escritura' });
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId; // Obtiene el ID insertado
-        // LOG - 201 //
-        insertLog(req.user.id, req.user.user, '007-004-201-001', "201", "POST", JSON.stringify(req.body),'Error en la base de datos', "");
-        return res.status(201).json({ id: insertedId }); // Devuelve el ID en la respuesta
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '007-004-200-001', "200", "POST", JSON.stringify(req.body),'Conexión de escritura creada', "");
+        return res.status(200).json({ id: insertedId }); // Devuelve el ID en la respuesta
       }
 
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body),'Error en la base de datos', "");
-      return res.status(500).json({ error: 'No se pudo insertar el registro' });
+      return res.status(500).json({ error: 'Error 2 al crear una conexión de escritura' });
     });
   });
 
@@ -133,8 +133,8 @@ const bcrypt = require('bcrypt');
     const { id, description, urlIngest, enabled, authorization } = req.body;
     if (!id || (!description && !urlIngest)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '007-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para actualizar', "");
-      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
+      insertLog(req.user.id, req.user.user, '007-005-400-001', "400", "PUT", JSON.stringify(req.body),'Se requiere el ID del usuario y al menos un campo para editar la conexión de escritura', "");
+      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la conexión de escritura' });
     }
     let query = "UPDATE conecction_write SET";
     const values = [];
@@ -161,17 +161,17 @@ const bcrypt = require('bcrypt');
       if (err) {
         // LOG - 500 //
         insertLog(req.user.id, req.user.user, '007-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error en la base de datos' });
+        return res.status(500).json({ error: 'Error al editar la conexión de escritura' });
       }
       if (result.affectedRows > 0) {
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '007-005-200-001', "200", "PUT", JSON.stringify(req.body),'Registro actualizado con éxito', "");
-        return res.status(200).json({ message: 'Registro actualizado con éxito' });
+        return res.status(200).json({ message: 'Conexión de escritura editada' });
       }
 
       // LOG - 404 //
       insertLog(req.user.id, req.user.user, '007-005-404-001', "404", "PUT", JSON.stringify(req.body),'Registro no encontrado', "");
-      return res.status(404).json({ error: 'Registro no encontrado' });
+      return res.status(404).json({ error: 'Registro no encontrado al editar las conexiones de escritura' });
     });
   });
 
@@ -179,23 +179,23 @@ const bcrypt = require('bcrypt');
     const id = parseInt(req.body.id);
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "ID no válido", JSON.stringify(req.body),'ID no válido', "");
+      insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "DELETE", JSON.stringify(req.body),'ID no válido al borrar una conexión de escritura', "");
       return res.status(400).json({ error: 'ID no válido' });
     }
     con.query("DELETE FROM conecction_write WHERE id = ?", id, function (err, result) {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '007-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '007-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar la conexión de escritura', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.affectedRows === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '007-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Conexion no encontrada', "");
+        insertLog(req.user.id, req.user.user, '007-006-404-001', "404", "DELETE", JSON.stringify(req.body),'Conexión de escritura no encontrada al eliminarla', "");
         return res.status(404).json({ error: 'Conexion no encontrada' });
       }
 
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Conexion eliminada con éxito', "");
+      insertLog(req.user.id, req.user.user, '007-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Conexión de escritura eliminada con éxito', "");
       res.json({ message: 'Conexion eliminada con éxito' });
     });
   });
@@ -207,7 +207,7 @@ const bcrypt = require('bcrypt');
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "POST", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "POST", JSON.stringify(req.params),'Error 1 al obtener el secreto de escritura', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       else{
@@ -215,7 +215,7 @@ const bcrypt = require('bcrypt');
         if (bcryptErr) {
           console.error("Error al comparar contraseñas:", bcryptErr);
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '007-007-500-003', "500", "POST", JSON.stringify(req.body),'Error al comparar contraseñas', JSON.stringify(bcryptErr));
+          insertLog(req.user.id, req.user.user, '007-007-500-003', "500", "POST", JSON.stringify(req.body),'Error 2 al obtener el secreto de escritura', JSON.stringify(bcryptErr));
           return res.status(500).json({ error: 'Error al comparar contraseñas' });
         }
         if(bcryptResult){
@@ -224,7 +224,7 @@ const bcrypt = require('bcrypt');
             if (err) {
               console.error(err);
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "POST", JSON.stringify(req.params),'Error en la base de datos', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "POST", JSON.stringify(req.params),'Error 3 al obtener el secreto de escritura', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
             }
             // Descifrar el accessKey antes de enviarlo en la respuesta
@@ -233,7 +233,7 @@ const bcrypt = require('bcrypt');
             }));
               
             // LOG - 200 //
-            insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "POST", JSON.stringify(req.params),'Secreto obtenido', "");
+            insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "POST", JSON.stringify(req.params),'Secreto de escritura obtenido', "");
             return res.send(decryptedResult);
           });
         }

@@ -124,9 +124,9 @@ const insertLog = require('./log');
       }
       if (result.affectedRows === 1) {
         const insertedId = result.insertId;
-        // LOG - 201 //
-        insertLog(req.user.id, req.user.user, '003-004-201-001', "201", "POST", JSON.stringify(req.body),"Datos guardados", "");
-        return res.status(201).json({ id: insertedId });
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '003-004-200-001', "200", "POST", JSON.stringify(req.body),"Datos guardados", "");
+        return res.status(200).json({ id: insertedId });
       }
 
       // LOG - 500 //

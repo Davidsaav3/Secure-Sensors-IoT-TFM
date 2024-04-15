@@ -161,17 +161,17 @@ router.use(cookieParser());
                 } 
                 else {
                     console.warn("Credenciales incorrectas");
-                    // LOG - 401 //
-                    insertLog("", "", '005-002-401-001', "401", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "");
-                    return res.status(401).json({ error: 'Credenciales incorrectas' });
+                    // LOG - 400 //
+                    insertLog("", "", '005-002-400-001', "400", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "");
+                    return res.status(400).json({ error: 'Credenciales incorrectas' });
                 }
             });
         } 
         else {
             console.warn("Usuario no encontrado");
-            // LOG - 401 //
-            insertLog("", "", '005-002-401-002', "401", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "");
-            return res.status(401).json({ error: 'Credenciales incorrectas' });
+            // LOG - 400 //
+            insertLog("", "", '005-002-400-002', "400", "POSTn", JSON.stringify(req.body),'Credenciales incorrectas', "");
+            return res.status(400).json({ error: 'Credenciales incorrectas' });
         }
     });
 });
@@ -218,9 +218,9 @@ router.use(cookieParser());
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
-              // LOG - 201 //
-              insertLog(req.user.id, req.user.user, '005-004-201-001', "201", "POST", "",'Datos guardados', "");
-              return res.status(201).json({ id: insertedId }); // Devuelve el ID
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.user, '005-004-200-001', "200", "POST", "",'Datos guardados', "");
+              return res.status(200).json({ id: insertedId }); // Devuelve el ID
           }
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "",'No se pudo insertar el registro', "");
@@ -229,187 +229,127 @@ router.use(cookieParser());
   });
 });
 
-    
-  router.put("/user", verifyToken, (req, res) => { // PUT EMAIL //
-    const { user: newUser } = req.body;
+  router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
+    const { id, user, password, change_password, enabled, token } = req.body;
     const tokenX = req.headers['authorization'];
 
-    if (!newUser) {
-      // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-006-401-001', "401", "PUT", JSON.stringify(req.body),'Se requiere el nuevo correo electrónico para actualizar', "");
-      return res.status(400).json({ error: 'Se requiere el nuevo correo electrónico para actualizar' });
+    const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
+    const currentDate = new Date();
+    const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+    const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+
+    if (!id && (user || password)) {
+        // LOG - 400 //
+        insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Se requiere el ID del usuario y al menos un campo para actualizar', "");
+        return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
     }
-  
-    jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
-      if (err) {
-        // LOG - 401 //
-        insertLog(req.user.id, req.user.user, '005-006-401-002', "401", "PUT", JSON.stringify(req.body),'Token no válido', JSON.stringify(err));
-        return res.status(401).json({ error: 'Token no válido' });
-      }
-  
-      const { id: userId, user: userUser } = decodedToken;
-      const query = "UPDATE users SET user = ? WHERE id = ? AND user = ?";
-      con.query(query, [newUser, userId, userUser], (err, result) => {
-        if (err) {
-          // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-006-401-003', "401", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error en la base de datos' });
-        }
-  
-        if (result.affectedRows === 1) {
+    let query = "UPDATE users SET";
+    const values = [];
+    let commaNeeded = false;
 
-          // No hay token_refresh existente, generar uno nuevo
-          const refreshToken = jwt.sign({ user: newUser, id: userId }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
+    if (user) {
+        query += " user=?";
+        values.push(user);
+        commaNeeded = true;
 
-          const currentDate = new Date();
-          const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
-          const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+        jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
+          if (err) {
+            // LOG - 400 //
+            insertLog(req.user.id, req.user.user, '005-006-400-002', "400", "PUT", JSON.stringify(req.body),'Token no válido', JSON.stringify(err));
+            return res.status(400).json({ error: 'Token no válido' });
+          }
+      
+          const { id: userId, user: userUser } = decodedToken;
+          console.log(userId+id)
+          if(userId==id){
+            // No hay token_refresh existente, generar uno nuevo
 
-          // Actualizar el nuevo token_refresh en la base de datos
-          const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
-          con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
-              if (updateErr) {
-                console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
-                // LOG - 500 //
-                insertLog(user.id, user.user, '005-006-500-005', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(updateErr));                                
-                return res.status(500).json({ error: 'Error en la base de datos' });
-              }
-              
-              // LOG - 200 //
-              insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
-              return res.status(200).json({ user: newUser }); // Devolver el nuevo correo
-          });
-        }
-  
-      });
-    });
-  });
-
-  let token2= '';
-
-  router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
-  const { id, user, password, change_password, enabled, token } = req.body;
-  const tokenX = req.headers['authorization'];
-
-  const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
-  const currentDate = new Date();
-  const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
-  const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
-
-  if (!id && (user || password)) {
-      // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Se requiere el ID del usuario y al menos un campo para actualizar', "");
-      return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para actualizar' });
-  }
-  let query = "UPDATE users SET";
-  const values = [];
-  let commaNeeded = false;
-
-  if (user) {
-      query += " user=?";
-      values.push(user);
-      commaNeeded = true;
-
-      jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
-        if (err) {
-          // LOG - 401 //
-          insertLog(req.user.id, req.user.user, '005-006-401-002', "401", "PUT", JSON.stringify(req.body),'Token no válido', JSON.stringify(err));
-          return res.status(401).json({ error: 'Token no válido' });
-        }
+            // Actualizar el nuevo token_refresh en la base de datos
+            const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
+            con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
+                if (updateErr) {
+                  console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+                  // LOG - 500 //
+                  insertLog(user.id, user.user, '005-006-500-005', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(updateErr));                                
+                  return res.status(500).json({ error: 'Error en la base de datos' });
+                }
+                
+                // LOG - 200 //
+                //insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
+                //return res.status(200).json({ user: user, refresh_token: refreshToken }); // Devolver el nuevo correo
+            });
+          }
+        });
+    }
     
-        const { id: userId, user: userUser } = decodedToken;
-        console.log(userId+id)
-        if(userId==id){
-          // No hay token_refresh existente, generar uno nuevo
 
-          // Actualizar el nuevo token_refresh en la base de datos
-          const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
-          con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
-              if (updateErr) {
-                console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+    if (token && token==true) {
+        if (commaNeeded) query += ",";
+        query += " token=?";
+        values.push('');
+        commaNeeded = true;
+    }
+
+    if (enabled && enabled==true) {
+        if (commaNeeded) query += ",";
+        query += " enabled=?";
+        values.push('');
+        commaNeeded = true;
+    }
+
+    if (password) {
+        // Cifrar la contraseña antes de almacenarla
+        bcrypt.hash(password, 10, (err, hashedPassword) => {
+            if (err) {
                 // LOG - 500 //
-                insertLog(user.id, user.user, '005-006-500-005', "500", "PUT", JSON.stringify(req.body),'Error en la base de datos', JSON.stringify(updateErr));                                
-                return res.status(500).json({ error: 'Error en la base de datos' });
-              }
-              
-              // LOG - 200 //
-              //insertLog(req.user.id, req.user.user, '005-006-200-004', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
-              //return res.status(200).json({ user: user, refresh_token: refreshToken }); // Devolver el nuevo correo
-          });
+                insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error al cifrar la contraseña', JSON.stringify(err));
+                return res.status(500).json({ error: 'Error al cifrar la contraseña' });
+            }
+            if (commaNeeded) query += ",";
+            query += " password=?";
+            values.push(hashedPassword); // Usar la contraseña cifrada
+            commaNeeded = true;
+            continueUpdateQuery();
+        });
+    } else {
+        // Si no se proporciona una nueva contraseña, continuar sin cifrarla
+        continueUpdateQuery();
+    }
+
+    function continueUpdateQuery() {
+        if (change_password != null) {
+            if (commaNeeded) query += ",";
+            query += " change_password=?";
+            values.push(change_password);
+            commaNeeded = true;
         }
-      });
-  }
-  
+        if (enabled != null) {
+            if (commaNeeded) query += ",";
+            query += " enabled=?";
+            values.push(enabled);
+            commaNeeded = true;
+        }
+        query += " WHERE id=?";
+        values.push(id);
 
-  if (token && token==true) {
-      if (commaNeeded) query += ",";
-      query += " token=?";
-      values.push('');
-      commaNeeded = true;
-  }
-
-  if (enabled && enabled==true) {
-      if (commaNeeded) query += ",";
-      query += " enabled=?";
-      values.push('');
-      commaNeeded = true;
-  }
-
-  if (password) {
-      // Cifrar la contraseña antes de almacenarla
-      bcrypt.hash(password, 10, (err, hashedPassword) => {
-          if (err) {
-              // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error al cifrar la contraseña', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error al cifrar la contraseña' });
-          }
-          if (commaNeeded) query += ",";
-          query += " password=?";
-          values.push(hashedPassword); // Usar la contraseña cifrada
-          commaNeeded = true;
-          continueUpdateQuery();
-      });
-  } else {
-      // Si no se proporciona una nueva contraseña, continuar sin cifrarla
-      continueUpdateQuery();
-  }
-
-  function continueUpdateQuery() {
-      if (change_password != null) {
-          if (commaNeeded) query += ",";
-          query += " change_password=?";
-          values.push(change_password);
-          commaNeeded = true;
-      }
-      if (enabled != null) {
-          if (commaNeeded) query += ",";
-          query += " enabled=?";
-          values.push(enabled);
-          commaNeeded = true;
-      }
-      query += " WHERE id=?";
-      values.push(id);
-
-      con.query(query, values, (err, result) => {
-          if (err) {
-              // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-007-401-003', "401", "PUT", "",'Error en la base de datos', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error en la base de datos xd' });
-          }
-          if (result.affectedRows > 0) {
-              // LOG - 200 //
-              insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Registro actualizado con éxito', "");
-              console.log(refreshToken)
-              return res.status(200).json({ refresh_token: refreshToken, user: user });
-          }
-          // LOG - 404 //
-          insertLog(req.user.id, req.user.user, '005-007-401-001', "401", "PUT", "",'Registro no encontrado', "");
-          return res.status(404).json({ error: 'Registro no encontrado' });
-      });
-  }
-});
-
-
+        con.query(query, values, (err, result) => {
+            if (err) {
+                // LOG - 500 //
+                insertLog(req.user.id, req.user.user, '005-007-500-003', "500", "PUT", "",'Error en la base de datos', JSON.stringify(err));
+                return res.status(500).json({ error: 'Error en la base de datos xd' });
+            }
+            if (result.affectedRows > 0) {
+                // LOG - 200 //
+                insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Registro actualizado con éxito', "");
+                console.log(refreshToken)
+                return res.status(200).json({ refresh_token: refreshToken, user: user });
+            }
+            // LOG - 404 //
+            insertLog(req.user.id, req.user.user, '005-007-404-001', "404", "PUT", "",'Registro no encontrado', "");
+            return res.status(404).json({ error: 'Registro no encontrado' });
+        });
+    }
+  });
 
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
@@ -444,9 +384,9 @@ router.use(cookieParser());
 
     jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
         if (err) {
-            // LOG - 401 //
-            //insertLog("", "", '005-009-401-001', "401", "POST", refreshToken,'Refresh token inválido', JSON.stringify(err));
-            return res.status(401).json({ error: 'Refresh token inválido' });
+            // LOG - 400 //
+            insertLog("", "", '005-009-400-001', "400", "POST", refreshToken,'Error 1 al refrescar el token', JSON.stringify(err));
+            return res.status(400).json({ error: 'Refresh token inválido' });
         }
 
         //console.log(decoded.user)
@@ -455,7 +395,7 @@ router.use(cookieParser());
             if (err || results.length === 0) {
 
                 // LOG - 400 //
-                insertLog("", "", '005-009-400-001', "400", "POST", refreshToken,'Los datos del JWT no existen en la base de datos', "");
+                insertLog("", "", '005-009-400-002', "400", "POST", refreshToken,'Error 2 al refrescar el token', "");
                 return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
             }
             // LOG - 200 //
@@ -473,17 +413,17 @@ router.use(cookieParser());
       con.query(query, ["", "", id], (err, result) => {
           if (err) {
               // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-010-500-002', "500", "POST", "",'Error en la base de datos', JSON.stringify(err));
+              insertLog(req.user.id, req.user.user, '005-010-500-002', "500", "POST", "",'Error 1 al revocar el token', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos' });
           }
           if (result.affectedRows === 1) {
               const insertedId = result.insertId; // Obtiene el ID insertado
-              // LOG - 201 //
-              insertLog(req.user.id, req.user.user, '005-010-201-001', "201", "POST", "",'Datos guardados', "");
-              return res.status(201).json({ id: insertedId }); // Devuelve el ID
+              // LOG - 200 //
+              insertLog(req.user.id, req.user.user, '005-010-200-001', "200", "POST", "",'Token revocado', "");
+              return res.status(200).json({ id: insertedId }); // Devuelve el ID
           }
           // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-010-500-001', "500", "POST", "",'No se pudo insertar el registro', "");
+          insertLog(req.user.id, req.user.user, '005-010-500-001', "500", "POST", "",'Error 2 al revocar el token', "");
           return res.status(500).json({ error: 'No se pudo insertar el registro' });
       });
   });
