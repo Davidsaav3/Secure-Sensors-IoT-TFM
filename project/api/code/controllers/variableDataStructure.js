@@ -4,8 +4,8 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
-const verifyToken = require('./token');
-const insertLog = require('./log');
+const verifyToken = require('../middleware/token');
+const insertLog = require('../middleware/log');
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;

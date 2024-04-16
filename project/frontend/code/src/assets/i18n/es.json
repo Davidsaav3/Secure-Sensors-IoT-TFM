@@ -184,6 +184,8 @@
     "login.pass": "Contraseña actual",
     "login.pass2": "Nueva contraseña",
     "login.access": "Acceder",
+    "sensors.copy": "Copiar",
+    "sensors.data": "Sin datos",
 
     "login.e1": "Nombre de usuario o contraseña incorrectos",
     "login.e2": "Error del servidor",

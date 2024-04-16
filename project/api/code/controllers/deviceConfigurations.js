@@ -4,8 +4,8 @@ let { con }= require('../middleware/mysql');
 let cors= require('cors')
 router.use(cors());
 router.use(express.json())
-const verifyToken = require('./token');
-const insertLog = require('./log');
+const verifyToken = require('../middleware/token');
+const insertLog = require('../middleware/log');
 
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;

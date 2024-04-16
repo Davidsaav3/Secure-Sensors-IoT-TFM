@@ -266,7 +266,7 @@ export class ConecctionWriteComponent implements OnInit {
     .subscribe(
       (data: any) => {
         this.conecctionsSecret = data[0];
-        console.log(data[0])
+        //console.log(data[0])
         this.showPass= true;
       },
       (error) => {

@@ -5,8 +5,8 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 const jwt = require('jsonwebtoken');
-const verifyToken = require('./token');
-const insertLog = require('./log');
+const verifyToken = require('../middleware/token');
+const insertLog = require('../middleware/log');
 const CryptoJS = require('crypto-js');
 const secretKey = process.env.PASSWORD_CIFRADO;
 const bcrypt = require('bcrypt');

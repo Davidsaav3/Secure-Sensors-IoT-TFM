@@ -123,11 +123,11 @@
 							<!--<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.id }}</td>-->
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
 
-							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
-								<span class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.user_id }}</p></span>
+							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span *ngIf="quote.user_id" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.user_id }}</p></span>
 							</td>
-							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
-								<span class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.username }}</p></span>
+							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span *ngIf="quote.username" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.username }}</p></span>
 							</td>
 
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}"><strong>{{ quote.log_method }}</strong></td>
@@ -139,8 +139,8 @@
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_code }}</td>
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_message }}</td>
 
-							<td class="truncate-text" [attr.title]="quote.log_parameters " class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ this.quote.log_parameters.length > 50 ? this.quote.log_parameters.substring(0, 50) + '...' : quote.log_parameters }}</td>
-							<td class="truncate-text" [attr.title]="quote.log_trace" class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ this.quote.log_trace.length > 50 ? this.quote.log_trace.substring(0, 50) + '...' : quote.log_trace }}</td>
+							<td data-bs-toggle="modal" data-bs-target="#exampleModal2" class="truncate-text" [attr.title]="quote.log_parameters " class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="changeCopy1=i">{{ this.quote.log_parameters.length > 50 ? this.quote.log_parameters.substring(0, 30) + '...' : quote.log_parameters }}</td>
+							<td data-bs-toggle="modal" data-bs-target="#exampleModal3" class="truncate-text" [attr.title]="quote.log_trace" class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="changeCopy2=i">{{ this.quote.log_trace.length > 50 ? this.quote.log_trace.substring(0, 30) + '...' : quote.log_trace }}</td>
 						</tr>
 						
 					</tbody>
@@ -216,7 +216,7 @@
 						<label for="user_id">{{ 'sensors.user_id' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.user_id }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="monitoring['user_id']" required>
 						<div *ngIf="form.submitted && form.controls['user_id'].errors" class="text-danger">
-							<div *ngIf="form.controls['user_id'].errors['required']">{{ user_id' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['user_id'].errors['required']">{{ 'user_id' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
 
@@ -333,10 +333,60 @@
 			<div class="modal-footer" style="border-top: 0px;">
 				<div class="row">
 					<div class="col-7">
-						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.exit' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'monitoring.log_parameters' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+				<p *ngIf="data[changeCopy1].log_parameters" class="not" id="logPar">{{data[changeCopy1].log_parameters}}</p>
+				<p *ngIf="!data[changeCopy1].log_parameters" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" (click)="copyToClipboard1()">{{ 'sensors.copy' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'monitoring.log_trace' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+				<p *ngIf="data[changeCopy2].log_trace" class="not" id="logTrace">{{data[changeCopy2].log_trace}}</p>
+				<p *ngIf="!data[changeCopy2].log_trace" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal3" class="btn btn-info" style="width: 100%" (click)="copyToClipboard2()">{{ 'sensors.copy' | translate }}</button>
 					</div>
 				</div>
 			</div>

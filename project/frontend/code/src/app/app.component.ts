@@ -44,7 +44,7 @@ export class AppComponent {
             return null;
         }
         const newToken = response.token;
-        console.log(newToken);
+        //console.log(newToken);
         localStorage.setItem('token', newToken);
         return newToken;
     } 

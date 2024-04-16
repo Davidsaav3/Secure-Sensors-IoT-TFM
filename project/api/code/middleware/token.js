@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.TOKEN;
-let { con }= require('../middleware/mysql');
+let { con }= require('./mysql');
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 
 function verifyToken(req, res, next) {
@@ -26,7 +26,7 @@ function verifyToken(req, res, next) {
                 return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
             }
             //console.log(results[0].token);
-            console.log(results[0].token)
+            //console.log(results[0].token)
             jwt.verify(results[0].token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
                 if (decoded) {
                     // Agregar ID y correo electrónico al objeto req.user

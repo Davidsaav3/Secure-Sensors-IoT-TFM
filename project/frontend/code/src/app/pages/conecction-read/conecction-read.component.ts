@@ -272,7 +272,7 @@ export class ConecctionReadComponent implements OnInit {
     .subscribe(
       (data: any) => {
         this.conecctionsSecret = data[0];
-        console.log(data[0])
+        //console.log(data[0])
         this.showPass= true;
       },
       (error) => {
@@ -288,7 +288,7 @@ export class ConecctionReadComponent implements OnInit {
 
     this.state = 1;
     if (form.valid) {
-      console.log(this.conecctions)
+      //console.log(this.conecctions)
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
         .subscribe(
@@ -350,7 +350,7 @@ export class ConecctionReadComponent implements OnInit {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       
       // Guardar la conexión editada
-      console.log(this.conecctions)
+      //console.log(this.conecctions)
       this.http.put(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
         .subscribe(
           (response: any) => {

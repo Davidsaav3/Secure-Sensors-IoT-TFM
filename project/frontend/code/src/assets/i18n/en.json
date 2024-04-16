@@ -182,6 +182,8 @@
     "login.pass": "Current password",
     "login.pass2": "New password",
     "login.access": "Access",
+    "sensors.copy": "Copy",
+    "sensors.data": "No data",
 
     "login.e1": "Invalid username or password",
     "login.e2": "Server error",

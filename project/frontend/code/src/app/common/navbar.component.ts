@@ -158,7 +158,7 @@ export class NavbarComponent {
         (data: any) => {
           this.alertUserOk = true;
           //this.clouseModalUser();
-          console.log(data.user)
+          //console.log(data.user)
           this.setCookie('refresh_token', data.refresh_token);
           localStorage.setItem("username", data.user);
           

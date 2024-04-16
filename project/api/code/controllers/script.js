@@ -5,7 +5,7 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 const jwt = require('jsonwebtoken');
-const verifyToken = require('./token');
+const verifyToken = require('../middleware/token');
 const SECRET_KEY = process.env.TOKEN; 
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/

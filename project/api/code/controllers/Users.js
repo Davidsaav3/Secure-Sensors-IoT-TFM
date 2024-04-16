@@ -5,11 +5,11 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 const jwt = require('jsonwebtoken');
-const verifyToken = require('./token');
+const verifyToken = require('../middleware/token');
 const SECRET_KEY = process.env.TOKEN;
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const bcrypt = require('bcrypt');
-const insertLog = require('./log');
+const insertLog = require('../middleware/log');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
@@ -260,7 +260,7 @@ router.use(cookieParser());
           }
       
           const { id: userId, user: userUser } = decodedToken;
-          console.log(userId+id)
+          //console.log(userId+id)
           if(userId==id){
             // No hay token_refresh existente, generar uno nuevo
 
@@ -341,7 +341,7 @@ router.use(cookieParser());
             if (result.affectedRows > 0) {
                 // LOG - 200 //
                 insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Usuario actualizado', "");
-                console.log(refreshToken)
+                //console.log(refreshToken)
                 return res.status(200).json({ refresh_token: refreshToken, user: user });
             }
             // LOG - 404 //

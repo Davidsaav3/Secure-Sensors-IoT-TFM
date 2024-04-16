@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, ViewChild, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,12 +9,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class MonitoringComponent implements OnInit {
-parseInt(arg0: any) {
-throw new Error('Method not implemented.');
-}
+
+  export class MonitoringComponent implements OnInit {
+    parseInt(arg0: any) {
+    throw new Error('Method not implemented.');
+  } 
+
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
+  @ViewChild('logTrace', {static: false}) logTraceElement: ElementRef | undefined;
+  @ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
+
   onResize() {
     window.resizeBy(-1, 0);
     this.resize();
@@ -76,6 +81,8 @@ throw new Error('Method not implemented.');
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
+  changeCopy1= 0;
+  changeCopy2= 0;
 
   monitoring = {
     id: 0,
@@ -105,6 +112,22 @@ throw new Error('Method not implemented.');
   ngOnInit(): void { // Inicializa
     this.getMonitoring(this.order, this.ordAux);
     this.createDate();
+  }
+
+  copyToClipboard1() {
+    if(this.logTraceElement!=null){
+      const el = this.logTraceElement.nativeElement;
+      el.select();
+      document.execCommand('copy');
+    }
+  }
+
+  copyToClipboard2() {
+    if(this.logParElement!=null){
+      const el = this.logParElement.nativeElement;
+      el.select();
+      document.execCommand('copy');
+    }
   }
 
   /* GET */
