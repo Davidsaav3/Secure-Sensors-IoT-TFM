@@ -7,35 +7,41 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 
-  // NO
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
-    const type0 = req.params.type;
-    const type1 = req.params.type1;
-    const type2 = req.params.type2;
-    const tam = parseInt(req.params.pag_pag);
-    const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
-    let query = ``;
-    if (type0 === 'search') {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM variable_data_structure) as total FROM variable_data_structure`;
-      query += ` ORDER BY ${type1} ${type2}`;
+  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => { /*/ GET /*/
+    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  
+    // Validar y sanitizar parámetros
+    const tam = parseInt(pag_pag);
+    const act = (parseInt(pag_tam) - 1) * tam;
+  
+    // Preparar la consulta SQL utilizando consultas preparadas
+    let query = "";
+    let queryParams = [];
+  
+    if (type === "search") {
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure) as total FROM variable_data_structure ORDER BY ? ? LIMIT ? OFFSET ?`;
+      queryParams = [type1, type2, tam, act];
     } 
     else {
-      query += `SELECT *,(SELECT COUNT(*) AS total FROM variable_data_structure WHERE description LIKE '%${type0}%' OR structure LIKE '%${type0}%' OR initial_byte LIKE '%${type0}%') as total FROM variable_data_structure`;
-      query += ` WHERE description LIKE '%${type0}%' OR structure LIKE '%${type0}%' OR initial_byte LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ?) as total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      const likePattern = `%${type}%`;
+      queryParams = Array(6).fill(likePattern).concat([type1, type2, tam, act]);
     }
-    query += ` LIMIT ? OFFSET ?`;
-    con.query(query, [ tam, act], (err, result) => {
+  
+    con.query(query, queryParams, (err, result) => {
       if (err) {
         console.error(err);
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '004-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener las estructuras de datos variables', JSON.stringify(err));
+        // Manejo de errores seguro
+        insertLog(req.user.id, req.user.user, '004-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener las estructuras de datos variables', JSON.stringify(err));
+        return res.status(500).send("Error interno del servidor");
       }
-
+  
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '004-001-200-001', "200", "GET", JSON.stringify(req.params),'Estructuras de datos variables recuperadas', JSON.stringify(result));
+      insertLog(req.user.id, req.user.user, '004-001-200-001', "200", "GET", JSON.stringify(req.params), 'Estructuras de datos variables recuperadas', JSON.stringify(result));
       res.send(result);
     });
   });
+  
 
   
   router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/

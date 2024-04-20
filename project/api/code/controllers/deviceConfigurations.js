@@ -732,50 +732,54 @@ const insertLog = require('../middleware/log');
     });
   }
 
-  // NO
   router.put("", verifyToken, (req, res) => { // UPDATE //
-    const {
-      uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
-    } = req.body;
-  
-    if (!uid || !topic_name) {
-      // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '001-005-400-001', "400", "PUT", JSON.stringify(req.body),'Uid y topic_name son requeridos', "");
-      return res.status(400).json({ error: 'Uid y topic_name son requeridos' });
-    }
-  
-    const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
-    con.query(queryCheckUid, [uid, id7], (err, result) => {
-      if (err) {
-        console.error('Error:', err);
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '001-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error al actualizar el dispositivo 1', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error al actualizar el dispositivo 1' });
+      const {
+        uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
+      } = req.body;
+    
+      // Validar los campos requeridos
+      if (!uid || !topic_name) {
+        // LOG - 400 //
+        insertLog(req.user.id, req.user.user, '001-005-400-001', "400", "PUT", JSON.stringify(req.body),'Uid y topic_name son requeridos', "");
+        return res.status(400).json({ error: 'Uid y topic_name son requeridos' });
       }
-  
-      if (result.length > 0) {
-        // LOG - 200 //
-        insertLog(req.user.id, req.user.user, '001-005-200-001', "200", "PUT", JSON.stringify(req.body),'Uid duplicado', "");
-        return res.status(200).json({ found: true, message: 'Uid duplicado' });
-      } 
-      else {
-        const queryUpdate = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
-        con.query(queryUpdate,
-          [uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7],
-          (err, result) => {
+    
+      // Consultar si ya existe un dispositivo con el mismo UID
+      const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
+      con.query(queryCheckUid, [uid, id7], (err, result) => {
+        if (err) {
+          console.error('Error:', err);
+          // LOG - 500 //
+          insertLog(req.user.id, req.user.user, '001-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error al actualizar el dispositivo 1', JSON.stringify(err));
+          return res.status(500).json({ error: 'Error al actualizar el dispositivo 1' });
+        }
+    
+        // Si se encuentra un dispositivo con el mismo UID, enviar una respuesta indicando que el UID está duplicado
+        if (result.length > 0) {
+          // LOG - 200 //
+          insertLog(req.user.id, req.user.user, '001-005-200-001', "200", "PUT", JSON.stringify(req.body),'Uid duplicado', "");
+          return res.status(200).json({ found: true, message: 'Uid duplicado' });
+        } 
+        else {
+          // Si no se encuentra ningún dispositivo con el mismo UID, realizar la actualización
+          const queryUpdate = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
+          const values = [uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7];
+          
+          con.query(queryUpdate, values, (err, result) => {
             if (err) {
               console.error("Error:", err);
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '001-005-500-002', "500", "PUT", JSON.stringify(req.body),'Error al actualizar el dispositivo 2', JSON.stringify(err));
               return res.status(500).json({ error: 'Error al actualizar el dispositivo 2' });
             }
+            // Si la actualización tiene éxito, ejecutar alguna lógica adicional, como actualizar sensores
             auxPost(req.body.sensors, id7);
             res.send(result);
-          }
-        );
-      }
-    });
-  });  
+          });
+        }
+      });
+    }); 
+    
 
   router.delete("", verifyToken, (req, res) => {
     const id = req.body.id;

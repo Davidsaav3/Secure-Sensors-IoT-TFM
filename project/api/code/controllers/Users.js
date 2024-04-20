@@ -13,34 +13,39 @@ const insertLog = require('../middleware/log');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
-  // NO
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
-    const type0 = req.params.type;
-    const type1 = req.params.type1;
-    const type2 = req.params.type2;
-    const tam = parseInt(req.params.pag_pag);
-    const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
-    let query = ``;
-    if (type0 === 'search') {
-      query += `SELECT id, user, change_password, enabled, revoke_date, (SELECT COUNT(*) AS total FROM users) as total FROM users`;
-      query += ` ORDER BY ${type1} ${type2}`;
-    } 
-    else {
-      query += `SELECT id, user, change_password , enabled, revoke_date, (SELECT COUNT(*) AS total FROM users WHERE user LIKE '%${type0}%' OR password LIKE '%${type0}%') as total FROM users`;
-      query += ` WHERE user LIKE '%${type0}%' OR password LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  
+    // Validar y sanitizar parámetros
+    const tam = parseInt(pag_pag);
+    const act = (parseInt(pag_tam) - 1) * tam;
+  
+    // Preparar la consulta SQL utilizando consultas parametrizadas
+    let query = "";
+    let values = [];
+  
+    if (type === 'search') {
+      query = `SELECT id, user, change_password, enabled, revoke_date, (SELECT COUNT(*) AS total FROM users) as total FROM users ORDER BY ? ? LIMIT ? OFFSET ?`;
+      values = [type1, type2, tam, act];
+    } else {
+      query = `SELECT id, user, change_password , enabled, revoke_date, (SELECT COUNT(*) AS total FROM users WHERE user LIKE ? OR password LIKE ?) as total FROM users WHERE user LIKE ? OR password LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      const likePattern = `%${type}%`;
+      values = Array(4).fill(likePattern).concat([type1, type2, tam, act]);
     }
-    query += ` LIMIT ? OFFSET ?`;
-    con.query(query, [ tam, act], (err, result) => {
+  
+    con.query(query, values, (err, result) => {
       if (err) {
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '005-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener los usuarios', JSON.stringify(err));
         console.error(err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.user, '005-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener los usuarios', JSON.stringify(err));
+        return res.status(500).json({ error: 'Error al obtener los usuarios' });
       }
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '005-001-200-001', "200", "GET", JSON.stringify(req.params),'Usuarios recuperados', JSON.stringify(result));
+      insertLog(req.user.id, req.user.user, '005-001-200-001', "200", "GET", JSON.stringify(req.params), 'Usuarios recuperados', JSON.stringify(result));
       res.send(result);
     });
   });
+  
 
   // NO
   router.post("/login", (req, res) => { // LOGIN //

@@ -7,38 +7,41 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 
-  // NO  
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {
-    
-    const type0 = req.params.type;
-    const type1 = req.params.type1;
-    const type2 = req.params.type2;
-    const tam = parseInt(req.params.pag_pag);
-    const act = (parseInt(req.params.pag_tam) - 1) * parseInt(req.params.pag_pag);
-    let query;
-    let values;
+router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {
+  const { type, type1, type2, pag_tam, pag_pag } = req.params;
 
-    if (type0 == 'search') {
-      query = `SELECT id, type, metric, description, position, correction_general, correction_time_general,(SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?`;
-    } 
-    else {
-      query = `SELECT id, type, metric, description, position, correction_general, correction_time_general,discard_value,(SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%') as total FROM sensors_types
-        WHERE type LIKE '%${type0}%' OR metric LIKE '%${type0}%' OR description LIKE '%${type0}%' OR errorvalue LIKE '%${type0}%' OR valuemax LIKE '%${type0}%' OR valuemin LIKE '%${type0}%'
-        ORDER BY ${type1} ${type2} LIMIT ? OFFSET ?`;
+  // Validar y sanitizar parámetros
+  const tam = parseInt(pag_pag);
+  const act = (parseInt(pag_tam) - 1) * tam;
+
+  // Preparar la consulta SQL utilizando consultas parametrizadas
+  let query;
+  let values;
+
+  if (type === 'search') {
+    query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, (SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ? ? LIMIT ? OFFSET ?`;
+    values = [type1, type2, tam, act];
+  } else {
+    query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, discard_value, (SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE ? OR metric LIKE ? OR description LIKE ? OR errorvalue LIKE ? OR valuemax LIKE ? OR valuemin LIKE ?) as total FROM sensors_types
+      WHERE type LIKE ? OR metric LIKE ? OR description LIKE ? OR errorvalue LIKE ? OR valuemax LIKE ? OR valuemin LIKE ?
+      ORDER BY ? ? LIMIT ? OFFSET ?`;
+    const likePattern = `%${type}%`;
+    values = Array(12).fill(likePattern).concat([type1, type2, tam, act]);
+  }
+
+  con.query(query, values, (err, result) => {
+    if (err) {
+      console.error("Error:", err);
+      // LOG - 500 //
+      insertLog(req.user.id, req.user.user, '002-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener los tipos de sensores', JSON.stringify(err));
+      return res.status(500).json({ error: 'Error al obtener los tipos de sensores' });
     }
-    values = [tam, act];
-    con.query(query, values, (err, result) => {
-      if (err) {
-        console.error("Error:", err);
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '002-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener los tipos de sensores', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error al obtener los tipos de sensores' });
-      }
-      // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '002-001-200-001', "200", "GET", JSON.stringify(req.params), 'Tipos de sensores recuperados', JSON.stringify(result));
-      res.send(result);
-    });
+    // LOG - 200 //
+    insertLog(req.user.id, req.user.user, '002-001-200-001', "200", "GET", JSON.stringify(req.params), 'Tipos de sensores recuperados', JSON.stringify(result));
+    res.send(result);
   });
+});
+
 
   router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/
     let query = `SELECT id, type, position FROM sensors_types ORDER BY type ASC`;

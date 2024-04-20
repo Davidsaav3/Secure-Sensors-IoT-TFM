@@ -11,29 +11,31 @@ const insertLog = require('../middleware/log');
 const secretKey = process.env.PASSWORD_CIFRADO;
 const bcrypt = require('bcrypt');
 
-  // NO
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
-    
-    const type0 = req.params.type;
-    const type1 = req.params.type1;
-    const type2 = req.params.type2;
-    const tam = parseInt(req.params.pag_pag);
-    const act = (req.params.pag_tam - 1) * parseInt(req.params.pag_pag);
-    let query = ``;
-    if (type0 === 'search') {
-      query += `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write`;
-      query += ` ORDER BY ${type1} ${type2}`;
-    } 
-    else {
-      query += `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write`;
-      query += ` WHERE description LIKE '%${type0}%' OR urLIngest LIKE '%${type0}%' ORDER BY ${type1} ${type2}`;
+    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  
+    // Validar y sanitizar parámetros
+    const tam = parseInt(pag_pag);
+    const act = (parseInt(pag_tam) - 1) * tam;
+  
+    // Preparar la consulta SQL utilizando consultas parametrizadas
+    let query = "";
+    let values = [];
+  
+    if (type === 'search') {
+      query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write ORDER BY ? ? LIMIT ? OFFSET ?`;
+      values = [type1, type2, tam, act];
+    } else {
+      query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write WHERE description LIKE ? OR urLIngest LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      const likePattern = `%${type}%`;
+      values = [likePattern, likePattern, type1, type2, tam, act];
     }
-    query += ` LIMIT ? OFFSET ?`;
-    con.query(query, [tam, act], (err, result) => {
+  
+    con.query(query, values, (err, result) => {
       if (err) {
         console.error(err);
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '007-001-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener la conexión de escritura', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '007-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de escritura', JSON.stringify(err));
         return res.status(500).json({ error: 'Error al obtener la conexión de escritura' });
       }
       // Descifrar el authorization antes de enviarlo en la respuesta
@@ -41,13 +43,13 @@ const bcrypt = require('bcrypt');
         ...row,
         //authorization: decryptMessage(row.authorization, secretKey)
       }));
-
+  
       // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '007-001-200-001', "200", "GET", JSON.stringify(req.params),'Conexión de escritura recuperada', JSON.stringify(decryptedResult));
+      insertLog(req.user.id, req.user.user, '007-001-200-001', "200", "GET", JSON.stringify(req.params), 'Conexión de escritura recuperada', JSON.stringify(decryptedResult));
       res.send(decryptedResult);
     });
   });
-
+  
 
   router.get("/id/:id", verifyToken, (req, res) => { /*/ ID  /*/
     // Obtener el ID de la solicitud
