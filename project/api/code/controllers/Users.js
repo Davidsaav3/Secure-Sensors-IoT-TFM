@@ -10,8 +10,10 @@ const SECRET_KEY = process.env.TOKEN;
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const bcrypt = require('bcrypt');
 const insertLog = require('../middleware/log');
+const rateLimiterMiddleware = require('../middleware/ip');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
+router.use(rateLimiterMiddleware);
 
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const { type, type1, type2, pag_tam, pag_pag } = req.params;
