@@ -13,6 +13,7 @@ const insertLog = require('../middleware/log');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
 
+  // NO
   router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const type0 = req.params.type;
     const type1 = req.params.type1;
@@ -41,7 +42,7 @@ router.use(cookieParser());
     });
   });
 
-
+  // NO
   router.post("/login", (req, res) => { // LOGIN //
     const { user, password } = req.body;
 
@@ -94,7 +95,7 @@ router.use(cookieParser());
                                     }
 
                                     // Generar nuevo token de acceso
-                                    const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
+                                    const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                                     // LOG - 200 //
                                     insertLog(user.id, user.user, '005-002-200-001', "200", "POST", JSON.stringify(req.body),'Login hecho 1', "");
                                     return res.status(200).json({
@@ -110,7 +111,7 @@ router.use(cookieParser());
                             } 
                             else {
                                 // El token_refresh aún es válido, usar el token actual
-                                const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
+                                const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                                 // LOG - 200 //
                                 insertLog(user.id, user.user, '005-002-200-002', "200", "POST", JSON.stringify(req.body),'Login hecho 2', "");
                                 return res.status(200).json({
@@ -143,7 +144,7 @@ router.use(cookieParser());
                             }
 
                             // Generar nuevo token de acceso
-                            const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
+                            const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                             
                             // LOG - 200 //
                             insertLog(user.id, user.user, '005-002-200-003', "200", "POST", JSON.stringify(req.body),'Login hecho 3', "");
@@ -178,57 +179,91 @@ router.use(cookieParser());
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
+    
+    // Validar
+    if (isNaN(id) || id <= 0) {
+        // LOG - 400 //
+        insertLog(req.user.id, req.user.user, '005-003-400-001', "400", "GET", JSON.stringify(req.params),'ID inválido al obtener usuario', "");
+        return res.status(400).json({ error: 'ID inválido al obtener usuario' });
+    }
     const query = "SELECT id, user, change_password, enabled , revoke_date FROM users WHERE id = ?";
-    con.query(query, [id,id], (err, result) => {
-      if (err) {
-        console.error("Error:", err);
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '005-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener usuario', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error al obtener usuario' });
-      }
-      // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '005-003-200-001', "200", "GET", JSON.stringify(req.params),'Usuario obtenido', JSON.stringify(result));
-      res.send(result);
+    con.query(query, [id], (err, result) => {
+        if (err) {
+            console.error("Error:", err);
+            // LOG - 500 //
+            insertLog(req.user.id, req.user.user, '005-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener usuario', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error al obtener usuario' });
+        }
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '005-003-200-001', "200", "GET", JSON.stringify(req.params),'Usuario obtenido', JSON.stringify(result));
+        res.send(result);
     });
   });
+
   
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-  const { user, password, change_password, enabled } = req.body;
-  
-  if (!user || !password) {
-    return res.status(400).json({ error: 'User y password  son requeridas' });
-  }
-  //console.log("Lo que me llega:", password);
-  bcrypt.hash(password, 10, (err, hashedPassword) => {
-      if (err) {
-          // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "",'Username es requerido al crear un usuario', JSON.stringify(err));
-          return res.status(500).json({ error: 'Username es requerido al crear un usuario' });
-      }
-      //console.log("Cifrada:", hashedPassword);
-      const currentDate = new Date();
-      const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
-      const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
-      const query = "INSERT INTO users (user, password, change_password, enabled, revoke_date) VALUES (?, ?, ?, ?, ?)";
-      con.query(query, [user, hashedPassword, change_password, enabled, formattedFutureDate], (err, result) => {
-          if (err) {
-              // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-004-500-002', "500", "POST", "",'Error 1 al crear usuario', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error 1 al crear usuario' });
-          }
-          if (result.affectedRows === 1) {
-              const insertedId = result.insertId; // Obtiene el ID insertado
-              // LOG - 200 //
-              insertLog(req.user.id, req.user.user, '005-004-200-001', "200", "POST", "",'Usuario creado', "");
-              return res.status(200).json({ id: insertedId }); // Devuelve el ID
-          }
-          // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-004-500-005', "500", "POST", "",'Error 2 al  crear usuario', "");
-          return res.status(500).json({ error: 'Error 2 al  crear usuario' });
-      });
-  });
-});
+    const { user, password, change_password, enabled } = req.body;
 
+    // Validar
+    if (!user || !password) {
+      return res.status(400).json({ error: 'User y password son requeridas' });
+    }
+
+    // fortaleza
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+])(?=.*[^\da-zA-Z]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial' });
+    }
+
+    // usuario ya existe
+    con.query("SELECT * FROM users WHERE user = ?", user, (err, existingUser) => {
+      if (err) {
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.user, '005-004-500-003', "500", "POST", "", 'Error al verificar el usuario existente', JSON.stringify(err));
+        return res.status(500).json({ error: 'Error al verificar el usuario existente' });
+      }
+
+      if (existingUser.length > 0) {
+        return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
+      }
+
+      // Cifrar la contraseña
+      bcrypt.hash(password, 10, (err, hashedPassword) => {
+        if (err) {
+          // LOG - 500 //
+          insertLog(req.user.id, req.user.user, '005-004-500-001', "500", "POST", "", 'Error al cifrar la contraseña', JSON.stringify(err));
+          return res.status(500).json({ error: 'Error al cifrar la contraseña' });
+        }
+
+        const currentDate = new Date();
+        const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+        const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        const query = "INSERT INTO users (user, password, change_password, enabled, revoke_date) VALUES (?, ?, ?, ?, ?)";
+        con.query(query, [user, hashedPassword, change_password, enabled, formattedFutureDate], (err, result) => {
+          if (err) {
+            // LOG - 500 //
+            insertLog(req.user.id, req.user.user, '005-004-500-002', "500", "POST", "", 'Error al crear usuario', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error al crear usuario' });
+          }
+
+          if (result.affectedRows === 1) {
+            const insertedId = result.insertId; // Obtener el ID insertado
+            // LOG - 200 //
+            insertLog(req.user.id, req.user.user, '005-004-200-001', "200", "POST", "", 'Usuario creado', "");
+            return res.status(200).json({ id: insertedId }); // Devolver el ID
+          }
+
+          // LOG - 500 //
+          insertLog(req.user.id, req.user.user, '005-004-500-005', "500", "POST", "", 'Error al crear usuario', "");
+          return res.status(500).json({ error: 'Error al crear usuario' });
+        });
+      });
+    });
+  });
+
+
+  // NO
   router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
     const { id, user, password, change_password, enabled, token } = req.body;
     const tokenX = req.headers['authorization'];
@@ -240,7 +275,7 @@ router.use(cookieParser());
 
     if (!id && (user || password)) {
         // LOG - 400 //
-        insertLog(req.user.id, req.user.user, '005-007-400-001', "400", "PUT", "",'Faltan datos para actualizar usuario 1', "");
+        insertLog(req.user.id, req.user.user, '005-005-400-001', "400", "PUT", "",'Faltan datos para actualizar usuario 1', "");
         return res.status(400).json({ error: 'Faltan datos para actualizar usuario 1' });
     }
     let query = "UPDATE users SET";
@@ -255,7 +290,7 @@ router.use(cookieParser());
         jwt.verify(tokenX, SECRET_KEY, (err, decodedToken) => {
           if (err) {
             // LOG - 400 //
-            insertLog(req.user.id, req.user.user, '005-006-400-002', "400", "PUT", JSON.stringify(req.body),'Faltan datos para actualizar usuario 2', JSON.stringify(err));
+            insertLog(req.user.id, req.user.user, '005-005-400-002', "400", "PUT", JSON.stringify(req.body),'Faltan datos para actualizar usuario 2', JSON.stringify(err));
             return res.status(400).json({ error: 'Faltan datos para actualizar usuario 2' });
           }
       
@@ -270,7 +305,7 @@ router.use(cookieParser());
                 if (updateErr) {
                   console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                   // LOG - 500 //
-                  insertLog(user.id, user.user, '005-006-500-001', "500", "PUT", JSON.stringify(req.body),'Error 1 al editar usuario', JSON.stringify(updateErr));                                
+                  insertLog(user.id, user.user, '005-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error 1 al editar usuario', JSON.stringify(updateErr));                                
                   return res.status(500).json({ error: 'Error 1 al editar usuario' });
                 }
                 
@@ -302,7 +337,7 @@ router.use(cookieParser());
         bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '005-007-500-002', "500", "PUT", "",'Error 2 al editar usuario', JSON.stringify(err));
+                insertLog(req.user.id, req.user.user, '005-005-500-002', "500", "PUT", "",'Error 2 al editar usuario', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error 2 al editar usuario' });
             }
             if (commaNeeded) query += ",";
@@ -335,17 +370,17 @@ router.use(cookieParser());
         con.query(query, values, (err, result) => {
             if (err) {
                 // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '005-007-500-003', "500", "PUT", "",'Error 3 al editar usuario', JSON.stringify(err));
+                insertLog(req.user.id, req.user.user, '005-005-500-003', "500", "PUT", "",'Error 3 al editar usuario', JSON.stringify(err));
                 return res.status(500).json({ error: 'Error 3 al editar usuario' });
             }
             if (result.affectedRows > 0) {
                 // LOG - 200 //
-                insertLog(req.user.id, req.user.user, '005-007-200-001', "200", "PUT", "",'Usuario actualizado', "");
+                insertLog(req.user.id, req.user.user, '005-005-200-001', "200", "PUT", "",'Usuario actualizado', "");
                 //console.log(refreshToken)
                 return res.status(200).json({ refresh_token: refreshToken, user: user });
             }
             // LOG - 404 //
-            insertLog(req.user.id, req.user.user, '005-007-404-001', "404", "PUT", "",'Faltan datos para actualizar usuario 3', "");
+            insertLog(req.user.id, req.user.user, '005-005-404-001', "404", "PUT", "",'Faltan datos para actualizar usuario 3', "");
             return res.status(404).json({ error: 'Faltan datos para actualizar usuario 3' });
         });
     }
@@ -354,79 +389,110 @@ router.use(cookieParser());
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = parseInt(req.body.id);
+  
+    // Verificar
     if (isNaN(id)) {
       // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '005-008-400-001', "400", "DELETE", JSON.stringify(req.params),'ID no válido al borrar el usuario', "");
+      insertLog(req.user.id, req.user.user, '005-006-400-001', "400", "DELETE", JSON.stringify(req.params), 'ID no válido al borrar el usuario', "");
       return res.status(400).json({ error: 'ID no válido al borrar el usuario' });
     }
-    con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
+  
+    // Verificar
+    con.query("SELECT * FROM users WHERE id = ?", id, function (err, user) {
       if (err) {
         // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '005-008-500-001', "500", "DELETE", JSON.stringify(req.params),'Error al eliminar el usuario', JSON.stringify(err));
+        insertLog(req.user.id, req.user.user, '005-006-500-001', "500", "DELETE", JSON.stringify(req.params), 'Error al eliminar el usuario', JSON.stringify(err));
         return res.status(500).json({ error: 'Error al eliminar el usuario' });
       }
-      if (result.affectedRows === 0) {
+  
+      if (user.length === 0) {
         // LOG - 404 //
-        insertLog(req.user.id, req.user.user, '005-008-404-003', "404", "DELETE", JSON.stringify(req.params),'Usuario no encontrado al eliminarlo', "");
+        insertLog(req.user.id, req.user.user, '005-006-404-001', "404", "DELETE", JSON.stringify(req.params), 'Usuario no encontrado al eliminarlo', "");
         return res.status(404).json({ error: 'Usuario no encontrado al eliminarlo' });
       }
-
-      // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '005-008-200-001', "200", "DELETE", JSON.stringify(req.params),'Usuario eliminado', "");
-      res.json({ message: 'Usuario eliminado' });
+  
+      con.query("DELETE FROM users WHERE id = ?", id, function (err, result) {
+        if (err) {
+          // LOG - 500 //
+          insertLog(req.user.id, req.user.user, '005-006-500-002', "500", "DELETE", JSON.stringify(req.params), 'Error al eliminar el usuario', JSON.stringify(err));
+          return res.status(500).json({ error: 'Error al eliminar el usuario' });
+        }
+  
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '005-006-200-001', "200", "DELETE", JSON.stringify(req.params), 'Usuario eliminado', "");
+        res.json({ message: 'Usuario eliminado' });
+      });
     });
   });
+  
 
   router.post('/refresh', (req, res) => {
-    const { refreshToken } = req.body;    
-    //const refreshToken = req.cookies.refresh_token;
-    //npm install cookie-parser
-
+    const { refreshToken } = req.body;
+  
+    // Verificamos
+    if (!refreshToken) {
+      // LOG - 400 //
+      insertLog("", "", '005-007-400-001', "400", "POST", "",'Error al refrescar el token', 'El token de refresco no fue proporcionado');
+      return res.status(400).json({ error: 'El token de refresco no fue proporcionado' });
+    }
+  
     jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
-        if (err) {
-            // LOG - 400 //
-            insertLog("", "", '005-009-400-001', "400", "POST", refreshToken,'Error 1 al refrescar el token', JSON.stringify(err));
-            return res.status(400).json({ error: 'Refresh token inválido' });
+      if (err) {
+        // LOG - 400 //
+        insertLog("", "", '005-007-400-002', "400", "POST", refreshToken,'Error al refrescar el token', JSON.stringify(err));
+        return res.status(400).json({ error: 'Refresh token inválido' });
+      }
+  
+      const userId = decoded.id;
+  
+      const query = "SELECT * FROM users WHERE id = ? AND enabled = 1";
+      con.query(query, [userId], (err, results) => {
+        if (err || results.length === 0) {
+          // LOG - 400 //
+          insertLog("", "", '005-007-400-003', "400", "POST", refreshToken,'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
+          return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado' });
         }
+  
+        // Generamos
+        const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
 
-        //console.log(decoded.user)
-        const query = "SELECT * FROM users WHERE id = ? AND (SELECT enabled FROM users WHERE id = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
-        con.query(query, [decoded.id, decoded.id], (err, results) => {
-            if (err || results.length === 0) {
-
-                // LOG - 400 //
-                insertLog("", "", '005-009-400-002', "400", "POST", refreshToken,'Error 2 al  refrescar el token', "");
-                return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
-            }
-            // LOG - 200 //
-            //insertLog("", "", '005-009-200-001', "200", "POST", refreshToken,'Token refrescado', "");
-            const newAccessToken = jwt.sign({ user: results[0].user, id: decoded.id }, SECRET_KEY, { expiresIn: process.env.ACCES_TOKE_TIME });
-            res.status(200).json({ token: newAccessToken });
-        });
+        // LOG - 200 //
+        insertLog("", "", '005-007-200-001', "200", "POST", refreshToken,'Token refrescado', '');
+        res.status(200).json({ token: newAccessToken });
+      });
     });
   });
 
 
   router.post("/revoke", verifyToken, (req, res) => {  /*/ REVOKE  /*/
     const { id } = req.body;
-      const query = "UPDATE users SET token = ? , revoke_date = ? WHERE id = ?";
-      con.query(query, ["", "", id], (err, result) => {
-          if (err) {
-              // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '005-010-500-002', "500", "POST", "",'Error 1 al revocar el token', JSON.stringify(err));
-              return res.status(500).json({ error: 'Error 1 al revocar el token' });
-          }
-          if (result.affectedRows === 1) {
-              const insertedId = result.insertId; // Obtiene el ID insertado
-              // LOG - 200 //
-              insertLog(req.user.id, req.user.user, '005-010-200-001', "200", "POST", "",'Token revocado', "");
-              return res.status(200).json({ id: insertedId }); // Devuelve el ID
-          }
-          // LOG - 500 //
-          insertLog(req.user.id, req.user.user, '005-010-500-001', "500", "POST", "",'Error 2 al revocar el token', "");
-          return res.status(500).json({ error: 'Error 2 al revocar el token' });
-      });
+  
+    // Verificamos
+    if (isNaN(id)) {
+      // LOG - 400 //
+      insertLog(req.user.id, req.user.user, '005-008-400-001', "400", "POST", JSON.stringify(req.body), 'ID no válido al revocar el token', "");
+      return res.status(400).json({ error: 'ID no válido al revocar el token' });
+    }
+  
+    const query = "UPDATE users SET token = '', revoke_date = NOW() WHERE id = ?";
+    con.query(query, [id], (err, result) => {
+      if (err) {
+        console.error("Error:", err);
+        // LOG - 500 //
+        insertLog(req.user.id, req.user.user, '005-008-500-002', "500", "POST", "",'Error al revocar el token', JSON.stringify(err));
+        return res.status(500).json({ error: 'Error al revocar el token' });
+      }
+      if (result.affectedRows === 1) {
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '005-008-200-001', "200", "POST", "",'Token revocado', "");
+        return res.status(200).json({ message: 'Token revocado' });
+      }
+      // LOG - 404 //
+      insertLog(req.user.id, req.user.user, '005-008-404-001', "404", "POST", "",'Usuario no encontrado al revocar el token', "");
+      return res.status(404).json({ error: 'Usuario no encontrado al revocar el token' });
+    });
   });
+  
 
 
 module.exports = router;

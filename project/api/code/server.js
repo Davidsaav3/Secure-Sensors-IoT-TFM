@@ -4,7 +4,7 @@ const app = express();
 require('dotenv').config();
 
 const corsOptions = {
-  origin: 'http://localhost:4200',
+  origin: ['http://localhost:4200', 'https://sensors.com:5501'],
   credentials: true // Permitir solicitudes con credenciales
 };
 
@@ -24,15 +24,15 @@ const monitoringRouter = require('./controllers/monitoring');
 app.use("/api/device_configurations", deviceConfigurationsRouter);
 app.use("/api/sensors_types", sensorsTypesRouter);
 app.use("/api/data_structure", dataStructureRouter);
-app.use("/api/variable_data_structure",variableDataStructureRouter);
+app.use("/api/variable_data_structure", variableDataStructureRouter);
 
-app.use("/api/users",usersRouter);
-app.use("/api/conecction_read",conecctionReadRouter);
-app.use("/api/conecction_write",conecctionWriteRouter);
-app.use("/api/script",scriptRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/conecction_read", conecctionReadRouter);
+app.use("/api/conecction_write", conecctionWriteRouter);
+app.use("/api/script", scriptRouter);
 app.use("/api/monitoring", monitoringRouter);
 
 const port = process.env.PORT_SENSORS;
 app.listen(port, () => {
-  console.log(`Sirviendo por el puerto :`+process.env.PORT_SENSORS+`/api/`);
+  console.log(`Sirviendo por el puerto: ` + process.env.PORT_SENSORS + `/api/`);
 });

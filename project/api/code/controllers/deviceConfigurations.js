@@ -7,6 +7,7 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 
+  // NO
   router.get("/get/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
     let search_text= req.params.search_text;
@@ -545,30 +546,39 @@ const insertLog = require('../middleware/log');
 
   router.get("/duplicate/:uid", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const uid = req.params.uid;
+    const MAX_DUPLICATE_ATTEMPTS = 100;
+    
+    // Valida
     let query = `SELECT uid FROM device_configurations`;
     con.query(query, (err, result) => {
-      if (err) {
-        console.error(err);
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '001-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar dispositivo 1', JSON.stringify(err));
-        return res.status(500).send("Error al duplicar dispositivo 1");
-      }
+        if (err) {
+            console.error(err);
+            // LOG - 500 //
+            insertLog(req.user.id, req.user.user, '001-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al duplicar dispositivo', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error al duplicar dispositivo' });
+        }
 
-      let contador = 1;
-      let nombresExistentes = new Set();
-      for (let index = 0; index < result.length; index++) {
-        nombresExistentes.add(result[index].uid);
-      }
-      
-      let uid_2 = uid;
-      while (nombresExistentes.has(uid_2)) {
-        uid_2 = `${uid}_${contador}`;
-        contador++;
-      }
+        let contador = 1;
+        let nombresExistentes = new Set();
+        for (let index = 0; index < result.length; index++) {
+            nombresExistentes.add(result[index].uid);
+        }
 
-      // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '001-003-200-001', "200", "GET", JSON.stringify(req.params),'Dispositivo duplicado', JSON.stringify(uid_2));
-      res.send(uid_2);
+        let uid_2 = uid;
+        while (nombresExistentes.has(uid_2)) {
+            // Limitar los bucles rarunos
+            if (contador > MAX_DUPLICATE_ATTEMPTS) {
+                // LOG - 500 //
+                insertLog(req.user.id, req.user.user, '001-003-500-002', "500", "GET", JSON.stringify(req.params),'Se excedió el límite de intentos de duplicación', "");
+                return res.status(500).json({ error: 'Se excedió el límite de intentos de duplicación' });
+            }
+            uid_2 = `${uid}_${contador}`;
+            contador++;
+        }
+
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '001-003-200-001', "200", "GET", JSON.stringify(req.params),'Dispositivo duplicado', JSON.stringify(uid_2));
+        res.send(uid_2);
     });
   });
 
@@ -722,6 +732,7 @@ const insertLog = require('../middleware/log');
     });
   }
 
+  // NO
   router.put("", verifyToken, (req, res) => { // UPDATE //
     const {
       uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
@@ -766,60 +777,68 @@ const insertLog = require('../middleware/log');
     });
   });  
 
-  router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
+  router.delete("", verifyToken, (req, res) => {
     const id = req.body.id;
+
+    // Validación
     if (isNaN(id)) {
-      // LOG - 400 //
-      insertLog(req.user.id, req.user.user, '001-006-400-001', "400", "DELETE", JSON.stringify(req.body),'Id no válido', "");
-      return res.status(400).json({ error: 'ID no válido' });
+        // LOG - 400 //
+        insertLog(req.user.id, req.user.user, '001-006-400-001', "400", "DELETE", JSON.stringify(req.body), 'Id no válido', "");
+        return res.status(400).json({ error: 'ID no válido' });
     }
 
     con.beginTransaction(function (err) {
-      if (err) {
-        // LOG - 500 //
-        insertLog(req.user.id, req.user.user, '001-006-500-001', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 1', JSON.stringify(err));
-        return res.status(500).json({ error: 'Error al eliminar dispositivo 1' });
-      }
-      con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
         if (err) {
-          con.rollback(function () {
             // LOG - 500 //
-            insertLog(req.user.id, req.user.user, '001-006-500-002', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 2', JSON.stringify(err));
-            return res.status(500).json({ error: 'Error al eliminar dispositivo 2' });
-          });
+            insertLog(req.user.id, req.user.user, '001-006-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar dispositivo 1', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error al eliminar dispositivo 1' });
         }
-        if (result.affectedRows === 0) {
-          con.rollback(function () {
-            // LOG - 404 //
-            insertLog(req.user.id, req.user.user, '001-006-404-001', "404", "DELETE", JSON.stringify(req.body),'No encontrado al eliminar dispositivo', "");
-            return res.status(404).json({ error: 'No encontrado al eliminar dispositivo' });
-          });
-        }
-        
-        con.query("DELETE FROM sensors_devices WHERE id_device = ?", id, function (err, result) {
-          if (err) {
-            con.rollback(function () {
-              // LOG - 500 //
-              insertLog(req.user.id, req.user.user, '001-006-500-003', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 3', "");
-              return res.status(500).json({ error: 'Error al eliminar dispositivo 3' });
-            });
-          }
-          con.commit(function (err) {
+
+        // Eliminación del dispositivo principal
+        con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
             if (err) {
-              con.rollback(function () {
-                // LOG - 500 //
-                insertLog(req.user.id, req.user.user, '001-006-500-004', "500", "DELETE", JSON.stringify(req.body),'Error al eliminar dispositivo 4', JSON.stringify(err));
-                return res.status(500).json({ error: 'Error al eliminar dispositivo 4' });
-              });
+                con.rollback(function () {
+                    // LOG - 500 //
+                    insertLog(req.user.id, req.user.user, '001-006-500-002', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar dispositivo 2', JSON.stringify(err));
+                    return res.status(500).json({ error: 'Error al eliminar dispositivo 2' });
+                });
             }
 
-            // LOG - 200 //
-            insertLog(req.user.id, req.user.user, '001-006-200-001', "200", "DELETE", JSON.stringify(req.body),'Dispositivo eliminado', "");
-            res.json({ message: 'Dispositivo eliminado' });
-          });
+            if (result.affectedRows === 0) {
+                con.rollback(function () {
+                    // LOG - 404 //
+                    insertLog(req.user.id, req.user.user, '001-006-404-001', "404", "DELETE", JSON.stringify(req.body), 'No encontrado al eliminar dispositivo', "");
+                    return res.status(404).json({ error: 'No encontrado al eliminar dispositivo' });
+                });
+            }
+
+            // Eliminación de los sensores asociados al dispositivo
+            con.query("DELETE FROM sensors_devices WHERE id_device = ?", id, function (err, result) {
+                if (err) {
+                    con.rollback(function () {
+                        // LOG - 500 //
+                        insertLog(req.user.id, req.user.user, '001-006-500-003', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar dispositivo 3', "");
+                        return res.status(500).json({ error: 'Error al eliminar dispositivo 3' });
+                    });
+                }
+
+                con.commit(function (err) {
+                    if (err) {
+                        con.rollback(function () {
+                            // LOG - 500 //
+                            insertLog(req.user.id, req.user.user, '001-006-500-004', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar dispositivo 4', JSON.stringify(err));
+                            return res.status(500).json({ error: 'Error al eliminar dispositivo 4' });
+                        });
+                    }
+
+                    // LOG - 200 //
+                    insertLog(req.user.id, req.user.user, '001-006-200-001', "200", "DELETE", JSON.stringify(req.body), 'Dispositivo eliminado', "");
+                    res.json({ message: 'Dispositivo eliminado' });
+                });
+            });
         });
-      });
     });
-  });
+});
+
 
 module.exports = router;
