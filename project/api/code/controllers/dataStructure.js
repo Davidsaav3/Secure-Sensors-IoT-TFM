@@ -7,24 +7,22 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
-    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
+    const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
   
-    // Validar y sanitizar parámetros
     const tam = parseInt(pag_pag);
     const act = (parseInt(pag_tam) - 1) * tam;
-  
-    // Preparar la consulta SQL utilizando consultas parametrizadas
     let query = "";
     let values = [];
   
-    if (type === 'search') {
+    if (text_search === 'search') {
       query = `SELECT *, (SELECT description FROM variable_data_structure WHERE id = id_variable_data_structure LIMIT 1) as variable_description, (SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure ORDER BY ? ? LIMIT ? OFFSET ?`;
-      values = [type1, type2, tam, act];
-    } else {
+      values = [order, order_type, tam, act];
+    } 
+    else {
       query = `SELECT *, (SELECT description FROM variable_data_structure WHERE id = id_variable_data_structure LIMIT 1) as variable_description, (SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE ? OR configuration LIKE ? OR identifier_code LIKE ? OR id_variable_data_structure LIKE ?) as total FROM data_estructure WHERE description LIKE ? OR configuration LIKE ? OR identifier_code LIKE ? OR id_variable_data_structure LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
-      const likePattern = `%${type}%`;
-      values = Array(8).fill(likePattern).concat([type1, type2, tam, act]);
+      const likePattern = `%${text_search}%`;
+      values = Array(8).fill(likePattern).concat([order, order_type, tam, act]);
     }
   
     con.query(query, values, (err, result) => {
@@ -34,7 +32,6 @@ const insertLog = require('../middleware/log');
         insertLog(req.user.id, req.user.user, '003-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener las estructuras de datos', JSON.stringify(err));
         return res.status(500).json({ error: 'Error al obtener las estructuras de datos' });
       }
-  
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '003-001-200-001', "200", "GET", JSON.stringify(req.params), 'Estructuras de datos recuperadas', JSON.stringify(result));
       res.send(result);
@@ -44,19 +41,17 @@ const insertLog = require('../middleware/log');
 
   router.get("/get_list", verifyToken, (req, res) => { /*/ GET LIST /*/
 
-      // Validación
       if (!req.user || !req.user.id || !req.user.user) {
           // LOG - 400 - Usuario no válido
           insertLog('Unknown', 'Unknown', '003-002-400-001', "400", "GET", "",'Usuario no válido', "");
           return res.status(400).json({ error: 'Usuario no válido' });
       }
-  
       let query = `SELECT id_estructure, description FROM data_estructure ORDER BY description ASC`;
       let query_2 = `SELECT id as id_estructure, description FROM variable_data_structure ORDER BY description ASC`;
   
       function queryDatabase(query) {
           return new Promise((resolve, reject) => {
-              // Implementar límites de tiempo de espera
+              // Límites de tiempo
               con.query({sql: query, timeout: 5000}, (err, result) => {
                   if (err) {
                       reject(err);
@@ -105,15 +100,12 @@ const insertLog = require('../middleware/log');
   
       let contador = 1;
       let existingNames = new Set();
-      
-      // Obtener los nombres de las estructuras de datos existentes
       result.forEach(row => {
         existingNames.add(row.description);
       });
       
       let duplicatedDescription = description;
       
-      // Si la descripción ya existe, añadir un sufijo numérico
       while (existingNames.has(duplicatedDescription)) {
         duplicatedDescription = `${description}_${contador}`;
         contador++;
@@ -121,8 +113,6 @@ const insertLog = require('../middleware/log');
   
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '003-003-200-001', "200", "GET", JSON.stringify(req.params), 'Estructura de datos duplicada', "");
-      
-      // Devolver la descripción duplicada
       res.json({ duplicatedDescription });
     });
   });
@@ -168,17 +158,16 @@ const insertLog = require('../middleware/log');
     const configuration = req.body.configuration === "" ? null : req.body.configuration;
     const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
     const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
-  
+
     if (!id_estructure) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '003-005-400-001', "400", "PUT", JSON.stringify(req.body), 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos', "");
       return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos' });
     }
-  
     let query = "UPDATE data_estructure SET description=?, configuration=?, identifier_code=?, id_variable_data_structure=?";
     const values = [description, configuration, identifier_code, id_variable_data_structure, id_estructure];
-  
     query += " WHERE id_estructure=?";
+    
     con.query(query, values, (err, result) => {
       if (err) {
         // LOG - 500 //
@@ -190,7 +179,6 @@ const insertLog = require('../middleware/log');
         insertLog(req.user.id, req.user.user, '003-005-200-001', "200", "PUT", JSON.stringify(req.body), 'Estructura de datos editada', "");
         return res.status(200).json({ message: 'Estructura de datos editada' });
       }
-  
       // LOG - 404 //
       insertLog(req.user.id, req.user.user, '003-005-404-001', "404", "PUT", JSON.stringify(req.body), 'Description es requerido al crear una estructura de datos', "");
       return res.status(404).json({ error: 'Description es requerido al crear una estructura de datos' });

@@ -7,26 +7,24 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 
-router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {
-  const { type, type1, type2, pag_tam, pag_pag } = req.params;
+router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {
+  const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
 
-  // Validar y sanitizar parámetros
   const tam = parseInt(pag_pag);
   const act = (parseInt(pag_tam) - 1) * tam;
-
-  // Preparar la consulta SQL utilizando consultas parametrizadas
   let query;
   let values;
 
-  if (type === 'search') {
+  if (text_search === 'search') {
     query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, (SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ? ? LIMIT ? OFFSET ?`;
-    values = [type1, type2, tam, act];
-  } else {
+    values = [order, order_type, tam, act];
+  } 
+  else {
     query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, discard_value, (SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE ? OR metric LIKE ? OR description LIKE ? OR errorvalue LIKE ? OR valuemax LIKE ? OR valuemin LIKE ?) as total FROM sensors_types
       WHERE type LIKE ? OR metric LIKE ? OR description LIKE ? OR errorvalue LIKE ? OR valuemax LIKE ? OR valuemin LIKE ?
       ORDER BY ? ? LIMIT ? OFFSET ?`;
-    const likePattern = `%${type}%`;
-    values = Array(12).fill(likePattern).concat([type1, type2, tam, act]);
+    const likePattern = `%${text_search}%`;
+    values = Array(12).fill(likePattern).concat([order, order_type, tam, act]);
   }
 
   con.query(query, values, (err, result) => {
@@ -100,7 +98,6 @@ router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res)
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
   
-    // Validar
     if (isNaN(id)) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '002-004-400-001', "400", "GET", JSON.stringify(req.params),'ID no válido al obtener el tipo de sensor', "");
@@ -130,7 +127,6 @@ router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res)
   router.post("", verifyToken, (req, res) => {  /*/  POST  /*/
     const { type, metric, description, errorvalue, valuemax, valuemin, position, correction_general, correction_time_general, discard_value } = req.body;
   
-    // Validación 
     if (!type || !metric) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '002-005-400-001', "400", "POST", JSON.stringify(req.body),'Type y Metric son requeridos al crear el tipo de sensor', "");
@@ -171,7 +167,6 @@ router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res)
       type, metric, description, errorvalue, valuemin, valuemax, id, position, correction_general, correction_time_general, discard_value
     } = req.body;
   
-    // Validación
     if (!type || !metric || !id) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '002-006-400-001', "400", "PUT", JSON.stringify(req.body),'Faltan campos obligatorios para editar el tipo de sensor', "");
@@ -221,19 +216,16 @@ router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res)
         insertLog(req.user.id, req.user.user, '002-007-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar el tipo de sensor', JSON.stringify(err));
         return res.status(500).json({ error: 'Error al eliminar el tipo de sensor' });
       }
-  
       if (result.affectedRows === 0) {
         // LOG - 404 //
         insertLog(req.user.id, req.user.user, '002-007-404-001', "404", "DELETE", JSON.stringify(req.body), 'Tipo de sensor no encontrado para eliminar', "");
         return res.status(404).json({ error: 'Tipo de sensor no encontrado para eliminar' });
       }
-  
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '002-007-200-001', "200", "DELETE", JSON.stringify(req.body), 'Tipo de sensor eliminado con éxito', "");
       res.json({ message: 'Tipo de sensor eliminado con éxito' });
     });
   });
   
-
 
 module.exports = router;

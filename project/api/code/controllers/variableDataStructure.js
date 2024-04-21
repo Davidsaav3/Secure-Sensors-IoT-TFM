@@ -7,42 +7,37 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => { /*/ GET /*/
-    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { /*/ GET /*/
+    const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
   
-    // Validar y sanitizar parámetros
     const tam = parseInt(pag_pag);
     const act = (parseInt(pag_tam) - 1) * tam;
-  
-    // Preparar la consulta SQL utilizando consultas preparadas
     let query = "";
     let queryParams = [];
   
-    if (type === "search") {
+    if (text_search === "search") {
       query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure) as total FROM variable_data_structure ORDER BY ? ? LIMIT ? OFFSET ?`;
-      queryParams = [type1, type2, tam, act];
+      queryParams = [order, order_type, tam, act];
     } 
     else {
       query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ?) as total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
-      const likePattern = `%${type}%`;
-      queryParams = Array(6).fill(likePattern).concat([type1, type2, tam, act]);
+      const likePattern = `%${text_search}%`;
+      queryParams = Array(6).fill(likePattern).concat([order, order_type, tam, act]);
     }
   
     con.query(query, queryParams, (err, result) => {
       if (err) {
         console.error(err);
-        // Manejo de errores seguro
+        // LOG - 500 //
         insertLog(req.user.id, req.user.user, '004-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener las estructuras de datos variables', JSON.stringify(err));
         return res.status(500).send("Error interno del servidor");
       }
-  
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '004-001-200-001', "200", "GET", JSON.stringify(req.params), 'Estructuras de datos variables recuperadas', JSON.stringify(result));
       res.send(result);
     });
   });
   
-
   
   router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/
     let query = `SELECT id, description, structure, initial_byte FROM variable_data_structure ORDER BY description ASC`;
@@ -112,7 +107,7 @@ const insertLog = require('../middleware/log');
         return res.status(500).json({ error: 'Error al crear una estructura de datos variable' });
       }
       if (result.affectedRows === 1) {
-        const insertedId = result.insertId; // Obtener el ID insertado
+        const insertedId = result.insertId; 
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '004-004-200-001', "200", "POST", JSON.stringify(req.body),'Estructura de datos variable creada', "");
         return res.status(200).json({ id: insertedId }); // Devolver el ID en la respuesta

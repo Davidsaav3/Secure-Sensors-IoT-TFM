@@ -65,7 +65,6 @@ const insertLog = require('../middleware/log');
     let xx2= parseFloat(x2);
     let yy1= parseFloat(y1);
     let yy2= parseFloat(y2);
-    //console.log("---")
 
 
       if(search_text=='search'){ // BUSQUEDA POR TEXTO ?
@@ -737,14 +736,12 @@ const insertLog = require('../middleware/log');
         uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
       } = req.body;
     
-      // Validar los campos requeridos
       if (!uid || !topic_name) {
         // LOG - 400 //
         insertLog(req.user.id, req.user.user, '001-005-400-001', "400", "PUT", JSON.stringify(req.body),'Uid y topic_name son requeridos', "");
         return res.status(400).json({ error: 'Uid y topic_name son requeridos' });
       }
     
-      // Consultar si ya existe un dispositivo con el mismo UID
       const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
       con.query(queryCheckUid, [uid, id7], (err, result) => {
         if (err) {
@@ -754,14 +751,14 @@ const insertLog = require('../middleware/log');
           return res.status(500).json({ error: 'Error al actualizar el dispositivo 1' });
         }
     
-        // Si se encuentra un dispositivo con el mismo UID, enviar una respuesta indicando que el UID está duplicado
+        // UID duplicado
         if (result.length > 0) {
           // LOG - 200 //
           insertLog(req.user.id, req.user.user, '001-005-200-001', "200", "PUT", JSON.stringify(req.body),'Uid duplicado', "");
           return res.status(200).json({ found: true, message: 'Uid duplicado' });
         } 
         else {
-          // Si no se encuentra ningún dispositivo con el mismo UID, realizar la actualización
+          // Siningún dispositivo
           const queryUpdate = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
           const values = [uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7];
           
@@ -772,7 +769,7 @@ const insertLog = require('../middleware/log');
               insertLog(req.user.id, req.user.user, '001-005-500-002', "500", "PUT", JSON.stringify(req.body),'Error al actualizar el dispositivo 2', JSON.stringify(err));
               return res.status(500).json({ error: 'Error al actualizar el dispositivo 2' });
             }
-            // Si la actualización tiene éxito, ejecutar alguna lógica adicional, como actualizar sensores
+            // éxito
             auxPost(req.body.sensors, id7);
             res.send(result);
           });
@@ -784,7 +781,6 @@ const insertLog = require('../middleware/log');
   router.delete("", verifyToken, (req, res) => {
     const id = req.body.id;
 
-    // Validación
     if (isNaN(id)) {
         // LOG - 400 //
         insertLog(req.user.id, req.user.user, '001-006-400-001', "400", "DELETE", JSON.stringify(req.body), 'Id no válido', "");
@@ -798,7 +794,7 @@ const insertLog = require('../middleware/log');
             return res.status(500).json({ error: 'Error al eliminar dispositivo 1' });
         }
 
-        // Eliminación del dispositivo principal
+        // Eliminación
         con.query("DELETE FROM device_configurations WHERE id = ?", id, function (err, result) {
             if (err) {
                 con.rollback(function () {
@@ -816,7 +812,7 @@ const insertLog = require('../middleware/log');
                 });
             }
 
-            // Eliminación de los sensores asociados al dispositivo
+            // Eliminación sensores 
             con.query("DELETE FROM sensors_devices WHERE id_device = ?", id, function (err, result) {
                 if (err) {
                     con.rollback(function () {

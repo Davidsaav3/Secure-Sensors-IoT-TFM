@@ -11,24 +11,22 @@ const insertLog = require('../middleware/log');
 const secretKey = process.env.PASSWORD_CIFRADO;
 const bcrypt = require('bcrypt');
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
-    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
+    const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
   
-    // Validar y sanitizar parámetros
     const tam = parseInt(pag_pag);
     const act = (parseInt(pag_tam) - 1) * tam;
-  
-    // Preparar la consulta SQL utilizando consultas parametrizadas
     let query = "";
     let values = [];
   
-    if (type === 'search') {
+    if (text_search === 'search') {
       query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write ORDER BY ? ? LIMIT ? OFFSET ?`;
-      values = [type1, type2, tam, act];
-    } else {
+      values = [order, order_type, tam, act];
+    } 
+    else {
       query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write WHERE description LIKE ? OR urLIngest LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
-      const likePattern = `%${type}%`;
-      values = [likePattern, likePattern, type1, type2, tam, act];
+      const likePattern = `%${text_search}%`;
+      values = [likePattern, likePattern, order, order_type, tam, act];
     }
   
     con.query(query, values, (err, result) => {
@@ -38,7 +36,6 @@ const bcrypt = require('bcrypt');
         insertLog(req.user.id, req.user.user, '007-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de escritura', JSON.stringify(err));
         return res.status(500).json({ error: 'Error al obtener la conexión de escritura' });
       }
-      // Descifrar el authorization antes de enviarlo en la respuesta
       const decryptedResult = result.map(row => ({
         ...row,
         //authorization: decryptMessage(row.authorization, secretKey)
@@ -52,10 +49,8 @@ const bcrypt = require('bcrypt');
   
 
   router.get("/id/:id", verifyToken, (req, res) => { /*/ ID  /*/
-    // Obtener el ID de la solicitud
     const id = parseInt(req.params.id);
-    
-    // Consulta SQL para obtener la conexión de escritura por ID
+
     const query = "SELECT id, description, urlIngest, enabled FROM conecction_write WHERE id = ?";
     con.query(query, [id, id], (err, result) => {
         if (err) {
@@ -65,7 +60,6 @@ const bcrypt = require('bcrypt');
             return res.status(500).json({ error: 'Error al obtener la conexión de escritura' });
         }
         
-        // Descifrar el valor de la autorización antes de enviarlo en la respuesta
         const decryptedResult = result.map(row => ({
             ...row,
             //authorization: decryptMessage(row.authorization, secretKey)
@@ -78,10 +72,8 @@ const bcrypt = require('bcrypt');
 });
 
 router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE  /*/
-    // Obtener la descripción de la solicitud
     const description = req.params.description;
-    
-    // Consulta SQL para verificar la existencia de descripciones duplicadas
+
     let query = `SELECT description FROM conecction_write`;
     con.query(query, (err, result) => {
         if (err) {
@@ -91,7 +83,6 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
             return res.status(500).send("Error al duplicar la conexión de escritura");
         }
 
-        // Verificar y generar un nombre único si la descripción ya existe
         let contador = 1;
         let nombresExistentes = new Set();
         for (let index = 0; index < result.length; index++) {
@@ -113,20 +104,15 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 
 
   router.post("", verifyToken, (req, res) => { /*/ POST  /*/
-  // Extraer los datos de la solicitud
   const { description, urlIngest, enabled, authorization } = req.body;
-  
-  // Verificar si se proporcionaron los campos obligatorios
+
   if (!description || !urlIngest) {
       // LOG - 400 - Description es requerido al crear una conexión de escritura
       insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body), 'Description es requerido al crear una conexión de escritura', "");
       return res.status(400).json({ error: 'Description es requerido al crear una conexión de escritura' });
   }
 
-  // Encriptar el valor de autorización antes de almacenarlo
   const encryptedMessage = encryptMessage(authorization, secretKey);
-  
-  // Construir y ejecutar la consulta SQL para insertar la conexión de escritura
   const query = "INSERT INTO conecction_write (description, urlIngest, enabled, authorization) VALUES (?, ?, ?, ?)";
   con.query(query, [description, urlIngest, enabled, encryptedMessage], (err, result) => {
       if (err) {
@@ -134,14 +120,12 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
           insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de escritura', JSON.stringify(err));
           return res.status(500).json({ error: 'Error al crear una conexión de escritura' });
       }
-      
       if (result.affectedRows === 1) {
-          const insertedId = result.insertId; // Obtener el ID insertado
+          const insertedId = result.insertId; 
           // LOG - 200 - Conexión de escritura creada
           insertLog(req.user.id, req.user.user, '007-004-200-001', "200", "POST", JSON.stringify(req.body), 'Conexión de escritura creada', "");
-          return res.status(200).json({ id: insertedId }); // Devolver el ID en la respuesta
+          return res.status(200).json({ id: insertedId });
       }
-
       // LOG - 500 - Error al crear una conexión de escritura
       insertLog(req.user.id, req.user.user, '007-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de escritura', "");
       return res.status(500).json({ error: 'Error al crear una conexión de escritura' });
@@ -149,23 +133,17 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 });
 
 
-
   router.put("", verifyToken, (req, res) => { /*/ UPDATE  /*/
-    // Extraer los datos de la solicitud
     const { id, description, urlIngest, enabled, authorization } = req.body;
     
-    // Verificar si se proporcionaron los campos obligatorios
     if (!id || !description || !urlIngest) {
         // LOG - 400 - Se requiere el ID del usuario y al menos un campo para editar la conexión de escritura
         insertLog(req.user.id, req.user.user, '007-005-400-001', "400", "PUT", JSON.stringify(req.body), 'Se requiere el ID del usuario y al menos un campo para editar la conexión de escritura', "");
         return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la conexión de escritura' });
     }
     
-    // Construir la consulta SQL dinámicamente
     let query = "UPDATE conecction_write SET";
     const values = [];
-    
-    // Verificar y agregar cada campo a la consulta
     if (description) {
         query += " description=?";
         values.push(description);
@@ -179,30 +157,24 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
         values.push(enabled);
     } 
     if (authorization && authorization != '') {
-        // Encriptar el valor de autorización antes de almacenarlo
         const encryptedMessage = encryptMessage(authorization, secretKey);
         query += ", authorization=?";
         values.push(encryptedMessage);
     }
     
-    // Agregar la condición WHERE para el ID
     query += " WHERE id=?";
     values.push(id);
-    
-    // Ejecutar la consulta SQL
     con.query(query, values, (err, result) => {
         if (err) {
             // LOG - 500 - Error al editar la conexión de escritura
             insertLog(req.user.id, req.user.user, '007-005-500-001', "500", "PUT", JSON.stringify(req.body), 'Error al editar la conexión de escritura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al editar la conexión de escritura' });
         }
-        
         if (result.affectedRows > 0) {
             // LOG - 200 - Conexión de escritura editada
             insertLog(req.user.id, req.user.user, '007-005-200-001', "200", "PUT", JSON.stringify(req.body), 'Conexión de escritura editada', "");
             return res.status(200).json({ message: 'Conexión de escritura editada' });
         }
-
         // LOG - 404 - Registro no encontrado al editar las conexiones de escritura
         insertLog(req.user.id, req.user.user, '007-005-404-001', "404", "PUT", JSON.stringify(req.body), 'Registro no encontrado al editar las conexiones de escritura', "");
         return res.status(404).json({ error: 'Registro no encontrado al editar las conexiones de escritura' });
@@ -211,20 +183,15 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 
 
   router.delete("", verifyToken, (req, res) => { /*/ DELETE  /*/
-  // Parsear el ID de la solicitud
   const id = parseInt(req.body.id);
   
-  // Verificar si el ID es un número válido
   if (isNaN(id)) {
       // LOG - 400 - ID no válido al borrar una conexión de escritura
       insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "DELETE", JSON.stringify(req.body), 'ID no válido al borrar una conexión de escritura', "");
       return res.status(400).json({ error: 'ID no válido al borrar una conexión de escritura' });
   }
   
-  // Consulta SQL para eliminar la conexión de escritura
   const query = "DELETE FROM conecction_write WHERE id = ?";
-  
-  // Ejecutar la consulta SQL
   con.query(query, [id], function (err, result) {
       if (err) {
           // LOG - 500 - Error al eliminar la conexión de escritura
@@ -245,21 +212,17 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 
 
   router.post("/secret", verifyToken, (req, res) => { /*/ SECRET  /*/
-  // Extraer id y contraseña del cuerpo de la solicitud
   const { id, password } = req.body;
-
-  // Consulta SQL para obtener la contraseña del usuario
   const query = "SELECT password FROM users WHERE id = ?";
 
-  // Ejecutar la consulta SQL para obtener la contraseña del usuario
   con.query(query, [parseInt(req.user.id)], (err, result) => {
       if (err) {
           console.error(err);
           // LOG - 500 - Error al obtener la contraseña del usuario
           insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "POST", JSON.stringify(req.params), 'Error al obtener la contraseña del usuario', JSON.stringify(err));
           return res.status(500).json({ error: 'Error al obtener la contraseña del usuario' });
-      } else {
-          // Verificar si la contraseña proporcionada coincide con la contraseña almacenada
+      } 
+      else {
           bcrypt.compare(password, result[0].password, (bcryptErr, bcryptResult) => {
               if (bcryptErr) {
                   console.error("Error al comparar contraseñas:", bcryptErr);
@@ -268,10 +231,7 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
                   return res.status(500).json({ error: 'Error al comparar contraseñas' });
               }
               if (bcryptResult) {
-                  // Si las contraseñas coinciden, obtener la autorización de escritura
                   const query = "SELECT authorization FROM conecction_write WHERE id = ?";
-
-                  // Ejecutar la consulta SQL para obtener la autorización de escritura
                   con.query(query, [id], (err, result) => {
                       if (err) {
                           console.error(err);
@@ -279,11 +239,9 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
                           insertLog(req.user.id, req.user.user, '007-007-500-003', "500", "POST", JSON.stringify(req.params), 'Error al obtener la autorización de escritura', JSON.stringify(err));
                           return res.status(500).json({ error: 'Error al obtener la autorización de escritura' });
                       }
-                      // Descifrar la autorización antes de enviarla en la respuesta
                       const decryptedResult = result.map(row => ({
                           authorization: decryptMessage(row.authorization, secretKey)
                       }));
-
                       // LOG - 200 - Autorización de escritura obtenida con éxito
                       insertLog(req.user.id, req.user.user, '007-007-200-001', "200", "POST", JSON.stringify(req.params), 'Autorización de escritura obtenida', "");
                       return res.send(decryptedResult);
@@ -295,16 +253,13 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 });
 
 
-  // Function to encrypt a message
   function encryptMessage(message, key) {
     const encryptedMessage = CryptoJS.AES.encrypt(message, key).toString();
     return encryptedMessage;
   }
 
-  // Function to decrypt a message
+
   function decryptMessage(encryptedMessage, key) {
-    //console.log(encryptedMessage)
-    //console.log(key)
     const decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, key);
     const decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
     return decryptedMessage;

@@ -13,10 +13,9 @@ const insertLog = require('../middleware/log');
 const rateLimiterMiddleware = require('../middleware/ip');
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
-router.use(rateLimiterMiddleware);
 
-  router.get("/get/:type/:type1/:type2/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
-    const { type, type1, type2, pag_tam, pag_pag } = req.params;
+  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
+    const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
   
     // Validar y sanitizar parámetros
     const tam = parseInt(pag_pag);
@@ -26,13 +25,14 @@ router.use(rateLimiterMiddleware);
     let query = "";
     let values = [];
   
-    if (type === 'search') {
+    if (text_search === 'search') {
       query = `SELECT id, user, change_password, enabled, revoke_date, (SELECT COUNT(*) AS total FROM users) as total FROM users ORDER BY ? ? LIMIT ? OFFSET ?`;
-      values = [type1, type2, tam, act];
-    } else {
+      values = [order, order_type, tam, act];
+    } 
+    else {
       query = `SELECT id, user, change_password , enabled, revoke_date, (SELECT COUNT(*) AS total FROM users WHERE user LIKE ? OR password LIKE ?) as total FROM users WHERE user LIKE ? OR password LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
-      const likePattern = `%${type}%`;
-      values = Array(4).fill(likePattern).concat([type1, type2, tam, act]);
+      const likePattern = `%${text_search}%`;
+      values = Array(4).fill(likePattern).concat([order, order_type, tam, act]);
     }
   
     con.query(query, values, (err, result) => {
@@ -50,7 +50,7 @@ router.use(rateLimiterMiddleware);
   
 
   // NO
-  router.post("/login", (req, res) => { // LOGIN //
+  router.post("/login", rateLimiterMiddleware, (req, res) => { // LOGIN //
     const { user, password } = req.body;
 
     if (!user || !password) {
