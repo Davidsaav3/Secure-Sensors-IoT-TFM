@@ -473,8 +473,8 @@ const cookieParser = require('cookie-parser');
   
 
   router.post('/refresh', cookieParser(), (req, res) => {
-    const refreshToken = req.cookies.refresh_token;
-    //const { refreshToken } = req.body;
+    //const refreshToken = req.cookies.refresh_token;
+    const { refreshToken } = req.body;
 
     // token de actualización existe
     if (!refreshToken) {

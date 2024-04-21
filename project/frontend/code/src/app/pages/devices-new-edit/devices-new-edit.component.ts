@@ -39,7 +39,13 @@ export class DevicesNewEditComponent implements OnInit {
     this.createDate();
 
     if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
-      this.id = parseInt(this.rutaActiva.snapshot.params["id"]);
+      const idParam = this.rutaActiva.snapshot.params["id"];
+      if (!isNaN(idParam) && Number.isInteger(Number(idParam))) {
+        this.id = parseInt(idParam, 10);
+      } 
+      else {
+        console.error("El parámetro 'id' no es un número entero válido.");
+      }
     }
     
     if (this.ruteAux[2] == "new") {

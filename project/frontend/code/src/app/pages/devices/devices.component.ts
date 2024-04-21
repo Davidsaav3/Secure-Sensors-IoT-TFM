@@ -4,6 +4,7 @@ import * as mapboxgl from "mapbox-gl";
 import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/app/environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 interface MarkerAndColor {
   color: string;
@@ -25,7 +26,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   @ViewChild("map") divMap?: ElementRef;
   styleSelector: mapboxgl.Map | undefined;
 
-  constructor(private http: HttpClient,private router: Router, private translate: TranslateService) {}
+  constructor(public sanitizer: DomSanitizer, private http: HttpClient,private router: Router, private translate: TranslateService) {}
 
   getDevice: string = environment.baseUrl+environment.deviceConfigurations+"/get";
   getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
@@ -219,6 +220,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     this.mark = id;
     this.ordAux = ordAux;
     this.getDevices();
+  }
+
+  sanitizeId(id: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(id).toString();
   }
 
   getDevices() { // Obtiene los dispositivos

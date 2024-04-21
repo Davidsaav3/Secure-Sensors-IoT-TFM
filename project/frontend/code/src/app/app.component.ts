@@ -40,7 +40,7 @@ export class AppComponent {
       };
 
       const body = { refreshToken };
-      const response = await this.http.post<any>(this.postRefresh, {}, httpOptions).toPromise();
+      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
       if (!response || !response.token) {
         console.error('Error al renovar el token');
         return null;

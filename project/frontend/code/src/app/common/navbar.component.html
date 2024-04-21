@@ -5,13 +5,13 @@
 				<a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/sensors" [ngClass]="{'active': this.rute=='/sensors'}">{{ 'sensors.t2' | translate }}</a>
+				<a class="nav-link" routerLink="/sensors" [ngClass]="{'active': this.rute=='/sensors'}">{{ 'sensors.t2' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/structure" [ngClass]="{'active': this.rute=='/structure'}">{{ 'sensors.t3' | translate }}</a>
+				<a class="nav-link" routerLink="/structure" [ngClass]="{'active': this.rute=='/structure'}">{{ 'sensors.t3' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/variable-structure" [ngClass]="{'active': this.rute=='/variable-structure'}">{{ 'variable_data_structure' | translate }}</a>
+				<a class="nav-link" routerLink="/variable-structure" [ngClass]="{'active': this.rute=='/variable-structure'}">{{ 'variable_data_structure' | translate }}</a>
 			</li>
 		</div>
 		<div class="nav nav-tabs mb-0 p-0" *ngIf="token!='' && (this.ruteAux[1]=='users' || this.ruteAux[1]=='conecction-read' || this.ruteAux[1]=='conecction-write' || this.ruteAux[1]=='script' || this.ruteAux[1]=='monitoring') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
@@ -19,16 +19,16 @@
 				<a class="nav-link" aria-current="page" routerLink="/users" [ngClass]="{'active': this.rute=='/users'}">{{ 'users' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/conecction-read" [ngClass]="{'active': this.rute=='/conecction-read'}">{{ 'conecction-read' | translate }}</a>
+				<a class="nav-link" routerLink="/conecction-read" [ngClass]="{'active': this.rute=='/conecction-read'}">{{ 'conecction-read' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/conecction-write" [ngClass]="{'active': this.rute=='/conecction-write'}">{{ 'conecction-write' | translate }}</a>
+				<a class="nav-link" routerLink="/conecction-write" [ngClass]="{'active': this.rute=='/conecction-write'}">{{ 'conecction-write' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}">{{ 'script' | translate }}</a>
+				<a class="nav-link" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}">{{ 'script' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#" routerLink="/monitoring" [ngClass]="{'active': this.rute=='/monitoring'}">{{ 'monitoring' | translate }}</a>
+				<a class="nav-link" routerLink="/monitoring" [ngClass]="{'active': this.rute=='/monitoring'}">{{ 'monitoring' | translate }}</a>
 			</li>
 		</div>
 		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]=='edit' || ruteAux[2]=='new' || ruteAux[2]=='duplicate'">
