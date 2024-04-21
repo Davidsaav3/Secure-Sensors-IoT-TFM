@@ -60,11 +60,39 @@ export class LoginComponent {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  login(form: any) { // LOGIN
-    let token = localStorage.getItem('token') ?? ''; 
-    if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
+  login(form: any) {
+      let token = localStorage.getItem('token') ?? '';
+      if (form.valid) {
+        const { user, password } = this.formlogin;
+
+        // Validar el nombre de usuario
+        if (!this.isValidUsername(user)) {
+            console.error("Nombre de usuario no válido");
+            return;
+        }
+
+        // Validar la contraseña
+        if (!this.isValidPassword(password)) {
+            console.error("Contraseña no válida");
+            return;
+        }
+  
+        // Codificar datos antes de enviarlos al servidor para prevenir XSS
+        const encodedFormLogin = {
+            user: encodeURIComponent(this.formlogin.user),
+            password: encodeURIComponent(this.formlogin.password)
+        };
+
+        // Crear opciones HTTP con el token de autorización
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Authorization': `${token}`
+            })
+        };
+
+        // Realizar la solicitud HTTP
+        this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
         .subscribe(
           (data: any) => {
             this.username= data.user;
@@ -101,8 +129,27 @@ export class LoginComponent {
         );
       this.change1 = false;
     }
+
   }
-  
+    
+  // Fnombre de usuario
+  isValidUsername(username: string): boolean {
+    return username.trim().length >= 3 && username.trim().length <= 20;
+  }
+
+  // contraseña
+  isValidPassword(password: string): boolean {
+    const minLength = 8;
+    const maxLength = 20;
+    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+    if (password.trim().length < minLength || password.trim().length > maxLength) {
+        return false;
+    }
+    if (!passwordPattern.test(password)) {
+        return false;
+    }
+    return true;
+  }
 
   saveStorage() { // Guarda datos en el local storage
     localStorage.setItem("id", this.id.toString());

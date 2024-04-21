@@ -5,7 +5,7 @@ const { RateLimiterMemory } = require("rate-limiter-flexible");
 
     const limiter = new RateLimiterMemory({
         points: 1, // Intentos
-        duration: 0, // Segundos de bloqueo
+        duration: 60, // Segundos de bloqueo
     });
     
     // Bloquear la IP

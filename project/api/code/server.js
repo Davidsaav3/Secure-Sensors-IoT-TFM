@@ -4,8 +4,10 @@ const app = express();
 require('dotenv').config();
 
 const corsOptions = {
-  origin: ['http://localhost:4200', 'https://sensors.com:5501'],
-  credentials: true // Permitir solicitudes con credenciales
+  origin: ['http://localhost:4200', 'https://sensors.com:5500'],
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
 app.use(cors(corsOptions));

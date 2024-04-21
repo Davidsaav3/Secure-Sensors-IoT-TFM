@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 let { con }= require('../middleware/mysql');
 let cors= require('cors')
-router.use(cors());
-router.use(express.json())
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/token');
 const SECRET_KEY = process.env.TOKEN;
@@ -11,8 +9,20 @@ const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const bcrypt = require('bcrypt');
 const insertLog = require('../middleware/log');
 const rateLimiterMiddleware = require('../middleware/ip');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-router.use(cookieParser());
+
+const corsOptions = {
+  origin: ['http://localhost:4200', 'https://sensors.com:5500'],
+  credentials: true, 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
+router.use(cors(corsOptions));
+router.use(express.json())
+router.use(bodyParser.json());
+//router.use(cookieParser());
 
   router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
@@ -433,42 +443,45 @@ router.use(cookieParser());
   });
   
 
-  router.post('/refresh', (req, res) => {
+  router.post('/refresh', cookieParser(), (req, res) => {
+    //const refreshToken = req.cookies.refreshToken;
+    //console.log(req.cookies)
     const { refreshToken } = req.body;
-  
-    // Verificamos
-    if (!refreshToken) {
-      // LOG - 400 //
-      insertLog("", "", '005-007-400-001', "400", "POST", "",'Error al refrescar el token', 'El token de refresco no fue proporcionado');
-      return res.status(400).json({ error: 'El token de refresco no fue proporcionado' });
-    }
-  
-    jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
-      if (err) {
-        // LOG - 400 //
-        insertLog("", "", '005-007-400-002', "400", "POST", refreshToken,'Error al refrescar el token', JSON.stringify(err));
-        return res.status(400).json({ error: 'Refresh token inválido' });
-      }
-  
-      const userId = decoded.id;
-  
-      const query = "SELECT * FROM users WHERE id = ? AND enabled = 1";
-      con.query(query, [userId], (err, results) => {
-        if (err || results.length === 0) {
-          // LOG - 400 //
-          insertLog("", "", '005-007-400-003', "400", "POST", refreshToken,'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
-          return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado' });
-        }
-  
-        // Generamos
-        const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
 
-        // LOG - 200 //
-        insertLog("", "", '005-007-200-001', "200", "POST", refreshToken,'Token refrescado', '');
-        res.status(200).json({ token: newAccessToken });
-      });
+    // Verificar si el token de actualización existe
+    if (!refreshToken) {
+        // LOG - 400 //
+        insertLog("", "", '005-007-400-001', "400", "POST", "", 'Error al refrescar el token', 'El token de refresco no fue proporcionado');
+        return res.status(400).json({ error: 'El token de refresco no fue proporcionado' });
+    }
+
+    jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
+        if (err) {
+            // LOG - 400 //
+            insertLog("", "", '005-007-400-002', "400", "POST", refreshToken, 'Error al refrescar el token', JSON.stringify(err));
+            return res.status(400).json({ error: 'Refresh token inválido' });
+        }
+
+        const userId = decoded.id;
+
+        const query = "SELECT * FROM users WHERE id = ? AND enabled = 1";
+        con.query(query, [userId], (err, results) => {
+            if (err || results.length === 0) {
+                // LOG - 400 //
+                insertLog("", "", '005-007-400-003', "400", "POST", refreshToken, 'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
+                return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado' });
+            }
+
+            // Generamos un nuevo token de acceso
+            const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
+
+            // LOG - 200 //
+            insertLog("", "", '005-007-200-001', "200", "POST", refreshToken, 'Token refrescado', '');
+            res.status(200).json({ token: newAccessToken });
+        });
     });
-  });
+});
+
 
 
   router.post("/revoke", verifyToken, (req, res) => {  /*/ REVOKE  /*/
