@@ -25,6 +25,7 @@ import { ConecctionReadComponent } from './pages/conecction-read/conecction-read
 import { ScriptComponent } from './pages/script/script.component';
 import { MonitoringComponent } from './pages/monitoring/monitoring.component';
 import { LoginComponent } from './pages/login/login.component';
+import { ClipboardModule } from 'ngx-clipboard';
 
 
 @NgModule({
@@ -52,6 +53,7 @@ import { LoginComponent } from './pages/login/login.component';
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
+    ClipboardModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {

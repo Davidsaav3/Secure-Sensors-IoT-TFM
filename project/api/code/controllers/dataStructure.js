@@ -105,7 +105,6 @@ const insertLog = require('../middleware/log');
       });
       
       let duplicatedDescription = description;
-      
       while (existingNames.has(duplicatedDescription)) {
         duplicatedDescription = `${description}_${contador}`;
         contador++;
@@ -144,7 +143,6 @@ const insertLog = require('../middleware/log');
         insertLog(req.user.id, req.user.user, '003-004-200-001', "200", "POST", JSON.stringify(req.body), "Estructura de datos creada", "");
         return res.status(200).json({ id: insertedId });
       }
-
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '003-004-500-002', "200", "POST", JSON.stringify(req.body), "Error 2 al crear una estructura de datos", "");
       return res.status(500).json({ error: 'Error 2 al crear una estructura de datos' });
@@ -188,7 +186,6 @@ const insertLog = require('../middleware/log');
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const idEstructure = parseInt(req.body.id_estructure);
-    
     if (isNaN(idEstructure)) {
         // LOG - 400 //
         insertLog(req.user.id, req.user.user, '003-006-400-001', "400", "DELETE", JSON.stringify(req.body), 'ID no válido al borrar una estructura de datos', "");
@@ -201,13 +198,11 @@ const insertLog = require('../middleware/log');
             insertLog(req.user.id, req.user.user, '003-006-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar la estructura de datos', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al eliminar la estructura de datos' });
         }
-        
         if (result.affectedRows === 0) {
             // LOG - 404 //
             insertLog(req.user.id, req.user.user, '003-006-404-001', "404", "DELETE", JSON.stringify(req.body), 'Estructura de datos no encontrada al eliminarla', "");
             return res.status(404).json({ error: 'Estructura de datos no encontrada al eliminarla' });
         }
-
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '003-006-200-001', "200", "DELETE", JSON.stringify(req.body), 'Estructura de datos eliminada con éxito', "");
         res.json({ message: 'Estructura de datos eliminada con éxito' });

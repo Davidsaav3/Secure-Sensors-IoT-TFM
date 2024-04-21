@@ -9,12 +9,8 @@ const verifyToken = require('../middleware/token');
 
   router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET //
       const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
-    
-      // Validar y sanitizar parámetros
       const tam = parseInt(pag_pag);
       const act = (parseInt(pag_tam) - 1) * tam;
-    
-      // Preparar la consulta SQL utilizando consultas parametrizadas
       let query = "";
       let queryParams = [];
     
@@ -27,7 +23,6 @@ const verifyToken = require('../middleware/token');
         const likePattern = `%${text_search}%`;
         queryParams = Array(14).fill(likePattern).concat([order, order_type, tam, act]);
       }
-      console.log(queryParams)
     
       con.query(query, queryParams, (err, result) => {
         if (err) {

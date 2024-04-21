@@ -11,16 +11,15 @@ router.use(express.json())
     const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');
     const query = "INSERT INTO log (user_id, username, log_date, log_code, log_status, log_method, log_parameters, log_message, log_trace) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     con.query(query, [user_id, username, log_date, log_code, log_status, log_method, truncarCadena(log_parameters, longitudMaxima), log_message, truncarCadena(log_trace, longitudMaxima)], (err, result) => {
-      /*if (err) {
-        return callback(err, null);
-      }
-      if (result.affectedRows === 1) {
-        const insertedId = result.insertId;
-        return callback(null, insertedId);
-      }
-      return callback('No se pudo insertar el registro', null);*/
+        if (err) {
+            // registra el error el propio log
+            console.error("Error al insertar en el registro:", err);
+        }
+        if (callback) {
+            callback(err, result);
+        }
     });
-  }
+}
 
   function truncarCadena(cadena, longitudMaxima) {
     if (cadena.length > longitudMaxima) {

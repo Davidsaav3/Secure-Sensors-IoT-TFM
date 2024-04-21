@@ -110,7 +110,7 @@ const insertLog = require('../middleware/log');
         const insertedId = result.insertId; 
         // LOG - 200 //
         insertLog(req.user.id, req.user.user, '004-004-200-001', "200", "POST", JSON.stringify(req.body),'Estructura de datos variable creada', "");
-        return res.status(200).json({ id: insertedId }); // Devolver el ID en la respuesta
+        return res.status(200).json({ id: insertedId });
       }
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '004-004-500-002', "500", "POST", JSON.stringify(req.body),'Error al crear una estructura de datos variable', "");

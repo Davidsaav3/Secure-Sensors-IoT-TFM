@@ -9,7 +9,6 @@ const insertLog = require('../middleware/log');
 
 router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {
   const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
-
   const tam = parseInt(pag_pag);
   const act = (parseInt(pag_tam) - 1) * tam;
   let query;
@@ -26,7 +25,6 @@ router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken
     const likePattern = `%${text_search}%`;
     values = Array(12).fill(likePattern).concat([order, order_type, tam, act]);
   }
-
   con.query(query, values, (err, result) => {
     if (err) {
       console.error("Error:", err);
@@ -51,7 +49,6 @@ router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken
         insertLog(req.user.id, req.user.user, '002-002-500-001', "500", "GET", "",'Error al obtener la lista de tipos de sensores ', JSON.stringify(err));
         return res.status(500).json({ error: 'Error al obtener la lista de tipos de sensores' });
       }
-  
       // LOG - 200 //
       insertLog(req.user.id, req.user.user, '002-002-200-001', "200", "GET", "",'Lista de tipos de sensores recuperada', JSON.stringify(result));
       res.json(result);
@@ -67,7 +64,7 @@ router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken
       insertLog(req.user.id, req.user.user, '002-003-400-001', "400", "GET", JSON.stringify(req.params),'Tipo de sensor no válido al duplicar', "");
       return res.status(400).json({ error: 'Tipo de sensor no válido al duplicar' });
     }
-  
+
     let query = `SELECT type FROM sensors_types`;
     con.query(query, (err, result) => {
       if (err) {

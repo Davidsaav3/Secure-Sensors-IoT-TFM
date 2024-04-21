@@ -59,19 +59,18 @@ const bcrypt = require('bcrypt');
             insertLog(req.user.id, req.user.user, '007-002-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de escritura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener la conexión de escritura' });
         }
-        
+    
         const decryptedResult = result.map(row => ({
             ...row,
             //authorization: decryptMessage(row.authorization, secretKey)
         }));
-
         // LOG - 200 - Conexión de escritura obtenida
         insertLog(req.user.id, req.user.user, '007-002-200-001', "200", "GET", JSON.stringify(req.params), 'Conexión de escritura obtenida', "");
         res.send(decryptedResult);
     });
-});
+  });
 
-router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE  /*/
+  router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE  /*/
     const description = req.params.description;
 
     let query = `SELECT description FROM conecction_write`;
@@ -99,38 +98,38 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
         insertLog(req.user.id, req.user.user, '007-003-200-001', "200", "GET", JSON.stringify(req.params), 'Conexión de escritura duplicada', "");
         res.json({ duplicatedescription: description_2 });
     });
-});
+  });
 
 
 
   router.post("", verifyToken, (req, res) => { /*/ POST  /*/
-  const { description, urlIngest, enabled, authorization } = req.body;
+    const { description, urlIngest, enabled, authorization } = req.body;
 
-  if (!description || !urlIngest) {
-      // LOG - 400 - Description es requerido al crear una conexión de escritura
-      insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body), 'Description es requerido al crear una conexión de escritura', "");
-      return res.status(400).json({ error: 'Description es requerido al crear una conexión de escritura' });
-  }
+    if (!description || !urlIngest) {
+        // LOG - 400 - Description es requerido al crear una conexión de escritura
+        insertLog(req.user.id, req.user.user, '007-004-400-001', "400", "POST", JSON.stringify(req.body), 'Description es requerido al crear una conexión de escritura', "");
+        return res.status(400).json({ error: 'Description es requerido al crear una conexión de escritura' });
+    }
 
-  const encryptedMessage = encryptMessage(authorization, secretKey);
-  const query = "INSERT INTO conecction_write (description, urlIngest, enabled, authorization) VALUES (?, ?, ?, ?)";
-  con.query(query, [description, urlIngest, enabled, encryptedMessage], (err, result) => {
-      if (err) {
-          // LOG - 500 - Error al crear una conexión de escritura
-          insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de escritura', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error al crear una conexión de escritura' });
-      }
-      if (result.affectedRows === 1) {
-          const insertedId = result.insertId; 
-          // LOG - 200 - Conexión de escritura creada
-          insertLog(req.user.id, req.user.user, '007-004-200-001', "200", "POST", JSON.stringify(req.body), 'Conexión de escritura creada', "");
-          return res.status(200).json({ id: insertedId });
-      }
-      // LOG - 500 - Error al crear una conexión de escritura
-      insertLog(req.user.id, req.user.user, '007-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de escritura', "");
-      return res.status(500).json({ error: 'Error al crear una conexión de escritura' });
+    const encryptedMessage = encryptMessage(authorization, secretKey);
+    const query = "INSERT INTO conecction_write (description, urlIngest, enabled, authorization) VALUES (?, ?, ?, ?)";
+    con.query(query, [description, urlIngest, enabled, encryptedMessage], (err, result) => {
+        if (err) {
+            // LOG - 500 - Error al crear una conexión de escritura
+            insertLog(req.user.id, req.user.user, '007-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de escritura', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error al crear una conexión de escritura' });
+        }
+        if (result.affectedRows === 1) {
+            const insertedId = result.insertId; 
+            // LOG - 200 - Conexión de escritura creada
+            insertLog(req.user.id, req.user.user, '007-004-200-001', "200", "POST", JSON.stringify(req.body), 'Conexión de escritura creada', "");
+            return res.status(200).json({ id: insertedId });
+        }
+        // LOG - 500 - Error al crear una conexión de escritura
+        insertLog(req.user.id, req.user.user, '007-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de escritura', "");
+        return res.status(500).json({ error: 'Error al crear una conexión de escritura' });
+    });
   });
-});
 
 
   router.put("", verifyToken, (req, res) => { /*/ UPDATE  /*/
@@ -183,32 +182,30 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 
 
   router.delete("", verifyToken, (req, res) => { /*/ DELETE  /*/
-  const id = parseInt(req.body.id);
-  
-  if (isNaN(id)) {
-      // LOG - 400 - ID no válido al borrar una conexión de escritura
-      insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "DELETE", JSON.stringify(req.body), 'ID no válido al borrar una conexión de escritura', "");
-      return res.status(400).json({ error: 'ID no válido al borrar una conexión de escritura' });
-  }
-  
-  const query = "DELETE FROM conecction_write WHERE id = ?";
-  con.query(query, [id], function (err, result) {
-      if (err) {
-          // LOG - 500 - Error al eliminar la conexión de escritura
-          insertLog(req.user.id, req.user.user, '007-006-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar la conexión de escritura', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error al eliminar la conexión de escritura' });
-      }
-      if (result.affectedRows === 0) {
-          // LOG - 404 - Conexión de escritura no encontrada al eliminarla
-          insertLog(req.user.id, req.user.user, '007-006-404-001', "404", "DELETE", JSON.stringify(req.body), 'Conexión de escritura no encontrada al eliminarla', "");
-          return res.status(404).json({ error: 'Conexión de escritura no encontrada al eliminarla' });
-      }
-
-      // LOG - 200 - Conexión de escritura eliminada
-      insertLog(req.user.id, req.user.user, '007-006-200-001', "200", "DELETE", JSON.stringify(req.body), 'Conexión de escritura eliminada', "");
-      res.json({ message: 'Conexión de escritura eliminada' });
-  });
-});
+    const id = parseInt(req.body.id);
+    if (isNaN(id)) {
+        // LOG - 400 - ID no válido al borrar una conexión de escritura
+        insertLog(req.user.id, req.user.user, '007-006-400-001', "400", "DELETE", JSON.stringify(req.body), 'ID no válido al borrar una conexión de escritura', "");
+        return res.status(400).json({ error: 'ID no válido al borrar una conexión de escritura' });
+    }
+    
+    const query = "DELETE FROM conecction_write WHERE id = ?";
+    con.query(query, [id], function (err, result) {
+        if (err) {
+            // LOG - 500 - Error al eliminar la conexión de escritura
+            insertLog(req.user.id, req.user.user, '007-006-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar la conexión de escritura', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error al eliminar la conexión de escritura' });
+        }
+        if (result.affectedRows === 0) {
+            // LOG - 404 - Conexión de escritura no encontrada al eliminarla
+            insertLog(req.user.id, req.user.user, '007-006-404-001', "404", "DELETE", JSON.stringify(req.body), 'Conexión de escritura no encontrada al eliminarla', "");
+            return res.status(404).json({ error: 'Conexión de escritura no encontrada al eliminarla' });
+        }
+        // LOG - 200 - Conexión de escritura eliminada
+        insertLog(req.user.id, req.user.user, '007-006-200-001', "200", "DELETE", JSON.stringify(req.body), 'Conexión de escritura eliminada', "");
+        res.json({ message: 'Conexión de escritura eliminada' });
+    });
+    });
 
 
   router.post("/secret", verifyToken, (req, res) => { /*/ SECRET  /*/

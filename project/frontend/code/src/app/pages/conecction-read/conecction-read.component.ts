@@ -286,7 +286,6 @@ export class ConecctionReadComponent implements OnInit {
   newConecction(form: any) {
     let token = localStorage.getItem('token') ?? ''; 
 
-    this.state = 1;
     if (form.valid) {
       //console.log(this.conecctions)
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -294,7 +293,7 @@ export class ConecctionReadComponent implements OnInit {
         .subscribe(
           (data: any) => {
             this.id = data.id;
-            this.alertNew = true;
+            this.alertNew = true;  
   
             setTimeout(() => {
               this.alertNew = false;
@@ -314,7 +313,6 @@ export class ConecctionReadComponent implements OnInit {
             });
             this.actId = this.id;
             this.openEdit();
-            this.state = 2;
           },
           (error) => {
             console.error("Error:", error);
@@ -402,47 +400,24 @@ export class ConecctionReadComponent implements OnInit {
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateConecction}/${type}`, {headers})
-      .subscribe(
+      this.http.get(`${this.duplicateConecction}/${type}`, {headers}).subscribe(
         (data: any) => {
           this.conecctions = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
-    
-          this.http.get(`${this.getId}/${this.conecctions.id}`, {headers})
-            .subscribe(
-              (data1: any) => {
-                this.conecctions = data1[0];
-                this.actId = this.conecctions.id;
-                this.id = this.conecctions.id;
-                let conecctions = { ...this.conecctions };
-                this.conecctionsCopy = {
-                  id: conecctions.id,
-                  description: conecctions.description ,
-                  mqttQeue: conecctions.mqttQeue, 
-                  appID: conecctions.appID, 
-                  accessKey: conecctions.accessKey, 
-                  subscribe: conecctions.subscribe, 
-                  enabled: conecctions.enabled
-                };
-                this.openNew(
-                  '',
-                  this.conecctions.description,
-                  this.conecctions.mqttQeue, 
-                  this.conecctions.appID, 
-                  this.conecctions.accessKey, 
-                  this.conecctions.subscribe, 
-                  this.conecctions.enabled
-                );
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
+          this.openNew(
+            '',
+            data.duplicatedDescription,
+            this.conecctions.mqttQeue, 
+            this.conecctions.appID, 
+            '', 
+            this.conecctions.subscribe, 
+            this.conecctions.enabled
+          );
           this.change = true;
         },
         (error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
+          console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }

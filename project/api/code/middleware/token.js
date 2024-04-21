@@ -3,6 +3,7 @@ const SECRET_KEY = process.env.TOKEN;
 let { con }= require('./mysql');
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 
+
     function verifyToken(req, res, next) {
         const token = req.headers['authorization'];
         if (!token) {
@@ -17,7 +18,6 @@ const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
                 return res.status(400).json({ error: 'Token inválido' });
             }
 
-            //console.log(decoded.user)
             const query = "SELECT * FROM users WHERE id = ? AND (SELECT enabled FROM users WHERE id = ?) = 1 AND revoke_date IS NOT NULL AND revoke_date != ''";
             con.query(query, [decoded.id, decoded.id], (err, results) => {
                 if (err || results.length === 0) {
@@ -25,7 +25,6 @@ const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
                     insertLog("", "", '009-001-400-003', "400", "TOKEN", refreshToken,'Los datos del JWT no existen en la base de datos', "");
                     return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
                 }
-                //console.log(results[0].token)
                 jwt.verify(results[0].token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
                     if (decoded) {
                         req.user = {

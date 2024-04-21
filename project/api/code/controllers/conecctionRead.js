@@ -16,14 +16,14 @@ const bcrypt = require('bcrypt');
   
     const tam = parseInt(pag_pag);
     const act = (parseInt(pag_tam) - 1) * tam;
-  
     let query = "";
     let values = [];
   
     if (text_search === 'search') {
       query = `SELECT id, description, mqttQeue, appID, subscribe, enabled, (SELECT COUNT(*) AS total FROM conecction_read) as total FROM conecction_read ORDER BY ? ? LIMIT ? OFFSET ?`;
       values = [order, order_type, tam, act];
-    } else {
+    } 
+    else {
       query = `SELECT id, description, mqttQeue, appID, subscribe, enabled, (SELECT COUNT(*) AS total FROM conecction_read) as total FROM conecction_read WHERE description LIKE ? OR mqttQeue LIKE ? OR appID LIKE ? OR subscribe LIKE ? OR enabled LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
       const likePattern = `%${text_searc}%`;
       values = Array(5).fill(likePattern).concat([order, order_type, tam, act]);
@@ -69,7 +69,8 @@ const bcrypt = require('bcrypt');
           // LOG - 200 - Conexión de lectura obtenida con éxito
           insertLog(req.user.id, req.user.user, '006-002-200-001', "200", "GET", JSON.stringify(req.params), 'Conexión de lectura obtenida por ID', "");
           res.json(decryptedResult);
-      } else {
+      } 
+      else {
           // LOG - 404 - Conexión de lectura no encontrada
           insertLog(req.user.id, req.user.user, '006-002-404-001', "404", "GET", JSON.stringify(req.params), 'Conexión de lectura no encontrada por ID', "");
           res.status(404).json({ error: 'Conexión de lectura no encontrada' });
@@ -79,78 +80,71 @@ const bcrypt = require('bcrypt');
 
 
   router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE  /*/
-  const description = req.params.description;
-  const query = `SELECT description FROM conecction_read`;
+    const description = req.params.description;
+    const query = `SELECT description FROM conecction_read`;
 
-  con.query(query, (err, result) => {
-      if (err) {
-          console.error(err);
-          // LOG - 500 - Error en la base de datos
-          insertLog(req.user.id, req.user.user, '006-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la conexión de lectura', JSON.stringify(err));
-          return res.status(500).send("Error en la base de datos");
-      }
+    con.query(query, (err, result) => {
+        if (err) {
+            console.error(err);
+            // LOG - 500 - Error en la base de datos
+            insertLog(req.user.id, req.user.user, '006-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la conexión de lectura', JSON.stringify(err));
+            return res.status(500).send("Error en la base de datos");
+        }
 
-      let existingDescriptions = new Set();
+        let existingDescriptions = new Set();
+        result.forEach(row => {
+            existingDescriptions.add(row.description);
+        });
+        let counter = 1;
+        let duplicatedDescription = description;
+        while (existingDescriptions.has(duplicatedDescription)) {
+            duplicatedDescription = `${description}_${counter}`;
+            counter++;
+        }
 
-      result.forEach(row => {
-          existingDescriptions.add(row.description);
-      });
-
-      let counter = 1;
-
-      let duplicatedDescription = description;
-      while (existingDescriptions.has(duplicatedDescription)) {
-          duplicatedDescription = `${description}_${counter}`;
-          counter++;
-      }
-
-      // LOG - 200 //
-      insertLog(req.user.id, req.user.user, '006-003-200-001', "200", "GET", JSON.stringify(req.params), 'Conexión de lectura duplicada', "");
-      res.json({ duplicatedDescription });
+        // LOG - 200 //
+        insertLog(req.user.id, req.user.user, '006-003-200-001', "200", "GET", JSON.stringify(req.params), 'Conexión de lectura duplicada', "");
+        res.json({ duplicatedDescription });
+    });
   });
-});
 
 
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
-  const { description, mqttQeue, appID, subscribe, enabled, accessKey } = req.body;
+    const { description, mqttQeue, appID, subscribe, enabled, accessKey } = req.body;
 
-  if (!description || !mqttQeue) {
-      // LOG - 400 - Campos requeridos faltantes
-      insertLog(req.user.id, req.user.user, '006-004-400-001', "400", "POST", JSON.stringify(req.body), 'Description y mqttQeue son requeridos al crear una conexión de lectura', "");
-      return res.status(400).json({ error: 'Description y mqttQeue son requeridos' });
-  }
-  const encryptedMessage = encryptMessage(accessKey, secretKey);
+    if (!description || !mqttQeue) {
+        // LOG - 400 - Campos requeridos faltantes
+        insertLog(req.user.id, req.user.user, '006-004-400-001', "400", "POST", JSON.stringify(req.body), 'Description y mqttQeue son requeridos al crear una conexión de lectura', "");
+        return res.status(400).json({ error: 'Description y mqttQeue son requeridos' });
+    }
+    const encryptedMessage = encryptMessage(accessKey, secretKey);
 
-  const query = "INSERT INTO conecction_read (description, mqttQeue, appID, subscribe, enabled, accessKey) VALUES (?, ?, ?, ?, ?, ?)";
-  con.query(query, [description, mqttQeue, appID, subscribe, enabled, encryptedMessage], (err, result) => {
-      if (err) {
-          console.error(err);
-          // LOG - 500 - Error en la base de datos
-          insertLog(req.user.id, req.user.user, '006-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de lectura', JSON.stringify(err));
-          return res.status(500).json({ error: 'Error en la base de datos' });
-      }
+    const query = "INSERT INTO conecction_read (description, mqttQeue, appID, subscribe, enabled, accessKey) VALUES (?, ?, ?, ?, ?, ?)";
+    con.query(query, [description, mqttQeue, appID, subscribe, enabled, encryptedMessage], (err, result) => {
+        if (err) {
+            console.error(err);
+            // LOG - 500 - Error en la base de datos
+            insertLog(req.user.id, req.user.user, '006-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de lectura', JSON.stringify(err));
+            return res.status(500).json({ error: 'Error en la base de datos' });
+        }
 
-      if (result.affectedRows === 1) {
-          const insertedId = result.insertId;
-          // LOG - 200 - Conexión de lectura creada
-          insertLog(req.user.id, req.user.user, '006-004-200-001', "200", "POST", JSON.stringify(req.body), 'Conexión de lectura creada', "");
-          return res.status(200).json({ id: insertedId }); // Devolver el ID en la respuesta
-      } 
-      else {
-          // LOG - 500 - No se pudo insertar el registro
-          insertLog(req.user.id, req.user.user, '006-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de lectura', "");
-          return res.status(500).json({ error: 'No se pudo insertar el registro' });
-      }
-  });
-});
+        if (result.affectedRows === 1) {
+            const insertedId = result.insertId;
+            // LOG - 200 - Conexión de lectura creada
+            insertLog(req.user.id, req.user.user, '006-004-200-001', "200", "POST", JSON.stringify(req.body), 'Conexión de lectura creada', "");
+            return res.status(200).json({ id: insertedId }); // Devolver el ID en la respuesta
+        } 
+        else {
+            // LOG - 500 - No se pudo insertar el registro
+            insertLog(req.user.id, req.user.user, '006-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de lectura', "");
+            return res.status(500).json({ error: 'No se pudo insertar el registro' });
+        }
+    });
+    });
 
 
   router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
     const { id, description, mqttQeue, appID, subscribe, enabled, accessKey } = req.body;
-
-    console.log(id)
-    console.log(description)
-    console.log(mqttQeue)
 
     if (!id || !description || !mqttQeue) {
         // LOG - 400 - Campos requeridos faltantes
@@ -306,4 +300,5 @@ const bcrypt = require('bcrypt');
     return decryptedMessage;
   }
 
+  
 module.exports = router;

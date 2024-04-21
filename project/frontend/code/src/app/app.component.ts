@@ -24,7 +24,7 @@ export class AppComponent {
       if (!newToken) {
           console.warn('La renovación del token ha fallado');
       }
-    }, 5000); //250000
+    }, 300000); //300000
   }
 
   async renewToken(refreshToken: string): Promise<string | null> {

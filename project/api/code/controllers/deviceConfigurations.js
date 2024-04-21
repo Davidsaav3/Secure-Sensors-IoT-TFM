@@ -545,7 +545,7 @@ const insertLog = require('../middleware/log');
 
   router.get("/duplicate/:uid", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
     const uid = req.params.uid;
-    const MAX_DUPLICATE_ATTEMPTS = 100;
+    const MAX_DUPLICATE_ATTEMPTS = 30;
     
     // Valida
     let query = `SELECT uid FROM device_configurations`;
@@ -565,7 +565,7 @@ const insertLog = require('../middleware/log');
 
         let uid_2 = uid;
         while (nombresExistentes.has(uid_2)) {
-            // Limitar los bucles rarunos
+            // Limitar bucles
             if (contador > MAX_DUPLICATE_ATTEMPTS) {
                 // LOG - 500 //
                 insertLog(req.user.id, req.user.user, '001-003-500-002', "500", "GET", JSON.stringify(req.params),'Se excedió el límite de intentos de duplicación', "");
@@ -597,7 +597,7 @@ const insertLog = require('../middleware/log');
       return res.status(400).json({ error: 'Topic_name es requerido' });
     }
   
-    // Consulta para verificar si el uid ya existe
+    // uid ya existe
     const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ?';
     con.query(queryCheckUid, [uid], (err, result) => {
       if (err) {
@@ -758,7 +758,7 @@ const insertLog = require('../middleware/log');
           return res.status(200).json({ found: true, message: 'Uid duplicado' });
         } 
         else {
-          // Siningún dispositivo
+          // Sin ningún dispositivo
           const queryUpdate = `UPDATE device_configurations SET uid = ?, alias = ?, origin = ?, description_origin = ?, application_id = ?, topic_name = ?, typemeter = ?, lat = ?, lon = ?, cota = ?, timezone = ?, enable = ?, organizationid = ?, updatedAt = ?, id_data_estructure = ?, variable_configuration = ? WHERE id = ?`;
           const values = [uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id7];
           

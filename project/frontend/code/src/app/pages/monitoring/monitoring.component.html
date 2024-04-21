@@ -352,7 +352,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
-				<p *ngIf="data[changeCopy1].log_parameters" class="not" id="logPar">{{data[changeCopy1].log_parameters}}</p>
+				<p #logTraceElement1 *ngIf="data[changeCopy1].log_parameters" class="not">{{data[changeCopy1].log_parameters}}</p>
 				<p *ngIf="!data[changeCopy1].log_parameters" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
@@ -361,7 +361,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-info" style="width: 100%" (click)="copyToClipboard1()">{{ 'sensors.copy' | translate }}</button>
+						<button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy1].log_parameters}" style="width: 100%" (click)="copyToClipboard(data[changeCopy1].log_parameters)">{{ 'sensors.copy' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -377,7 +377,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
-				<p *ngIf="data[changeCopy2].log_trace" class="not" id="logTrace">{{data[changeCopy2].log_trace}}</p>
+				<p #logTraceElement2 *ngIf="data[changeCopy2].log_trace" class="not">{{data[changeCopy2].log_trace}}</p>
 				<p *ngIf="!data[changeCopy2].log_trace" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
 			</div>
 			<div class="modal-footer" style="border-top: 0px;">
@@ -386,7 +386,7 @@
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal3" class="btn btn-info" style="width: 100%" (click)="copyToClipboard2()">{{ 'sensors.copy' | translate }}</button>
+						<button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy2].log_trace}" style="width: 100%" (click)="copyToClipboard(data[changeCopy2].log_trace)">{{ 'sensors.copy' | translate }}</button>
 					</div>
 				</div>
 			</div>

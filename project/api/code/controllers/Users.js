@@ -22,16 +22,13 @@ const corsOptions = {
 router.use(cors(corsOptions));
 router.use(express.json())
 router.use(bodyParser.json());
-//router.use(cookieParser());
+
 
   router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => {  /*/ GET  /*/
     const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
   
-    // Validar y sanitizar parámetros
     const tam = parseInt(pag_pag);
     const act = (parseInt(pag_tam) - 1) * tam;
-  
-    // Preparar la consulta SQL utilizando consultas parametrizadas
     let query = "";
     let values = [];
   
@@ -59,7 +56,6 @@ router.use(bodyParser.json());
   });
   
 
-  // NO
   router.post("/login", rateLimiterMiddleware, (req, res) => { // LOGIN //
     const { user, password } = req.body;
 
@@ -67,6 +63,13 @@ router.use(bodyParser.json());
       // LOG - 400 //
       insertLog("", user, '005-002-400-001', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 1', "");
       return res.status(400).json({ error: 'Faltan datos para hacer login 1' });
+    }
+
+    // Validación
+    if (!isValidPassword(password)) {
+      // LOG - 400 //
+      insertLog("", user, '005-002-400-002', "400", "POST", JSON.stringify(req.body),'La contraseña no cumple con los requisitos de seguridad', "");
+      return res.status(400).json({ error: 'La contraseña no cumple con los requisitos de seguridad' });
     }
 
     const selectQuery = "SELECT * FROM users WHERE user = ? AND (SELECT enabled FROM users WHERE user = ?) = 1";
@@ -85,23 +88,23 @@ router.use(bodyParser.json());
                 if (bcryptErr) {
                     console.error("Error al comparar contraseñas:", bcryptErr);
                     // LOG - 500 //
-                    insertLog(req.user.id, req.user.user, '005-002-500-002', "500", "POST", JSON.stringify(req.body),'Error 2 al hacer login', JSON.stringify(bcryptErr));
+                    insertLog(user.id, user.user, '005-002-500-002', "500", "POST", JSON.stringify(req.body),'Error 2 al hacer login', JSON.stringify(bcryptErr));
                     return res.status(500).json({ error: 'Error 2 al hacer login' });
                 }
 
                 if (bcryptResult) {
-                    // Verificar si el token_refresh aún es válido
+                    // token_refresh válido
                     if (user.token) {
                         jwt.verify(user.token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
                             if (verifyErr) {
-                                // El token ha caducado o es inválido, generar uno nuevo
+                                // token caducado o inválido
                                 const newRefreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
                                 
                                 const currentDate = new Date();
                                 const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
                                 const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
-                                // Actualizar el nuevo token_refresh en la base de datos
+                                // Actualizar token_refresh
                                 const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
                                 con.query(updateQuery, [newRefreshToken, formattedFutureDate, user.id], (updateErr, updateResult) => {
                                     if (updateErr) {
@@ -111,7 +114,7 @@ router.use(bodyParser.json());
                                       return res.status(500).json({ error: 'Error 3 al hacer login' });
                                     }
 
-                                    // Generar nuevo token de acceso
+                                    // nuevo token de acceso
                                     const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                                     // LOG - 200 //
                                     insertLog(user.id, user.user, '005-002-200-001', "200", "POST", JSON.stringify(req.body),'Login hecho 1', "");
@@ -127,7 +130,7 @@ router.use(bodyParser.json());
                                 });
                             } 
                             else {
-                                // El token_refresh aún es válido, usar el token actual
+                                // token_refresh aún válido
                                 const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                                 // LOG - 200 //
                                 insertLog(user.id, user.user, '005-002-200-002', "200", "POST", JSON.stringify(req.body),'Login hecho 2', "");
@@ -143,14 +146,14 @@ router.use(bodyParser.json());
                         });
                     } 
                     else {
-                        // No hay token_refresh existente, generar uno nuevo
+                        // No token_refresh, generar nuevo
                         const refreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
 
                         const currentDate = new Date();
                         const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
                         const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
-                        // Actualizar el nuevo token_refresh en la base de datos
+                        // Actualizar el nuevo token_refresh
                         const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
                         con.query(updateQuery, [refreshToken, formattedFutureDate, user.id], (updateErr, updateResult) => {
                             if (updateErr) {
@@ -193,11 +196,17 @@ router.use(bodyParser.json());
         }
     });
 });
+
+  // validar contraseña 
+  function isValidPassword(password) {
+    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+    return passwordPattern.test(password);
+  }
+
   
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
     const id = parseInt(req.params.id);
     
-    // Validar
     if (isNaN(id) || id <= 0) {
         // LOG - 400 //
         insertLog(req.user.id, req.user.user, '005-003-400-001', "400", "GET", JSON.stringify(req.params),'ID inválido al obtener usuario', "");
@@ -221,7 +230,6 @@ router.use(bodyParser.json());
   router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
     const { user, password, change_password, enabled } = req.body;
 
-    // Validar
     if (!user || !password) {
       return res.status(400).json({ error: 'User y password son requeridas' });
     }
@@ -232,7 +240,7 @@ router.use(bodyParser.json());
       return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres y contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial' });
     }
 
-    // usuario ya existe
+    // usuario existe ?
     con.query("SELECT * FROM users WHERE user = ?", user, (err, existingUser) => {
       if (err) {
         // LOG - 500 //
@@ -244,7 +252,7 @@ router.use(bodyParser.json());
         return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
       }
 
-      // Cifrar la contraseña
+      // Cifrar contraseña
       bcrypt.hash(password, 10, (err, hashedPassword) => {
         if (err) {
           // LOG - 500 //
@@ -263,9 +271,8 @@ router.use(bodyParser.json());
             insertLog(req.user.id, req.user.user, '005-004-500-002', "500", "POST", "", 'Error al crear usuario', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al crear usuario' });
           }
-
           if (result.affectedRows === 1) {
-            const insertedId = result.insertId; // Obtener el ID insertado
+            const insertedId = result.insertId;
             // LOG - 200 //
             insertLog(req.user.id, req.user.user, '005-004-200-001', "200", "POST", "", 'Usuario creado', "");
             return res.status(200).json({ id: insertedId }); // Devolver el ID
@@ -312,11 +319,7 @@ router.use(bodyParser.json());
           }
       
           const { id: userId, user: userUser } = decodedToken;
-          //console.log(userId+id)
           if(userId==id){
-            // No hay token_refresh existente, generar uno nuevo
-
-            // Actualizar el nuevo token_refresh en la base de datos
             const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
             con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
                 if (updateErr) {
@@ -325,7 +328,6 @@ router.use(bodyParser.json());
                   insertLog(user.id, user.user, '005-005-500-001', "500", "PUT", JSON.stringify(req.body),'Error 1 al editar usuario', JSON.stringify(updateErr));                                
                   return res.status(500).json({ error: 'Error 1 al editar usuario' });
                 }
-                
                 // LOG - 200 //
                 //insertLog(req.user.id, req.user.user, '005-006-200-001', "200", "PUT", JSON.stringify(req.body),'Datos actualizados', "");
                 //return res.status(200).json({ user: user, refresh_token: refreshToken }); // Devolver el nuevo correo
@@ -350,7 +352,7 @@ router.use(bodyParser.json());
     }
 
     if (password) {
-        // Cifrar la contraseña antes de almacenarla
+        // Cifrar contraseña
         bcrypt.hash(password, 10, (err, hashedPassword) => {
             if (err) {
                 // LOG - 500 //
@@ -359,12 +361,13 @@ router.use(bodyParser.json());
             }
             if (commaNeeded) query += ",";
             query += " password=?";
-            values.push(hashedPassword); // Usar la contraseña cifrada
+            values.push(hashedPassword); 
             commaNeeded = true;
             continueUpdateQuery();
         });
-    } else {
-        // Si no se proporciona una nueva contraseña, continuar sin cifrarla
+    } 
+    else {
+        // continuar sin cifrarla, si no hay
         continueUpdateQuery();
     }
 
@@ -393,7 +396,6 @@ router.use(bodyParser.json());
             if (result.affectedRows > 0) {
                 // LOG - 200 //
                 insertLog(req.user.id, req.user.user, '005-005-200-001', "200", "PUT", "",'Usuario actualizado', "");
-                //console.log(refreshToken)
                 return res.status(200).json({ refresh_token: refreshToken, user: user });
             }
             // LOG - 404 //
@@ -406,15 +408,12 @@ router.use(bodyParser.json());
 
   router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
     const id = parseInt(req.body.id);
-  
-    // Verificar
     if (isNaN(id)) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '005-006-400-001', "400", "DELETE", JSON.stringify(req.params), 'ID no válido al borrar el usuario', "");
       return res.status(400).json({ error: 'ID no válido al borrar el usuario' });
     }
   
-    // Verificar
     con.query("SELECT * FROM users WHERE id = ?", id, function (err, user) {
       if (err) {
         // LOG - 500 //
@@ -448,7 +447,7 @@ router.use(bodyParser.json());
     //console.log(req.cookies)
     const { refreshToken } = req.body;
 
-    // Verificar si el token de actualización existe
+    // token de actualización existe
     if (!refreshToken) {
         // LOG - 400 //
         insertLog("", "", '005-007-400-001', "400", "POST", "", 'Error al refrescar el token', 'El token de refresco no fue proporcionado');
@@ -463,7 +462,6 @@ router.use(bodyParser.json());
         }
 
         const userId = decoded.id;
-
         const query = "SELECT * FROM users WHERE id = ? AND enabled = 1";
         con.query(query, [userId], (err, results) => {
             if (err || results.length === 0) {
@@ -471,10 +469,7 @@ router.use(bodyParser.json());
                 insertLog("", "", '005-007-400-003', "400", "POST", refreshToken, 'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
                 return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado' });
             }
-
-            // Generamos un nuevo token de acceso
             const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
-
             // LOG - 200 //
             insertLog("", "", '005-007-200-001', "200", "POST", refreshToken, 'Token refrescado', '');
             res.status(200).json({ token: newAccessToken });
@@ -486,8 +481,6 @@ router.use(bodyParser.json());
 
   router.post("/revoke", verifyToken, (req, res) => {  /*/ REVOKE  /*/
     const { id } = req.body;
-  
-    // Verificamos
     if (isNaN(id)) {
       // LOG - 400 //
       insertLog(req.user.id, req.user.user, '005-008-400-001', "400", "POST", JSON.stringify(req.body), 'ID no válido al revocar el token', "");

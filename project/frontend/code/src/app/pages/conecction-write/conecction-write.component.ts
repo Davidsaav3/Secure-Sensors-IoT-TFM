@@ -280,7 +280,6 @@ export class ConecctionWriteComponent implements OnInit {
   newConecction(form: any) {
     let token = localStorage.getItem('token') ?? ''; 
 
-    this.state = 1;
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
       this.http.post(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
@@ -288,7 +287,7 @@ export class ConecctionWriteComponent implements OnInit {
           (data: any) => {
             this.id = data.id;
             this.alertNew = true;
-  
+
             setTimeout(() => {
               this.alertNew = false;
             }, 2000);
@@ -307,7 +306,6 @@ export class ConecctionWriteComponent implements OnInit {
             });
             this.actId = this.id;
             this.openEdit();
-            this.state = 2;
           },
           (error) => {
             console.error("Error:", error);
@@ -378,43 +376,22 @@ export class ConecctionWriteComponent implements OnInit {
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateConecction}/${type}`, {headers})
-      .subscribe(
+      this.http.get(`${this.duplicateConecction}/${type}`, {headers}).subscribe(
         (data: any) => {
           this.conecctions = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
-    
-          this.http.get(`${this.getId}/${this.conecctions.id}`, {headers})
-            .subscribe(
-              (data1: any) => {
-                this.conecctions = data1[0];
-                this.actId = this.conecctions.id;
-                this.id = this.conecctions.id;
-                let conecctions = { ...this.conecctions };
-                this.conecctionsCopy = {
-                  id: conecctions.id,
-                  description: conecctions.description ,
-                  authorization: conecctions.authorization, 
-                  urlIngest: conecctions.urlIngest, 
-                  enabled: conecctions.enabled
-                };
-                this.openNew(
-                  '',
-                  this.conecctions.description,
-                  this.conecctions.authorization, 
-                  this.conecctions.urlIngest, 
-                  this.conecctions.enabled
-                );
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
+          this.openNew(
+            '',
+            data.duplicatedescription,
+            '', 
+            this.conecctions.urlIngest, 
+            this.conecctions.enabled
+          );
           this.change = true;
         },
         (error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
+          console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }

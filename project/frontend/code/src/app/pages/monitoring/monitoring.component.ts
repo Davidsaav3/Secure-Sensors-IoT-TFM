@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, OnInit, HostListener } from "@angular
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ClipboardService } from 'ngx-clipboard';
 
 @Component({
   selector: "app-monitoring",
@@ -17,7 +18,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
-  @ViewChild('logTrace', {static: false}) logTraceElement: ElementRef | undefined;
+  @ViewChild('logTrace', {static: false}) logTraceElement1: ElementRef | undefined;
+  @ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
   @ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
 
   onResize() {
@@ -25,7 +27,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     this.resize();
   }
 
-  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -114,19 +116,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
     this.createDate();
   }
 
-  copyToClipboard1() {
-    if(this.logTraceElement!=null){
-      const el = this.logTraceElement.nativeElement;
-      el.select();
-      document.execCommand('copy');
-    }
-  }
-
-  copyToClipboard2() {
-    if(this.logParElement!=null){
-      const el = this.logParElement.nativeElement;
-      el.select();
-      document.execCommand('copy');
+  copyToClipboard(textToCopy: string) {
+    if (textToCopy) {
+      navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+          console.log('Texto copiado al portapapeles: ', textToCopy);
+        })
+        .catch((error) => {
+          console.error('Error al copiar texto al portapapeles: ', error);
+        });
     }
   }
 
