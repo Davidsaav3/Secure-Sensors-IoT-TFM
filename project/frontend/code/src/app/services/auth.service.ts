@@ -6,6 +6,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
   providedIn: 'root'
 })
 export class AuthService {
+  redirectUrl: string | null = null; 
+
   constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {}
 
   isAuthenticated(): boolean {

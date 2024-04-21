@@ -24,7 +24,7 @@ export class AppComponent {
       if (!newToken) {
           console.warn('La renovación del token ha fallado');
       }
-    }, 300000); //300000
+    }, 5000); //300000 y 5000
   }
 
   async renewToken(refreshToken: string): Promise<string | null> {
@@ -40,7 +40,7 @@ export class AppComponent {
       };
 
       const body = { refreshToken };
-      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
+      const response = await this.http.post<any>(this.postRefresh, {}, httpOptions).toPromise();
       if (!response || !response.token) {
         console.error('Error al renovar el token');
         return null;
