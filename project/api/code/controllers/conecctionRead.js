@@ -21,7 +21,7 @@ const bcrypt = require('bcrypt');
     // Evita que el navegador realice "sniffing" del tipo MIME
     res.setHeader('X-Content-Type-Options', 'nosniff'); 
     // Obliga al uso de HTTPS durante un período de tiempo
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains'); 
+    res.setHeader('Strict-Transport-Security', 'max-age=${process.env.TRANSPORT_SECURITY_AGE}; includeSubDomains'); 
     // Especifica de dónde se pueden cargar los recursos
     res.setHeader('Content-Security-Policy', "default-src 'self'; geolocation 'self'");
     // Activa el filtro XSS en los navegadores
@@ -31,7 +31,7 @@ const bcrypt = require('bcrypt');
     // Controla qué recursos pueden ser compartidos entre diferentes orígenes
     res.setHeader('Cross-Origin-Resource-Policy', 'same-origin'); 
     // Indica al navegador que espere y reporte certificados de transparencia
-    res.setHeader('Expect-CT', 'max-age=0, report-uri="https://sensors.com:5500/report"'); 
+    res.setHeader('Expect-CT', `max-age=${process.env.REPORT_AGE}, report-uri="${process.env.REPORT_URL}"`); 
     // Controla qué funciones o características pueden ser usadas en la página
     res.setHeader('Feature-Policy', "geolocation 'self'");    
     // Permite solicitudes CORS desde el dominio del frontend

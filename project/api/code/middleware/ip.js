@@ -4,8 +4,8 @@ const rateLimit = require("express-rate-limit");
 const { RateLimiterMemory } = require("rate-limiter-flexible");
 
     const limiter = new RateLimiterMemory({
-        points: 3, // Intentos
-        duration: 60, // Segundos de bloqueo
+        points: process.env.IP_BLOCK_TIME, // Intentos
+        duration: process.env.IP_ACCES, // Segundos de bloqueo
     });
     
     // Bloquear la IP

@@ -345,7 +345,7 @@
 </div>
 
 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered" style="margin: 30px; max-width: calc(100% - 60px);">
 		<div class="modal-content">
 			<div class="modal-header" style="border-bottom: 0px;">
 				<h3 class="modal-title">{{ 'monitoring.log_parameters' | translate }}</h3>
@@ -370,29 +370,30 @@
 </div>
 
 <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header" style="border-bottom: 0px;">
-				<h3 class="modal-title">{{ 'monitoring.log_trace' | translate }}</h3>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
-				<p #logTraceElement2 *ngIf="data[changeCopy2].log_trace" class="not">{{data[changeCopy2].log_trace}}</p>
-				<p *ngIf="!data[changeCopy2].log_trace" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
-			</div>
-			<div class="modal-footer" style="border-top: 0px;">
-				<div class="row">
-					<div class="col-6">
-						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
-					</div>
-					<div class="col-6">
-						<button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy2].log_trace}" style="width: 100%" (click)="copyToClipboard(data[changeCopy2].log_trace)">{{ 'sensors.copy' | translate }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-dialog-centered" style="margin: 30px; max-width: calc(100% - 60px);">
+        <div class="modal-content" style="width: 100%;">
+            <div class="modal-header" style="border-bottom: 0px;">
+                <h3 class="modal-title">{{ 'monitoring.log_trace' | translate }}</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+                <p #logTraceElement2 *ngIf="data[changeCopy2].log_trace" class="not">{{data[changeCopy2].log_trace}}</p>
+                <p *ngIf="!data[changeCopy2].log_trace" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
+            </div>
+            <div class="modal-footer" style="border-top: 0px;">
+                <div class="row">
+                    <div class="col-6">
+                        <button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy2].log_trace}" style="width: 100%" (click)="copyToClipboard(data[changeCopy2].log_trace)">{{ 'sensors.copy' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <div class="toast-cont">
 
