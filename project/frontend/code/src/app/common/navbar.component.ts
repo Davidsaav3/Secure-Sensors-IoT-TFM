@@ -45,6 +45,9 @@ export class NavbarComponent {
   changed= false;
   scriptEnable= false;
 
+  backendStatus: boolean = false; 
+  backendURL: string = "http://localhost:3000";
+
   formapassword = {
     id: this.id,
     password: "",
@@ -66,6 +69,10 @@ export class NavbarComponent {
   ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
+    this.checkBackendStatus();
+    setInterval(() => {
+        this.checkBackendStatus();
+    }, 1000); 
   }
 
   togglePasswordType() {
@@ -270,5 +277,17 @@ export class NavbarComponent {
 
   removeSpaces(event: any) {
     event.target.value = event.target.value.replace(/\s/g, ''); // Esto elimina todos los espacios en blanco
-}
+  }
+
+  checkBackendStatus(): void { // STATUS //
+    this.http.get<any>(this.backendURL + "/status").subscribe(
+      (data) => {
+        this.backendStatus = data.enEjecucion;
+        console.log("Estado del backend:", this.backendStatus);
+      },
+      (error) => {
+        console.error("Error al obtener el estado del backend:", error);
+      }
+    );
+  }
 }

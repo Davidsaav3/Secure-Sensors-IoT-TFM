@@ -4,7 +4,7 @@ const rateLimit = require("express-rate-limit");
 const { RateLimiterMemory } = require("rate-limiter-flexible");
 
     const limiter = new RateLimiterMemory({
-        points: 1, // Intentos
+        points: 3, // Intentos
         duration: 60, // Segundos de bloqueo
     });
     

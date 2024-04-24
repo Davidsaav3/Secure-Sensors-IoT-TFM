@@ -1,7 +1,5 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
-import { Router } from "@angular/router";
-import { environment } from "../../environments/environment";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: "app-script",
@@ -10,12 +8,52 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 
 export class ScriptComponent implements OnInit {
+  backendStatus: boolean = false; 
+  backendURL: string = "http://localhost:3000";
 
-  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private http: HttpClient) {}
 
+  ngOnInit(): void {
+    this.checkBackendStatus();
+  }
+
+  toggleBackend(status: boolean): void { // ON // OFF //
+    this.backendStatus = status;
+
+    if (status) {
+      console.log("Encendiendo el backend...");
+      this.http.post(this.backendURL + "/on", {}).subscribe(
+        () => {
+          console.log("Backend encendido exitosamente.");
+        },
+        (error) => {
+          console.error("Error al encender el backend:", error);
+        }
+      );
+    } 
+    else {
+      console.log("Apagando el backend...");
+      this.http.post(this.backendURL + "/off", {}).subscribe(
+        () => {
+          console.log("Backend apagado exitosamente.");
+        },
+        (error) => {
+          console.error("Error al apagar el backend:", error);
+        }
+      );
+    }
+  }
+
+  checkBackendStatus(): void { // STATUS //
+    this.http.get<any>(this.backendURL + "/status").subscribe(
+      (data) => {
+        this.backendStatus = data.enEjecucion;
+        console.log("Estado del backend:", this.backendStatus);
+      },
+      (error) => {
+        console.error("Error al obtener el estado del backend:", error);
+      }
+    );
   }
   
-  ngOnInit(): void { // Inicializa
-
-  }
 }
