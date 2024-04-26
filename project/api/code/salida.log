@@ -1,0 +1,28 @@
+[33m[nodemon] 2.0.22[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node ../code/ingestador/sensors.js`[39m
+connected: 0
+Aplication: test-ua-sensor@ttn
+connected: 1
+Aplication: ua-bim@ttn
+connected: 2
+Aplication: ua-roomsensors@ttn
+<Buffer 7b 22 65 6e 64 5f 64 65 76 69 63 65 5f 69 64 73 22 3a 7b 22 64 65 76 69 63 65 5f 69 64 22 3a 22 75 61 2d 67 61 72 64 65 6e 73 2d 73 30 30 35 22 2c 22 ... 2800 more bytes>
+1
+1
+<Buffer 7b 22 65 6e 64 5f 64 65 76 69 63 65 5f 69 64 73 22 3a 7b 22 64 65 76 69 63 65 5f 69 64 22 3a 22 75 61 2d 67 61 72 64 65 6e 73 2d 73 30 31 32 22 2c 22 ... 2805 more bytes>
+1
+1
+1
+1
+<Buffer 7b 22 65 6e 64 5f 64 65 76 69 63 65 5f 69 64 73 22 3a 7b 22 64 65 76 69 63 65 5f 69 64 22 3a 22 75 61 2d 67 61 72 64 65 6e 73 2d 73 30 30 32 22 2c 22 ... 2803 more bytes>
+1
+1
+<Buffer 7b 22 65 6e 64 5f 64 65 76 69 63 65 5f 69 64 73 22 3a 7b 22 64 65 76 69 63 65 5f 69 64 22 3a 22 75 61 2d 67 61 72 64 65 6e 73 2d 73 30 31 35 22 2c 22 ... 2356 more bytes>
+<Buffer 7b 22 65 6e 64 5f 64 65 76 69 63 65 5f 69 64 73 22 3a 7b 22 64 65 76 69 63 65 5f 69 64 22 3a 22 73 65 6e 73 6f 72 2d 76 6f 63 2d 31 22 2c 22 61 70 70 ... 1788 more bytes>
+1
+<Buffer 7b 22 65 6e 64 5f 64 65 76 69 63 65 5f 69 64 73 22 3a 7b 22 64 65 76 69 63 65 5f 69 64 22 3a 22 79 6f 6b 6f 67 61 77 61 2d 78 73 37 37 30 61 2d 73 31 ... 2216 more bytes>
+1
+[32m[nodemon] restarting due to changes...[39m

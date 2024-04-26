@@ -27,7 +27,6 @@ const ingest_config = config.ingest_config;
   password: config.accessKey
 });
 
-
 client.on('connect', () => {
   if (controlVars.msg_connect) console.log('connected');
   client.subscribe(config.suscribe);
@@ -43,9 +42,9 @@ client.on('message', async (topic, message) => {
 */
 
 async function actualizarBD() {
-  scriptDAO.updateDate(0);
-  const status = await scriptDAO.getStatus(0);
-  console.log(status)
+  scriptDAO.updateDate();
+  const status = await scriptDAO.getStatus();
+  console.log('SCRIPT FUNCIONANDO: '+ status)
   if (status === 0) {
     clouseScript();
   } 
@@ -57,7 +56,6 @@ async function actualizarBD() {
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas
 // para ver cadens de conexión mirar https://www.thethingsindustries.com/docs/integrations/mqtt/
 
-console.log("ON")
 var client= {};
 
 for (let i = 0; i < connection_config.length; i++) {
@@ -86,7 +84,7 @@ for (let i = 0; i < connection_config.length; i++) {
 }
 
 function clouseScript() {
-    console.log('PARAR ALTO')
+    console.log('SCRIPT PARADO')
     //status= scriptDAO.update(1);
     for (let i = 0; i < connection_config.length; i++) {
       client[i].end();

@@ -70,7 +70,6 @@ export class NavbarComponent {
   ngOnInit(): void { // Inicializa
     this.readStorage();
     this.translate.use(this.activeLang);
-    this.checkBackendStatus();
     setInterval(() => {
         this.checkBackendStatus();
     }, 5000); 

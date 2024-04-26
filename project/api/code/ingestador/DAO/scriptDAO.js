@@ -4,16 +4,16 @@ let { con } = require('../../middleware/mysql');
 let cors = require('cors');
 router.use(express.json());
 
-function getStatus(scriptId) {
-    const query = `SELECT status FROM script WHERE id = ?`;
+function getStatus() {
+    const query = `SELECT status FROM script WHERE id = 0`;
     return new Promise((resolve, reject) => {
-      con.query(query, [scriptId], (err, result) => {
+      con.query(query, [], (err, result) => {
         if (err) {
           reject(err);
           return;
         }
         if (result.length !== 1) {
-          reject(new Error('Invalid script ID or multiple scripts with same ID'));
+          reject(new Error('Error getStatus()'));
           return;
         }
         const status = result[0].status;
@@ -22,15 +22,14 @@ function getStatus(scriptId) {
     });
 }
 
-function updateDate(res) {
+function updateDate() {
   const query = `UPDATE script SET date = NOW() WHERE id = 0`;
   con.query(query, [], (err, result) => {
     if (err) {
-      return json({ error: 'Error en la base de datos 2' });
+      return json({ error: 'Error updateDate()' });
     }
     if (result.length === 1) {
-      const status = 1; // Corrige el acceso a la propiedad 'status'
-      return status;
+      return true;
     }
   });
 }

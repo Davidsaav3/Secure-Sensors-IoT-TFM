@@ -5,7 +5,7 @@ let cors= require('cors')
 router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
-const { exec } = require("child_process");
+const { spawn } = require("child_process");
 
   const corsOptions = {
     origin: ['http://localhost:4200', 'https://sensors.com:5500'],
@@ -44,35 +44,40 @@ const { exec } = require("child_process");
     next();
 });
 
+//ejecutarSensors();
+
 router.post("/script", (req, res) => {  // SCRIPT
   const status = req.body.status;
-  console.log(status)
+  //console.log(status)
   const query = "UPDATE script SET status = ?";
-  con.query(query, [status], (err, result) => { // Cambio de nombre a 'result'
+  con.query(query, [status], (err, result) => {
     if (err) {
       return res.status(500).json({ error: 'Error en la base de datos' });
-    }
-    if (result.length === 1) { 
-      const status = result.status;
-      res.status(200).json({ status: status });
     }
   });
 
   if (status==1) {
-    exec("node ./ingestador/sensors.js", (error, stdout, stderr) => {
-      if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-    });
+    ejecutarSensors();
+    // nodemon --inspect=5173 ../code/ingestador/sensors
   }
 
 });
+
+function ejecutarSensors() {
+  const proceso = spawn('node', ['../code/ingestador/sensors']);
+  proceso.stdout.on('data', (data) => {
+    console.log(`[sensors.js]-> ${data}`);
+  });
+  proceso.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+  proceso.on('error', (error) => {
+    console.error(`Error: ${error.message}`);
+  });
+  proceso.on('close', (code) => {
+    console.log(`Proceso cerrado con código de salida ${code}`);
+  });
+}
 
 
 router.get("/script-status", (req, res) => {  // STATUS
