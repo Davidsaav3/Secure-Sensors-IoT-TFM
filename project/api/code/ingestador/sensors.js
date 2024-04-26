@@ -42,19 +42,17 @@ client.on('message', async (topic, message) => {
 });
 */
 
-function actualizarBD() {
-  scriptDAO.updateDate(1)
-  //me conecto a la BD actualizo la fecha
-  //mirar si apagar=true --> si true, no programo el timer, hago el disconect
-  //si es false - setTimeout(actualizarBD, 5000)
-  if (scriptDAO.getStatus(1)==0) {
+async function actualizarBD() {
+  scriptDAO.updateDate(0);
+  const status = await scriptDAO.getStatus(0);
+  console.log(status)
+  if (status === 0) {
     clouseScript();
   } 
   else {
-    setTimeout(actualizarBD, 5000)
+    setTimeout(() => actualizarBD(), 5000);
   }
 }
-// Entro a la BD, actualizo fecha y pongo apagar=false
 
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas
 // para ver cadens de conexión mirar https://www.thethingsindustries.com/docs/integrations/mqtt/
