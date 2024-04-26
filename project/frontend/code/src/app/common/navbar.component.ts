@@ -45,7 +45,7 @@ export class NavbarComponent {
   changed= false;
   scriptEnable= false;
 
-  status: boolean = false; 
+  status = 1; 
   date= ''; 
   backendURL: string = "http://localhost:5172/api/script";
 
@@ -284,6 +284,7 @@ export class NavbarComponent {
       (data) => {
         this.date= data.date;
         this.status= data.status;
+        localStorage.setItem('status', this.status.toString());
       },
       (error) => {
         console.error("Error al obtener el estado:", error);

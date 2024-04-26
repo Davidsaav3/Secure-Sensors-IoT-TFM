@@ -25,6 +25,7 @@ export class ScriptComponent implements OnInit {
   toggleBackend(status: any): void {
     let status1 = {
       status: status,
+      status2: localStorage.getItem('status')
     };
     let token = localStorage.getItem('token') ?? ''; 
     const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};

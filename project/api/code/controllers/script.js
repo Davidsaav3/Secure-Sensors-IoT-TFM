@@ -48,6 +48,8 @@ const { spawn } = require("child_process");
 
 router.post("/script", (req, res) => {  // SCRIPT
   const status = req.body.status;
+  const status2 = req.body.status2;
+
   //console.log(status)
   const query = "UPDATE script SET status = ?";
   con.query(query, [status], (err, result) => {
@@ -56,7 +58,7 @@ router.post("/script", (req, res) => {  // SCRIPT
     }
   });
 
-  if (status==1) {
+  if (status==1 && status2!=1) {
     ejecutarSensors();
     // nodemon --inspect=5173 ../code/ingestador/sensors
   }
