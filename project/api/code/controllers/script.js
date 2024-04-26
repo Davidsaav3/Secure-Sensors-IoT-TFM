@@ -6,6 +6,7 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 const { spawn } = require("child_process");
+const insertLogScript = require('../middleware/log_script');
 
   const corsOptions = {
     origin: ['http://localhost:4200', 'https://sensors.com:5500'],
@@ -59,8 +60,11 @@ router.post("/script", (req, res) => {  // SCRIPT
   });
 
   if (status==1 && status2!=1) {
+    insertLogScript('x', 'x', 1, 'x');
     ejecutarSensors();
-    // nodemon --inspect=5173 ../code/ingestador/sensors
+  }
+  if(status==0){
+    insertLogScript('x', 'x', 0, 'x');
   }
 
 });
@@ -93,6 +97,32 @@ router.get("/script-status", (req, res) => {  // STATUS
       const status= result[0].status;
       return res.status(200).json({ status: status, date: date });
     }
+  });
+});
+
+router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET //
+  const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
+  const tam = parseInt(pag_pag);
+  const act = (parseInt(pag_tam) - 1) * tam;
+  let query = "";
+  let queryParams = [];
+
+  if (text_search === 'search') {
+    query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script) as total FROM log_script ORDER BY ? ? LIMIT ? OFFSET ?`;
+    queryParams = [order, order_type, tam, act];
+  } 
+  else {
+    query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ?) as total FROM log WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+    const likePattern = `%${text_search}%`;
+    queryParams = Array(14).fill(likePattern).concat([order, order_type, tam, act]);
+  }
+
+  con.query(query, queryParams, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Error en la base de datos' });
+    }
+    res.send(result);
   });
 });
 

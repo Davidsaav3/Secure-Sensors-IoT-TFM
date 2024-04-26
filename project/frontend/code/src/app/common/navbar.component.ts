@@ -30,7 +30,6 @@ export class NavbarComponent {
   passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
   alerts= false;
   change_password= false;
-
   username= "davidsaav";
   id= 1;
   token= '';
