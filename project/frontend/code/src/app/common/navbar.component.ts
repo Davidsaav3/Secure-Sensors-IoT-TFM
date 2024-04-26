@@ -45,8 +45,9 @@ export class NavbarComponent {
   changed= false;
   scriptEnable= false;
 
-  backendStatus: boolean = false; 
-  backendURL: string = "http://localhost:3000";
+  status: boolean = false; 
+  date= ''; 
+  backendURL: string = "http://localhost:5172/api/script";
 
   formapassword = {
     id: this.id,
@@ -72,7 +73,7 @@ export class NavbarComponent {
     this.checkBackendStatus();
     setInterval(() => {
         this.checkBackendStatus();
-    }, 1000); 
+    }, 5000); 
   }
 
   togglePasswordType() {
@@ -280,13 +281,13 @@ export class NavbarComponent {
   }
 
   checkBackendStatus(): void { // STATUS //
-    this.http.get<any>(this.backendURL + "/status").subscribe(
+    this.http.get<any>(this.backendURL + "/script-status").subscribe(
       (data) => {
-        this.backendStatus = data.enEjecucion;
-        console.log("Estado del backend:", this.backendStatus);
+        this.date= data.date;
+        this.status= data.status;
       },
       (error) => {
-        console.error("Error al obtener el estado del backend:", error);
+        console.error("Error al obtener el estado:", error);
       }
     );
   }

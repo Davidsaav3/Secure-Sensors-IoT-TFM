@@ -4,11 +4,15 @@
     <div class="cc2 cont mx-0 c100">
 
 		<div class="form-check form-switch mt-5">
-			<label class="toggle tt1 t1">
-		  <input maxlength="4" type="checkbox" (ngModelChange)="toggleBackend(!backendStatus)" id="check" name="check" [(ngModel)]="backendStatus">
-				<span class="slider"></span>
-				<span class="labels t1" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
-			</label>
+			<div class="btn-group" role="group" aria-label="Toggle backend">
+				<button type="button" class="btn btn-success" [ngClass]="{ 'active': backendStatus }" (click)="toggleBackend(1)">
+				  {{ 'sensors.enable' | translate }}
+				</button>
+
+				<button type="button" class="btn btn-danger" [ngClass]="{ 'active': !backendStatus }" (click)="toggleBackend(0)">
+				  {{ 'sensors.disable' | translate }}
+				</button>
+			  </div>			  
 		</div>
 
     </div>

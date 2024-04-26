@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: "app-script",
@@ -9,51 +10,33 @@ import { HttpClient } from "@angular/common/http";
 
 export class ScriptComponent implements OnInit {
   backendStatus: boolean = false; 
-  backendURL: string = "http://localhost:3000";
+  backendURL: string = "http://localhost:5172/api/script";
+  date= '';
+  status= '';
+  postSensors: string = environment.baseUrl+environment.script;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   ngOnInit(): void {
-    this.checkBackendStatus();
+
   }
 
-  toggleBackend(status: boolean): void { // ON // OFF //
-    this.backendStatus = status;
-
-    if (status) {
-      console.log("Encendiendo el backend...");
-      this.http.post(this.backendURL + "/on", {}).subscribe(
-        () => {
-          console.log("Backend encendido exitosamente.");
-        },
-        (error) => {
-          console.error("Error al encender el backend:", error);
-        }
-      );
-    } 
-    else {
-      console.log("Apagando el backend...");
-      this.http.post(this.backendURL + "/off", {}).subscribe(
-        () => {
-          console.log("Backend apagado exitosamente.");
-        },
-        (error) => {
-          console.error("Error al apagar el backend:", error);
-        }
-      );
-    }
-  }
-
-  checkBackendStatus(): void { // STATUS //
-    this.http.get<any>(this.backendURL + "/status").subscribe(
-      (data) => {
-        this.backendStatus = data.enEjecucion;
-        console.log("Estado del backend:", this.backendStatus);
+  toggleBackend(status: any): void {
+    let status1 = {
+      status: status,
+    };
+    let token = localStorage.getItem('token') ?? ''; 
+    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
+    this.http.post(this.backendURL+"/script", JSON.stringify(status1), httpOptions).subscribe(
+      () => {
+        console.log("Solicitud POST enviada exitosamente.");
       },
       (error) => {
-        console.error("Error al obtener el estado del backend:", error);
+        console.error("Error al enviar la solicitud POST:", error);
       }
     );
   }
+  
   
 }
