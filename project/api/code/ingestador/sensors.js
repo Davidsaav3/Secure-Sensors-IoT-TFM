@@ -41,17 +41,24 @@ client.on('message', async (topic, message) => {
 });
 */
 
-async function actualizarBD() {
-  scriptDAO.updateDate();
-  const status = await scriptDAO.getStatus();
-  console.log('SCRIPT FUNCIONANDO: '+ status)
-  if (status === 0) {
-    clouseScript();
-  } 
-  else {
-    setTimeout(() => actualizarBD(), 5000);
+  async function actualizarBD() { // BUCLE PRINCIPAL
+    scriptDAO.updateDate();
+    const status = await scriptDAO.getStatus();
+    console.log('SCRIPT FUNCIONANDO: '+ status)
+    if (status === 0) {
+      clouseScript();
+    } 
+    else {
+      setTimeout(() => actualizarBD(), 5000);
+    }
   }
-}
+
+  function clouseScript() { // PARAR SCRIPT
+    console.log('SCRIPT PARADO')
+    for (let i = 0; i < connection_config.length; i++) {
+      client[i].end();
+    }
+  }
 
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas
 // para ver cadens de conexión mirar https://www.thethingsindustries.com/docs/integrations/mqtt/
@@ -59,19 +66,16 @@ async function actualizarBD() {
 var client= {};
 
 for (let i = 0; i < connection_config.length; i++) {
-
   client[i] = mqtt.connect(connection_config[i].mqttQeue, {
     username: connection_config[i].appID,
     password: connection_config[i].accessKey
   });
-
   client[i].on('connect', () => {
     if (controlVars.msg_connect) console.log('connected');
     console.log('connected:', i);
     console.log("Aplication:", connection_config[i].appID);
     client[i].subscribe(connection_config[i].subscribe);
   });
-
   client[i].on('message', async (topic, message) => {
     try {
       //await main(message);
@@ -80,15 +84,6 @@ for (let i = 0; i < connection_config.length; i++) {
       console.log(error)
     }
   });
-
-}
-
-function clouseScript() {
-    console.log('SCRIPT PARADO')
-    //status= scriptDAO.update(1);
-    for (let i = 0; i < connection_config.length; i++) {
-      client[i].end();
-    }
 }
 
 //----------------------------------------------------------------------
@@ -339,5 +334,4 @@ const main = async (message) => {
 }
 
 setTimeout(actualizarBD ,5000);
-//client.on('error', (err) => console.log(err));
 

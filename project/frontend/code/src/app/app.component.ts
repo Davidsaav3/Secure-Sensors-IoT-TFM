@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment } from "./environments/environment"
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from "@angular/router";
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -14,17 +15,21 @@ export class AppComponent {
   postRefresh: string = environment.baseUrl+environment.users+'/refresh';
   AppVersion = environment.AppVersion;
   activeLang = environment.languageLang;
-  constructor(private translate: TranslateService, private http: HttpClient, public router: Router) {
+  constructor(private authService: AuthService,private translate: TranslateService, private http: HttpClient, public router: Router) {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
 
   ngOnInit(): void { // Inicializa
-    setInterval(async () => {
-      const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
-      if (!newToken) {
-          console.warn('La renovación del token ha fallado');
-      }
-    }, 5000); //300000 y 5000
+    if(this.authService.isAuthenticated()){
+      setInterval(async () => {
+        if(this.authService.isAuthenticated()){
+          const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
+          if (!newToken) {
+            console.warn('La renovación del token ha fallado');
+          }
+        }
+      }, 5000); //300000 y 5000
+    }
   }
 
   async renewToken(refreshToken: string): Promise<string | null> {
@@ -48,7 +53,8 @@ export class AppComponent {
       const newToken = response.token;
       localStorage.setItem('token', newToken); // Almacenar el nuevo token en el almacenamiento local
       return newToken;
-    } catch (error) {
+    } 
+    catch (error) {
       this.logOut(); // Realizar la lógica de cierre de sesión en caso de error
       console.error('Error al renovar el token:', error);
       return null;

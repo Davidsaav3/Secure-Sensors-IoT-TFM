@@ -4,7 +4,7 @@ let { con } = require('../../middleware/mysql');
 let cors = require('cors');
 router.use(express.json());
 
-function getStatus() {
+  function getStatus() { // OBTENER STATUS
     const query = `SELECT status FROM script WHERE id = 0`;
     return new Promise((resolve, reject) => {
       con.query(query, [], (err, result) => {
@@ -20,21 +20,20 @@ function getStatus() {
         resolve(status);
       });
     });
-}
+  }
 
-function updateDate() {
-  const query = `UPDATE script SET date = NOW() WHERE id = 0`;
-  con.query(query, [], (err, result) => {
-    if (err) {
-      return json({ error: 'Error updateDate()' });
-    }
-    if (result.length === 1) {
-      return true;
-    }
-  });
-}
+  function updateDate() { // ACTUALIZAR FECHA
+    const query = `UPDATE script SET date = NOW() WHERE id = 0`;
+    con.query(query, [], (err, result) => {
+      if (err) {
+        return json({ error: 'Error updateDate()' });
+      }
+      if (result.length === 1) {
+        return true;
+      }
+    });
+  }
 
 module.exports = {
-  getStatus,
-  updateDate
+  getStatus, updateDate
 };
