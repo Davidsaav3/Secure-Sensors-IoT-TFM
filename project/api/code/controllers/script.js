@@ -52,7 +52,6 @@ const SECRET_KEY = process.env.TOKEN;
     const status2 = req.body.status2;
     const token = req.headers['authorization'];
 
-
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
       if (err) {
           // LOG - 400 //
@@ -78,7 +77,6 @@ const SECRET_KEY = process.env.TOKEN;
           return res.status(500).json({ error: 'Token de refresco expirado' });
       }
     });
-
     //console.log(status)
     const query = "UPDATE script SET status = ?";
     con.query(query, [status], (err, result) => {
@@ -89,18 +87,10 @@ const SECRET_KEY = process.env.TOKEN;
     });
 
   });
-
   function runScript(status, id, user, status2, refreshToken, body) {
     const proceso = spawn('node', ['../code/ingestador/sensors']);
     proceso.stdout.on('data', (data) => {
       console.log(`[sensors.js]-> ${data}`);
-      /*if (status==1 && status2!=1) {
-        insertLogScript(id, user, 1, data);
-        runScript();
-      }
-      if(status==0){
-        insertLogScript(id, user, 0, data);
-      }*/
     });
     proceso.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
@@ -115,6 +105,7 @@ const SECRET_KEY = process.env.TOKEN;
       insertLog(id, user, '008-001-500-006', "500", "", JSON.stringify(body),'`Error al activar o desactivar el script (salida con código)', code);
     });
   }
+
 
   router.get("/script-status", verifyToken, (req, res) => {  // STATUS
     const query = "SELECT date, status FROM script";
@@ -131,6 +122,7 @@ const SECRET_KEY = process.env.TOKEN;
       }
     });
   });
+
 
   router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET //
     const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
@@ -160,4 +152,5 @@ const SECRET_KEY = process.env.TOKEN;
     });
   });
 
+  
 module.exports = router;
