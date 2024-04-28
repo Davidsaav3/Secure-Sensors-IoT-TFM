@@ -252,8 +252,8 @@
     "conecctions.e7" : "Duplicate conecction",
     "conecctions.e8" : "Error duplicating conecction",
 
-    "script_enable": "Script enabled",
-    "script_disable": "Script disabled",
+    "script_enable": "Script Enabled",
+    "script_disable": "Script Disabled",
 
     "monitoreo.id": "Identification",
     "monitoring.user_id": "ID",
@@ -269,6 +269,7 @@
     "monitoring.log_trace": "Output",
     "monitoring.find": "Search registers...",
     "revoke": "Revoke Token",
-    "no_logs": "There are no log records"
-
+    "no_logs": "There are no log records",
+    "script.enable": "Enable Script",
+    "script.disable": "Disable Script"
 }

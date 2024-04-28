@@ -40,8 +40,12 @@
 	<div class="col-12 col-md-7 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
 			<div *ngIf="token != ''" class="pe-3" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
-				<span *ngIf="status" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }}: {{this.date}}</span>
-				<span *ngIf="!status" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }}: {{this.date}}</span>
+				<span *ngIf="status==2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
+					<span class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
+					{{ 'script' | translate }}
+				</span>
+				<span *ngIf="status==1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
+				<span *ngIf="status==0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
 			</div>
 			<div *ngIf="token != ''" class="pe-3">
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">

@@ -115,7 +115,7 @@ backendStatus: boolean = false;
     this.createDate();
   }
 
-  toggleBackend(status: any): void {
+  setScript(status: any): void {
     let status1 = {
       status: status,
       status2: localStorage.getItem('status')

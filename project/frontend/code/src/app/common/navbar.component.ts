@@ -2,8 +2,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { Router } from "@angular/router";
 import { environment } from "../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import * as bootstrap from "bootstrap";
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: "app-navbar",
@@ -44,7 +44,7 @@ export class NavbarComponent {
   changed= false;
   scriptEnable= false;
 
-  status = 1; 
+  status = 2; 
   date= ''; 
   backendURL: string = "http://localhost:5172/api/script";
 
@@ -58,7 +58,7 @@ export class NavbarComponent {
     user: "",
   };
 
-  constructor(private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private authService: AuthService,private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -67,11 +67,32 @@ export class NavbarComponent {
   passwordFieldType1 = 'password';
 
   ngOnInit(): void { // Inicializa
+    if (localStorage.getItem('status')) {
+      let aux= localStorage.getItem('status');
+      if(aux!=null)
+        this.status=  parseInt(aux, 10);
+    }
+    else{
+      this.status= 2;
+    }
+
+    if (localStorage.getItem('date')) {
+      let storedDate = localStorage.getItem('date');
+      if (storedDate !== null) {
+        this.date = storedDate;
+      }   
+    }
+    else{
+      this.date= '';
+    }
+
     this.readStorage();
     this.translate.use(this.activeLang);
-    setInterval(() => {
-        this.checkBackendStatus();
-    }, 5000); 
+    if(this.authService.isAuthenticated()){
+      setInterval(() => {
+        this.statusScript();
+      }, 5000);
+    }
   }
 
   togglePasswordType() {
@@ -266,6 +287,8 @@ export class NavbarComponent {
     this.deleteCookie('refresh_token');
     localStorage.removeItem("username");
     localStorage.removeItem("activeLang");
+    localStorage.removeItem("date");
+    localStorage.removeItem("status");
     localStorage.setItem('token', '');
     this.router.navigate(['/login']);
   }
@@ -275,19 +298,25 @@ export class NavbarComponent {
   }
 
   removeSpaces(event: any) {
-    event.target.value = event.target.value.replace(/\s/g, ''); // Esto elimina todos los espacios en blanco
+    event.target.value = event.target.value.replace(/\s/g, ''); 
   }
 
-  checkBackendStatus(): void { // STATUS //
-    this.http.get<any>(this.backendURL + "/script-status").subscribe(
-      (data) => {
-        this.date= data.date;
-        this.status= data.status;
-        localStorage.setItem('status', this.status.toString());
-      },
-      (error) => {
-        console.error("Error al obtener el estado:", error);
-      }
-    );
+  statusScript(): void { // STATUS //
+    let token = localStorage.getItem('token') ?? ''; 
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
+    if(this.authService.isAuthenticated()){
+      this.http.get<any>(this.backendURL + "/script-status", {headers}).subscribe(
+        (data) => {
+          this.date= data.date;
+          this.status= data.status;
+          localStorage.setItem('status', this.status.toString());
+          localStorage.setItem('date', this.date.toString());
+        },
+        (error) => {
+          console.error("Error al obtener el estado:", error);
+        }
+      );
+    }
   }
 }

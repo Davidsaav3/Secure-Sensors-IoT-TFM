@@ -254,8 +254,8 @@
     "coneccticons.e7": "Conexión duplicada",
     "conecctions.e8": "Error al duplicar la conexión",
 
-    "script_enable": "Script activado",
-    "script_disable": "Script desactivado",
+    "script_enable": "Script Activado",
+    "script_disable": "Script Desactivado",
 
     "monitoring.id": "Id",	 
     "monitoring.user_id": "Id",	 
@@ -271,7 +271,7 @@
     "monitoring.log_trace": "Salida",
     "monitoring.find": "Buscar registros...",
     "revoke": "Revocar Token",
-    "no_logs": "No hay registros de log"
-
+    "script.enable": "Activar Script",
+    "script.disable": "Desactivar Script"
 
 }

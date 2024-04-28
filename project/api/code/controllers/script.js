@@ -7,6 +7,8 @@ const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 const { spawn } = require("child_process");
 const insertLogScript = require('../middleware/log_script');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = process.env.TOKEN;
 
   const corsOptions = {
     origin: ['http://localhost:4200', 'https://sensors.com:5500'],
@@ -45,86 +47,103 @@ const insertLogScript = require('../middleware/log_script');
     next();
 });
 
-//ejecutarSensors();
+  router.post("/script", verifyToken, (req, res) => {  // SCRIPT
+    const status = req.body.status;
+    const status2 = req.body.status2;
+    const token = req.headers['authorization'];
 
-router.post("/script", (req, res) => {  // SCRIPT
-  const status = req.body.status;
-  const status2 = req.body.status2;
 
-  //console.log(status)
-  const query = "UPDATE script SET status = ?";
-  con.query(query, [status], (err, result) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error en la base de datos' });
-    }
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+      if (err) {
+          // LOG - 400 //
+          insertLog(req.user.id, req.user.user, '009-001-400-002', "400", "TOKEN", token,'Token inválido', JSON.stringify(err));
+          return res.status(400).json({ error: 'Token inválido' });
+      }
+      if (decoded) {
+        req.user = {
+            id: decoded.id,
+            user: decoded.user
+        };
+        runScript(status,req.user.id, req.user.user, status2);
+      }
+      else{
+          // LOG - 500 //
+          insertLog("", "", '009-001-500-001', "400", "TOKEN", refreshToken,'Error al validar token', "");
+          return res.status(500).json({ error: 'Token de refresco expirado' });
+      }
+    });
+
+    //console.log(status)
+    const query = "UPDATE script SET status = ?";
+    con.query(query, [status], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+    });
+
   });
 
-  if (status==1 && status2!=1) {
-    insertLogScript('x', 'x', 1, 'x');
-    ejecutarSensors();
-  }
-  if(status==0){
-    insertLogScript('x', 'x', 0, 'x');
-  }
-
-});
-
-function ejecutarSensors() {
-  const proceso = spawn('node', ['../code/ingestador/sensors']);
-  proceso.stdout.on('data', (data) => {
-    console.log(`[sensors.js]-> ${data}`);
-  });
-  proceso.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
-  proceso.on('error', (error) => {
-    console.error(`Error: ${error.message}`);
-  });
-  proceso.on('close', (code) => {
-    console.log(`Proceso cerrado con código de salida ${code}`);
-  });
-}
-
-
-router.get("/script-status", (req, res) => {  // STATUS
-  const query = "SELECT date, status FROM script";
-  con.query(query, [], (err, result) => { // Cambio de nombre a 'result'
-    if (err) {
-      return res.status(500).json({ error: 'Error en la base de datos' });
-    }
-    if (result.length === 1) { 
-      const date= result[0].date;
-      const status= result[0].status;
-      return res.status(200).json({ status: status, date: date });
-    }
-  });
-});
-
-router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET //
-  const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
-  const tam = parseInt(pag_pag);
-  const act = (parseInt(pag_tam) - 1) * tam;
-  let query = "";
-  let queryParams = [];
-
-  if (text_search === 'search') {
-    query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script) as total FROM log_script ORDER BY ? ? LIMIT ? OFFSET ?`;
-    queryParams = [order, order_type, tam, act];
-  } 
-  else {
-    query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ?) as total FROM log WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
-    const likePattern = `%${text_search}%`;
-    queryParams = Array(14).fill(likePattern).concat([order, order_type, tam, act]);
+  function runScript(status, id, user, status2) {
+    const proceso = spawn('node', ['../code/ingestador/sensors']);
+    proceso.stdout.on('data', (data) => {
+      console.log(`[sensors.js]-> ${data}`);
+      if (status==1 && status2!=1) {
+        insertLogScript(id, user, 1, data);
+        runScript();
+      }
+      if(status==0){
+        insertLogScript(id, user, 0, data);
+      }
+    });
+    proceso.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
+    proceso.on('error', (error) => {
+      console.error(`Error: ${error.message}`);
+    });
+    proceso.on('close', (code) => {
+      console.log(`Proceso cerrado con código de salida ${code}`);
+    });
   }
 
-  con.query(query, queryParams, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Error en la base de datos' });
-    }
-    res.send(result);
+  router.get("/script-status", verifyToken, (req, res) => {  // STATUS
+    const query = "SELECT date, status FROM script";
+    con.query(query, [], (err, result) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      if (result.length === 1) { 
+        const date= result[0].date;
+        const status= result[0].status;
+        return res.status(200).json({ status: status, date: date });
+      }
+    });
   });
-});
 
+  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET //
+    const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
+    const tam = parseInt(pag_pag);
+    const act = (parseInt(pag_tam) - 1) * tam;
+    let query = "";
+    let queryParams = [];
+
+    if (text_search === 'search') {
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script) as total FROM log_script ORDER BY ? ? LIMIT ? OFFSET ?`;
+      queryParams = [order, order_type, tam, act];
+    } 
+    else {
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ?) as total FROM log WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      const likePattern = `%${text_search}%`;
+      queryParams = Array(14).fill(likePattern).concat([order, order_type, tam, act]);
+    }
+
+    con.query(query, queryParams, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      res.send(result);
+    });
+  });
 
 module.exports = router;

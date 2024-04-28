@@ -12,13 +12,13 @@
 					</div>
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
-					<div class="d-flex btn-group" role="group" aria-label="Toggle backend">
-						<button type="button" class="btn btn-success" [ngClass]="{ 'active': backendStatus }" (click)="toggleBackend(1)">
-						{{ 'sensors.enable' | translate }}
+					<div class="d-flex btn-group pb-3" role="group" aria-label="Toggle backend">
+						<button type="button" class="btn btn-success" [ngClass]="{ 'active': backendStatus }" (click)="setScript(1)">
+						{{ 'script.enable' | translate }}
 						</button>
 
-						<button type="button" class="btn btn-danger" [ngClass]="{ 'active': !backendStatus }" (click)="toggleBackend(0)">
-						{{ 'sensors.disable' | translate }}
+						<button type="button" class="btn btn-danger" [ngClass]="{ 'active': !backendStatus }" (click)="setScript(0)">
+						{{ 'script.disable' | translate }}
 						</button>
 					</div>	
 				</div>
@@ -89,21 +89,21 @@
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
 							<!--<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.id }}</td>-->
-							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
 
-							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+							<td  class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">
 								<span *ngIf="quote.user_id" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.user_id }}</p></span>
 							</td>
-							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+							<td  class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">
 								<span *ngIf="quote.username" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.username }}</p></span>
 							</td>
 
-							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
-								<span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': (quote.log_status==0)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
-								<span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': (quote.log_status==1)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': (quote.log_status==0)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': (quote.log_status==1)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
 							</td>
 						
-							<td data-bs-toggle="modal" data-bs-target="#exampleModal3" class="truncate-text" [attr.title]="quote.log_trace" class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="changeCopy2=i">{{ this.quote.log_trace.length > 50 ? this.quote.log_trace.substring(0, 30) + '...' : quote.log_trace }}</td>
+							<td data-bs-toggle="modal" data-bs-target="#exampleModal3" class="truncate-text" [attr.title]="quote.log_trace" class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="changeCopy2=i">{{ this.quote.log_trace.length > 50 ? this.quote.log_trace.substring(0, 30) + '...' : quote.log_trace }}</td>
 						</tr>
 						
 					</tbody>

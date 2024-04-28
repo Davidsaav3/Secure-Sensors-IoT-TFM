@@ -21,13 +21,16 @@ router.use(express.json())
     });
 }
 
-  function truncarCadena(cadena, longitudMaxima) {
-    if (cadena.length > longitudMaxima) {
-        return cadena.substring(0, longitudMaxima);
-    } 
-    else {
-        return cadena;
-    }
+function truncarCadena(cadena, longitudMaxima) {
+  if (typeof cadena !== 'string') {
+    return '';
   }
+  if (cadena.length > longitudMaxima) {
+    return cadena.substring(0, longitudMaxima);
+  } 
+  else {
+    return cadena;
+  }
+}
 
 module.exports = insertLogScript;
