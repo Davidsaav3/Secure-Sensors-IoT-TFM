@@ -56,7 +56,7 @@ const SECRET_KEY = process.env.TOKEN;
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
       if (err) {
           // LOG - 400 //
-          insertLog(req.user.id, req.user.user, '009-001-400-002', "400", "TOKEN", token,'Token inválido', JSON.stringify(err));
+          insertLog(req.user.id, req.user.user, '008-001-400-001', "400", "POST", JSON.stringify(req.body),'Error al activar o desactivar el script', JSON.stringify(err));
           return res.status(400).json({ error: 'Token inválido' });
       }
       if (decoded) {
@@ -66,7 +66,7 @@ const SECRET_KEY = process.env.TOKEN;
         };
         if (status==1 && status2==0) {
           insertLogScript(req.user.id, req.user.user, 1, '');
-          runScript();
+          runScript(status, req.user.id, req.user.user, status2, token, req.body);
         }
         if(status==0 && status2==1){
           insertLogScript(req.user.id, req.user.user, 0, '');
@@ -74,7 +74,7 @@ const SECRET_KEY = process.env.TOKEN;
       }
       else{
           // LOG - 500 //
-          insertLog("", "", '009-001-500-001', "400", "TOKEN", refreshToken,'Error al validar token', "");
+          insertLog(req.user.id, req.user.user, '008-001-500-002', "500", "POST", JSON.stringify(req.body),'Error al activar o desactivar el script 2', "");
           return res.status(500).json({ error: 'Token de refresco expirado' });
       }
     });
@@ -83,13 +83,14 @@ const SECRET_KEY = process.env.TOKEN;
     const query = "UPDATE script SET status = ?";
     con.query(query, [status], (err, result) => {
       if (err) {
+        insertLog(req.user.id, req.user.user, '008-001-500-003', "500", "POST", JSON.stringify(req.body),'Error al activar o desactivar el script 3', "");
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
     });
 
   });
 
-  function runScript(status, id, user, status2) {
+  function runScript(status, id, user, status2, refreshToken, body) {
     const proceso = spawn('node', ['../code/ingestador/sensors']);
     proceso.stdout.on('data', (data) => {
       console.log(`[sensors.js]-> ${data}`);
@@ -103,12 +104,15 @@ const SECRET_KEY = process.env.TOKEN;
     });
     proceso.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
+      insertLog(id, user, '008-001-500-004', "500", "", JSON.stringify(body),'Error al activar o desactivar el script (stderr)', data);
     });
     proceso.on('error', (error) => {
       console.error(`Error: ${error.message}`);
+      insertLog(id, user, '008-001-500-005', "500", "", JSON.stringify(body),'Error al activar o desactivar el script (error)', error.message);
     });
     proceso.on('close', (code) => {
       console.log(`Proceso cerrado con código de salida ${code}`);
+      insertLog(id, user, '008-001-500-006', "500", "", JSON.stringify(body),'`Error al activar o desactivar el script (salida con código)', code);
     });
   }
 
@@ -116,11 +120,13 @@ const SECRET_KEY = process.env.TOKEN;
     const query = "SELECT date, status FROM script";
     con.query(query, [], (err, result) => {
       if (err) {
+        insertLog(req.user.id, req.user.user, '008-002-500-001', "500", "GET", '','Error al obtener el estado del script', err);
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
       if (result.length === 1) { 
         const date= result[0].date;
         const status= result[0].status;
+        //insertLog(req.user.id, req.user.user, '008-002-200-001', "500", "GET", '','Estado del escript obtenido', result);
         return res.status(200).json({ status: status, date: date });
       }
     });
@@ -146,8 +152,10 @@ const SECRET_KEY = process.env.TOKEN;
     con.query(query, queryParams, (err, result) => {
       if (err) {
         console.error(err);
+        insertLog(req.user.id, req.user.user, '008-003-500-001', "500", "GET", JSON.stringify(req.params),'Error al obtener el log del script', JSON.stringify(err));
         return res.status(500).json({ error: 'Error en la base de datos' });
-      }
+      }        
+      insertLog(req.user.id, req.user.user, '008-003-200-001', "200", "GET", JSON.stringify(req.params),'Log del script obtenido', JSON.stringify(result));
       res.send(result);
     });
   });
