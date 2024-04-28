@@ -351,7 +351,7 @@
 				<h3 class="modal-title">{{ 'monitoring.log_parameters' | translate }}</h3>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+			<div *ngIf="data[changeCopy1]" class="modal-body" style="overflow-x: auto; white-space: nowrap;">
 				<p #logTraceElement1 *ngIf="data[changeCopy1].log_parameters" class="not">{{data[changeCopy1].log_parameters}}</p>
 				<p *ngIf="!data[changeCopy1].log_parameters" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
 			</div>
@@ -360,7 +360,7 @@
 					<div class="col-6">
 						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
-					<div class="col-6">
+					<div class="col-6" *ngIf="data[changeCopy1]">
 						<button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy1].log_parameters}" style="width: 100%" (click)="copyToClipboard(data[changeCopy1].log_parameters)">{{ 'sensors.copy' | translate }}</button>
 					</div>
 				</div>
@@ -376,7 +376,7 @@
                 <h3 class="modal-title">{{ 'monitoring.log_trace' | translate }}</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+            <div *ngIf="data[changeCopy2]" class="modal-body" style="overflow-x: auto; white-space: nowrap;">
                 <p #logTraceElement2 *ngIf="data[changeCopy2].log_trace" class="not">{{data[changeCopy2].log_trace}}</p>
                 <p *ngIf="!data[changeCopy2].log_trace" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
             </div>
@@ -385,7 +385,7 @@
                     <div class="col-6">
                         <button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" *ngIf="data[changeCopy1]">
                         <button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy2].log_trace}" style="width: 100%" (click)="copyToClipboard(data[changeCopy2].log_trace)">{{ 'sensors.copy' | translate }}</button>
                     </div>
                 </div>

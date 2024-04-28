@@ -272,6 +272,7 @@
     "monitoring.find": "Buscar registros...",
     "revoke": "Revocar Token",
     "script.enable": "Activar Script",
-    "script.disable": "Desactivar Script"
+    "script.disable": "Desactivar Script",
+    "no_logs": "No hay registros de log"
 
 }

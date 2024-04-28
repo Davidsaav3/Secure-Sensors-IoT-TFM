@@ -71,7 +71,7 @@ backendStatus: boolean = false;
 
   searchAux = "search";
   order = "log_date";
-  ordAux = "DESC";
+  ordAux = "ASC";
 
   alertDelete: any = false;
   notDelete: any = false;

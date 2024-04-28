@@ -91,14 +91,14 @@ const cookieParser = require('cookie-parser');
 
     if (!user || !password) {
       // LOG - 400 //
-      insertLog("", user, '005-002-400-001', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 1', "");
+      insertLog("", user, '005-002-400-001', "400", "POST", '','Faltan datos para hacer login 1', "");
       return res.status(400).json({ error: 'Faltan datos para hacer login 1' });
     }
 
     // Validación
     if (!isValidPassword(password)) {
       // LOG - 400 //
-      insertLog("", user, '005-002-400-002', "400", "POST", JSON.stringify(req.body),'La contraseña no cumple con los requisitos de seguridad', "");
+      insertLog("", user, '005-002-400-002', "400", "POST", '','La contraseña no cumple con los requisitos de seguridad', "");
       return res.status(400).json({ error: 'La contraseña no cumple con los requisitos de seguridad' });
     }
 
@@ -106,7 +106,7 @@ const cookieParser = require('cookie-parser');
     con.query(selectQuery, [user, user], (err, result) => {
         if (err) {
           // LOG - 500 //
-          insertLog("", user, '005-002-500-001', "500", "POST", JSON.stringify(req.body),'Error 1 al hacer login', JSON.stringify(err));
+          insertLog("", user, '005-002-500-001', "500", "POST", '','Error 1 al hacer login', JSON.stringify(err));
           return res.status(500).json({ error: 'Error 1 al hacer login' });
         }
 
@@ -118,7 +118,7 @@ const cookieParser = require('cookie-parser');
                 if (bcryptErr) {
                     console.error("Error al comparar contraseñas:", bcryptErr);
                     // LOG - 500 //
-                    insertLog(user.id, user.user, '005-002-500-002', "500", "POST", JSON.stringify(req.body),'Error 2 al hacer login', JSON.stringify(bcryptErr));
+                    insertLog(user.id, user.user, '005-002-500-002', "500", "POST", '','Error 2 al hacer login', JSON.stringify(bcryptErr));
                     return res.status(500).json({ error: 'Error 2 al hacer login' });
                 }
 
@@ -140,14 +140,14 @@ const cookieParser = require('cookie-parser');
                                     if (updateErr) {
                                       console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                                       // LOG - 500 //
-                                      insertLog(user.id, user.user, '005-002-500-003', "500", "POST", JSON.stringify(req.body),'Error 3 al hacer login', JSON.stringify(updateErr));
+                                      insertLog(user.id, user.user, '005-002-500-003', "500", "POST", '','Error 3 al hacer login', JSON.stringify(updateErr));
                                       return res.status(500).json({ error: 'Error 3 al hacer login' });
                                     }
 
                                     // nuevo token de acceso
                                     const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                                     // LOG - 200 //
-                                    insertLog(user.id, user.user, '005-002-200-001', "200", "POST", JSON.stringify(req.body),'Login hecho 1', "");
+                                    insertLog(user.id, user.user, '005-002-200-001', "200", "POST", '','Login hecho 1', "");
                                     return res.status(200).json({
                                         id: user.id,
                                         user: user.user,
@@ -163,7 +163,7 @@ const cookieParser = require('cookie-parser');
                                 // token_refresh aún válido
                                 const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                                 // LOG - 200 //
-                                insertLog(user.id, user.user, '005-002-200-002', "200", "POST", JSON.stringify(req.body),'Login hecho 2', "");
+                                insertLog(user.id, user.user, '005-002-200-002', "200", "POST", '','Login hecho 2', "");
                                 return res.status(200).json({
                                     id: user.id,
                                     user: user.user,
@@ -189,7 +189,7 @@ const cookieParser = require('cookie-parser');
                             if (updateErr) {
                               console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                               // LOG - 500 //
-                              insertLog(user.id, user.user, '005-002-500-004', "500", "POST", JSON.stringify(req.body),'Error 4 al hacer login', JSON.stringify(updateErr));                                
+                              insertLog(user.id, user.user, '005-002-500-004', "500", "POST", '','Error 4 al hacer login', JSON.stringify(updateErr));                                
                               return res.status(500).json({ error: 'Error 4 al hacer login' });
                             }
 
@@ -197,7 +197,7 @@ const cookieParser = require('cookie-parser');
                             const accessToken = jwt.sign({ user: user.user, id: user.id, date: new Date().toISOString() }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
                             
                             // LOG - 200 //
-                            insertLog(user.id, user.user, '005-002-200-003', "200", "POST", JSON.stringify(req.body),'Login hecho 3', "");
+                            insertLog(user.id, user.user, '005-002-200-003', "200", "POST", '','Login hecho 3', "");
                             return res.status(200).json({
                                 id: user.id,
                                 user: user.user,
@@ -213,7 +213,7 @@ const cookieParser = require('cookie-parser');
                 else {
                     console.warn("Credenciales incorrectas");
                     // LOG - 400 //
-                    insertLog("", "", '005-002-400-001', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 2', "");
+                    insertLog("", "", '005-002-400-001', "400", "POST", '','Faltan datos para hacer login 2', "");
                     return res.status(400).json({ error: 'Faltan datos para hacer login 2' });
                 }
             });
@@ -221,7 +221,7 @@ const cookieParser = require('cookie-parser');
         else {
             console.warn("Usuario no encontrado");
             // LOG - 400 //
-            insertLog("", "", '005-002-400-002', "400", "POST", JSON.stringify(req.body),'Faltan datos para hacer login 3', "");
+            insertLog("", "", '005-002-400-002', "400", "POST", '','Faltan datos para hacer login 3', "");
             return res.status(400).json({ error: 'Faltan datos para hacer login 3' });
         }
     });
@@ -500,7 +500,7 @@ const cookieParser = require('cookie-parser');
             }
             const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
             // LOG - 200 //
-            insertLog("", "", '005-007-200-001', "200", "POST", refreshToken, 'Token refrescado', '');
+            //insertLog("", "", '005-007-200-001', "200", "POST", refreshToken, 'Token refrescado', '');
             res.status(200).json({ token: newAccessToken });
         });
     });

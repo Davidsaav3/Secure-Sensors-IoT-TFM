@@ -64,7 +64,13 @@ const SECRET_KEY = process.env.TOKEN;
             id: decoded.id,
             user: decoded.user
         };
-        runScript(status,req.user.id, req.user.user, status2);
+        if (status==1 && status2==0) {
+          insertLogScript(req.user.id, req.user.user, 1, '');
+          runScript();
+        }
+        if(status==0 && status2==1){
+          insertLogScript(req.user.id, req.user.user, 0, '');
+        }
       }
       else{
           // LOG - 500 //
@@ -87,13 +93,13 @@ const SECRET_KEY = process.env.TOKEN;
     const proceso = spawn('node', ['../code/ingestador/sensors']);
     proceso.stdout.on('data', (data) => {
       console.log(`[sensors.js]-> ${data}`);
-      if (status==1 && status2!=1) {
+      /*if (status==1 && status2!=1) {
         insertLogScript(id, user, 1, data);
         runScript();
       }
       if(status==0){
         insertLogScript(id, user, 0, data);
-      }
+      }*/
     });
     proceso.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
