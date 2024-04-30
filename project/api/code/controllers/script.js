@@ -47,7 +47,7 @@ const SECRET_KEY = process.env.TOKEN;
     next();
 });
 
-  router.post("/script", verifyToken, (req, res) => {  // SCRIPT
+  router.post("/script", verifyToken, (req, res) => {  // SCRIPT // bloq...
     const status = req.body.status;
     const status2 = req.body.status2;
     const token = req.headers['authorization'];
@@ -63,7 +63,7 @@ const SECRET_KEY = process.env.TOKEN;
             id: decoded.id,
             user: decoded.user
         };
-        if (status==1 && status2==0) {
+        if (status==1 && status2==0) { // nombres y servicios
           insertLogScript(req.user.id, req.user.user, 1, '');
           runScript(status, req.user.id, req.user.user, status2, token, req.body);
         }
@@ -103,7 +103,9 @@ const SECRET_KEY = process.env.TOKEN;
     proceso.on('close', (code) => {
       console.log(`Proceso cerrado con código de salida ${code}`);
       insertLog(id, user, '008-001-500-006', "500", "", JSON.stringify(body),'`Error al activar o desactivar el script (salida con código)', code);
-    });
+    }); // ver
+    //proceso.kill();
+    //iniciar off
   }
 
 
@@ -118,13 +120,13 @@ const SECRET_KEY = process.env.TOKEN;
         const date= result[0].date;
         const status= result[0].status;
         //insertLog(req.user.id, req.user.user, '008-002-200-001', "500", "GET", '','Estado del escript obtenido', result);
-        return res.status(200).json({ status: status, date: date });
+        return res.status(200).json({ status, date });
       }
     });
   });
 
 
-  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET //
+  router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { // GET // *log
     const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
     const tam = parseInt(pag_pag);
     const act = (parseInt(pag_tam) - 1) * tam;

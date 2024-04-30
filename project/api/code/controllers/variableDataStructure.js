@@ -43,7 +43,7 @@ const insertLog = require('../middleware/log');
     next();
 });
 
-  router.get("/get/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { /*/ GET /*/
+  router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (req, res) => { /*/ GET /*/
     const { text_search, order, order_type, pag_tam, pag_pag } = req.params;
   
     const tam = parseInt(pag_pag);

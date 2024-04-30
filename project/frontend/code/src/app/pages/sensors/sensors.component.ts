@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, OnInit, HostListener, OnDestroy} from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class SensorsComponent implements OnInit {
+export class SensorsComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
   onResize() {
@@ -21,10 +21,10 @@ export class SensorsComponent implements OnInit {
     this.resize();
   }
 
-  getSensor: string = environment.baseUrl+environment.sensorsTypes+"/get";
-  postSensors: string = environment.baseUrl+environment.sensorsTypes;
-  duplicateSensor: string = environment.baseUrl+environment.sensorsTypes+"/duplicate";
-  getId: string = environment.baseUrl+environment.sensorsTypes+"/id";
+  getSensor: string = environment.baseUrl+environment.url.sensorsTypes+"";
+  postSensors: string = environment.baseUrl+environment.url.sensorsTypes;
+  duplicateSensor: string = environment.baseUrl+environment.url.sensorsTypes+"/duplicate";
+  getId: string = environment.baseUrl+environment.url.sensorsTypes+"/id";
 
   totalPages = 5;
   currentPage = 1;
@@ -50,7 +50,6 @@ export class SensorsComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
   
   show = false;
   showAux = true;
@@ -69,6 +68,11 @@ export class SensorsComponent implements OnInit {
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
 
   sensors = {
     id: 0,
@@ -104,6 +108,13 @@ export class SensorsComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getSensors(this.order, this.ordAux);
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
 
   /* GET */
@@ -274,7 +285,7 @@ export class SensorsComponent implements OnInit {
             this.id = data.id;
             this.alertNew = true;
   
-            setTimeout(() => {
+            this.temp1= setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -348,7 +359,7 @@ export class SensorsComponent implements OnInit {
       this.state = 2;
       this.saveOk = true;
 
-      setTimeout(() => {
+      this.temp2= setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
@@ -450,7 +461,7 @@ export class SensorsComponent implements OnInit {
       );
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3= setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -462,10 +473,10 @@ export class SensorsComponent implements OnInit {
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getSensors(this.order, this.ordAux);
         $this.openClouse();

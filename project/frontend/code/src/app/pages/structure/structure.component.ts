@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from "@angular/core";
+import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,10 +9,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class StructureComponent implements OnInit {
+export class StructureComponent implements OnInit, OnDestroy {
 
   resultsPerPag = environment.resultsPerPag;
-  getVariableStructureList: string =environment.baseUrl+environment.variableDataStructure+"/get_list";
+  getVariableStructureList: string =environment.baseUrl+environment.url.variableDataStructure+"/get_list";
 
   constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     let token = localStorage.getItem('token') ?? ''; 
@@ -26,9 +26,9 @@ export class StructureComponent implements OnInit {
     });
   }
 
-  getEstructure: string = environment.baseUrl+environment.dataStructure+"/get";
-  postEstructure: string = environment.baseUrl+environment.dataStructure;
-  duplicateEstructure: string =environment.baseUrl+environment.dataStructure+"/duplicate";
+  getEstructure: string = environment.baseUrl+environment.url.dataStructure+"";
+  postEstructure: string = environment.baseUrl+environment.url.dataStructure;
+  duplicateEstructure: string =environment.baseUrl+environment.url.dataStructure+"/duplicate";
 
   totalPages = 5;
   currentPage = 1;
@@ -52,7 +52,6 @@ export class StructureComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
   
   show = false;
   showAux = true;
@@ -71,6 +70,11 @@ export class StructureComponent implements OnInit {
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
 
   estructure = {
     id_estructure: "",
@@ -108,6 +112,13 @@ export class StructureComponent implements OnInit {
   ngOnInit(): void { // Inicializa
     this.getStructures(this.order, this.ordAux);
     this.getStructuresList();
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();;
   }
 
   /* GET */
@@ -246,7 +257,7 @@ export class StructureComponent implements OnInit {
             this.id = data.id;
             this.alertNew = true;
   
-            setTimeout(() => {
+            this.temp1= setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -341,7 +352,7 @@ export class StructureComponent implements OnInit {
       }
 
       this.saveOk = true;
-      setTimeout(() => {
+      this.temp2= setTimeout(() => {
         this.saveOk = false;
       }, 2000);
 
@@ -402,7 +413,7 @@ export class StructureComponent implements OnInit {
 
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3= setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -414,10 +425,10 @@ export class StructureComponent implements OnInit {
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getStructures(this.order, this.ordAux);
         $this.openClouse();

@@ -12,7 +12,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   
-  postRefresh: string = environment.baseUrl+environment.users+'/refresh';
+  postRefresh: string = environment.baseUrl+environment.url.users+'/refresh';
   AppVersion = environment.AppVersion;
   activeLang = environment.languageLang;
   constructor(private authService: AuthService,private translate: TranslateService, private http: HttpClient, public router: Router) {
@@ -20,7 +20,9 @@ export class AppComponent {
   }
 
   ngOnInit(): void { // Inicializa
+    console.log('NGINIT APP')
     if(this.authService.isAuthenticated()){
+      console.log('ARRANCANDO INT')
       setInterval(async () => {
         if(this.authService.isAuthenticated()){
           const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
@@ -31,6 +33,8 @@ export class AppComponent {
       }, 5000); //300000 y 5000
     }
   }
+
+  //ngOnDestroy
 
   async renewToken(refreshToken: string): Promise<string | null> {
     try {

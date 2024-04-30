@@ -6,20 +6,35 @@ export const environment = {
     defaultMapsStyle: 'streets-v12',
     AppVersion: '2.5.0',   
 
-    deviceConfigurations: '/device_configurations',
-    sensorsTypes: '/sensors_types',
-    dataStructure: '/data_structure',
-    variableDataStructure: '/variable_data_structure',
-
-    users: '/users',
-    conecctionRead: '/conecction_read',
-    conecctionWrite: '/conecction_write',
-    script: '/script',
-    monitoring: '/monitoring',
+    url: {
+        deviceConfigurations: '/device_configurations',
+        sensorsTypes: '/sensors_types',
+        dataStructure: '/data_structure',
+        variableDataStructure: '/variable_data_structure',
+        users: '/users',
+        conecctionRead: '/conecction_read',
+        conecctionWrite: '/conecction_write',
+        script: '/script',
+        monitoring: '/monitoring',
+    },
 
     // PRODUCCIÓN //
     //baseUrl: "http://localhost/api",
 
     // DESARROLLO //
     baseUrl: "http://localhost:5172/api",
+
+    /* 
+        url: {
+        deviceConfigurations: '/device_configurations',
+        sensorsTypes: '/sensors_types',
+        dataStructure: '/data_structure',
+        variableDataStructure: '/variable_data_structure',
+        users: '/users',
+        conecctionRead: '/conecction_read',
+        conecctionWrite: '/conecction_write',
+        script: '/script',
+        monitoring: '/monitoring',
+    },
+    */
 };

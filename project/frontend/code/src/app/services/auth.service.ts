@@ -20,4 +20,13 @@ export class AuthService {
     
     return isAuthenticated;
   }
+
+  /*
+  primero(){
+    if(this.token=''){
+      this.token = localStorage.getItem('token')?.toString() || '';
+    }
+    return !this.jwtHelper.isTokenExpired(this.token);
+  }
+  */
 }

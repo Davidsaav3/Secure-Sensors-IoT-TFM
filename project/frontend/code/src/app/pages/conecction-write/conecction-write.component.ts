@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class ConecctionWriteComponent implements OnInit {
+export class ConecctionWriteComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
   onResize() {
@@ -21,11 +21,11 @@ export class ConecctionWriteComponent implements OnInit {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl+environment.conecctionWrite+"/get";
-  postConecction: string = environment.baseUrl+environment.conecctionWrite;
-  duplicateConecction: string = environment.baseUrl+environment.conecctionWrite+"/duplicate";
-  getId: string = environment.baseUrl+environment.conecctionWrite+"/id";
-  getIdSecret: string = environment.baseUrl+environment.conecctionWrite+"/secret";
+  getConecction: string = environment.baseUrl+environment.url.conecctionWrite+"";
+  postConecction: string = environment.baseUrl+environment.url.conecctionWrite;
+  duplicateConecction: string = environment.baseUrl+environment.url.conecctionWrite+"/duplicate";
+  getId: string = environment.baseUrl+environment.url.conecctionWrite+"/id";
+  getIdSecret: string = environment.baseUrl+environment.url.conecctionWrite+"/secret";
 
   passwordFieldType = 'password';
   passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
@@ -54,8 +54,12 @@ export class ConecctionWriteComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
-  
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
+
   show = false;
   showAux = true;
   dupOk = false;
@@ -107,6 +111,13 @@ export class ConecctionWriteComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getConecctions(this.order, this.ordAux);
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
 
   /* GET */
@@ -288,7 +299,7 @@ export class ConecctionWriteComponent implements OnInit {
             this.id = data.id;
             this.alertNew = true;
 
-            setTimeout(() => {
+            this.temp1 = setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -355,7 +366,7 @@ export class ConecctionWriteComponent implements OnInit {
       this.state = 2;
       this.saveOk = true;
 
-      setTimeout(() => {
+      this.temp2 = setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
@@ -424,7 +435,7 @@ export class ConecctionWriteComponent implements OnInit {
       );
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3 = setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -436,10 +447,10 @@ export class ConecctionWriteComponent implements OnInit {
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getConecctions(this.order, this.ordAux);
         $this.openClouse();

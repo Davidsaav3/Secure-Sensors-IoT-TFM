@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef } from "@angular/core";
+import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient,HttpHeaders } from '@angular/common/http';
@@ -9,15 +9,15 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class VariableStructureComponent implements OnInit {
+export class VariableStructureComponent implements OnInit, OnDestroy {
 
   resultsPerPag = environment.resultsPerPag;
   
   constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {}
 
-  getEstructure: string =environment.baseUrl+environment.variableDataStructure+"/get";
-  postStructure: string = environment.baseUrl+environment.variableDataStructure;
-  duplicateEstructure: string =environment.baseUrl+environment.variableDataStructure+"/duplicate";
+  getEstructure: string =environment.baseUrl+environment.url.variableDataStructure+"";
+  postStructure: string = environment.baseUrl+environment.url.variableDataStructure;
+  duplicateEstructure: string =environment.baseUrl+environment.url.variableDataStructure+"/duplicate";
 
   totalPages = 5;
   currentPage = 1;
@@ -39,7 +39,6 @@ export class VariableStructureComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
   
   show = false;
   showAux = true;
@@ -58,6 +57,11 @@ export class VariableStructureComponent implements OnInit {
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
 
   structure = {
     id: 0,
@@ -79,6 +83,13 @@ export class VariableStructureComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getStructure(this.order, this.ordAux);
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
   
   /* GET */
@@ -194,7 +205,7 @@ export class VariableStructureComponent implements OnInit {
             this.id = data.id;
             this.alertNew = true;
   
-            setTimeout(() => {
+            this.temp1= setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -267,7 +278,7 @@ export class VariableStructureComponent implements OnInit {
       this.state = 2;
 
       this.saveOk = true;
-      setTimeout(() => {
+      this.temp2= setTimeout(() => {
         this.saveOk = false;
       }, 2000);
 
@@ -328,7 +339,7 @@ export class VariableStructureComponent implements OnInit {
     );
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3= setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -342,9 +353,9 @@ export class VariableStructureComponent implements OnInit {
 
   textSearch(event: any) { // Busqueda por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getStructure(this.order, this.ordAux);
         $this.openClouse();

@@ -1,5 +1,5 @@
 import { environment } from "../../environments/environment";
-import { Component, ElementRef, ViewChild, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ClipboardService } from 'ngx-clipboard';
@@ -10,7 +10,7 @@ import { ClipboardService } from 'ngx-clipboard';
   styleUrls: ["../../app.component.css"],
 })
 
-export class ScriptComponent implements OnInit {
+export class ScriptComponent implements OnInit, OnDestroy {
   parseInt(arg0: any) {
   throw new Error('Method not implemented.');
 } 
@@ -25,12 +25,12 @@ backendStatus: boolean = false;
   backendURL: string = "http://localhost:5172/api/script";
   date= '';
   status= '';
-  postSensors: string = environment.baseUrl+environment.script;
+  postSensors: string = environment.baseUrl+environment.url.script;
 
-  getMonitorings: string = environment.baseUrl+environment.script+"/get";
-  postMonitoring: string = environment.baseUrl+environment.script;
-  duplicateMonitorings: string = environment.baseUrl+environment.script+"/duplicate";
-  getId: string = environment.baseUrl+environment.script+"/id";
+  getMonitorings: string = environment.baseUrl+environment.url.script+"";
+  postMonitoring: string = environment.baseUrl+environment.url.script;
+  duplicateMonitorings: string = environment.baseUrl+environment.url.script+"/duplicate";
+  getId: string = environment.baseUrl+environment.url.script+"/id";
   date_2: any;
 
   mostrarTooltip = false;
@@ -60,8 +60,12 @@ backendStatus: boolean = false;
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
-  
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
+
   show = false;
   showAux = true;
   dupOk = false;
@@ -113,6 +117,13 @@ backendStatus: boolean = false;
   ngOnInit(): void {
     this.getMonitoring(this.order, this.ordAux);
     this.createDate();
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
 
   setScript(status: any): void {
@@ -312,7 +323,7 @@ backendStatus: boolean = false;
             this.id = data.id;
             this.alertNew = true;
   
-            setTimeout(() => {
+            this.temp1= setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -382,7 +393,7 @@ backendStatus: boolean = false;
       this.state = 2;
       this.saveOk = true;
 
-      setTimeout(() => {
+      this.temp2= setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
@@ -476,7 +487,7 @@ backendStatus: boolean = false;
       );
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3= setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -488,10 +499,10 @@ backendStatus: boolean = false;
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getMonitoring(this.order, this.ordAux);
         $this.openClouse();

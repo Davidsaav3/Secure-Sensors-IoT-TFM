@@ -1,4 +1,4 @@
-import {AfterViewInit,Component,ElementRef,OnDestroy,ViewChild,} from "@angular/core";
+import {AfterViewInit,Component,ElementRef, OnDestroy, OnInit, ViewChild,} from "@angular/core";
 import { Router } from "@angular/router";
 import * as mapboxgl from "mapbox-gl";
 import { TranslateService } from "@ngx-translate/core";
@@ -22,14 +22,14 @@ interface MarkerAndColor {
   styleUrls: ["../../app.component.css"],
 })
 
-export class DevicesComponent implements AfterViewInit, OnDestroy {
+export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild("map") divMap?: ElementRef;
   styleSelector: mapboxgl.Map | undefined;
 
   constructor(public sanitizer: DomSanitizer, private http: HttpClient,private router: Router, private translate: TranslateService) {}
 
-  getDevice: string = environment.baseUrl+environment.deviceConfigurations+"/get";
-  getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
+  getDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"";
+  getSensorsList: string = environment.baseUrl+environment.url.sensorsTypes+"/get_list";
 
   zoom: number = 7;
   map?: mapboxgl.Map;
@@ -52,7 +52,11 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   data: any[] = [];
   rute = "";
-  timeout: any = null;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+
   idsParam: any;
   idsParam1: any;
   searchAux = false;
@@ -192,6 +196,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     );
   }
 
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    this.map?.remove();
+  }
+
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
     this.createMap();
     //console.log('Versión de Mapbox GL JS:', mapboxgl.version);
@@ -231,7 +242,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     //console.log(this.search.value)
-    setTimeout(() => { // Asincrono
+    this.temp1= setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
       } 
@@ -279,7 +290,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
             //console.log(this.markers)
             //console.log(this.markers);
 
-            setTimeout(() => { // Asincrono
+            this.temp2= setTimeout(() => { // Asincrono
               if (this.map != null) {
                 let contenido;
                 let cont = [];
@@ -697,10 +708,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void { // Eliminar mapa
-    this.map?.remove();
-  }
-
   /* FILTERS */
 
   initFilters() { // Inicializa los filtros del mapa
@@ -878,9 +885,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     this.searched= true;
     this.currentPage = 1;
     this.deleteSearch();
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp1);
     var $this = this;
-    this.timeout = setTimeout(function () {
+    this.temp3 = setTimeout(function () {
       if (event.keyCode != 13) {
         $this.getDevices();
       }
@@ -1017,9 +1024,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy {
     this.search.value = localStorage.getItem("search") ?? "";
     if(this.search.value!=""){
       this.searched= true;
-      clearTimeout(this.timeout);
+      clearTimeout(this.temp1);
       var $this = this;
-      this.timeout = setTimeout(function () {
+      this.temp3 = setTimeout(function () {
         $this.getDevices();
       }, 1);
     }

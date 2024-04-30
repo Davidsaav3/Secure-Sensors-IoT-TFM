@@ -40,17 +40,19 @@ client.on('message', async (topic, message) => {
   }
 });
 */
+  // act estado de db a 1
+
+  await scriptDAO.updateDate(); // try catch-> return
 
   async function actualizarBD() { // BUCLE PRINCIPAL
-    scriptDAO.updateDate();
-    const status = await scriptDAO.getStatus();
+    const status = await scriptDAO.getStatus(); // si falla, cerramos 
     console.log('SCRIPT FUNCIONANDO: '+ status)
     if (status === 0) {
       clouseScript();
+      return 0;
     } 
-    else {
-      setTimeout(() => actualizarBD(), 5000);
-    }
+    scriptDAO.updateDate(); // si falla se cierra
+    setTimeout(() => actualizarBD(), 5000);
   }
 
   function clouseScript() { // PARAR SCRIPT
@@ -58,6 +60,7 @@ client.on('message', async (topic, message) => {
     for (let i = 0; i < connection_config.length; i++) {
       client[i].end();
     }
+    // db apagado...
   }
 
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas

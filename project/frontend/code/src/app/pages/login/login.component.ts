@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, OnInit, HostListener, OnDestroy} from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ["../../app.component.css"],
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   
   registerForm2: FormGroup = this.formBuilder.group({
     fa: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
@@ -23,7 +23,7 @@ export class LoginComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  postLogin: string = environment.baseUrl+environment.users+'/login';
+  postLogin: string = environment.baseUrl+environment.url.users+'/login';
 
   cont: any= 0;
   mostrar: any= false;
@@ -33,6 +33,10 @@ export class LoginComponent {
   mostrar5: any= false;
   fa: string | undefined;
   change1= false;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
 
   alertCreNot= false;
   alertServNot= false;
@@ -58,6 +62,12 @@ export class LoginComponent {
 
   togglePasswordType() {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
   }
 
   login(form: any) {
@@ -107,21 +117,21 @@ export class LoginComponent {
             if (error.status === 401) {
               console.error("Credenciales incorrectas");
               this.alertCreNot = true;
-              setTimeout(() => {
+              this.temp1= setTimeout(() => {
                 this.alertCreNot = false;
               }, 2000);
             } 
             else if (error.status === 500) {
               console.error("Error en el servidor");
               this.alertServNot = true;
-              setTimeout(() => {
+              this.temp2= setTimeout(() => {
                 this.alertServNot = false;
               }, 2000);
             } 
             else {
               console.error("Error desconocido:", error);
               this.alertDifNot = true;
-              setTimeout(() => {
+              this.temp3= setTimeout(() => {
                 this.alertDifNot = false;
               }, 2000);
             }

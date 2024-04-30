@@ -16,7 +16,7 @@
 		</div>
 		<div class="nav nav-tabs mb-0 p-0" *ngIf="token!='' && (this.ruteAux[1]=='users' || this.ruteAux[1]=='conecction-read' || this.ruteAux[1]=='conecction-write' || this.ruteAux[1]=='script' || this.ruteAux[1]=='monitoring') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
 			<li class="nav-item">
-				<a class="nav-link" aria-current="page" routerLink="/users" [ngClass]="{'active': this.rute=='/users'}">{{ 'users' | translate }}</a>
+				<a class="nav-link" aria-current="page" routerLink="/users" [ngClass]="{'active': this.rute=='/users'}">{{ 'users.users' | translate }}</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" routerLink="/conecction-read" [ngClass]="{'active': this.rute=='/conecction-read'}">{{ 'conecction-read' | translate }}</a>
@@ -28,7 +28,7 @@
 				<a class="nav-link" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}">{{ 'script' | translate }}</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" routerLink="/monitoring" [ngClass]="{'active': this.rute=='/monitoring'}">{{ 'monitoring' | translate }}</a>
+				<a class="nav-link" routerLink="/monitoring" [ngClass]="{'active': this.rute=='/monitoring'}">{{ 'monitoring.monitoring' | translate }}</a>
 			</li>
 		</div>
 		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]=='edit' || ruteAux[2]=='new' || ruteAux[2]=='duplicate'">
@@ -39,13 +39,13 @@
 	</div>
 	<div class="col-12 col-md-7 p-0 pt-2">
 		<div class="d-flex" style="justify-content: flex-end;">
-			<div *ngIf="token != ''" class="pe-3" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
-				<span *ngIf="status==2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
-					<span class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
+			<div *ngIf="token != ''" class="pe-3" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
+				<span (click)="statusScript()" *ngIf="status==2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
+					<span  class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
 					{{ 'script' | translate }}
 				</span>
-				<span *ngIf="status==1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
-				<span *ngIf="status==0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
+				<span routerLink="/script" *ngIf="status==1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
+				<span routerLink="/script" *ngIf="status==0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
 			</div>
 			<div *ngIf="token != ''" class="pe-3">
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -64,7 +64,7 @@
 					</ng-container>
 				</select>
 			</div>	
-			<div class="pe-3" *ngIf="token!=''" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+			<!--<div class="pe-3" *ngIf="token!=''" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
 				<button *ngIf="alerts" type="button" class="btn btn-secondary">
 					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
 						<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"></path>
@@ -75,7 +75,7 @@
 						<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"></path>
 					</svg>
 				</button>
-			</div>	
+			</div>-->
 			<div *ngIf="token!=''" class="pe-3" style="cursor: pointer;">
 				<div class="dropdown">
 					<div id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" class="circle-container" style=" width: 40px; height: 40px; background-color: #fff; border: 1px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">

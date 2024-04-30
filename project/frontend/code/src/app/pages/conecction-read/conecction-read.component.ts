@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class ConecctionReadComponent implements OnInit {
+export class ConecctionReadComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
   onResize() {
@@ -21,11 +21,11 @@ export class ConecctionReadComponent implements OnInit {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl+environment.conecctionRead+"/get";
-  postConecction: string = environment.baseUrl+environment.conecctionRead;
-  duplicateConecction: string = environment.baseUrl+environment.conecctionRead+"/duplicate";
-  getId: string = environment.baseUrl+environment.conecctionRead+"/id";
-  getIdSecret: string = environment.baseUrl+environment.conecctionRead+"/secret";
+  getConecction: string = environment.baseUrl+environment.url.conecctionRead+"";
+  postConecction: string = environment.baseUrl+environment.url.conecctionRead;
+  duplicateConecction: string = environment.baseUrl+environment.url.conecctionRead+"/duplicate";
+  getId: string = environment.baseUrl+environment.url.conecctionRead+"/id";
+  getIdSecret: string = environment.baseUrl+environment.url.conecctionRead+"/secret";
 
   passwordFieldType = 'password';
   passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
@@ -55,8 +55,12 @@ export class ConecctionReadComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
-  
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
+
   show = false;
   showAux = true;
   dupOk = false;
@@ -111,6 +115,13 @@ export class ConecctionReadComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getConecctions(this.order, this.ordAux);
+  }
+  
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
 
   /* GET */
@@ -295,7 +306,7 @@ export class ConecctionReadComponent implements OnInit {
             this.id = data.id;
             this.alertNew = true;  
   
-            setTimeout(() => {
+            this.temp1 = setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -378,7 +389,7 @@ export class ConecctionReadComponent implements OnInit {
       this.saveOk = true;
   
       // Ocultar el mensaje de éxito después de 2 segundos
-      setTimeout(() => {
+      this.temp2 = setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
@@ -450,7 +461,7 @@ export class ConecctionReadComponent implements OnInit {
       );
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3 = setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -462,10 +473,10 @@ export class ConecctionReadComponent implements OnInit {
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getConecctions(this.order, this.ordAux);
         $this.openClouse();

@@ -23,7 +23,7 @@ router.use(express.json());
   }
 
   function updateDate() { // ACTUALIZAR FECHA
-    const query = `UPDATE script SET date = NOW() WHERE id = 0`;
+    const query = `UPDATE script SET date = NOW(), status = 1 WHERE id = 0`;
     con.query(query, [], (err, result) => {
       if (err) {
         return json({ error: 'Error updateDate()' });

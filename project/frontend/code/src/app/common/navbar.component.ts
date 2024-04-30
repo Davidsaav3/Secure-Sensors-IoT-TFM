@@ -2,7 +2,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { Router } from "@angular/router";
 import { environment } from "../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ["../app.component.css"],
 })
 
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   
   @ViewChild('confirmDeleteModal2') confirmDeleteModal2!: ElementRef;
   @ViewChild('confirmDeleteModal3') confirmDeleteModal3!: ElementRef;
@@ -39,7 +39,7 @@ export class NavbarComponent {
   alertPassNot= false;
   alertUserNot= false;
 
-  postUser: string = environment.baseUrl+environment.users;
+  postUser: string = environment.baseUrl+environment.url.users;
   but= false;
   changed= false;
   scriptEnable= false;
@@ -47,6 +47,13 @@ export class NavbarComponent {
   status = 2; 
   date= ''; 
   backendURL: string = "http://localhost:5172/api/script";
+
+  temp1: any;
+  temp2: any;
+  temp3: any;
+  temp4: any;
+  temp5: any;
+  temp6: any;
 
   formapassword = {
     id: this.id,
@@ -85,14 +92,22 @@ export class NavbarComponent {
     else{
       this.date= '';
     }
-
+    
     this.readStorage();
     this.translate.use(this.activeLang);
+    console.log('JUSTO ANTES')
     if(this.authService.isAuthenticated()){
-      setInterval(() => {
-        this.statusScript();
-      }, 5000);
+      //this.statusScript();
     }
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
+    //this.temp5.clearInterval();
+    //this.temp6.clearInterval();
   }
 
   togglePasswordType() {
@@ -104,7 +119,7 @@ export class NavbarComponent {
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
+    this.temp1= setTimeout(() => {
       if (this.change_password) {
         this.openModal();
       }
@@ -190,14 +205,14 @@ export class NavbarComponent {
           localStorage.setItem("username", data.user);
           
 
-          setTimeout(() => {
+          this.temp2= setTimeout(() => {
             this.alertUserOk = false;
           }, 2000);
         },
         (error) => {
           console.error("Error:", error);
           this.alertUserNot = true;
-          setTimeout(() => {
+          this.temp3= setTimeout(() => {
             this.alertUserNot = false;
           }, 2000);
         }
@@ -235,7 +250,7 @@ export class NavbarComponent {
             localStorage.setItem('change_password', "0");
             //this.clouseModal();
             
-            setTimeout(() => {
+            this.temp3= setTimeout(() => {
               this.alertPassOk = false;
             }, 2000);
           },
@@ -251,7 +266,7 @@ export class NavbarComponent {
               // For example, you can access error.errors and display appropriate error messages
             }
             
-            setTimeout(() => {
+            this.temp5= setTimeout(() => {
               this.alertPassNot = false;
             }, 2000);
           }
@@ -301,10 +316,17 @@ export class NavbarComponent {
     event.target.value = event.target.value.replace(/\s/g, ''); 
   }
 
-  statusScript(): void { // STATUS //
-    let token = localStorage.getItem('token') ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+  lanzarTimer(){
+    this.temp6= setTimeout(() => {
+      console.log('DENTRO')
+      this.statusScript();
+    }, 5000); //parametrizar*/
+  }
 
+  statusScript(): void { // STATUS //
+    let token = localStorage.getItem('token') ?? ''; // parametrizar
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    console.log('statusscript')
     if(this.authService.isAuthenticated()){
       this.http.get<any>(this.backendURL + "/script-status", {headers}).subscribe(
         (data) => {
@@ -312,10 +334,18 @@ export class NavbarComponent {
           this.status= data.status;
           localStorage.setItem('status', this.status.toString());
           localStorage.setItem('date', this.date.toString());
+          this.lanzarTimer();
         },
         (error) => {
-          console.error("Error al obtener el estado:", error);
-        }
+          console.error("Error al obtener el estado:", error); // 
+          this.status= 2;
+        } // contador, parametrizar tiempos
+        // 5 errores acumulados mostrar en color naraja
+        // play, stop
+        // y la fecha en naranja
+        //modo error
+        // recargar
+        // CONTROLAR FALLO DE TOKEN
       );
     }
   }

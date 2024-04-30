@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { DataSharingService } from "../../services/data_sharing.service";
@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class DevicesNewEditComponent implements OnInit {
+export class DevicesNewEditComponent implements OnInit, OnDestroy {
 
   sharedLat: any = "";
   sharedLon: any = "";
@@ -21,6 +21,14 @@ export class DevicesNewEditComponent implements OnInit {
   rute = "";
   ruteAux: any= 0;
   cont = 0;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
+  temp5: any = null;
+  temp6: any = null;
+  temp7: any = null;
 
   @HostListener("window:resize", ["$event"])
   
@@ -62,11 +70,11 @@ export class DevicesNewEditComponent implements OnInit {
     }
   }
 
-  idDevice: string = environment.baseUrl+environment.deviceConfigurations+"/id";
-  postDevice: string = environment.baseUrl+environment.deviceConfigurations;
-  getStructureList: string = environment.baseUrl+environment.dataStructure+"/get_list";
-  duplicateDevice: string = environment.baseUrl+environment.deviceConfigurations+"/duplicate";
-  getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
+  idDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"/id";
+  postDevice: string = environment.baseUrl+environment.url.deviceConfigurations;
+  getStructureList: string = environment.baseUrl+environment.url.dataStructure+"/get_list";
+  duplicateDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"/duplicate";
+  getSensorsList: string = environment.baseUrl+environment.url.sensorsTypes+"/get_list";
 
   alt1 = true;
   alt2 = true;
@@ -180,7 +188,7 @@ export class DevicesNewEditComponent implements OnInit {
       this.showLarge = false;
       this.getDevices();
   
-      setTimeout(() => { // Asincrono
+      this.temp1= setTimeout(() => { // Asincrono
         this.dataSharingService.sharedLat$.subscribe((data) => {
           this.devices.lat = data;
         });
@@ -251,6 +259,16 @@ export class DevicesNewEditComponent implements OnInit {
   
     this.onResize();
     this.showLarge = false;
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
+    //this.temp5.clearInterval();
+    //this.temp6.clearInterval();
+    //this.temp7.clearInterval();
   }
   
   /* GET */
@@ -384,7 +402,7 @@ export class DevicesNewEditComponent implements OnInit {
         this.http.post<any>(this.postDevice, this.devices, {headers}).subscribe(
           (data: any) => {
             if(data.found==true){
-              setTimeout(() => {
+              this.temp2= setTimeout(() => {
                 this.actNot = false;
               }, 2000);
               this.actNot= true;
@@ -409,7 +427,7 @@ export class DevicesNewEditComponent implements OnInit {
           .subscribe(
             (data) => {
               if(data.found==true){
-                setTimeout(() => {
+                this.temp3= setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
                 this.actNot= true;        
@@ -478,14 +496,14 @@ export class DevicesNewEditComponent implements OnInit {
           .subscribe(
             (data: any) => {
               if(data.found==true){
-                setTimeout(() => {
+                this.temp4= setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
                 this.actNot= true;             
               }    
               else{
                 this.actOk = true;
-                setTimeout(() => {
+                this.temp4= setTimeout(() => {
                   this.actOk = false;
                 }, 2000);
               }   
@@ -504,14 +522,14 @@ export class DevicesNewEditComponent implements OnInit {
           .subscribe(
             (data: any) => {
               if(data.found==true){
-                setTimeout(() => {
+                this.temp5= setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
                 this.actNot= true;             
               }      
             else{
               this.actOk = true;
-              setTimeout(() => {
+              this.temp6= setTimeout(() => {
                 this.actOk = false;
               }, 2000);
             }

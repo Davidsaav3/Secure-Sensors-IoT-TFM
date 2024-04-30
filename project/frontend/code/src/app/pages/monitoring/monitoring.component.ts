@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, ViewChild, OnInit, OnDestroy, HostListener } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -11,7 +11,7 @@ import { ClipboardService } from 'ngx-clipboard';
 })
 
 
-  export class MonitoringComponent implements OnInit {
+  export class MonitoringComponent implements OnInit, OnDestroy {
     parseInt(arg0: any) {
     throw new Error('Method not implemented.');
   } 
@@ -31,10 +31,10 @@ import { ClipboardService } from 'ngx-clipboard';
     this.resize();
   }
 
-  getMonitorings: string = environment.baseUrl+environment.monitoring+"/get";
-  postMonitoring: string = environment.baseUrl+environment.monitoring;
-  duplicateMonitorings: string = environment.baseUrl+environment.monitoring+"/duplicate";
-  getId: string = environment.baseUrl+environment.monitoring+"/id";
+  getMonitorings: string = environment.baseUrl+environment.url.monitoring+"";
+  postMonitoring: string = environment.baseUrl+environment.url.monitoring;
+  duplicateMonitorings: string = environment.baseUrl+environment.url.monitoring+"/duplicate";
+  getId: string = environment.baseUrl+environment.url.monitoring+"/id";
   date: any;
 
   mostrarTooltip = false;
@@ -64,7 +64,6 @@ import { ClipboardService } from 'ngx-clipboard';
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
   
   show = false;
   showAux = true;
@@ -85,6 +84,11 @@ import { ClipboardService } from 'ngx-clipboard';
   saveNot: any = false;
   changeCopy1= 0;
   changeCopy2= 0;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
 
   monitoring = {
     id: 0,
@@ -114,6 +118,13 @@ import { ClipboardService } from 'ngx-clipboard';
   ngOnInit(): void { // Inicializa
     this.getMonitoring(this.order, this.ordAux);
     this.createDate();
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
 
   copyToClipboard(textToCopy: string) {
@@ -294,7 +305,7 @@ import { ClipboardService } from 'ngx-clipboard';
             this.id = data.id;
             this.alertNew = true;
   
-            setTimeout(() => {
+            this.temp1= setTimeout(() => {
               this.alertNew = false;
             }, 2000);
   
@@ -364,7 +375,7 @@ import { ClipboardService } from 'ngx-clipboard';
       this.state = 2;
       this.saveOk = true;
 
-      setTimeout(() => {
+      this.temp2= setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
@@ -458,7 +469,7 @@ import { ClipboardService } from 'ngx-clipboard';
       );
     this.alertDelete = true;
 
-    setTimeout(() => {
+    this.temp3= setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -470,10 +481,10 @@ import { ClipboardService } from 'ngx-clipboard';
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getMonitoring(this.order, this.ordAux);
         $this.openClouse();

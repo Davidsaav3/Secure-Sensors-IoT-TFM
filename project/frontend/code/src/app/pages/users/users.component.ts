@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { Component, ElementRef, OnInit, HostListener, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class UsersComponent implements OnInit {
+export class UsersComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   @HostListener("window:resize", ["$event"])
   onResize() {
@@ -21,11 +21,11 @@ export class UsersComponent implements OnInit {
     this.resize();
   }
 
-  getUser: string = environment.baseUrl+environment.users+"/get";
-  postUser: string = environment.baseUrl+environment.users;
-  postUserRevoke: string = environment.baseUrl+environment.users+"/revoke";
-  duplicateUser: string = environment.baseUrl+environment.users+"/duplicate";
-  getId: string = environment.baseUrl+environment.users+"/id";
+  getUser: string = environment.baseUrl+environment.url.users+"";
+  postUser: string = environment.baseUrl+environment.url.users;
+  postUserRevoke: string = environment.baseUrl+environment.url.users+"/revoke";
+  duplicateUser: string = environment.baseUrl+environment.url.users+"/duplicate";
+  getId: string = environment.baseUrl+environment.url.users+"/id";
 
   currentDate = this.getCurrentDate();
 
@@ -53,7 +53,6 @@ export class UsersComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
   change2= false;
   
   show = false;
@@ -77,6 +76,13 @@ export class UsersComponent implements OnInit {
   saveNot: any = false;
   alertRep: any = false;
   notRep: any = false;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
+  temp5: any = null;
+  temp6: any = null;
 
   users = {
     id: 0,
@@ -106,6 +112,15 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getUsers(this.order, this.ordAux);
+  }
+
+  ngOnDestroy(){
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
+    //this.temp5.clearInterval();
+    //this.temp6.clearInterval();
   }
 
   getCurrentDate(): string {
@@ -249,7 +264,7 @@ export class UsersComponent implements OnInit {
           this.id = data.id;
           this.alertNew = true;
 
-          setTimeout(() => {
+          this.temp1= setTimeout(() => {
             this.alertNew = false;
           }, 2000);
 
@@ -271,7 +286,7 @@ export class UsersComponent implements OnInit {
         },
         (error) => {
           this.notRep = true;
-          setTimeout(() => {
+          this.temp2= setTimeout(() => {
             this.notRep = false;
           }, 2000);
           console.error("Error:", error);
@@ -326,7 +341,7 @@ export class UsersComponent implements OnInit {
       this.state = 2;
       this.saveOk = true;
 
-      setTimeout(() => {
+      this.temp3= setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
@@ -358,7 +373,7 @@ export class UsersComponent implements OnInit {
     this.http.delete(this.postUser, options).subscribe(
       (response: any) => {
         this.alertDelete = true;
-        setTimeout(() => {
+        this.temp4= setTimeout(() => {
           this.alertDelete = false;
         }, 2000);
     
@@ -375,9 +390,9 @@ export class UsersComponent implements OnInit {
 
   textSearch(event: any) { // Busca por texto
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp5);
     var $this = this;
-    this.timeout = setTimeout(() => {
+    this.temp5 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getUsers(this.order, this.ordAux);
         $this.openClouse();
@@ -417,7 +432,7 @@ export class UsersComponent implements OnInit {
     this.state = 2;
     this.saveOk = true;
 
-    setTimeout(() => {
+    this.temp6= setTimeout(() => {
       this.saveOk = false;
     }, 2000);
     
