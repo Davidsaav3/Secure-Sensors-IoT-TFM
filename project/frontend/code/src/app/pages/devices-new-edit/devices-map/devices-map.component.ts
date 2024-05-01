@@ -333,11 +333,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   /* LOCAL STORAGE */
 
   saveStorage() { // Guarda datos en local storage
-    localStorage.setItem("colorMap", this.colorMap);
+    this.storageService.setMap(this.colorMap)
   }
 
   readStorage() { // Recupera datos del local storage
-    this.colorMap = localStorage.getItem("colorMap") ?? environment.defaultMapsStyle;
+    this.colorMap = this.storageService.getMap() ?? environment.defaultMapsStyle;
   }
 
   /* SHARED */

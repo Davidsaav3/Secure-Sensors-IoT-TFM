@@ -4,61 +4,134 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
-  private token: string = '';
-  private status: string = '';
-  private date: string = '';
-  private id: string = '';
-  private username: string = '';
-  private change_password: string = '';
+  private token: string | null = null;
+  private status: string | null = null;
+  private date: string | null = null;
+  private id: string | null = null;
+  private username: string | null = null;
+  private pass: string | null = null;
+  private map: string | null = null;
+  private open: string | null = null;
+  private page: string | null = null;
+  private search: string | null = null;
+  private lang: string | null = null;
 
-  constructor() {}
+  constructor() {
+    // Al inicializar el servicio, intenta cargar los valores del localStorage si existen
+    this.loadFromLocalStorage();
+  }
 
-  // TOKEN //
+  private loadFromLocalStorage(): void {
+    this.token = localStorage.getItem('token') || null;
+    this.status = localStorage.getItem('status') || null;
+    this.date = localStorage.getItem('date') || null;
+    this.id = localStorage.getItem('id') || null;
+    this.username = localStorage.getItem('username') || null;
+    this.pass = localStorage.getItem('pass') || null;
+    this.map = localStorage.getItem('map') || null;
+    this.open = localStorage.getItem('open') || null;
+    this.page = localStorage.getItem('page') || null;
+    this.search = localStorage.getItem('search') || null;
+    this.lang = localStorage.getItem('lang') || null;
+  }
+
+  // token //
   setToken(token: string): void {
     this.token = token;
+    localStorage.setItem('token', token);
   }
-  getToken(): string {
+  getToken(): string | null {
     return this.token;
   }
 
-  // STATUS //
+  // status //
   setStatus(status: string): void {
     this.status = status;
+    localStorage.setItem('status', status);
   }
-  getStatus(): string {
+  getStatus(): string | null {
     return this.status;
   }
 
-  // DATE //
+  // date //
   setDate(date: string): void {
     this.date = date;
+    localStorage.setItem('date', date);
   }
-  getDate(): string {
+  getDate(): string | null {
     return this.date;
   }
 
-  // ID //
+  // id //
   setId(id: string): void {
     this.id = id;
+    localStorage.setItem('id', id);
   }
-  getId(): string {
+  getId(): string | null {
     return this.id;
   }
 
-  // USERNAME //
+  // username //
   setUsername(username: string): void {
     this.username = username;
+    localStorage.setItem('username', username);
   }
-  getUsername(): string {
+  getUsername(): string | null {
     return this.username;
   }
 
-  // CHANGE PASSWORD //
-  setChange(change_password: string): void {
-    this.change_password = change_password;
+  // pass //
+  setChange(pass: string): void {
+    this.pass = pass;
+    localStorage.setItem('pass', pass);
   }
-  getChange(): string {
-    return this.change_password;
+  getChange(): string | null {
+    return this.pass;
+  }
+
+  // search //
+  setSearch(search: string): void {
+    this.search = search;
+    localStorage.setItem('search', search);
+  }
+  getSearch(): string | null {
+    return this.search;
+  }
+
+  // page //
+  setPage(page: string): void {
+    this.page = page;
+    localStorage.setItem('page', page);
+  }
+  getPage(): string | null {
+    return this.page;
+  }
+
+  // open //
+  setOpen(open: string): void {
+    this.open = open;
+    localStorage.setItem('open', open);
+  }
+  getOpen(): string | null {
+    return this.open;
+  }
+
+  // map //
+  setMap(map: string): void {
+    this.map = map;
+    localStorage.setItem('map', map);
+  }
+  getMap(): string | null {
+    return this.map;
+  }
+
+  // lang //
+  setLang(lang: string): void {
+    this.lang = lang;
+    localStorage.setItem('lang', lang);
+  }
+  getLang(): string | null {
+    return this.lang;
   }
 
 }

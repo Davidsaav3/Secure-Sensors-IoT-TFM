@@ -883,7 +883,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   /* BÚSCAR */
 
   onKeySearch(event: any) { // Busqueda por texto
-    localStorage.setItem("search", this.search.value);
+    this.storageService.setSearch(this.search.value)
     this.searched= true;
     this.currentPage = 1;
     this.deleteSearch();
@@ -923,12 +923,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   deleteSearch2(){
     this.search.value = "";
-    localStorage.setItem("search", this.search.value);
+    this.storageService.setSearch(this.search.value)
   }
 
   deleteText() { // Limpiar busqueda por texto
     this.search.value = "";
-    localStorage.setItem("search", this.search.value);
+    this.storageService.setSearch(this.search.value)
     this.getDevices();
   }
 
@@ -951,7 +951,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     }
   }
@@ -959,12 +959,12 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     } 
     else {
       this.currentPage = 1;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     }
   }
@@ -972,14 +972,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
-    localStorage.setItem("currentPage", this.currentPage.toString());
+    this.storageService.setPage(this.currentPage.toString())
     this.getDevices();
   }
 
@@ -987,19 +987,19 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
       this.getDevices();
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     } 
     else {
       this.currentPage = this.totalPages;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     }
   }
@@ -1007,7 +1007,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
-      localStorage.setItem("currentPage", this.currentPage.toString());
+      this.storageService.setPage(this.currentPage.toString())
       this.getDevices();
     }
   }
@@ -1015,15 +1015,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   /* LOCAL STORAGE */
 
   saveStorage() { // Guarda datos en local storage
-    localStorage.setItem("openAux", this.openAux.toString());
-    localStorage.setItem("colorMap", this.colorMap);
+    this.storageService.setOpen(this.openAux.toString())
+    this.storageService.setMap(this.colorMap)
   }
 
   readStorage() { // Recupera datos en local storage
-    this.openAux = JSON.parse(localStorage.getItem("openAux") ?? "");
-    this.colorMap = localStorage.getItem("colorMap") ?? environment.defaultMapsStyle;
-    this.currentPage = parseInt(JSON.parse(localStorage.getItem("currentPage") ?? ""), 10);
-    this.search.value = localStorage.getItem("search") ?? "";
+    this.openAux = JSON.parse(this.storageService.getOpen() ?? "");
+    this.colorMap = this.storageService.getMap() ?? environment.defaultMapsStyle;
+    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? ""), 10);
+    this.search.value = this.storageService.getSearch() ?? "";
     if(this.search.value!=""){
       this.searched= true;
       clearTimeout(this.temp1);

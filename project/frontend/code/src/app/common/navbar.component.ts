@@ -264,7 +264,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   saveStorage() { // Guarda datos en el local storage
     this.storageService.setId(this.id.toString());
     this.storageService.setUsername(this.username);
-    localStorage.setItem("activeLang", this.activeLang);
+    this.storageService.setLang(this.activeLang);
+
   }
 
   readStorage() { // Recupera datos del local storage
@@ -272,7 +273,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const id: number = idString !== null ? parseInt(idString) : 1; 
     this.id = id;
     this.username = this.storageService.getUsername() ?? "davidsaav";
-    this.activeLang = localStorage.getItem("activeLang") ?? "es";
+    this.activeLang = this.storageService.getLang() ?? "es";
     this.token = this.storageService.getToken() ?? '';
     const storedValue = this.storageService.getChange();
     this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
@@ -285,11 +286,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   logOut(){
     this.storageService.setId('');
     this.storageService.setUsername('');
-    this.deleteCookie('refresh_token');
-    localStorage.removeItem("activeLang");
+    this.storageService.setLang('');
     this.storageService.setStatus('');
     this.storageService.setDate('');
     this.storageService.setToken('');
+    this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }
 

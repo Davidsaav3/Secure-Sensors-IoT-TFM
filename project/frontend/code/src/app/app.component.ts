@@ -69,9 +69,9 @@ export class AppComponent {
   logOut(){
     this.storageService.setId('');
     this.storageService.setUsername('');
-    this.deleteCookie('refresh_token');
-    localStorage.removeItem("activeLang");
+    this.storageService.setLang('');
     this.storageService.setToken('');
+    this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }
 

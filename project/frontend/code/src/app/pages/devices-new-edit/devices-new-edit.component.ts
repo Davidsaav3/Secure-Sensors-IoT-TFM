@@ -696,7 +696,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* LOCAL STORAGE */
 
   readStorage() { // Recupera datos de local storage
-    this.activeLang = localStorage.getItem("activeLang") ?? "es";
+    this.activeLang = this.storageService.getLang() ?? "es";
   }
 
   async getStructuresList(event: any) {
