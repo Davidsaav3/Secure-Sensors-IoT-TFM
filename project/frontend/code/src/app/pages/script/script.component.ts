@@ -3,6 +3,7 @@ import { Component, ElementRef, ViewChild, OnInit, OnDestroy, HostListener } fro
 import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ClipboardService } from 'ngx-clipboard';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: "app-script",
@@ -111,7 +112,7 @@ backendStatus: boolean = false;
     value: "",
   };
 
-  constructor(private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private tokenService: TokenService,private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -131,7 +132,7 @@ backendStatus: boolean = false;
       status: status,
       status2: localStorage.getItem('status')
     };
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
     this.http.post(this.backendURL+"/script", JSON.stringify(status1), httpOptions).subscribe(
       () => {
@@ -234,7 +235,7 @@ backendStatus: boolean = false;
   }
 
   getMonitoring(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -277,7 +278,7 @@ backendStatus: boolean = false;
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -312,7 +313,7 @@ backendStatus: boolean = false;
   /* NEW */
 
   newMonitoring(form: any) {
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     this.state = 1;
     if (form.valid) {
@@ -371,7 +372,7 @@ backendStatus: boolean = false;
   /* EDIT */
 
   editMonitoring(form: any) { // Guardar datos de la conexión editado
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -410,7 +411,7 @@ backendStatus: boolean = false;
   /* DUPLICATE */
 
   duplicateMonitoring(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -463,7 +464,7 @@ backendStatus: boolean = false;
   /* DELETE */
 
   deletemonitoring(idActual: any) { // Elimina conexión
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     var monitoring2 = {

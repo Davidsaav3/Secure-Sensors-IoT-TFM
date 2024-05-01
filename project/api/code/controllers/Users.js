@@ -486,7 +486,7 @@ const cookieParser = require('cookie-parser');
     jwt.verify(refreshToken, SECRET_KEY, (err, decoded) => {
         if (err) {
             // LOG - 400 //
-            insertLog("", "", '005-007-400-002', "400", "POST", refreshToken, 'Error al refrescar el token', JSON.stringify(err));
+            insertLog("", "", '005-007-400-002', "400", "POST", '', 'Error al refrescar el token', JSON.stringify(err));
             return res.status(400).json({ error: 'Refresh token inválido' });
         }
 
@@ -495,7 +495,7 @@ const cookieParser = require('cookie-parser');
         con.query(query, [userId], (err, results) => {
             if (err || results.length === 0) {
                 // LOG - 400 //
-                insertLog("", "", '005-007-400-003', "400", "POST", refreshToken, 'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
+                insertLog("", "", '005-007-400-003', "400", "POST", '', 'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
                 return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado' });
             }
             const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });

@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service'; 
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: "app-login",
@@ -47,7 +48,7 @@ export class LoginComponent implements OnDestroy {
   username= 'davidsaav';
   token= '';
 
-  constructor(private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
+  constructor(private tokenService: TokenService,private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   formlogin = {
     user: "",
@@ -71,7 +72,7 @@ export class LoginComponent implements OnDestroy {
   }
 
   login(form: any) {
-      let token = localStorage.getItem('token') ?? '';
+      let token = this.tokenService.getToken() ?? '';
       if (form.valid) {
         const { user, password } = this.formlogin;
 
@@ -108,7 +109,7 @@ export class LoginComponent implements OnDestroy {
             this.username= data.user;
             this.id= data.id;
             this.saveStorage();
-            localStorage.setItem('token', data.token);
+            this.tokenService.setToken(data.token)
             this.setCookie('refresh_token', data.refresh_token);
             localStorage.setItem('change_password', data.change_password);
             this.router.navigate(['/devices']);
@@ -171,7 +172,7 @@ export class LoginComponent implements OnDestroy {
     const id: number = idString !== null ? parseInt(idString) : 1; 
     this.id = id;    
     this.username = localStorage.getItem("username") ?? "davidsaav";
-    this.token = localStorage.getItem('token') ?? '';
+    this.token = this.tokenService.getToken() ?? '';
   }
 
   // Guardar cookie

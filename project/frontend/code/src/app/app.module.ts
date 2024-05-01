@@ -8,6 +8,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from "@ng-select/ng-select";
 import { JwtModule } from '@auth0/angular-jwt';
+import { TokenService } from './services/token.service';
 
 import { NavbarComponent } from './common/navbar.component';
 import { DevicesComponent } from './pages/devices/devices.component';
@@ -26,7 +27,6 @@ import { ScriptComponent } from './pages/script/script.component';
 import { MonitoringComponent } from './pages/monitoring/monitoring.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ClipboardModule } from 'ngx-clipboard';
-
 
 @NgModule({
   declarations: [
@@ -57,10 +57,11 @@ import { ClipboardModule } from 'ngx-clipboard';
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
-          return localStorage.getItem('token');
+          const tokenService = new TokenService();
+          return tokenService.getToken();
         },
-        allowedDomains: ['your-api-domain.com'],
-        disallowedRoutes: ['/login', '/logout'],
+        allowedDomains: ['localhost'],
+        disallowedRoutes: ['/login', '/sensors'],
       }
     }),
     TranslateModule.forRoot({

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,25 +9,15 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class AuthService {
   redirectUrl: string | null = null; 
 
-  constructor(private http: HttpClient, public jwtHelper: JwtHelperService) {}
+  constructor(private tokenService: TokenService,private http: HttpClient, public jwtHelper: JwtHelperService) {}
 
   isAuthenticated(): boolean {
     let isAuthenticated = false;
-    const token: string | null = localStorage.getItem('token');
-    
+    const token: string | null = this.tokenService.getToken();
     if (token !== null) {
       isAuthenticated = !this.jwtHelper.isTokenExpired(token);
     }
-    
     return isAuthenticated;
   }
-
-  /*
-  primero(){
-    if(this.token=''){
-      this.token = localStorage.getItem('token')?.toString() || '';
-    }
-    return !this.jwtHelper.isTokenExpired(this.token);
-  }
-  */
+  
 }

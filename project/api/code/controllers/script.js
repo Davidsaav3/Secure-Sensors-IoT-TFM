@@ -6,7 +6,6 @@ router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
 const { spawn } = require("child_process");
-const insertLogScript = require('../middleware/log_script');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.TOKEN;
 
@@ -63,12 +62,8 @@ const SECRET_KEY = process.env.TOKEN;
             id: decoded.id,
             user: decoded.user
         };
-        if (status==1 && status2==0) { // nombres y servicios
-          insertLogScript(req.user.id, req.user.user, 1, '');
+        if (status==1) { // nombres y servicios
           runScript(status, req.user.id, req.user.user, status2, token, req.body);
-        }
-        if(status==0 && status2==1){
-          insertLogScript(req.user.id, req.user.user, 0, '');
         }
       }
       else{

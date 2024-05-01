@@ -5,6 +5,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { environment } from "src/app/environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { TokenService } from '../../services/token.service';
 
 interface MarkerAndColor {
   color: string;
@@ -26,7 +27,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild("map") divMap?: ElementRef;
   styleSelector: mapboxgl.Map | undefined;
 
-  constructor(public sanitizer: DomSanitizer, private http: HttpClient,private router: Router, private translate: TranslateService) {}
+  constructor(private tokenService: TokenService,public sanitizer: DomSanitizer, private http: HttpClient,private router: Router, private translate: TranslateService) {}
 
   getDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"";
   getSensorsList: string = environment.baseUrl+environment.url.sensorsTypes+"/get_list";
@@ -166,7 +167,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   };
 
   ngOnInit(): void { // Inicialización
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.initFilters();
@@ -238,7 +239,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   getDevices() { // Obtiene los dispositivos
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     //console.log(this.search.value)
@@ -468,7 +469,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   }
   
   getMapDevices(num: any) { // Auxiliar de orderDevices (Map)
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.getCornerCoordinates();

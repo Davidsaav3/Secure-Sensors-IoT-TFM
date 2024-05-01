@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: "app-structure",
@@ -14,8 +15,8 @@ export class StructureComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   getVariableStructureList: string =environment.baseUrl+environment.url.variableDataStructure+"/get_list";
 
-  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
-    let token = localStorage.getItem('token') ?? ''; 
+  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.getVariableStructureList}`, {headers})
@@ -128,7 +129,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   getStructures(id: any, ord: any) { // Obtiene todas las estructuras de datos
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -229,7 +230,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   getStructuresList() {
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.getVariableStructureList}`, {headers})
@@ -246,7 +247,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newStructures(form: any) { // Guardar datos de estructura de datoss nueva
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     this.state = 1;
     if (form.valid) {
@@ -326,7 +327,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   editStructuresAux(form: any, num: any) { // Guardar datos de estructura editada
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -370,7 +371,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateStructures(num: any, description: any) { // Obtiene nombre de estructura de datos duplicada
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -389,7 +390,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteStructures(idActual: any) { // Elimina estructura de datos
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     var estructure2 = {
       id_estructure: this.id,

@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: "app-variable-structure",
@@ -13,7 +14,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
 
   resultsPerPag = environment.resultsPerPag;
   
-  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {}
+  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {}
 
   getEstructure: string =environment.baseUrl+environment.url.variableDataStructure+"";
   postStructure: string = environment.baseUrl+environment.url.variableDataStructure;
@@ -134,7 +135,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   }
 
   getStructure(id: any, ord: any) { // Obtiene todas las estructuras
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -194,7 +195,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newStructure(form: any) { // Guardar los datos de una estructura nueva
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     this.state = 1;
     if (form.valid) {
@@ -256,7 +257,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   }
 
   editStructureAux(form: any) { // Guardar datos de estructura
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     if (form.valid) {
     const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -296,7 +297,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateStructure(num: any, description: any) { // Obtiene el nombre de una estructura duplicada
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -318,7 +319,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteStructure(idActual: any) { // Elimina una estructura
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     var structure2 = {
       id: this.id,

@@ -2,6 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, HostListener } from "@angular
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: "app-conecction-write",
@@ -17,7 +18,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -197,7 +198,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   }
 
   getConecctions(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -239,7 +240,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -270,7 +271,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
 
   getSecret(idActual: any) { // Obtiene secreto
     this.users.id= this.id;
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     
     const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
     this.http.post(this.getIdSecret, JSON.stringify(this.users), httpOptions)
@@ -289,7 +290,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newConecction(form: any) {
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -344,7 +345,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   /* EDIT */
 
   editConecction(form: any) { // Guardar datos de la conexión editado
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -383,7 +384,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateConecctions(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -411,7 +412,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteconecctions(idActual: any) { // Elimina conexión
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     var conecctions2 = {

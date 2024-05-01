@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ClipboardService } from 'ngx-clipboard';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: "app-monitoring",
@@ -27,7 +28,7 @@ import { ClipboardService } from 'ngx-clipboard';
     this.resize();
   }
 
-  constructor(private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private tokenService: TokenService,private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -216,7 +217,7 @@ import { ClipboardService } from 'ngx-clipboard';
   }
 
   getMonitoring(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -259,7 +260,7 @@ import { ClipboardService } from 'ngx-clipboard';
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -294,7 +295,7 @@ import { ClipboardService } from 'ngx-clipboard';
   /* NEW */
 
   newMonitoring(form: any) {
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     this.state = 1;
     if (form.valid) {
@@ -353,7 +354,7 @@ import { ClipboardService } from 'ngx-clipboard';
   /* EDIT */
 
   editMonitoring(form: any) { // Guardar datos de la conexión editado
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
 
     if (form.valid) {
       const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
@@ -392,7 +393,7 @@ import { ClipboardService } from 'ngx-clipboard';
   /* DUPLICATE */
 
   duplicateMonitoring(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -445,7 +446,7 @@ import { ClipboardService } from 'ngx-clipboard';
   /* DELETE */
 
   deletemonitoring(idActual: any) { // Elimina conexión
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     var monitoring2 = {

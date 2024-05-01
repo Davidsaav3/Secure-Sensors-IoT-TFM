@@ -1,3 +1,4 @@
+const insertLogScript = require('../middleware/log_script');
 
 /* Variables de control debug */
 const controlVars = require('./controlvars');
@@ -42,7 +43,7 @@ client.on('message', async (topic, message) => {
 */
   // act estado de db a 1
 
-  await scriptDAO.updateDate(); // try catch-> return
+  scriptDAO.updateDate(); // try catch-> return ///////////////////////////////////////// AWAIT
 
   async function actualizarBD() { // BUCLE PRINCIPAL
     const status = await scriptDAO.getStatus(); // si falla, cerramos 
@@ -60,6 +61,7 @@ client.on('message', async (topic, message) => {
     for (let i = 0; i < connection_config.length; i++) {
       client[i].end();
     }
+    insertLogScript('','', 0, '');
     // db apagado...
   }
 
@@ -336,5 +338,6 @@ const main = async (message) => {
 
 }
 
+insertLogScript('','', 1, '');
 setTimeout(actualizarBD ,5000);
 

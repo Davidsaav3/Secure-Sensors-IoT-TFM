@@ -4,6 +4,7 @@ import { environment } from "../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ViewChild, ElementRef, Renderer2, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { TokenService } from '../services/token.service';
 
 @Component({
   selector: "app-navbar",
@@ -65,7 +66,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     user: "",
   };
 
-  constructor(private authService: AuthService,private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private tokenService: TokenService, private authService: AuthService,private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -184,7 +185,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   changeUser(form: any) { // Editar perfil
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
   
     //if (form.valid) {
     const httpOptions = {
@@ -230,7 +231,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
   changePassword(form: any) { // Cambiar contraseña
-    let token = localStorage.getItem('token') ?? ''; 
+    let token = this.tokenService.getToken() ?? ''; 
   
     if (form.valid) {
       const httpOptions = {
@@ -288,7 +289,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.id = id;
     this.username = localStorage.getItem("username") ?? "davidsaav";
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
-    this.token = localStorage.getItem('token') ?? '';
+    this.token = this.tokenService.getToken() ?? '';
     const storedValue = localStorage.getItem('change_password');
     this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
     if(this.change_password){
@@ -304,7 +305,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     localStorage.removeItem("activeLang");
     localStorage.removeItem("date");
     localStorage.removeItem("status");
-    localStorage.setItem('token', '');
+    this.tokenService.setToken('');
     this.router.navigate(['/login']);
   }
 
@@ -324,7 +325,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   statusScript(): void { // STATUS //
-    let token = localStorage.getItem('token') ?? ''; // parametrizar
+    let token = this.tokenService.getToken() ?? ''; // parametrizar
     let headers = new HttpHeaders().set('Authorization', `${token}`);
     console.log('statusscript')
     if(this.authService.isAuthenticated()){
