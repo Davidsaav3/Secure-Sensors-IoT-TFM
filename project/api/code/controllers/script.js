@@ -4,6 +4,8 @@ let { con }= require('../middleware/mysql');
 router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');
+const insertLogScript = require('../middleware/log_script');
+
 const { spawn } = require("child_process");
 
   const corsMiddleware = require('../middleware/corsMiddleware');
@@ -11,42 +13,80 @@ const { spawn } = require("child_process");
   router.use(corsMiddleware);
   router.use(securityMiddleware);
 
-  router.post("/script", verifyToken, (req, res) => {  // SCRIPT // bloq...
+  let proceso;
+
+  router.post("/script", verifyToken, (req, res) => {  
     const status = req.body.status;
     const { id, user } = req.user;
-
-    if (status==1) { // nombres y servicios
-      runScript(id, user, req.body);
-    }
-
-    //console.log(status)
-    const query = "UPDATE script SET status = ?";
+  
+    let query = "SELECT status, date FROM script WHERE id = 0";
     con.query(query, [status], (err, result) => {
       if (err) {
         insertLog(id, user, '008-001-500-003', "500", "POST", JSON.stringify(req.body),'Error al activar o desactivar el script 3', "");
         return res.status(500).json({ error: 'Error en la base de datos' });
       }
-    });
+      else{
+        console.log(status)
+        console.log(result[0].status)
 
+        const fechaOriginal = new Date(result[0].date);
+        fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
+        let anio = fechaOriginal.getFullYear();
+        let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
+        let dia = String(fechaOriginal.getDate()).padStart(2, '0');
+        let horas = String(fechaOriginal.getHours()).padStart(2, '0');
+        let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
+        let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
+        let milisegundos = fechaOriginal.getMilliseconds();
+        let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+
+        let fechaActual = new Date();
+        let fechaMenos5Segundos = new Date(fechaActual.getTime());
+        anio = fechaMenos5Segundos.getFullYear();
+        mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
+        dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
+        horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
+        minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
+        segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
+        formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+
+        console.log(formatoPersonalizado)
+        console.log(formatoPersonalizado2)
+
+        if (status==1 && formatoPersonalizado>formatoPersonalizado2) {
+          console.log("ENCIENDETE");
+          proceso= runScript(id, user, req.body);
+        }
+        if (status==0 && formatoPersonalizado<formatoPersonalizado2) {
+          console.log("APAGATE");
+          proceso.kill();
+          if(!proceso.status)
+            insertLogScript(id,user, 0, '');
+        }
+      }
+    });
   });
+
+
   function runScript(id, user, body) {
-    const proceso = spawn('node', ['../code/ingestador/sensors']);
+    proceso = spawn('node', ['../code/ingestador/sensors']);
     proceso.stdout.on('data', (data) => {
       console.log(`[sensors.js]-> ${data}`);
     });
     proceso.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
-      insertLog(id, user, '008-001-500-004', "500", "", JSON.stringify(body),'Error al activar o desactivar el script (stderr)', data);
+      insertLog(id, user, '008-001-500-004', "500", "", JSON.stringify(body),'Error al activar o desactivar el script (stderr)', '');
     });
     proceso.on('error', (error) => {
       console.error(`Error: ${error.message}`);
-      insertLog(id, user, '008-001-500-005', "500", "", JSON.stringify(body),'Error al activar o desactivar el script (error)', error.message);
+      insertLog(id, user, '008-001-500-005', "500", "", JSON.stringify(body),'Error al activar o desactivar el script (error)', '');
     });
     proceso.on('close', (code) => {
       console.log(`Proceso cerrado con código de salida ${code}`);
-      insertLog(id, user, '008-001-500-006', "500", "", JSON.stringify(body),'`Error al activar o desactivar el script (salida con código)', code);
+      insertLog(id, user, '008-001-500-006', "500", "", JSON.stringify(body),'`Error al activar o desactivar el script (salida con código)', '');
     }); // ver
-    //proceso.kill();
+    insertLogScript(id,user, 1, '');
+    return proceso;
     //iniciar off
   }
 

@@ -111,7 +111,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.translate.use(this.activeLang);
     console.log('JUSTO ANTES')
     if(this.authService.isAuthenticated()){
-      //this.statusScript();
+      this.statusScript();
     }
   }
 
@@ -327,7 +327,37 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.http.get<any>(this.backendURL + "/script-status", {headers}).subscribe(
         (data) => {
           this.date= data.date;
-          this.status= data.status;
+
+          const fechaOriginal = new Date(this.date);
+          fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
+          let anio = fechaOriginal.getFullYear();
+          let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
+          let dia = String(fechaOriginal.getDate()).padStart(2, '0');
+          let horas = String(fechaOriginal.getHours()).padStart(2, '0');
+          let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
+          let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
+          let milisegundos = fechaOriginal.getMilliseconds();
+          let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+  
+          let fechaActual = new Date();
+          let fechaMenos5Segundos = new Date(fechaActual.getTime());
+          anio = fechaMenos5Segundos.getFullYear();
+          mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
+          dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
+          horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
+          minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
+          segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
+          let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+  
+          console.log(formatoPersonalizado)
+          console.log(formatoPersonalizado2)
+
+          if(formatoPersonalizado<formatoPersonalizado2){
+            this.status= 1;
+          }
+          if(formatoPersonalizado>formatoPersonalizado2){
+            this.status= 0;
+          }
           this.storageService.setStatus(this.status.toString());
           this.storageService.setDate(this.date.toString());
           this.lanzarTimer();

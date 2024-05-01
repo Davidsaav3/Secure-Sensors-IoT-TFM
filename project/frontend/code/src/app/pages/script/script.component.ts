@@ -131,9 +131,7 @@ backendStatus: boolean = false;
   setScript(status: any): void {
     let status1 = {
       status: status,
-      status2: this.storageService.getStatus()
     };
-    let token = this.storageService.getToken() ?? ''; 
     this.http.post(this.backendURL+"/script", JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
       () => {
         console.log("Solicitud POST enviada exitosamente.");
