@@ -2,7 +2,8 @@ import { Component, OnInit, ElementRef, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-structure",
@@ -15,8 +16,8 @@ export class StructureComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
   getVariableStructureList: string =environment.baseUrl+environment.url.variableDataStructure+"/get_list";
 
-  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
-    let token = this.tokenService.getToken() ?? ''; 
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.getVariableStructureList}`, {headers})
@@ -129,7 +130,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   getStructures(id: any, ord: any) { // Obtiene todas las estructuras de datos
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -230,7 +231,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   getStructuresList() {
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.getVariableStructureList}`, {headers})
@@ -247,12 +248,9 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newStructures(form: any) { // Guardar datos de estructura de datoss nueva
-    let token = this.tokenService.getToken() ?? ''; 
-
     this.state = 1;
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postEstructure, JSON.stringify(this.estructure), httpOptions)
+      this.http.post(this.postEstructure, JSON.stringify(this.estructure), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -327,11 +325,8 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   editStructuresAux(form: any, num: any) { // Guardar datos de estructura editada
-    let token = this.tokenService.getToken() ?? ''; 
-
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.put(this.postEstructure, JSON.stringify(this.estructure), httpOptions)
+      this.http.put(this.postEstructure, JSON.stringify(this.estructure), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             // Respuesta
@@ -371,7 +366,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateStructures(num: any, description: any) { // Obtiene nombre de estructura de datos duplicada
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -390,7 +385,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteStructures(idActual: any) { // Elimina estructura de datos
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
 
     var estructure2 = {
       id_estructure: this.id,

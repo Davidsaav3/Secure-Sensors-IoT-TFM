@@ -4,7 +4,8 @@ import { ActivatedRoute } from "@angular/router";
 import { DataSharingService } from "../../services/data_sharing.service";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-devices-new-edit",
@@ -39,8 +40,8 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   }
   public id: any;
 
-  constructor(private tokenService: TokenService,private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
-    let token = this.tokenService.getToken() ?? ''; 
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.rute = this.router.routerState.snapshot.url;
@@ -168,7 +169,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
     
     this.devices.sensors = [];
@@ -275,7 +276,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* GET */
 
   getDevices() { // Obtene el Dispositivo
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
@@ -349,7 +350,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   }
 
   getStructure(num: any) { // Obtiene las listas de estructuras de datos
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.getStructureList}`, {headers}).subscribe(
@@ -372,7 +373,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newDevices(form: any) { // Guardar la información del Dispositivo
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.createDate();
@@ -423,8 +424,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.sensors = [];
       } 
       else {
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-        this.http.post<any>(this.postDevice, this.devices, httpOptions)
+        this.http.post<any>(this.postDevice, this.devices, this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data) => {
               if(data.found==true){
@@ -468,7 +468,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* EDIT */
 
   editDevices(form: any) { // Edita la información del Dispositivo
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
 
     this.getShared();
     this.createDate();
@@ -492,8 +492,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           },
         ];
         this.devices.sensors = sensors_aux;
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-        this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
+        this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
               if(data.found==true){
@@ -518,8 +517,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       else {
         //console.log(this.devices.lat)
         //console.log(this.devices.lon)
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-        this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
+        this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
               if(data.found==true){
@@ -550,7 +548,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* DELET */
 
   deleteDevices(idActual: any) { // Elimina el Dispositivo
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
 
     var devices = {
       id: idActual,
@@ -608,7 +606,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* RECHARGE */
   
   rechargeMap() { // Recargar mapa a su estado anterior a la edición sin guardado
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(

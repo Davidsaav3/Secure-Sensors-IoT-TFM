@@ -8,7 +8,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from "@ng-select/ng-select";
 import { JwtModule } from '@auth0/angular-jwt';
-import { TokenService } from './services/token.service';
+import { StorageService } from './services/storage.service';
 
 import { NavbarComponent } from './common/navbar.component';
 import { DevicesComponent } from './pages/devices/devices.component';
@@ -57,8 +57,8 @@ import { ClipboardModule } from 'ngx-clipboard';
     JwtModule.forRoot({
       config: {
         tokenGetter: () => {
-          const tokenService = new TokenService();
-          return tokenService.getToken();
+          const storageService = new StorageService();
+          return storageService.getToken();
         },
         allowedDomains: ['localhost'],
         disallowedRoutes: ['/login', '/sensors'],

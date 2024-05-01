@@ -3,7 +3,8 @@ import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ClipboardService } from 'ngx-clipboard';
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-monitoring",
@@ -28,7 +29,7 @@ import { TokenService } from '../../services/token.service';
     this.resize();
   }
 
-  constructor(private tokenService: TokenService,private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -217,7 +218,7 @@ import { TokenService } from '../../services/token.service';
   }
 
   getMonitoring(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -260,7 +261,7 @@ import { TokenService } from '../../services/token.service';
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -295,12 +296,9 @@ import { TokenService } from '../../services/token.service';
   /* NEW */
 
   newMonitoring(form: any) {
-    let token = this.tokenService.getToken() ?? ''; 
-
     this.state = 1;
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postMonitoring, JSON.stringify(this.monitoring), httpOptions)
+      this.http.post(this.postMonitoring, JSON.stringify(this.monitoring), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -354,11 +352,8 @@ import { TokenService } from '../../services/token.service';
   /* EDIT */
 
   editMonitoring(form: any) { // Guardar datos de la conexión editado
-    let token = this.tokenService.getToken() ?? ''; 
-
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.put(this.postMonitoring, JSON.stringify(this.monitoring), httpOptions)
+      this.http.put(this.postMonitoring, JSON.stringify(this.monitoring), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (response: any) => {
             // Respuesta
@@ -393,7 +388,7 @@ import { TokenService } from '../../services/token.service';
   /* DUPLICATE */
 
   duplicateMonitoring(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -446,7 +441,7 @@ import { TokenService } from '../../services/token.service';
   /* DELETE */
 
   deletemonitoring(idActual: any) { // Elimina conexión
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     var monitoring2 = {

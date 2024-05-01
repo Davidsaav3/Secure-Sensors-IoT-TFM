@@ -2,7 +2,8 @@ import { Component, ElementRef, OnInit, HostListener, OnDestroy} from "@angular/
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-sensors",
@@ -18,7 +19,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -195,7 +196,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
   }
 
   getSensors(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -237,7 +238,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -275,12 +276,9 @@ export class SensorsComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newSensor(form: any) {
-    let token = this.tokenService.getToken() ?? ''; 
-
     this.state = 1;
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+      this.http.post(this.postSensors, JSON.stringify(this.sensors), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -338,11 +336,8 @@ export class SensorsComponent implements OnInit, OnDestroy {
   /* EDIT */
 
   editSensor(form: any) { // Guardar datos del sensor editado
-    let token = this.tokenService.getToken() ?? ''; 
-
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.put(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+      this.http.put(this.postSensors, JSON.stringify(this.sensors), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (response: any) => {
             // Respuesta
@@ -377,7 +372,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateSensors(num: any, type: any) { // Obtiene el nombre del sensor duplicado
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -438,7 +433,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteSensors(idActual: any) { // Elimina sensor
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     var sensors2 = {

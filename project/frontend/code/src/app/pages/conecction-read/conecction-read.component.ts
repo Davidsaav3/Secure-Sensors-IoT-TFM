@@ -2,7 +2,8 @@ import { Component, ElementRef, OnDestroy, OnInit, HostListener } from "@angular
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-conecction-read",
@@ -18,7 +19,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -202,7 +203,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   }
 
   getConecctions(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -244,7 +245,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -276,11 +277,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   }
 
   getSecret(idActual: any) { // Obtiene secreto
-    this.users.id= this.id;
-    let token = this.tokenService.getToken() ?? ''; 
-    
-    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-    this.http.post(this.getIdSecret, JSON.stringify(this.users), httpOptions)
+    this.users.id= this.id;    
+    this.http.post(this.getIdSecret, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
     .subscribe(
       (data: any) => {
         this.conecctionsSecret = data[0];
@@ -296,12 +294,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newConecction(form: any) {
-    let token = this.tokenService.getToken() ?? ''; 
-
     if (form.valid) {
-      //console.log(this.conecctions)
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.post(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
+      this.http.post(this.postConecction, JSON.stringify(this.conecctions), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -353,15 +347,10 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
 
   /* EDIT */
 
-  editConecction(form: any) { // Guardar datos de la conexión editado
-    let token = this.tokenService.getToken() ?? ''; 
-  
-    if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      
-      // Guardar la conexión editada
+  editConecction(form: any) { // Guardar datos de la conexión editado  
+    if (form.valid) {      
       //console.log(this.conecctions)
-      this.http.put(this.postConecction, JSON.stringify(this.conecctions), httpOptions)
+      this.http.put(this.postConecction, JSON.stringify(this.conecctions), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (response: any) => {
             // Manejar la respuesta
@@ -408,7 +397,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateConecctions(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
@@ -438,7 +427,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteconecctions(idActual: any) { // Elimina conexión
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     var conecctions2 = {

@@ -4,7 +4,8 @@ import { environment } from "../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ViewChild, ElementRef, Renderer2, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-import { TokenService } from '../services/token.service';
+import { StorageService } from '../services/storage.service';
+import { HttpOptionsService } from '../services/httpOptions.service';
 
 @Component({
   selector: "app-navbar",
@@ -66,7 +67,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     user: "",
   };
 
-  constructor(private tokenService: TokenService, private authService: AuthService,private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService, private authService: AuthService,private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -75,8 +76,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   passwordFieldType1 = 'password';
 
   ngOnInit(): void { // Inicializa
-    if (localStorage.getItem('status')) {
-      let aux= localStorage.getItem('status');
+    if (this.storageService.getStatus()) {
+      let aux= this.storageService.getStatus();
+      
       if(aux!=null)
         this.status=  parseInt(aux, 10);
     }
@@ -84,8 +86,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.status= 2;
     }
 
-    if (localStorage.getItem('date')) {
-      let storedDate = localStorage.getItem('date');
+    if (this.storageService.getDate()) {
+      let storedDate = this.storageService.getDate();
       if (storedDate !== null) {
         this.date = storedDate;
       }   
@@ -185,26 +187,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   changeUser(form: any) { // Editar perfil
-    let token = this.tokenService.getToken() ?? ''; 
-  
-    //if (form.valid) {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': `${token}`
-      })
-    };
     this.formuserdata.id= this.id;
 
-    this.http.put(this.postUser, JSON.stringify(this.formuserdata), httpOptions)
+    this.http.put(this.postUser, JSON.stringify(this.formuserdata), this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.alertUserOk = true;
           //this.clouseModalUser();
           //console.log(data.user)
           this.setCookie('refresh_token', data.refresh_token);
-          localStorage.setItem("username", data.user);
-          
+          this.storageService.setUsername(data.user);          
 
           this.temp2= setTimeout(() => {
             this.alertUserOk = false;
@@ -230,25 +222,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
       document.cookie = cookieString;
     }
 
-  changePassword(form: any) { // Cambiar contraseña
-    let token = this.tokenService.getToken() ?? ''; 
-  
+  changePassword(form: any) { // Cambiar contraseña  
     if (form.valid) {
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': `${token}`
-        })
-      };
       this.formapassword.id= this.id;
       
-      this.http.put(this.postUser, JSON.stringify(this.formapassword), httpOptions)
+      this.http.put(this.postUser, JSON.stringify(this.formapassword), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.alertPassOk = true;
             this.change_password = false;
   
-            localStorage.setItem('change_password', "0");
+            this.storageService.setChange("0");
             //this.clouseModal();
             
             this.temp3= setTimeout(() => {
@@ -257,8 +241,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
           },
           (error) => {
             this.change_password = false;
-            localStorage.setItem('change_password', "0");
-  
+            this.storageService.setChange("0");
+            
             console.error("Error:", error);
             this.alertPassNot = true;
             
@@ -278,19 +262,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
   
 
   saveStorage() { // Guarda datos en el local storage
-    localStorage.setItem("id", this.id.toString());
-    localStorage.setItem("username", this.username);
+    this.storageService.setId(this.id.toString());
+    this.storageService.setUsername(this.username);
     localStorage.setItem("activeLang", this.activeLang);
   }
 
   readStorage() { // Recupera datos del local storage
-    const idString: string | null = localStorage.getItem("id");
+    const idString: string | null = this.storageService.getId();
     const id: number = idString !== null ? parseInt(idString) : 1; 
     this.id = id;
-    this.username = localStorage.getItem("username") ?? "davidsaav";
+    this.username = this.storageService.getUsername() ?? "davidsaav";
     this.activeLang = localStorage.getItem("activeLang") ?? "es";
-    this.token = this.tokenService.getToken() ?? '';
-    const storedValue = localStorage.getItem('change_password');
+    this.token = this.storageService.getToken() ?? '';
+    const storedValue = this.storageService.getChange();
     this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
     if(this.change_password){
       this.setBackdropAttribute();
@@ -299,13 +283,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   logOut(){
-    localStorage.removeItem("id");
+    this.storageService.setId('');
+    this.storageService.setUsername('');
     this.deleteCookie('refresh_token');
-    localStorage.removeItem("username");
     localStorage.removeItem("activeLang");
-    localStorage.removeItem("date");
-    localStorage.removeItem("status");
-    this.tokenService.setToken('');
+    this.storageService.setStatus('');
+    this.storageService.setDate('');
+    this.storageService.setToken('');
     this.router.navigate(['/login']);
   }
 
@@ -325,7 +309,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   statusScript(): void { // STATUS //
-    let token = this.tokenService.getToken() ?? ''; // parametrizar
+    let token = this.storageService.getToken() ?? ''; // parametrizar
     let headers = new HttpHeaders().set('Authorization', `${token}`);
     console.log('statusscript')
     if(this.authService.isAuthenticated()){
@@ -333,8 +317,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
         (data) => {
           this.date= data.date;
           this.status= data.status;
-          localStorage.setItem('status', this.status.toString());
-          localStorage.setItem('date', this.date.toString());
+          this.storageService.setStatus(this.status.toString());
+          this.storageService.setDate(this.date.toString());
           this.lanzarTimer();
         },
         (error) => {

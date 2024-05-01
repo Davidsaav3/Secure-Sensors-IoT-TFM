@@ -5,7 +5,8 @@ import { DataSharingService } from "../../../services/data_sharing.service";
 import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TokenService } from '../../../services/token.service';
+import { StorageService } from '../../../services/storage.service';
+import { HttpOptionsService } from '../../../services/httpOptions.service';
 
 interface MarkerAndColor {
   color: string;
@@ -37,7 +38,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.sharedLat
   );
 
-  constructor(private tokenService: TokenService,private http: HttpClient,private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
     this.rute = this.rute1.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -77,7 +78,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   /* AUX INIT */
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
       if (this.ruteAux[2] == "new") {

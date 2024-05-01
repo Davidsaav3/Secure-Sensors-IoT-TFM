@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { TokenService } from './token.service';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +9,11 @@ import { TokenService } from './token.service';
 export class AuthService {
   redirectUrl: string | null = null; 
 
-  constructor(private tokenService: TokenService,private http: HttpClient, public jwtHelper: JwtHelperService) {}
+  constructor(private storageService: StorageService,private http: HttpClient, public jwtHelper: JwtHelperService) {}
 
   isAuthenticated(): boolean {
     let isAuthenticated = false;
-    const token: string | null = this.tokenService.getToken();
+    const token: string | null = this.storageService.getToken();
     if (token !== null) {
       isAuthenticated = !this.jwtHelper.isTokenExpired(token);
     }

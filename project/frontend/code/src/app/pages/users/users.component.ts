@@ -2,7 +2,8 @@ import { Component, ElementRef, OnInit, HostListener, OnDestroy } from "@angular
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-users",
@@ -18,7 +19,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private tokenService: TokenService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
@@ -178,7 +179,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   getUsers(id: any, ord: any) {// Obtiene los usuarios pasando parametros de ordenación
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.order = id;
@@ -220,7 +221,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
@@ -254,12 +255,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newUser(form: any) {
-    let token = this.tokenService.getToken() ?? ''; 
-
-
     this.state = 1;
-    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-    this.http.post(this.postUser, JSON.stringify(this.users), httpOptions)
+    this.http.post(this.postUser, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.id = data.id;
@@ -320,10 +317,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   /* EDIT */
 
   editUser(form: any) { // Guardar datos del usuario editado
-    let token = this.tokenService.getToken() ?? ''; 
     if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-      this.http.put(this.postUser, JSON.stringify(this.users), httpOptions)
+      this.http.put(this.postUser, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (response: any) => {
             this.openEdit();
@@ -360,7 +355,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteUsers(idActual: any) { // Elimina usuario
-    let token = this.tokenService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? ''; 
     var users2 = {
       id: this.id,
     };
@@ -415,13 +410,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   revokeUser(idActual: any){ // Quita token del usuario
-    let token = this.tokenService.getToken() ?? ''; 
     let users = {
       id: idActual,
     };
-
-    const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`})};
-    this.http.post(this.postUserRevoke, JSON.stringify(users), httpOptions)
+    this.http.post(this.postUserRevoke, JSON.stringify(users), this.httpOptionsService.getHttpOptions())
       .subscribe(
         (response: any) => {
           // Respuesta

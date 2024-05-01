@@ -4,7 +4,7 @@ import { environment } from "./environments/environment"
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from "@angular/router";
 import { AuthService } from './services/auth.service';
-import { TokenService } from './services/token.service';
+import { StorageService } from './services/storage.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent {
   postRefresh: string = environment.baseUrl+environment.url.users+'/refresh';
   AppVersion = environment.AppVersion;
   activeLang = environment.languageLang;
-  constructor(private tokenService: TokenService, private authService: AuthService,private translate: TranslateService, private http: HttpClient, public router: Router) {
+  constructor(private storageService: StorageService, private authService: AuthService,private translate: TranslateService, private http: HttpClient, public router: Router) {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
 
@@ -39,7 +39,7 @@ export class AppComponent {
 
   async renewToken(refreshToken: string): Promise<string | null> {
     try {
-      let token = this.tokenService.getToken() ?? '';
+      let token = this.storageService.getToken() ?? '';
 
       const httpOptions = {
         headers: new HttpHeaders({
@@ -56,7 +56,7 @@ export class AppComponent {
         return null;
       }
       const newToken = response.token;
-      this.tokenService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+      this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
       return newToken;
     } 
     catch (error) {
@@ -67,11 +67,11 @@ export class AppComponent {
   }
 
   logOut(){
-    localStorage.removeItem("id");
+    this.storageService.setId('');
+    this.storageService.setUsername('');
     this.deleteCookie('refresh_token');
-    localStorage.removeItem("username");
     localStorage.removeItem("activeLang");
-    this.tokenService.setToken('');
+    this.storageService.setToken('');
     this.router.navigate(['/login']);
   }
 

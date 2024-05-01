@@ -6,7 +6,8 @@ import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service'; 
-import { TokenService } from '../../services/token.service';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-login",
@@ -48,7 +49,7 @@ export class LoginComponent implements OnDestroy {
   username= 'davidsaav';
   token= '';
 
-  constructor(private tokenService: TokenService,private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
+  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   formlogin = {
     user: "",
@@ -72,7 +73,7 @@ export class LoginComponent implements OnDestroy {
   }
 
   login(form: any) {
-      let token = this.tokenService.getToken() ?? '';
+      let token = this.storageService.getToken() ?? '';
       if (form.valid) {
         const { user, password } = this.formlogin;
 
@@ -94,24 +95,16 @@ export class LoginComponent implements OnDestroy {
             password: encodeURIComponent(this.formlogin.password)
         };
 
-        // Crear opciones HTTP con el token de autorización
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json; charset=UTF-8',
-                'Authorization': `${token}`
-            })
-        };
-
         // Realizar la solicitud HTTP
-        this.http.post(this.postLogin, JSON.stringify(this.formlogin), httpOptions)
+        this.http.post(this.postLogin, JSON.stringify(this.formlogin), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.username= data.user;
             this.id= data.id;
             this.saveStorage();
-            this.tokenService.setToken(data.token)
+            this.storageService.setToken(data.token)
             this.setCookie('refresh_token', data.refresh_token);
-            localStorage.setItem('change_password', data.change_password);
+            this.storageService.setChange(data.change_password);
             this.router.navigate(['/devices']);
           },
           (error: any) => {
@@ -163,16 +156,16 @@ export class LoginComponent implements OnDestroy {
   }
 
   saveStorage() { // Guarda datos en el local storage
-    localStorage.setItem("id", this.id.toString());
-    localStorage.setItem("username", this.username);
+    this.storageService.setId(this.id.toString());
+    this.storageService.setUsername(this.username);
   }
 
   readStorage() { // Recupera datos del local storage
-    const idString: string | null = localStorage.getItem("id");
+    const idString: string | null = this.storageService.getId();
     const id: number = idString !== null ? parseInt(idString) : 1; 
     this.id = id;    
-    this.username = localStorage.getItem("username") ?? "davidsaav";
-    this.token = this.tokenService.getToken() ?? '';
+    this.username = this.storageService.getUsername() ?? "davidsaav";
+    this.token = this.storageService.getToken() ?? '';
   }
 
   // Guardar cookie
