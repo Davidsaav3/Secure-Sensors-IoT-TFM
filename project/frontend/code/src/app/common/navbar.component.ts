@@ -109,7 +109,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     
     this.readStorage();
     this.translate.use(this.activeLang);
-    console.log('JUSTO ANTES')
+    //('JUSTO ANTES')
     if(this.authService.isAuthenticated()){
       this.statusScript();
     }
@@ -314,7 +314,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   lanzarTimer(){
     this.temp6= setTimeout(() => {
-      console.log('DENTRO')
+      //console.log('DENTRO')
       this.statusScript();
     }, environment.acces_token_timeout); //parametrizar*/
   }
@@ -322,7 +322,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   statusScript(): void { // STATUS //
     let token = this.storageService.getToken() ?? ''; // parametrizar
     let headers = new HttpHeaders().set('Authorization', `${token}`);
-    console.log('statusscript')
+    //('statusscript')
     if(this.authService.isAuthenticated()){
       this.http.get<any>(this.backendURL + "/script-status", {headers}).subscribe(
         (data) => {
@@ -349,8 +349,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
           segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
           let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
   
-          console.log(formatoPersonalizado)
-          console.log(formatoPersonalizado2)
+          //console.log(formatoPersonalizado)
+          //console.log(formatoPersonalizado2)
 
           if(formatoPersonalizado<formatoPersonalizado2){
             this.status= 1;
@@ -363,15 +363,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
           this.lanzarTimer();
         },
         (error) => {
-          console.error("Error al obtener el estado:", error); // 
+          console.error("Error al obtener el estado:", error);
           this.status= 2;
-        } // contador, parametrizar tiempos
-        // 5 errores acumulados mostrar en color naraja
-        // play, stop
-        // y la fecha en naranja
-        //modo error
-        // recargar
-        // CONTROLAR FALLO DE TOKEN
+        } 
       );
     }
   }

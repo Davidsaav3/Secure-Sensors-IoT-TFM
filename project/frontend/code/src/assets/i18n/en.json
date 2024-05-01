@@ -278,6 +278,7 @@
 
     "script_enable": "Play",
     "script_disable": "Stop",
+    "script.click": "Click to recharge",
 
     "monitoreo.id": "Identification",
 

@@ -134,7 +134,7 @@ backendStatus: boolean = false;
     };
     this.http.post(this.backendURL+"/script", JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
       () => {
-        console.log("Solicitud POST enviada exitosamente.");
+        //console.log("Solicitud POST enviada exitosamente.");
       },
       (error) => {
         console.error("Error al enviar la solicitud POST:", error);
@@ -148,7 +148,7 @@ backendStatus: boolean = false;
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
         .then(() => {
-          console.log('Texto copiado al portapapeles: ', textToCopy);
+          //console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
           console.error('Error al copiar texto al portapapeles: ', error);

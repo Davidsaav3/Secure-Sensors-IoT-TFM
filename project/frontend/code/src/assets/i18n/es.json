@@ -273,6 +273,7 @@
 
     "script_enable": "Play",
     "script_disable": "Stop",
+    "script.click": "Haz click para recargar",
 
     "monitoring": {    
         "monitoring": "Monitorización",

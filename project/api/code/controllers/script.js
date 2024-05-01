@@ -90,7 +90,6 @@ const { spawn } = require("child_process");
     //iniciar off
   }
 
-
   router.get("/script-status", verifyToken, (req, res) => {  // STATUS
     const query = "SELECT date, status FROM script";
     const { id, user } = req.user;

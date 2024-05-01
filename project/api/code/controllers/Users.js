@@ -96,7 +96,7 @@ const cookieParser = require('cookie-parser');
                                 const newRefreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
                                 
                                 const currentDate = new Date();
-                                const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+                                const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
                                 const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
                                 // Actualizar token_refresh
@@ -145,7 +145,7 @@ const cookieParser = require('cookie-parser');
                         const refreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
 
                         const currentDate = new Date();
-                        const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+                        const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
                         const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
                         // Actualizar el nuevo token_refresh
@@ -256,7 +256,7 @@ const cookieParser = require('cookie-parser');
         }
 
         const currentDate = new Date();
-        const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+        const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
         const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
         const query = "INSERT INTO users (user, password, change_password, enabled, revoke_date) VALUES (?, ?, ?, ?, ?)";
@@ -289,7 +289,7 @@ const cookieParser = require('cookie-parser');
 
     const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
     const currentDate = new Date();
-    const futureDate = new Date(currentDate.getTime() + (7 * 24 * 60 * 60 * 1000));
+    const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
     const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
     if (!id && (user || password)) {
@@ -441,7 +441,7 @@ const cookieParser = require('cookie-parser');
     //const refreshToken = req.cookies.refresh_token;
     const { refreshToken } = req.body;
 
-    // token de actualización existe
+    // token de actualización existey
     if (!refreshToken) {
         // LOG - 400 //
         insertLog("", "", '005-007-400-001', "400", "POST", "", 'Error al refrescar el token', 'El token de refresco no fue proporcionado');

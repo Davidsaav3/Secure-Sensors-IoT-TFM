@@ -21,9 +21,9 @@ export class AppComponent {
   }
 
   ngOnInit(): void { // Inicializa
-    console.log('NGINIT APP')
+    //console.log('NGINIT APP')
     if(this.authService.isAuthenticated()){
-      console.log('ARRANCANDO INT')
+      //console.log('ARRANCANDO INT')
       setInterval(async () => {
         if(this.authService.isAuthenticated()){
           const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');

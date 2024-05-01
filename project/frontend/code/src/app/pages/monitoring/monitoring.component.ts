@@ -133,7 +133,7 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
         .then(() => {
-          console.log('Texto copiado al portapapeles: ', textToCopy);
+         //console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
           console.error('Error al copiar texto al portapapeles: ', error);

@@ -48,7 +48,7 @@
             <div *ngIf="token !== ''" class="pe-3" [ngClass]="{'active': rute === '/' + script}" style="cursor: pointer;">
                 <span (click)="statusScript()" *ngIf="status == 2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
                     <span class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
-                    {{ script | translate }}
+                    {{ 'script.click' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span>
                 </span>
                 <span [routerLink]="'/' + script" *ngIf="status == 1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span></span>
                 <span [routerLink]="'/' + script" *ngIf="status == 0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span></span>
