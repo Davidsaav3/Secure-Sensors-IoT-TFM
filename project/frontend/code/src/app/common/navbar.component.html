@@ -1,112 +1,123 @@
 <div class="mb-0 d-flex">
-	<div class="col-12 col-md-5 p-0">
-		<div class="nav nav-tabs mb-0 p-0 me-0" *ngIf="token!='' && (this.ruteAux[1]=='devices' || this.ruteAux[1]=='sensors' || this.ruteAux[1]=='structure' || this.ruteAux[1]=='variable-structure') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
-			<li class="nav-item">
-				<a class="nav-link" aria-current="page" routerLink="/devices" [ngClass]="{'active': this.rute=='/devices'}">{{ 'sensors.t1' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/sensors" [ngClass]="{'active': this.rute=='/sensors'}">{{ 'sensors.t2' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/structure" [ngClass]="{'active': this.rute=='/structure'}">{{ 'sensors.t3' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/variable-structure" [ngClass]="{'active': this.rute=='/variable-structure'}">{{ 'variable_data_structure' | translate }}</a>
-			</li>
-		</div>
-		<div class="nav nav-tabs mb-0 p-0" *ngIf="token!='' && (this.ruteAux[1]=='users' || this.ruteAux[1]=='conecction-read' || this.ruteAux[1]=='conecction-write' || this.ruteAux[1]=='script' || this.ruteAux[1]=='monitoring') && ruteAux[2]!='edit' && ruteAux[2]!='new' && ruteAux[2]!='duplicate'">
-			<li class="nav-item">
-				<a class="nav-link" aria-current="page" routerLink="/users" [ngClass]="{'active': this.rute=='/users'}">{{ 'users.users' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/conecction-read" [ngClass]="{'active': this.rute=='/conecction-read'}">{{ 'conecction-read' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/conecction-write" [ngClass]="{'active': this.rute=='/conecction-write'}">{{ 'conecction-write' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/script" [ngClass]="{'active': this.rute=='/script'}">{{ 'script' | translate }}</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" routerLink="/monitoring" [ngClass]="{'active': this.rute=='/monitoring'}">{{ 'monitoring.monitoring' | translate }}</a>
-			</li>
-		</div>
-		<div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2]=='edit' || ruteAux[2]=='new' || ruteAux[2]=='duplicate'">
-			<li class="nav-item">
-				<a class="nav-link me-3">&nbsp;</a>
-			</li>
-		</div>
-	</div>
-	<div class="col-12 col-md-7 p-0 pt-2">
-		<div class="d-flex" style="justify-content: flex-end;">
-			<div *ngIf="token != ''" class="pe-3" [ngClass]="{'active': this.rute=='/script'}" style="cursor: pointer;">
-				<span (click)="statusScript()" *ngIf="status==2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
-					<span  class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
-					{{ 'script' | translate }}
-				</span>
-				<span routerLink="/script" *ngIf="status==1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
-				<span routerLink="/script" *ngIf="status==0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{this.date}}</span></span>
-			</div>
-			<div *ngIf="token != ''" class="pe-3">
-				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-					<input type="radio" class="btn-check visually-hidden" name="btnradio" id="btnradio2" autocomplete="off" >
-					<label class="btn btn-secondary" for="btnradio2" routerLink="/devices" [ngStyle]="{ 'background-color': ruteAux[1]=='devices' || ruteAux[1]=='sensors' || ruteAux[1]=='structure' || ruteAux[1]=='variable-structure' ? '#565e64' : '' }">{{ 'management' | translate }}</label>
-					
-					<input type="radio" class="btn-check visually-hidden" name="btnradio" id="btnradio1" autocomplete="off" >
-					<label class="btn btn-secondary" for="btnradio1" routerLink="/users" [ngStyle]="{ 'background-color': ruteAux[1]=='users' || ruteAux[1]=='conecction-read' || ruteAux[1]=='conecction-write' || ruteAux[1]=='script' || ruteAux[1]=='monitoring' ? '#565e64' : '' }">{{ 'settings' | translate }}</label>
-				</div>
-			</div>		
-			
-			<div class="pe-3">
-				<select style="min-width: 120px;" (change)="changeLanguage()" class="form-select btn btn-secondary" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
-					<ng-container *ngFor="let quote of this.lengLang; let i = index">
-						<option value='{{quote}}' [ngClass]="{'selected': activeLang == quote}" >{{this.lengName[i]}}</option>
-					</ng-container>
-				</select>
-			</div>	
-			<!--<div class="pe-3" *ngIf="token!=''" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-				<button *ngIf="alerts" type="button" class="btn btn-secondary">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-						<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"></path>
-					</svg>
-				</button>
-				<button *ngIf="!alerts" type="button" class="btn btn-secondary">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
-						<path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"></path>
-					</svg>
-				</button>
-			</div>-->
-			<div *ngIf="token!=''" class="pe-3" style="cursor: pointer;">
-				<div class="dropdown">
-					<div id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" class="circle-container" style=" width: 40px; height: 40px; background-color: #fff; border: 1px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-						<span class="circle-text">{{ username.substr(0,1).toUpperCase() }}</span>
-					</div>
-					<ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton" style="z-index: 1000000">
-						<li><a class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal3">
-							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
-								<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-							</svg>						
-							{{ 'edit.profile' | translate }}
-						  </a></li>
-						  <li><a #openModalButton class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal2">
-							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil me-2" viewBox="0 0 16 16">
-								<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
-							</svg>	
-							{{ 'edit.change' | translate }}
-						  </a></li>
-						  <li><a class="dropdown-item cursor-pointer" (click)="logOut()">
-							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
-								<path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
-								<path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
-							</svg>							
-							{{ 'log.out' | translate }}
-						  </a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="col-12 col-md-5 p-0">
+        <div class="nav nav-tabs mb-0 p-0 me-0" *ngIf="token !== '' && (ruteAux[1] === deviceConfigurations || ruteAux[1] === sensorsTypes || ruteAux[1] === dataStructure || ruteAux[1] === variableDataStructure) && ruteAux[2] !== 'edit' && ruteAux[2] !== 'new' && ruteAux[2] !== 'duplicate'">
+            <ul class="nav"  style="margin: 0px;">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" [routerLink]="'/' + deviceConfigurations" [ngClass]="{'active': rute === '/' + deviceConfigurations}">{{ 'sensors.t1' | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + sensorsTypes" [ngClass]="{'active': rute === '/' + sensorsTypes}">{{ 'sensors.t2' | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + dataStructure" [ngClass]="{'active': rute === '/' + dataStructure}">{{ 'sensors.t3' | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + variableDataStructure" [ngClass]="{'active': rute === '/' + variableDataStructure}">{{ 'variable_data_structure' | translate }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="nav nav-tabs mb-0 p-0" *ngIf="token !== '' && (ruteAux[1] === users || ruteAux[1] === conecctionRead || ruteAux[1] === conecctionWrite || ruteAux[1] === script || ruteAux[1] === monitoring) && ruteAux[2] !== 'edit' && ruteAux[2] !== 'new' && ruteAux[2] !== 'duplicate'">
+            <ul class="nav" style="margin: 0px;">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" [routerLink]="'/' + users" [ngClass]="{'active': rute === '/' + users}">{{ 'users.users' | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + conecctionRead" [ngClass]="{'active': rute === '/' + conecctionRead}">{{ conecctionRead | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + conecctionWrite" [ngClass]="{'active': rute === '/' + conecctionWrite}">{{ conecctionWrite | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + script" [ngClass]="{'active': rute === '/' + script}">{{ script | translate }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="'/' + monitoring" [ngClass]="{'active': rute === '/' + monitoring}">{{ 'monitoring.monitoring' | translate }}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2] === 'edit' || ruteAux[2] === 'new' || ruteAux[2] === 'duplicate'">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link me-3">&nbsp;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-7 p-0 pt-2">
+        <div class="d-flex" style="justify-content: flex-end;">
+            <div *ngIf="token !== ''" class="pe-3" [ngClass]="{'active': rute === '/' + script}" style="cursor: pointer;">
+                <span (click)="statusScript()" *ngIf="status == 2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
+                    <span class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
+                    {{ script | translate }}
+                </span>
+                <span [routerLink]="'/' + script" *ngIf="status == 1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span></span>
+                <span [routerLink]="'/' + script" *ngIf="status == 0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span></span>
+            </div>
+            <div *ngIf="token !== ''" class="pe-3">
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check visually-hidden" name="btnradio" id="btnradio2" autocomplete="off">
+                    <label class="btn btn-secondary" for="btnradio2" [routerLink]="'/' + deviceConfigurations" [ngStyle]="{ 'background-color': ruteAux[1] === deviceConfigurations || ruteAux[1] === sensorsTypes || ruteAux[1] === dataStructure || ruteAux[1] === variableDataStructure ? '#565e64' : '' }">{{ 'management' | translate }}</label>
+                    <input type="radio" class="btn-check visually-hidden" name="btnradio" id="btnradio1" autocomplete="off">
+                    <label class="btn btn-secondary" for="btnradio1" [routerLink]="'/' + users" [ngStyle]="{ 'background-color': ruteAux[1] === users || ruteAux[1] === conecctionRead || ruteAux[1] === conecctionWrite || ruteAux[1] === script || ruteAux[1] === monitoring ? '#565e64' : '' }">{{ 'settings' | translate }}</label>
+                </div>
+            </div>
+            <div class="pe-3">
+                <select style="min-width: 120px;" (change)="changeLanguage()" class="form-select btn btn-secondary" aria-label="Default select example" id="sel_type" [(ngModel)]="activeLang">
+                    <ng-container *ngFor="let quote of lengLang; let i = index">
+                        <option value="{{ quote }}" [ngClass]="{'selected': activeLang == quote }">{{ lengName[i] }}</option>
+                    </ng-container>
+                </select>
+            </div>
+            <!-- <div class="pe-3" *ngIf="token !== ''" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <button *ngIf="alerts" type="button" class="btn btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"></path>
+                    </svg>
+                </button>
+                <button *ngIf="!alerts" type="button" class="btn btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6"></path>
+                    </svg>
+                </button>
+            </div> -->
+            <div *ngIf="token !== ''" class="pe-3" style="cursor: pointer;">
+                <div class="dropdown">
+                    <div id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" class="circle-container" style=" width: 40px; height: 40px; background-color: #fff; border: 1px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span class="circle-text">{{ username.substr(0, 1).toUpperCase() }}</span>
+                    </div>
+                    <ul class="dropdown-menu cursor-pointer" aria-labelledby="dropdownMenuButton" style="z-index: 1000000">
+                        <li>
+                            <a class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal3">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
+                                </svg>
+                                {{ 'edit.profile' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a #openModalButton class="dropdown-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-pencil me-2" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                </svg>
+                                {{ 'edit.change' | translate }}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item cursor-pointer" (click)="logOut()">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z" />
+                                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                                </svg>
+                                {{ 'log.out' | translate }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <div  class="modal fade" #confirmDeleteModal2 id="confirmDeleteModal2" data-bs-keyboard="false" tabindex="-1" aria-labelledby="confirmDeleteModal2" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">

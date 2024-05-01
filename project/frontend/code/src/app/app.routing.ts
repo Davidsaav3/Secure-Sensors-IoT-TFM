@@ -7,20 +7,20 @@ import { VariableStructureComponent } from './pages/variable-structure/variable-
 
 const routes: Routes = [
   {
-    path:'devices', component: DeviceComponent
+    path:environment.rute.deviceConfigurations, component: DeviceComponent
   },
   { 
-    path:'sensors', component: SensorsComponent
+    path:environment.rute.sensorsTypes, component: SensorsComponent
   },
   { 
-    path:'structure', component: StructureComponent
+    path:environment.rute.dataStructure, component: StructureComponent
   },
   { 
-    path:'variable-structure', component: VariableStructureComponent
+    path:environment.rute.variableDataStructure, component: VariableStructureComponent
   },
   {
     path:'**',
-    redirectTo: 'devices'
+    redirectTo: environment.rute.deviceConfigurations
   },
 ]
 

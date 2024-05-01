@@ -20,6 +20,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
   @ViewChild('openModalButton') openModalButton: ElementRef | undefined;
   @ViewChild('clouseModalButton') clouseModalButton: ElementRef | undefined;
 
+  deviceConfigurations = environment.rute.deviceConfigurations;
+  sensorsTypes = environment.rute.sensorsTypes;
+  dataStructure = environment.rute.dataStructure;
+  variableDataStructure = environment.rute.variableDataStructure;
+  login = environment.rute.login;
+  users = environment.rute.users;
+  conecctionRead = environment.rute.conecctionRead;
+  conecctionWrite = environment.rute.conecctionWrite;
+  script = environment.rute.script;
+  monitoring = environment.rute.monitoring;
+
   lengName = environment.languageName;
   lengLang = environment.languageLang;
   activeLang = environment.languageLang[0];

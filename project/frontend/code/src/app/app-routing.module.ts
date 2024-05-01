@@ -15,10 +15,11 @@ import { ConecctionReadComponent } from './pages/conecction-read/conecction-read
 import { ScriptComponent } from './pages/script/script.component';
 import { MonitoringComponent } from './pages/monitoring/monitoring.component';
 import { LoginComponent } from './pages/login/login.component';
+import { environment } from "./environments/environment"
 
 const routes: Routes = [
   {
-    path:'devices', component: DeviceComponent, canActivate: [AuthGuard] ,
+    path:environment.rute.deviceConfigurations, component: DeviceComponent, canActivate: [AuthGuard] ,
     children: [
       {
         path: '',
@@ -70,35 +71,35 @@ const routes: Routes = [
     ]
   },
   { 
-    path:'sensors', component: SensorsComponent, canActivate: [AuthGuard] 
+    path:environment.rute.sensorsTypes, component: SensorsComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'structure', component: StructureComponent, canActivate: [AuthGuard] 
+    path:environment.rute.dataStructure, component: StructureComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'variable-structure', component: VariableStructureComponent, canActivate: [AuthGuard] 
+    path:environment.rute.variableDataStructure, component: VariableStructureComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'login', component: LoginComponent
+    path:environment.rute.login, component: LoginComponent
   },
   { 
-    path:'users', component: UsersComponent, canActivate: [AuthGuard] 
+    path:environment.rute.users, component: UsersComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'conecction-read', component: ConecctionReadComponent, canActivate: [AuthGuard] 
+    path:environment.rute.conecctionRead, component: ConecctionReadComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'conecction-write', component: ConecctionWriteComponent, canActivate: [AuthGuard] 
+    path:environment.rute.conecctionWrite, component: ConecctionWriteComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'script', component: ScriptComponent, canActivate: [AuthGuard] 
+    path:environment.rute.script, component: ScriptComponent, canActivate: [AuthGuard] 
   },
   { 
-    path:'monitoring', component: MonitoringComponent, canActivate: [AuthGuard] 
+    path:environment.rute.monitoring, component: MonitoringComponent, canActivate: [AuthGuard] 
   },
   {
     path:'**',
-    redirectTo: 'devices'
+    redirectTo: environment.rute.deviceConfigurations
   },
 ];
 
