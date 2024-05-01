@@ -30,7 +30,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   getIdSecret: string = environment.baseUrl+environment.url.conecctionWrite+"/secret";
 
   passwordFieldType = 'password';
-  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+  passwordPattern = environment.password_pattern;;
 
   totalPages = 5;
   currentPage = 1;

@@ -64,7 +64,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   viewDup = -1;
   pencilDup = -1;
 
-  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+  passwordPattern = environment.password_pattern;;
 
   searchAux = "search";
   order = "user";

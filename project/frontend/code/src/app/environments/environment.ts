@@ -18,6 +18,19 @@ export const environment = {
         monitoring: '/monitoring',
     },
 
+    rute: {
+        deviceConfigurations: 'devices',
+        sensorsTypes: 'sensors',
+        dataStructure: 'structure',
+        variableDataStructure: 'variable-structure',
+        login: 'login',
+        users: 'users',
+        conecctionRead: 'conecction-read',
+        conecctionWrite: 'conecction-write',
+        script: 'script',
+        monitoring: 'monitoring',
+    },
+
     // PRODUCCIÓN //
     //baseUrl: "http://localhost/api",
 
@@ -37,4 +50,9 @@ export const environment = {
         monitoring: '/monitoring',
     },
     */
+
+    password_pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/,
+    acces_token_timeout: 5000,
+    script_status_timeout: 5000,
+    title: 'Sensors IoT'
 };

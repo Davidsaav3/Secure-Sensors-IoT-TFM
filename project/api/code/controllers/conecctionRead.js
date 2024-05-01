@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 let { con }= require('../middleware/mysql');
-let cors= require('cors')
 router.use(express.json())
 const verifyToken = require('../middleware/token');
 const insertLog = require('../middleware/log');

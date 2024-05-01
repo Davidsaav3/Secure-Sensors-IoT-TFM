@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 let { con }= require('../middleware/mysql');
-let cors= require('cors')
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/token');
 const SECRET_KEY = process.env.TOKEN;
@@ -51,6 +50,7 @@ const cookieParser = require('cookie-parser');
   });
   
 
+  // AÑADIR: rateLimiterMiddleware !!!!!!!!!!!!!!!!
   router.post("/login", (req, res) => { // LOGIN //
     const { user, password } = req.body;
 

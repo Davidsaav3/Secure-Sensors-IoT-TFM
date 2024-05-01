@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   name= "settings"
   change1= false;
   change2= false;
-  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+  passwordPattern = environment.password_pattern;
   alerts= false;
   change_password= false;
   username= "davidsaav";
@@ -305,7 +305,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.temp6= setTimeout(() => {
       console.log('DENTRO')
       this.statusScript();
-    }, 5000); //parametrizar*/
+    }, environment.acces_token_timeout); //parametrizar*/
   }
 
   statusScript(): void { // STATUS //

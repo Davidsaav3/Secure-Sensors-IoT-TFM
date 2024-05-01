@@ -31,7 +31,7 @@ export class AppComponent {
             console.warn('La renovación del token ha fallado');
           }
         }
-      }, 5000); //300000 y 5000
+      }, environment.acces_token_timeout); //300000 y 5000
     }
   }
 
@@ -102,5 +102,5 @@ export class AppComponent {
     this.translate.use(lang);
   }
   
-  title = 'Sensors IoT';
+  title = environment.title;
 }

@@ -43,7 +43,7 @@ export class LoginComponent implements OnDestroy {
   alertCreNot= false;
   alertServNot= false;
   alertDifNot= false;
-  passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+  passwordPattern = environment.password_pattern;;
 
   id= 1;
   username= 'davidsaav';
@@ -145,7 +145,7 @@ export class LoginComponent implements OnDestroy {
   isValidPassword(password: string): boolean {
     const minLength = 8;
     const maxLength = 20;
-    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
+    const passwordPattern = environment.password_pattern;;
     if (password.trim().length < minLength || password.trim().length > maxLength) {
         return false;
     }
