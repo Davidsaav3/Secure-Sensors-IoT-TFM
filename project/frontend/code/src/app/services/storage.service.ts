@@ -14,7 +14,7 @@ export class StorageService {
   private open: string | null = null;
   private page: string | null = null;
   private search: string | null = null;
-  private lang: string | null = null;
+  private lang: string | null = 'es';
 
   constructor() {
     // Al inicializar el servicio, intenta cargar los valores del localStorage si existen
@@ -32,13 +32,22 @@ export class StorageService {
     this.open = localStorage.getItem('open') || null;
     this.page = localStorage.getItem('page') || null;
     this.search = localStorage.getItem('search') || null;
-    this.lang = localStorage.getItem('lang') || null;
+    this.lang = localStorage.getItem('lang') || 'es';
   }
 
+  private setItemToLocalStorage(key: string, value: string | null): void {
+    if (value !== null && value !== '') {
+      localStorage.setItem(key, value);
+    } 
+    else {
+      localStorage.removeItem(key);
+    }
+  }
+  
   // token //
   setToken(token: string): void {
     this.token = token;
-    localStorage.setItem('token', token);
+    this.setItemToLocalStorage('token', token);
   }
   getToken(): string | null {
     return this.token;

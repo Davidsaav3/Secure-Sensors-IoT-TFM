@@ -5,7 +5,7 @@ let cors= require('cors')
 router.use(cors());
 router.use(express.json())
 
-  var longitudMaxima = 150;
+  var longitudMaxima = process.env.LOG_SIZE;
   
   function insertLog(user_id, username, log_code, log_status, log_method, log_parameters, log_message, log_trace, callback) {
     const log_date = new Date().toISOString().slice(0, 19).replace('T', ' ');

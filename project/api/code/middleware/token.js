@@ -4,7 +4,6 @@ let { con }= require('./mysql');
 const REFRESH_SECRET_KEY = process.env.TOKEN_REFRESH;
 const insertLog = require('../middleware/log');
 
-
     function verifyToken(req, res, next) {
         const token = req.headers['authorization'];
         if (!token) {

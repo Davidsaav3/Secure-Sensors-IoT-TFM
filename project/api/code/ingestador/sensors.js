@@ -53,7 +53,7 @@ client.on('message', async (topic, message) => {
       return 0;
     } 
     scriptDAO.updateDate(); // si falla se cierra
-    setTimeout(() => actualizarBD(), 5000);
+    setTimeout(() => actualizarBD(), process.env.SCRIPT_RELOAD_TIME);
   }
 
   function clouseScript() { // PARAR SCRIPT
@@ -339,5 +339,5 @@ const main = async (message) => {
 }
 
 insertLogScript('','', 1, '');
-setTimeout(actualizarBD ,5000);
+setTimeout(actualizarBD ,process.env.SCRIPT_RELOAD_TIME);
 

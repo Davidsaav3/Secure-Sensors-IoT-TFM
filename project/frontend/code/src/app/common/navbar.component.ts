@@ -265,7 +265,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.storageService.setId(this.id.toString());
     this.storageService.setUsername(this.username);
     this.storageService.setLang(this.activeLang);
-
   }
 
   readStorage() { // Recupera datos del local storage
@@ -286,7 +285,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   logOut(){
     this.storageService.setId('');
     this.storageService.setUsername('');
-    this.storageService.setLang('');
+    this.storageService.setChange('');
     this.storageService.setStatus('');
     this.storageService.setDate('');
     this.storageService.setToken('');
