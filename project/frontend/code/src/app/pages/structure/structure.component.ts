@@ -120,8 +120,8 @@ export class StructureComponent implements OnInit, OnDestroy {
     //this.temp3.clearInterval();
     //this.temp4.clearInterval();
     this.storageService.setSearch('')
-    this.storageService.setPerPage('')
-    this.storageService.setPage('')
+    this.storageService.setPerPage('15')
+    this.storageService.setPage('1')
   }
 
   /* GET */
@@ -542,8 +542,10 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   readStorage() { // Recupera datos en local storage
-    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
-    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
+    let pageString = this.storageService.getPage() ?? "1"; 
+    this.currentPage = parseInt(pageString, 10);
+    pageString = this.storageService.getPerPage() ?? "15"; 
+    this.quantPage = parseInt(pageString, 10);
     this.search.value = this.storageService.getSearch() ?? "";
     if(this.search.value!=""){
       //this.searched= true;

@@ -19,9 +19,9 @@ export class ScriptComponent implements OnInit, OnDestroy {
 
 resultsPerPag = environment.resultsPerPag;
 @HostListener("window:resize", ["$event"])
-@ViewChild('logTrace', {static: false}) logTraceElement1: ElementRef | undefined;
-@ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
-@ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
+//@ViewChild('logTrace', {static: false}) logTraceElement1: ElementRef | undefined;
+//@ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
+//@ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
 
 backendStatus: boolean = false; 
   backendURL: string = "http://localhost:5172/api/script";
@@ -128,8 +128,8 @@ backendStatus: boolean = false;
     //this.temp3.clearInterval();
     //this.temp4.clearInterval();
     this.storageService.setSearch('')
-    this.storageService.setPerPage('')
-    this.storageService.setPage('')
+    this.storageService.setPerPage('15')
+    this.storageService.setPage('1')
   }
 
   setScript(status: any): void {
@@ -640,8 +640,10 @@ backendStatus: boolean = false;
   }
 
   readStorage() { // Recupera datos en local storage
-    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
-    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
+    let pageString = this.storageService.getPage() ?? "1"; 
+    this.currentPage = parseInt(pageString, 10);
+    pageString = this.storageService.getPerPage() ?? "15"; 
+    this.quantPage = parseInt(pageString, 10);
     this.searchAuxArray.value = this.storageService.getSearch() ?? "";
     if(this.searchAuxArray.value!=""){
       //this.searched= true;

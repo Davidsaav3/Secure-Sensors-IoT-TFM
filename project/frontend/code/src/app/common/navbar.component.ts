@@ -300,10 +300,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.storageService.setStatus('');
     this.storageService.setDate('');
     this.storageService.setToken('');
-    this.storageService.setPage('');
+    this.storageService.setPage('1');
     this.storageService.setSearch('');
     this.storageService.setOpen('');
     this.storageService.setMap('');
+    this.storageService.setPerPage('15');
+
     this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }

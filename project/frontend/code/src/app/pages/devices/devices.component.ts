@@ -200,8 +200,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     //this.temp3.clearInterval();
     this.map?.remove();
     this.storageService.setSearch('')
-    this.storageService.setPerPage('')
-    this.storageService.setPage('')
+    this.storageService.setPerPage('15')
+    this.storageService.setPage('1')
   }
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
@@ -1019,10 +1019,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   readStorage() { // Recupera datos en local storage
-    this.openAux = JSON.parse(this.storageService.getOpen() ?? "true");
+    let pageString= this.storageService.getOpen() ?? "true"
+    this.openAux = JSON.parse(pageString);
     this.colorMap = this.storageService.getMap() ?? environment.defaultMapsStyle;
-    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
-    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
+    pageString = this.storageService.getPage() ?? "1"; 
+    this.currentPage = parseInt(pageString, 10);
+    pageString = this.storageService.getPerPage() ?? "15"; 
+    this.quantPage = parseInt(pageString, 10);
     this.search.value = this.storageService.getSearch() ?? "";
     if(this.search.value!=""){
       this.searched= true;
