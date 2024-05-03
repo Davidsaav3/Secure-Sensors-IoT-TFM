@@ -201,7 +201,12 @@
         "e9" : "El nombre de usuario debe ser único",
 
         "m1.1" : "Delete user",
-        "m1.2" : "Are you sure you want to remove the user ?"
+        "m1.2" : "Are you sure you want to remove the user ?",
+
+        "a1" : "Username updated.",
+        "a2" : "Error updating username.",
+        "a3" : "Password updated.",
+        "a4": "Error updating password."
     },
 
     "edit.change": "Change password",
@@ -232,11 +237,6 @@
     "complexity" : "The password must contain a capital letter, a number, and a special character.",
     "min_length": "The password must be at least 8 characters.",
     "pass_required" : "Password is required.",
-
-    "user.a1" : "Username updated.",
-    "user.a2" : "Error updating username.",
-    "user.a3" : "Password updated.",
-    "user.a4": "Error updating password.",
 
     "conecction-read": "Acquisition", 
     "conecction-write": "Intake",
@@ -296,12 +296,12 @@
         "log_parameters": "Input",
         "log_message": "Message",
         "log_trace": "Output",
-        "find": "Search registers..."
+        "find": "Search registers...",
+        "enable": "Enable Script",
+        "disable": "Disable Script"
     },
 
     "revoke": "Revoke Token",
-    "no_logs": "There are no log records",
-    "script.enable": "Enable Script",
-    "script.disable": "Disable Script"
+    "no_logs": "There are no log records"
 
 }

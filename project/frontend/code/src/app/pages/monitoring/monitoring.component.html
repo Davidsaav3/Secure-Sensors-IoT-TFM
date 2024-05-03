@@ -124,10 +124,10 @@
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
 
 							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
-								<span *ngIf="quote.user_id" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.user_id }}</p></span>
+								<span *ngIf="quote.user_id" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0">{{ quote.user_id }}</p></span>
 							</td>
 							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
-								<span *ngIf="quote.username" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.username }}</p></span>
+								<span *ngIf="quote.username" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0">{{ quote.username }}</p></span>
 							</td>
 
 							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}"><strong>{{ quote.log_method }}</strong></td>
@@ -157,7 +157,7 @@
 				</div>
 				<div>
 
-					<select (change)="this.currentPage=1;getMonitoringLocal('description','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<select (change)="this.currentPage=1;getMonitoringLocal('log_date','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 				</div>

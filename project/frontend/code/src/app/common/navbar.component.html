@@ -172,7 +172,7 @@
 									</svg>
 								</span>
 							</div>
-							<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+							<div *ngIf="form.submitted && form.controls['password'] && form.controls['password'].errors" class="text-danger">
 								<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
 								<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
 								<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
@@ -217,7 +217,7 @@
 						<div class="col-12 pt-2 form-group">
 							<label for="type">{{ 'login.user' | translate }}</label>
 							<input (ngModelChange)="change2=true" (keyup)="removeSpaces($event)" value="{{ formuserdata.user }}" [(ngModel)]="formuserdata['user']" maxlength="45" type="text" id="user1" class="form-control" name="type" required>
-							<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
+							<div *ngIf="form.submitted && form.controls['type'] && form.controls['type'].errors" class="text-danger">
 								<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
 							</div>
 						</div>
@@ -245,7 +245,7 @@
 	<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
-				{{ 'user.a1' | translate }}
+				{{ 'users.a1' | translate }}
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>
@@ -256,7 +256,7 @@
 	<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
-				{{ 'user.a2' | translate }}
+				{{ 'users.a2' | translate }}
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>
@@ -267,7 +267,7 @@
 	<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
-				{{ 'user.a3' | translate }}
+				{{ 'users.a3' | translate }}
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>
@@ -278,7 +278,7 @@
 	<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body">
-				{{ 'user.a4' | translate }}
+				{{ 'users.a4' | translate }}
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 		</div>

@@ -67,7 +67,7 @@
 					<tbody *ngFor="let quote of data; let i = index">
 						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
-							<td [ngClass]="{'mark': actId == quote.id && state==2}" class="d-none d-md-none d-lg-table-cell" (click)="orderColumn(quote.id)">{{ quote.urlIngest }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.urlIngest }}</td>
 
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
 								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
@@ -166,9 +166,10 @@
 					<div class="col-8 pt-2 form-group">
 						<label for="description">{{ 'sensors.description' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
-						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
-							<div *ngIf="form.controls['description'].errors['required']">{{ 'description' | translate }} {{ 'required' | translate }}</div>
+						<div *ngIf="form.submitted && form.controls['description'] && form.controls['description'].errors">
+							<div *ngIf="form.controls['description'].errors && form.controls['description'].errors['required']">{{ 'description' | translate }} {{ 'required' | translate }}</div>
 						</div>
+				
 					</div>
 
 					<div class="col-4 pt-2 form-group">
@@ -180,17 +181,19 @@
 								<span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
 							</label>
 						</div>
-						<div *ngIf="form.submitted && form.controls['enabled'].errors" class="text-danger">
-							<div *ngIf="form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
+						<div *ngIf="form.submitted && form.controls['enabled'] && form.controls['enabled'].errors" class="text-danger">
+							<div *ngIf="form.controls['enabled'].errors && form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
 						</div>
+					
 					</div>
 
 					<div [ngClass]="{'col-8': state === 2, 'col-12': state === 0 || state === 1}" class="pt-2 form-group">
 						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctions['authorization']">
-						<div *ngIf="form.submitted && form.controls['authorization'].errors" class="text-danger">
-							<div *ngIf="form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
+						<div *ngIf="form.submitted && form.controls['authorization'] && form.controls['authorization'].errors" class="text-danger">
+							<div *ngIf="form.controls['authorization'].errors && form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
 						</div>
+					
 					</div>
 
 					<div *ngIf="state==2" class="col-4 ps-2 pt-2 form-group" style="display: flex; flex-direction: column;">
@@ -206,12 +209,10 @@
 					<div class="col-12 pt-2 form-group">
 						<label for="urlIngest">{{ 'conecctions.urlIngest' | translate }}</label>
 						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.urlIngest }}" type="text" id="urlIngest" class="form-control" name="urlIngest" [(ngModel)]="conecctions['urlIngest']" required>
-						<div *ngIf="form.submitted && form.controls['urlIngest'].errors" class="text-danger">
-							<div *ngIf="form.controls['urlIngest'].errors['required']">{{ 'conecctions.urlIngest' | translate }} {{ 'required' | translate }}</div>
+						<div *ngIf="form.submitted && form.controls['urlIngest'] && form.controls['urlIngest'].errors" class="text-danger">
+							<div *ngIf="form.controls['urlIngest'].errors && form.controls['urlIngest'].errors['required']">{{ 'conecctions.urlIngest' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>
-
-
 				</div>
 			</div>
 
@@ -322,13 +323,14 @@
 								</svg>
 							</span>
 						</div>
-						<div *ngIf="form.submitted && form.controls['password'].errors" class="text-danger">
+						<div *ngIf="form.submitted && form.controls['password'] && form.controls['password'].errors" class="text-danger">
 							<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
 							<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
 							<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
 								{{ 'complexity' | translate }}
 							</div>      
 						</div>  
+						
 					</div>
 				</form>
 				<!---->
@@ -336,9 +338,10 @@
 					<div class="col-12 pt-2 form-group">
 						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
 						<input disabled data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctionsSecret.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctionsSecret['authorization']" required>
-						<div *ngIf="form.submitted && form.controls['authorization'].errors" class="text-danger">
-							<div *ngIf="form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
+						<div *ngIf="form.submitted && form.controls['authorization'] && form.controls['authorization'].errors" class="text-danger">
+							<div *ngIf="form.controls['authorization'].errors && form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
 						</div>
+					
 					</div>
 				</form>
 				<!---->

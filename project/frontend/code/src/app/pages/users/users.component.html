@@ -199,7 +199,7 @@
 								<span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
 							</label>
 						</div>
-						<div *ngIf="form.submitted && form.controls['enabled'].errors" class="text-danger">
+						<div *ngIf="form.submitted && form.controls['enabled'] && form.controls['enabled'].errors" class="text-danger">
 							<div *ngIf="form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
 						</div>
 					</div>

@@ -289,12 +289,12 @@
         "log_parameters": "Entrada",
         "log_message": "Mensaje",
         "log_trace": "Salida",
-        "find": "Buscar registros..."
+        "find": "Buscar registros...",
+        "enable": "Activar Script",
+        "disable": "Desactivar Script"
     },       
     
     "revoke": "Revocar Token",
-    "script.enable": "Activar Script",
-    "script.disable": "Desactivar Script",
     "no_logs": "No hay registros de log"
 
 }

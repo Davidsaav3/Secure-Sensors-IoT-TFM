@@ -245,27 +245,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
         .subscribe(
           (data: any) => {
             this.alertPassOk = true;
+            this.temp3= setTimeout(() => {
+              this.alertPassOk = false;
+            }, 2000);
             this.change_password = false;
   
             this.storageService.setChange("0");
             //this.clouseModal();
-            
-            this.temp3= setTimeout(() => {
-              this.alertPassOk = false;
-            }, 2000);
+
+
           },
           (error) => {
+            console.log('HOLA')
             this.change_password = false;
             this.storageService.setChange("0");
             
             console.error("Error:", error);
+
             this.alertPassNot = true;
-            
-            if (error && error.errors) {
-              // Handle errors here
-              // For example, you can access error.errors and display appropriate error messages
-            }
-            
             this.temp5= setTimeout(() => {
               this.alertPassNot = false;
             }, 2000);
