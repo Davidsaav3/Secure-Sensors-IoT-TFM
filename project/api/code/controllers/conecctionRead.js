@@ -27,7 +27,7 @@ const bcrypt = require('bcrypt');
     } 
     else {
       query = `SELECT id, description, mqttQeue, appID, subscribe, enabled, (SELECT COUNT(*) AS total FROM conecction_read) as total FROM conecction_read WHERE description LIKE ? OR mqttQeue LIKE ? OR appID LIKE ? OR subscribe LIKE ? OR enabled LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
-      const likePattern = `%${text_searc}%`;
+      const likePattern = `%${text_search}%`;
       values = Array(5).fill(likePattern).concat([order, order_type, tam, act]);
     }
   

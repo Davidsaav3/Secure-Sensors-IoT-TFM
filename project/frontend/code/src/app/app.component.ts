@@ -13,6 +13,7 @@ import { StorageService } from './services/storage.service';
 })
 export class AppComponent {
   
+  title= environment.title;
   postRefresh: string = environment.baseUrl+environment.url.users+'/refresh';
   AppVersion = environment.AppVersion;
   activeLang = environment.languageLang;
@@ -20,19 +21,20 @@ export class AppComponent {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
 
-  ngOnInit(): void { // Inicializa
+  ngOnInit(): void { 
+    // Inicializa
     //console.log('NGINIT APP')
-    if(this.authService.isAuthenticated()){
+    //if(this.authService.isAuthenticated()){
       //console.log('ARRANCANDO INT')
       setInterval(async () => {
-        if(this.authService.isAuthenticated()){
+        //if(this.authService.isAuthenticated()){
           const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
           if (!newToken) {
             console.warn('La renovación del token ha fallado');
           }
-        }
+        //}
       }, environment.acces_token_timeout); //300000 y 5000
-    }
+    //}
   }
 
   //ngOnDestroy
@@ -69,8 +71,14 @@ export class AppComponent {
   logOut(){
     this.storageService.setId('');
     this.storageService.setUsername('');
-    this.storageService.setLang('');
+    this.storageService.setChange('');
+    this.storageService.setStatus('');
+    this.storageService.setDate('');
     this.storageService.setToken('');
+    this.storageService.setPage('');
+    this.storageService.setSearch('');
+    this.storageService.setOpen('');
+    this.storageService.setMap('');
     this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }
@@ -101,6 +109,4 @@ export class AppComponent {
     this.activeLang = lang;
     this.translate.use(lang);
   }
-  
-  title = environment.title;
 }

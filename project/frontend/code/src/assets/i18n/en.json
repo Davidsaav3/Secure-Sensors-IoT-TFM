@@ -53,10 +53,13 @@
         "l1" : "All",
         "l2" : "All states",
 
-        "general" : "Correction general",
-        "time_general" : "Correction time general",
-        "sensors.specific" : "Correction specific",
-        "sensors.time_specific" : "Correction time specific"
+        "all_devices" : "All Devices",
+        "discard_value": "Discarded value",
+        "buscar_usuarios": "Search for users...",
+        "copy": "Copy",
+        "data": "No data",
+        "general" : "General correction",
+        "time_general" : "General time correction"
     },
 
     "devices": {
@@ -169,17 +172,15 @@
     "hide": "Hide settings",
     "sensors.discard_value": "Discard value",
 
-    "users": "Users",
     "credentials": "Credentials",
     "script": "Script",
-    "monitoring": "Monitoring",
     "management": "Management",
     "settings": "Settings",
     "edit.profile": "Change username",
     "log.out": "Log out",
 
-    "user": "User",
     "users": {
+        "users": "Users",
         "of": "User ",
         "new": "New user ",
         "duplicate": "Duplicate ",
@@ -237,14 +238,14 @@
     "user.a3" : "Password updated.",
     "user.a4": "Error updating password.",
 
-    "connection-read": "Acquisition", 
-    "connection-write": "Intake",
-    "new_connection": "New connection",
-    "search_connections": "Search for connections...",
+    "conecction-read": "Acquisition", 
+    "conecction-write": "Intake",
+    "new_conecction": "New conecction",
+    "search_conecctions": "Search for conecctions...",
 
     "conecctions": {
         "duplicate": "Duplicate", 
-        "neuvo": "New connection", 
+        "neuvo": "New conecction", 
         "of": "Connection",
 
         "authorization": "Authorization",
@@ -271,7 +272,7 @@
         "e8" : "Error duplicating conecction"
     },
 
-    "no_connections": "Connections not found, disable filters",
+    "no_conecctions": "Connections not found, disable filters",
     "no_users": "Users not found, disable filters",
 
     "change_password" : "Change password",
@@ -283,11 +284,12 @@
     "monitoreo.id": "Identification",
 
     "monitoring": {
+        "monitoring": "Monitoring",
         "user_id": "ID",
         "username": "User",
         "log_date": "Expiration date",
         "date": "Date",	 
-        "timed_out": "Timed_out",
+        "timed_out": "Timed out",
         "log_code": "Code",
         "log_status": "Status",
         "log_method": "Method",

@@ -33,12 +33,16 @@ export class StorageService {
     this.page = localStorage.getItem('page') || null;
     this.search = localStorage.getItem('search') || null;
     this.lang = localStorage.getItem('lang') || 'es';
+
+    this.setItemToLocalStorage('lang', this.lang);
+    this.setItemToLocalStorage('page', this.page);
+    this.setItemToLocalStorage('open', this.open);
   }
 
   private setItemToLocalStorage(key: string, value: string | null): void {
     if (value !== null && value !== '') {
       localStorage.setItem(key, value);
-    } 
+    }
     else {
       localStorage.removeItem(key);
     }
@@ -56,7 +60,7 @@ export class StorageService {
   // status //
   setStatus(status: string): void {
     this.status = status;
-    localStorage.setItem('status', status);
+    this.setItemToLocalStorage('status', status);
   }
   getStatus(): string | null {
     return this.status;
@@ -65,7 +69,7 @@ export class StorageService {
   // date //
   setDate(date: string): void {
     this.date = date;
-    localStorage.setItem('date', date);
+    this.setItemToLocalStorage('date', date);
   }
   getDate(): string | null {
     return this.date;
@@ -74,7 +78,7 @@ export class StorageService {
   // id //
   setId(id: string): void {
     this.id = id;
-    localStorage.setItem('id', id);
+    this.setItemToLocalStorage('id', id);
   }
   getId(): string | null {
     return this.id;
@@ -83,7 +87,7 @@ export class StorageService {
   // username //
   setUsername(username: string): void {
     this.username = username;
-    localStorage.setItem('username', username);
+    this.setItemToLocalStorage('username', username);
   }
   getUsername(): string | null {
     return this.username;
@@ -92,7 +96,7 @@ export class StorageService {
   // pass //
   setChange(pass: string): void {
     this.pass = pass;
-    localStorage.setItem('pass', pass);
+    this.setItemToLocalStorage('pass', pass);
   }
   getChange(): string | null {
     return this.pass;
@@ -101,7 +105,7 @@ export class StorageService {
   // search //
   setSearch(search: string): void {
     this.search = search;
-    localStorage.setItem('search', search);
+    this.setItemToLocalStorage('search', search);
   }
   getSearch(): string | null {
     return this.search;
@@ -110,7 +114,7 @@ export class StorageService {
   // page //
   setPage(page: string): void {
     this.page = page;
-    localStorage.setItem('page', page);
+    this.setItemToLocalStorage('page', page);
   }
   getPage(): string | null {
     return this.page;
@@ -119,7 +123,7 @@ export class StorageService {
   // open //
   setOpen(open: string): void {
     this.open = open;
-    localStorage.setItem('open', open);
+    this.setItemToLocalStorage('open', open);
   }
   getOpen(): string | null {
     return this.open;
@@ -128,7 +132,7 @@ export class StorageService {
   // map //
   setMap(map: string): void {
     this.map = map;
-    localStorage.setItem('map', map);
+    this.setItemToLocalStorage('map', map);
   }
   getMap(): string | null {
     return this.map;
@@ -137,7 +141,7 @@ export class StorageService {
   // lang //
   setLang(lang: string): void {
     this.lang = lang;
-    localStorage.setItem('lang', lang);
+    this.setItemToLocalStorage('lang', lang);
   }
   getLang(): string | null {
     return this.lang;

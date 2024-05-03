@@ -46,6 +46,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   username= "davidsaav";
   id= 1;
   token= '';
+  token2= '';
 
   alertPassOk= false;
   alertUserOk= false;
@@ -110,8 +111,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.readStorage();
     this.translate.use(this.activeLang);
     //('JUSTO ANTES')
-    if(this.authService.isAuthenticated()){
+    //if(this.authService.isAuthenticated()){
       this.statusScript();
+    //}
+    if(!this.authService.isAuthenticated()){
+      this.token2= '';
     }
   }
 
@@ -273,8 +277,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   
 
   saveStorage() { // Guarda datos en el local storage
-    this.storageService.setId(this.id.toString());
-    this.storageService.setUsername(this.username);
     this.storageService.setLang(this.activeLang);
   }
 
@@ -282,9 +284,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     const idString: string | null = this.storageService.getId();
     const id: number = idString !== null ? parseInt(idString) : 1; 
     this.id = id;
-    this.username = this.storageService.getUsername() ?? "davidsaav";
-    this.activeLang = this.storageService.getLang() ?? "es";
+    this.username = this.storageService.getUsername() ?? '';
+    this.activeLang = this.storageService.getLang() ?? 'es';
     this.token = this.storageService.getToken() ?? '';
+    this.token2 = this.storageService.getToken() ?? '';
     const storedValue = this.storageService.getChange();
     this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
     if(this.change_password){
@@ -300,6 +303,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.storageService.setStatus('');
     this.storageService.setDate('');
     this.storageService.setToken('');
+    this.storageService.setPage('');
+    this.storageService.setSearch('');
+    this.storageService.setOpen('');
+    this.storageService.setMap('');
     this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }
@@ -323,7 +330,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     let token = this.storageService.getToken() ?? ''; // parametrizar
     let headers = new HttpHeaders().set('Authorization', `${token}`);
     //('statusscript')
-    if(this.authService.isAuthenticated()){
+    //if(this.authService.isAuthenticated()){
       this.http.get<any>(this.backendURL + "/script-status", {headers}).subscribe(
         (data) => {
           this.date= data.date;
@@ -367,6 +374,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
           this.status= 2;
         } 
       );
-    }
+    //}
   }
 }

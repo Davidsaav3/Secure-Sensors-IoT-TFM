@@ -37,7 +37,6 @@ const { spawn } = require("child_process");
         let horas = String(fechaOriginal.getHours()).padStart(2, '0');
         let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
         let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
-        let milisegundos = fechaOriginal.getMilliseconds();
         let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
 
         let fechaActual = new Date();
@@ -125,7 +124,7 @@ const { spawn } = require("child_process");
     else {
       query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ?) as total FROM log WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
       const likePattern = `%${text_search}%`;
-      queryParams = Array(14).fill(likePattern).concat([order, order_type, tam, act]);
+      queryParams = Array(12).fill(likePattern).concat([order, order_type, tam, act]);
     }
 
     con.query(query, queryParams, (err, result) => {

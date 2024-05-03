@@ -168,14 +168,10 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   };
 
   ngOnInit(): void { // Inicialización
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     this.initFilters();
     this.selectSensors.sensors = [];
-    this.readStorage();
-   
-    this.http.get(this.getSensorsList, {headers}).subscribe(
+
+    this.http.get(this.getSensorsList, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         data.unshift({
           id: -3,
@@ -186,7 +182,6 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
           id: -2,
           type: this.translate.instant('text_2'),
         });
-
         this.selectSensorsCopy.sensors = data;
         for (let index = 0; index < data.length; index++) {
           this.selectSensorsCopy.sensors[index].name = data[index].type;
@@ -196,6 +191,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
         console.error('Error al obtener datos:', error);
       }
     );
+    this.readStorage();
   }
 
   ngOnDestroy(){
@@ -1020,9 +1016,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   readStorage() { // Recupera datos en local storage
-    this.openAux = JSON.parse(this.storageService.getOpen() ?? "");
+    this.openAux = JSON.parse(this.storageService.getOpen() ?? "true");
     this.colorMap = this.storageService.getMap() ?? environment.defaultMapsStyle;
-    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? ""), 10);
+    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
     this.search.value = this.storageService.getSearch() ?? "";
     if(this.search.value!=""){
       this.searched= true;

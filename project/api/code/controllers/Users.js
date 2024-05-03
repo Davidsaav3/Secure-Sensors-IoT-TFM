@@ -96,7 +96,7 @@ const cookieParser = require('cookie-parser');
                                 const newRefreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
                                 
                                 const currentDate = new Date();
-                                const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
+                                const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
                                 const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
                                 // Actualizar token_refresh
@@ -145,7 +145,7 @@ const cookieParser = require('cookie-parser');
                         const refreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
 
                         const currentDate = new Date();
-                        const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
+                        const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
                         const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
                         // Actualizar el nuevo token_refresh
@@ -256,7 +256,7 @@ const cookieParser = require('cookie-parser');
         }
 
         const currentDate = new Date();
-        const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
+        const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
         const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
         const query = "INSERT INTO users (user, password, change_password, enabled, revoke_date) VALUES (?, ?, ?, ?, ?)";
@@ -289,7 +289,7 @@ const cookieParser = require('cookie-parser');
 
     const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME }); 
     const currentDate = new Date();
-    const futureDate = new Date(currentDate.getTime() + (process.env.ACCESS_TOKEN_SECONDS));
+    const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
     const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
     if (!id && (user || password)) {

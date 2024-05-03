@@ -36,7 +36,7 @@
             </ul>
         </div>
         <div class="nav nav-tabs mb-0 p-0" *ngIf="ruteAux[2] === 'edit' || ruteAux[2] === 'new' || ruteAux[2] === 'duplicate'">
-            <ul class="nav">
+            <ul class="nav" style="margin: 0px;">
                 <li class="nav-item">
                     <a class="nav-link me-3">&nbsp;</a>
                 </li>
@@ -45,7 +45,7 @@
     </div>
     <div class="col-12 col-md-7 p-0 pt-2">
         <div class="d-flex" style="justify-content: flex-end;">
-            <div *ngIf="token !== ''" class="pe-3" [ngClass]="{'active': rute === '/' + script}" style="cursor: pointer;">
+            <div *ngIf="token2 !== ''" class="pe-3" [ngClass]="{'active': rute === '/' + script}" style="cursor: pointer;">
                 <span (click)="statusScript()" *ngIf="status == 2" class="badge rounded-pill text-bg-warning fs-5 mt-1">
                     <span class="spinner-grow spinner-grow-sm me-1 mt-0" role="status" aria-hidden="true"></span>
                     {{ 'script.click' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span>
@@ -53,7 +53,7 @@
                 <span [routerLink]="'/' + script" *ngIf="status == 1" class="badge rounded-pill text-bg-success fs-5 mt-1">{{ 'script_enable' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span></span>
                 <span [routerLink]="'/' + script" *ngIf="status == 0" class="badge rounded-pill text-bg-danger fs-5 mt-1">{{ 'script_disable' | translate }} <span class="mb-0" style="font-weight: 400;">{{ date }}</span></span>
             </div>
-            <div *ngIf="token !== ''" class="pe-3">
+            <div *ngIf="token2 !== ''" class="pe-3">
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check visually-hidden" name="btnradio" id="btnradio2" autocomplete="off">
                     <label class="btn btn-secondary" for="btnradio2" [routerLink]="'/' + deviceConfigurations" [ngStyle]="{ 'background-color': ruteAux[1] === deviceConfigurations || ruteAux[1] === sensorsTypes || ruteAux[1] === dataStructure || ruteAux[1] === variableDataStructure ? '#565e64' : '' }">{{ 'management' | translate }}</label>
@@ -80,7 +80,7 @@
                     </svg>
                 </button>
             </div> -->
-            <div *ngIf="token !== ''" class="pe-3" style="cursor: pointer;">
+            <div *ngIf="token2 !== ''" class="pe-3" style="cursor: pointer;">
                 <div class="dropdown">
                     <div id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" class="circle-container" style=" width: 40px; height: 40px; background-color: #fff; border: 1px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                         <span class="circle-text">{{ username.substr(0, 1).toUpperCase() }}</span>
@@ -159,7 +159,7 @@
 						<div class="col-12 mt-2">
 							<label for="password">{{ 'login.pass2' | translate }}</label>
 							<div class="input-group">
-								<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="{{ passwordFieldType1 }}" id="password" class="form-control" name="password" required autocomplete>
+								<input (ngModelChange)="change1=true" value="{{ formapassword.password }}" [(ngModel)]="formapassword['password']" maxlength="45" minlength="8" type="{{ passwordFieldType1 }}" class="form-control" name="password" required autocomplete>
 								<span (click)="togglePasswordType1()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">
 									<svg *ngIf="this.passwordFieldType1=='password'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
 										<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
