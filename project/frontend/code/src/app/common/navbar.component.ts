@@ -89,6 +89,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   passwordFieldType1 = 'password';
 
   ngOnInit(): void { // Inicializa
+    this.lanzarTimer();
     if (this.storageService.getStatus()) {
       let aux= this.storageService.getStatus();
       
@@ -319,66 +320,67 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   lanzarTimer() {
+    let consecutivoFallos = 0; // Contador de fallos consecutivos
     const bucle = () => {
-      if (this.contador < environment.script_status_times) {
-        setTimeout(() => {
-          this.statusScript();
-          this.contador++;
-          bucle();
-        }, environment.acces_token_timeout);
-      }
+        if (consecutivoFallos < environment.acces_token_times) {
+            setTimeout(() => {
+                this.statusScript().then(() => {
+                    consecutivoFallos = 0; // Reiniciar contador en caso de éxito
+                }).catch(() => {
+                    consecutivoFallos++; // Incrementar contador en caso de fallo
+                }).finally(() => {
+                    bucle(); // Llamar recursivamente al bucle
+                });
+            }, environment.acces_token_timeout);
+        }
     };
     bucle();
-  }
-
-  statusScript(): void { // STATUS //
-    //('statusscript')
-    //if(this.authService.isAuthenticated()){
-      this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).subscribe(
-        (data) => {
-          this.contador= 0;
-          this.date= data.date;
-
-          const fechaOriginal = new Date(this.date);
-          fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
-          let anio = fechaOriginal.getFullYear();
-          let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
-          let dia = String(fechaOriginal.getDate()).padStart(2, '0');
-          let horas = String(fechaOriginal.getHours()).padStart(2, '0');
-          let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
-          let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
-          let milisegundos = fechaOriginal.getMilliseconds();
-          let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
-  
-          let fechaActual = new Date();
-          let fechaMenos5Segundos = new Date(fechaActual.getTime());
-          anio = fechaMenos5Segundos.getFullYear();
-          mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
-          dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
-          horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
-          minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
-          segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
-          let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
-  
-          //console.log(formatoPersonalizado)
-          //console.log(formatoPersonalizado2)
-
-          if(formatoPersonalizado<formatoPersonalizado2){
-            this.status= 1;
-          }
-          if(formatoPersonalizado>formatoPersonalizado2){
-            this.status= 0;
-          }
-          this.storageService.setStatus(this.status.toString());
-          this.storageService.setDate(this.date.toString());
-          this.lanzarTimer();
-        },
-        (error) => {
-          console.error("Error al obtener el estado:", error);
-          this.status= 2;
-          this.lanzarTimer();
-        } 
-      );
-    //}
-  }
 }
+
+async statusScript(): Promise<void> {
+    try {
+        const data = await this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).toPromise();
+        this.contador = 0;
+        this.date = data.date;
+
+        const fechaOriginal = new Date(this.date);
+        fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
+        let anio = fechaOriginal.getFullYear();
+        let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
+        let dia = String(fechaOriginal.getDate()).padStart(2, '0');
+        let horas = String(fechaOriginal.getHours()).padStart(2, '0');
+        let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
+        let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
+        let milisegundos = fechaOriginal.getMilliseconds();
+        let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+
+        let fechaActual = new Date();
+        let fechaMenos5Segundos = new Date(fechaActual.getTime());
+        anio = fechaMenos5Segundos.getFullYear();
+        mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
+        dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
+        horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
+        minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
+        segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
+        let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+
+        //console.log(formatoPersonalizado)
+        //console.log(formatoPersonalizado2)
+
+        if(formatoPersonalizado<formatoPersonalizado2){
+          this.status= 1;
+        }
+        if(formatoPersonalizado>formatoPersonalizado2){
+          this.status= 0;
+        }
+        this.storageService.setStatus(this.status.toString());
+        this.storageService.setDate(this.date.toString());
+        //this.lanzarTimer();
+    } catch (error) {
+        console.error("Error al obtener el estado:", error);
+        throw error; // Relanzar el error para ser capturado por el llamador
+    }
+}
+
+}
+  

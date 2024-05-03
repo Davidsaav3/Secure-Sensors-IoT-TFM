@@ -56,8 +56,9 @@ export const environment = {
     script_status_timeout: 5000,
     title: 'Sensors IoT',
 
-    acces_token_times: 5,
-    script_status_times: 5,
+    acces_token_times: 2,
+    script_status_times: 2,
     script_status_frontend: 5000,
+    acces_token_frontend: 5000,
 
 };
