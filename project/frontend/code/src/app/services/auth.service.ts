@@ -7,9 +7,9 @@ import { StorageService } from './storage.service';
   providedIn: 'root'
 })
 export class AuthService {
-  redirectUrl: string | null = null; 
+  redirectUrl: string | null = null;
 
-  constructor(private storageService: StorageService,private http: HttpClient, public jwtHelper: JwtHelperService) {}
+  constructor(private storageService: StorageService, private http: HttpClient, public jwtHelper: JwtHelperService) { }
 
   isAuthenticated(): boolean {
     let isAuthenticated = false;
@@ -19,5 +19,5 @@ export class AuthService {
     }
     return isAuthenticated;
   }
-  
+
 }

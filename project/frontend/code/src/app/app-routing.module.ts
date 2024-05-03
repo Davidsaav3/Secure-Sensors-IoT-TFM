@@ -19,22 +19,22 @@ import { environment } from "./environments/environment"
 
 const routes: Routes = [
   {
-    path:environment.rute.deviceConfigurations, component: DeviceComponent, canActivate: [AuthGuard] ,
+    path: environment.rute.deviceConfigurations, component: DeviceComponent, canActivate: [AuthGuard],
     children: [
       {
         path: '',
-        component: DevicesComponent, canActivate: [AuthGuard] 
+        component: DevicesComponent, canActivate: [AuthGuard]
       },
       {
         path: 'duplicate',
         children: [
           {
             path: ':id',
-            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
+            component: DevicesNewEditComponent, canActivate: [AuthGuard]
           },
           {
             path: '**',
-            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
+            component: DevicesNewEditComponent, canActivate: [AuthGuard]
           }
         ]
       },
@@ -43,11 +43,11 @@ const routes: Routes = [
         children: [
           {
             path: ':id',
-            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
+            component: DevicesNewEditComponent, canActivate: [AuthGuard]
           },
           {
             path: '**',
-            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
+            component: DevicesNewEditComponent, canActivate: [AuthGuard]
           }
         ]
       },
@@ -56,49 +56,49 @@ const routes: Routes = [
         children: [
           {
             path: ':id',
-            component: DevicesNewEditComponent, canActivate: [AuthGuard] 
+            component: DevicesNewEditComponent, canActivate: [AuthGuard]
           },
           {
             path: '**',
-            component: DeviceComponent, canActivate: [AuthGuard] 
+            component: DeviceComponent, canActivate: [AuthGuard]
           }
         ]
       },
       {
         path: '**',
-        component: DeviceComponent, canActivate: [AuthGuard] 
+        component: DeviceComponent, canActivate: [AuthGuard]
       },
     ]
   },
-  { 
-    path:environment.rute.sensorsTypes, component: SensorsComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.dataStructure, component: StructureComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.variableDataStructure, component: VariableStructureComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.login, component: LoginComponent
-  },
-  { 
-    path:environment.rute.users, component: UsersComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.conecctionRead, component: ConecctionReadComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.conecctionWrite, component: ConecctionWriteComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.script, component: ScriptComponent, canActivate: [AuthGuard] 
-  },
-  { 
-    path:environment.rute.monitoring, component: MonitoringComponent, canActivate: [AuthGuard] 
+  {
+    path: environment.rute.sensorsTypes, component: SensorsComponent, canActivate: [AuthGuard]
   },
   {
-    path:'**',
+    path: environment.rute.dataStructure, component: StructureComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: environment.rute.variableDataStructure, component: VariableStructureComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: environment.rute.login, component: LoginComponent
+  },
+  {
+    path: environment.rute.users, component: UsersComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: environment.rute.conecctionRead, component: ConecctionReadComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: environment.rute.conecctionWrite, component: ConecctionWriteComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: environment.rute.script, component: ScriptComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: environment.rute.monitoring, component: MonitoringComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: '**',
     redirectTo: environment.rute.deviceConfigurations
   },
 ];

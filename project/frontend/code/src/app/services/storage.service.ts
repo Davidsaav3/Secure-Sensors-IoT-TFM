@@ -50,7 +50,7 @@ export class StorageService {
       localStorage.removeItem(key);
     }
   }
-  
+
   // token //
   setToken(token: string): void {
     this.token = token;
@@ -125,7 +125,7 @@ export class StorageService {
 
   // per page //
   setPerPage(perpage: string): void {
-    this.perpage =perpage;
+    this.perpage = perpage;
     this.setItemToLocalStorage('perpage', perpage);
   }
   getPerPage(): string | null {

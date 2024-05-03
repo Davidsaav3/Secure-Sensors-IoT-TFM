@@ -18,10 +18,10 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   sharedLat: any = "";
   sharedLon: any = "";
   date: any;
-  
+
   state = 0; // 0 new // 1 duplicate // 2 edit
   rute = "";
-  ruteAux: any= 0;
+  ruteAux: any = 0;
   cont = 0;
 
   temp1: any = null;
@@ -33,16 +33,15 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   temp7: any = null;
 
   @HostListener("window:resize", ["$event"])
-  
+
   onResize() {
     window.resizeBy(-1, 0);
     this.resize();
   }
   public id: any;
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
-    let token = this.storageService.getToken() ?? ''; 
-    
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, private router: Router, private dataSharingService: DataSharingService, private rutaActiva: ActivatedRoute,) {
+
 
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
@@ -52,12 +51,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       const idParam = this.rutaActiva.snapshot.params["id"];
       if (!isNaN(idParam) && Number.isInteger(Number(idParam))) {
         this.id = parseInt(idParam, 10);
-      } 
+      }
       else {
         console.error("El parámetro 'id' no es un número entero válido.");
       }
     }
-    
+
     if (this.ruteAux[2] == "new") {
       this.http.get(this.getStructureList, this.httpOptionsService.getHttpOptions()).subscribe(
         (quotesData: any) => {
@@ -65,18 +64,18 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           this.auxFixed = quotesData.data_estructure[0].id_estructure;
           this.devices.id_data_estructure = this.auxFixed;
         },
-        (error:any) => {
+        (error: any) => {
           console.error(error);
         }
       );
     }
   }
 
-  idDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"/id";
-  postDevice: string = environment.baseUrl+environment.url.deviceConfigurations;
-  getStructureList: string = environment.baseUrl+environment.url.dataStructure+"/get_list";
-  duplicateDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"/duplicate";
-  getSensorsList: string = environment.baseUrl+environment.url.sensorsTypes+"/get_list";
+  idDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/id";
+  postDevice: string = environment.baseUrl + environment.url.deviceConfigurations;
+  getStructureList: string = environment.baseUrl + environment.url.dataStructure + "/get_list";
+  duplicateDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/duplicate";
+  getSensorsList: string = environment.baseUrl + environment.url.sensorsTypes + "/get_list";
 
   alt1 = true;
   alt2 = true;
@@ -169,14 +168,14 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit(): void {
-    let token = this.storageService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? '';
     let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     this.devices.sensors = [];
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.getStructure(0);
-  
+
     this.http.get(this.getSensorsList, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.selectSensors.sensors = data;
@@ -185,12 +184,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         console.error(error);
       }
     );
-  
+
     if (this.ruteAux[2] == "edit") {
       this.showLarge = false;
       this.getDevices();
-  
-      this.temp1= setTimeout(() => { // Asincrono
+
+      this.temp1 = setTimeout(() => { // Asincrono
         this.dataSharingService.sharedLat$.subscribe((data) => {
           this.devices.lat = data;
         });
@@ -199,11 +198,11 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         });
       }, 1);
     }
-  
+
     if (this.ruteAux[2] == "new" || this.ruteAux[2] == "duplicate") {
 
       if (this.ruteAux[2] == "duplicate") {
-        this.state= 1;
+        this.state = 1;
         // 1. Duplicate
         this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
@@ -221,7 +220,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               this.devices.sensors[index].id_device = this.id;
             }
 
-            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text', headers}).subscribe(
+            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text', headers }).subscribe(
               (data: string) => {
                 this.devices.uid = data;
               },
@@ -238,7 +237,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       }
 
       if (this.ruteAux[2] == "new") {
-        this.state= 0;
+        this.state = 0;
         // 0. New
         this.devices.lat = 0;
         this.devices.lon = 0;
@@ -249,7 +248,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       this.getShared();
       this.createDate();
     }
-  
+
     setInterval(() => {
       this.dataSharingService.sharedAct$.subscribe((data) => {
         if (data != false) {
@@ -258,12 +257,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       });
       this.readStorage();
     }, 10);
-  
+
     this.onResize();
     this.showLarge = false;
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -272,12 +271,11 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     //this.temp6.clearInterval();
     //this.temp7.clearInterval();
   }
-  
+
   /* GET */
 
   getDevices() { // Obtene el Dispositivo
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
@@ -301,7 +299,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         console.error(error);
       }
     );
-    
+
   }
 
   getSensorsLocal(id: any, ord: any) { // Ordena columnas de sensores
@@ -312,19 +310,19 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.sensors.sort((a: any, b: any) => Number(a.position) - Number(b.position));
       }
       if (id == "datafield") {
-        this.devices.sensors.sort((a: any, b: any) =>a.datafield.localeCompare(b.datafield));
+        this.devices.sensors.sort((a: any, b: any) => a.datafield.localeCompare(b.datafield));
       }
       if (id == "nodata") {
-        this.devices.sensors.sort((a: any, b: any) =>a.nodata.localeCompare(b.nodata));
+        this.devices.sensors.sort((a: any, b: any) => a.nodata.localeCompare(b.nodata));
       }
       if (id == "correction_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.correction_specific.localeCompare(b.correction_specific));
+        this.devices.sensors.sort((a: any, b: any) => a.correction_specific.localeCompare(b.correction_specific));
       }
       if (id == "correction_time_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.correction_time_specific.localeCompare(b.correction_time_specific));
+        this.devices.sensors.sort((a: any, b: any) => a.correction_time_specific.localeCompare(b.correction_time_specific));
       }
       if (id == "topic_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.topic_specific.localeCompare(b.topic_specific));
+        this.devices.sensors.sort((a: any, b: any) => a.topic_specific.localeCompare(b.topic_specific));
       }
     }
     if (ord == "DESC") {
@@ -332,32 +330,31 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.sensors.sort((a: any, b: any) => Number(b.position) - Number(a.position));
       }
       if (id == "datafield") {
-        this.devices.sensors.sort((a: any, b: any) =>b.datafield.localeCompare(a.datafield));
+        this.devices.sensors.sort((a: any, b: any) => b.datafield.localeCompare(a.datafield));
       }
       if (id == "nodata") {
-        this.devices.sensors.sort((a: any, b: any) =>b.nodata.localeCompare(a.nodata));
+        this.devices.sensors.sort((a: any, b: any) => b.nodata.localeCompare(a.nodata));
       }
       if (id == "correction_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.correction_specific.localeCompare(a.correction_specific));
+        this.devices.sensors.sort((a: any, b: any) => b.correction_specific.localeCompare(a.correction_specific));
       }
       if (id == "correction_time_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.correction_time_specific.localeCompare(a.correction_time_specific));
+        this.devices.sensors.sort((a: any, b: any) => b.correction_time_specific.localeCompare(a.correction_time_specific));
       }
       if (id == "topic_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.topic_specific.localeCompare(a.topic_specific));
+        this.devices.sensors.sort((a: any, b: any) => b.topic_specific.localeCompare(a.topic_specific));
       }
     }
   }
 
   getStructure(num: any) { // Obtiene las listas de estructuras de datos
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     this.http.get(`${this.getStructureList}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (quotesData: any) => {
         if (num === 1) {
           this.structures.structure = quotesData.variable_data_structure;
-        } 
+        }
         else {
           this.structures.structure = quotesData.data_estructure;
         }
@@ -373,8 +370,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* NEW */
 
   newDevices(form: any) { // Guardar la información del Dispositivo
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     this.createDate();
     this.devices.createdAt = this.date;
@@ -403,16 +399,16 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.sensors = sensors_aux;
         this.http.post<any>(this.postDevice, this.devices, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
-            if(data.found==true){
-              this.temp2= setTimeout(() => {
+            if (data.found == true) {
+              this.temp2 = setTimeout(() => {
                 this.actNot = false;
               }, 2000);
-              this.actNot= true;
+              this.actNot = true;
               this.devices.createdAt = '';
               this.devices.updatedAt = '';
             }
-            else{
-              this.id= data.insertId;
+            else {
+              this.id = data.insertId;
               //console.log(data.insertId);
               this.newSensors();
             }
@@ -422,21 +418,21 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           }
         );
         this.devices.sensors = [];
-      } 
+      }
       else {
         this.http.post<any>(this.postDevice, this.devices, this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data) => {
-              if(data.found==true){
-                this.temp3= setTimeout(() => {
+              if (data.found == true) {
+                this.temp3 = setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
-                this.actNot= true;        
+                this.actNot = true;
                 this.devices.createdAt = '';
-                this.devices.updatedAt = '';     
+                this.devices.updatedAt = '';
               }
-              else{
-                this.id= data.insertId;
+              else {
+                this.id = data.insertId;
                 //console.log(data.insertId);
                 this.newSensors();
               }
@@ -468,7 +464,6 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* EDIT */
 
   editDevices(form: any) { // Edita la información del Dispositivo
-    let token = this.storageService.getToken() ?? ''; 
 
     this.getShared();
     this.createDate();
@@ -495,19 +490,19 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
-              if(data.found==true){
-                this.temp4= setTimeout(() => {
+              if (data.found == true) {
+                this.temp4 = setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
-                this.actNot= true;             
-              }    
-              else{
+                this.actNot = true;
+              }
+              else {
                 this.actOk = true;
-                this.temp4= setTimeout(() => {
+                this.temp4 = setTimeout(() => {
                   this.actOk = false;
                 }, 2000);
-              }   
-           },
+              }
+            },
             (error) => {
               console.error("Error:", error);
             }
@@ -520,18 +515,18 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
-              if(data.found==true){
-                this.temp5= setTimeout(() => {
+              if (data.found == true) {
+                this.temp5 = setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
-                this.actNot= true;             
-              }      
-            else{
-              this.actOk = true;
-              this.temp6= setTimeout(() => {
-                this.actOk = false;
-              }, 2000);
-            }
+                this.actNot = true;
+              }
+              else {
+                this.actOk = true;
+                this.temp6 = setTimeout(() => {
+                  this.actOk = false;
+                }, 2000);
+              }
             },
             (error) => {
               console.error("Error:", error);
@@ -548,18 +543,18 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   /* DELET */
 
   deleteDevices(idActual: any) { // Elimina el Dispositivo
-    let token = this.storageService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? '';
 
     var devices = {
       id: idActual,
     };
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}` }),
       body: JSON.stringify(devices)
     };
     this.http.delete(this.postDevice, httpOptions)
       .subscribe(
-        (response: any) => {
+        () => {
           this.router.navigate(["/devices"]);
         },
         (error) => {
@@ -604,10 +599,9 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   }
 
   /* RECHARGE */
-  
+
   rechargeMap() { // Recargar mapa a su estado anterior a la edición sin guardado
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
@@ -702,7 +696,6 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   async getStructuresList(event: any) {
     let num = event.target.checked ? 1 : 0;
     try {
-      const result = await this.getStructure(num);
       this.devices.variable_configuration = num;
       if (num == 0) {
         this.devices.id_data_estructure = this.auxFixed;

@@ -14,20 +14,20 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 export class StructureComponent implements OnInit, OnDestroy {
 
   resultsPerPag = environment.resultsPerPag;
-  getVariableStructureList: string =environment.baseUrl+environment.url.variableDataStructure+"/get_list";
+  getVariableStructureList: string = environment.baseUrl + environment.url.variableDataStructure + "/get_list";
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
     this.http.get(`${this.getVariableStructureList}`, this.httpOptionsService.getHttpOptions())
-    .subscribe((quotesData: any) => {
-      this.aux = quotesData[0].id;
-    }, (error) => {
-      console.error("Error al obtener datos de estructura variable:", error);
-    });
+      .subscribe((quotesData: any) => {
+        this.aux = quotesData[0].id;
+      }, (error) => {
+        console.error("Error al obtener datos de estructura variable:", error);
+      });
   }
 
-  getEstructure: string = environment.baseUrl+environment.url.dataStructure+"";
-  postEstructure: string = environment.baseUrl+environment.url.dataStructure;
-  duplicateEstructure: string =environment.baseUrl+environment.url.dataStructure+"/duplicate";
+  getEstructure: string = environment.baseUrl + environment.url.dataStructure + "";
+  postEstructure: string = environment.baseUrl + environment.url.dataStructure;
+  duplicateEstructure: string = environment.baseUrl + environment.url.dataStructure + "/duplicate";
 
   totalPages = 5;
   currentPage = 1;
@@ -51,7 +51,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   saved = false;
   change = false;
   width = 0;
-  
+
   show = false;
   showAux = true;
   dupOk = false;
@@ -114,7 +114,7 @@ export class StructureComponent implements OnInit, OnDestroy {
     this.readStorage();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -135,7 +135,7 @@ export class StructureComponent implements OnInit, OnDestroy {
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
       this.searchAux = "search";
-    } 
+    }
     else {
       this.searchAux = this.search.value;
     }
@@ -143,26 +143,26 @@ export class StructureComponent implements OnInit, OnDestroy {
     this.charging = true;
     this.data = [];
     this.http.get(`${this.getEstructure}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
-    .subscribe((data: any) => {
-      this.charging = false;
-      if (data && data.length > 0 && data[0].total) {
-        this.totalPages = Math.ceil(data[0].total / this.quantPage);
-        this.total = data[0].total;
-      } 
-      else {
-        this.totalPages = 0;
-        this.total = 0;
-      }
-      this.data = data;
-      if (this.data.length < this.quantPage) {
-        this.totalPage = this.total;
-      } 
-      else {
-        this.totalPage = this.quantPage * this.currentPage;
-      }
-    }, (error) => {
-      console.error("Error al obtener datos de estructura:", error);
-    });
+      .subscribe((data: any) => {
+        this.charging = false;
+        if (data && data.length > 0 && data[0].total) {
+          this.totalPages = Math.ceil(data[0].total / this.quantPage);
+          this.total = data[0].total;
+        }
+        else {
+          this.totalPages = 0;
+          this.total = 0;
+        }
+        this.data = data;
+        if (this.data.length < this.quantPage) {
+          this.totalPage = this.total;
+        }
+        else {
+          this.totalPage = this.quantPage * this.currentPage;
+        }
+      }, (error) => {
+        console.error("Error al obtener datos de estructura:", error);
+      });
   }
 
   getStructuresLocal(id: any, ord: any) { // Ordena las columnas en local
@@ -172,37 +172,37 @@ export class StructureComponent implements OnInit, OnDestroy {
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) =>a.description.localeCompare(b.description));
+          this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
         }
         if (id == "configuration") {
-          this.data.sort((a: any, b: any) =>a.configuration.localeCompare(b.configuration));
+          this.data.sort((a: any, b: any) => a.configuration.localeCompare(b.configuration));
         }
         if (id == "identifier_code") {
-          this.data.sort((a: any, b: any) =>a.identifier_code.localeCompare(b.identifier_code));
+          this.data.sort((a: any, b: any) => a.identifier_code.localeCompare(b.identifier_code));
         }
         if (id == "id_variable_data_structure") {
-          this.data.sort((a: any, b: any) =>a.id_variable_data_structure.localeCompare(b.id_variable_data_structure));
+          this.data.sort((a: any, b: any) => a.id_variable_data_structure.localeCompare(b.id_variable_data_structure));
         }
       }
       if (ord == "DESC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) =>b.description.localeCompare(a.description));
+          this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
         }
         if (id == "configuration") {
-          this.data.sort((a: any, b: any) =>b.configuration.localeCompare(a.configuration));
+          this.data.sort((a: any, b: any) => b.configuration.localeCompare(a.configuration));
         }
         if (id == "identifier_code") {
-          this.data.sort((a: any, b: any) =>b.identifier_code.localeCompare(a.identifier_code));
+          this.data.sort((a: any, b: any) => b.identifier_code.localeCompare(a.identifier_code));
         }
         if (id == "id_variable_data_structure") {
-          this.data.sort((a: any, b: any) =>b.id_variable_data_structure.localeCompare(a.id_variable_data_structure));
+          this.data.sort((a: any, b: any) => b.id_variable_data_structure.localeCompare(a.id_variable_data_structure));
         }
       }
-    } 
+    }
     else {
       this.getStructures(id, ord);
     }
-    const sectionElement =this.elementRef.nativeElement.querySelector(".mark_select");
+    const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
       sectionElement.scrollIntoView({ behavior: "smooth" });
     }
@@ -251,11 +251,11 @@ export class StructureComponent implements OnInit, OnDestroy {
           (data: any) => {
             this.id = data.id;
             this.alertNew = true;
-  
-            this.temp1= setTimeout(() => {
+
+            this.temp1 = setTimeout(() => {
               this.alertNew = false;
             }, 2000);
-  
+
             this.openClouse();
             let estructure = {
               id_estructure: this.id,
@@ -265,7 +265,7 @@ export class StructureComponent implements OnInit, OnDestroy {
               id_variable_data_structure: this.estructure.id_variable_data_structure,
             };
             this.data.push(estructure);
-            this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
+            this.data.sort((a: { description: string }, b: { description: any }) => { return a.description.localeCompare(b.description); });
             this.actId = this.id;
             this.openEdit();
             this.state = 2;
@@ -274,12 +274,12 @@ export class StructureComponent implements OnInit, OnDestroy {
             console.error("Error:", error);
           }
         );
-  
+
       this.change = false;
     }
   }
 
-  openNew(id_estructure: any,description: any,configuration: any, identifier_code: any,id_variable_data_structure: any,variable_description: any) { // Abre Nueva estructura de datos
+  openNew(id_estructure: any, description: any, configuration: any, identifier_code: any, id_variable_data_structure: any, variable_description: any) { // Abre Nueva estructura de datos
     if (id_estructure == "") {
       this.estructureCopy.id_variable_data_structure = this.aux;
       this.estructure = {
@@ -290,7 +290,7 @@ export class StructureComponent implements OnInit, OnDestroy {
         id_variable_data_structure: this.aux,
         variable_description: variable_description,
       };
-    } 
+    }
     else {
       this.estructureCopy.id_variable_data_structure = id_variable_data_structure;
       this.estructure = {
@@ -331,20 +331,20 @@ export class StructureComponent implements OnInit, OnDestroy {
             console.error("Error:", error);
           }
         );
-      this.data = this.data.filter((data: { id_estructure: string }) =>data.id_estructure !== this.estructure.id_estructure);
+      this.data = this.data.filter((data: { id_estructure: string }) => data.id_estructure !== this.estructure.id_estructure);
       let estructure = this.estructure;
       this.data.push(estructure);
-      this.data.sort((a: { description: string }, b: { description: any }) => {return a.description.localeCompare(b.description);});
+      this.data.sort((a: { description: string }, b: { description: any }) => { return a.description.localeCompare(b.description); });
       this.actId = parseInt(this.estructure.id_estructure);
       this.openEdit();
       this.state = 2;
 
       if (num >= 0) {
-        this.data[num].variable_description =this.estructure.variable_description;
+        this.data[num].variable_description = this.estructure.variable_description;
       }
 
       this.saveOk = true;
-      this.temp2= setTimeout(() => {
+      this.temp2 = setTimeout(() => {
         this.saveOk = false;
       }, 2000);
 
@@ -361,24 +361,24 @@ export class StructureComponent implements OnInit, OnDestroy {
 
   /* DUPLICATE */
 
-  duplicateStructures(num: any, description: any) { // Obtiene nombre de estructura de datos duplicada
+  duplicateStructures(description: any) { // Obtiene nombre de estructura de datos duplicada
     if (!this.change && !this.change) {
       this.http.get(`${this.duplicateEstructure}/${description}`, this.httpOptionsService.getHttpOptions()).subscribe(
-      (data: any) => {
-        this.openClouse();
-        this.state = 0;
-        this.openNew("1", data.duplicatedDescription, this.estructure.configuration, this.estructure.identifier_code, this.estructure.id_variable_data_structure, this.estructure.variable_description);
-        this.change = true;
-      }, (error:any) => {
-        console.error("Error al verificar la descripción duplicada:", error);
-      });
+        (data: any) => {
+          this.openClouse();
+          this.state = 0;
+          this.openNew("1", data.duplicatedDescription, this.estructure.configuration, this.estructure.identifier_code, this.estructure.id_variable_data_structure, this.estructure.variable_description);
+          this.change = true;
+        }, (error: any) => {
+          console.error("Error al verificar la descripción duplicada:", error);
+        });
     }
   }
 
   /* DELETE */
 
   deleteStructures(idActual: any) { // Elimina estructura de datos
-    let token = this.storageService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? '';
 
     var estructure2 = {
       id_estructure: this.id,
@@ -389,7 +389,7 @@ export class StructureComponent implements OnInit, OnDestroy {
       }),
       body: JSON.stringify(estructure2)
     };
-  
+
     this.http.delete(this.postEstructure, httpOptions)
       .subscribe(
         (data: any) => {
@@ -402,7 +402,7 @@ export class StructureComponent implements OnInit, OnDestroy {
 
     this.alertDelete = true;
 
-    this.temp3= setTimeout(() => {
+    this.temp3 = setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -454,14 +454,14 @@ export class StructureComponent implements OnInit, OnDestroy {
   clouse() { // Cierra tarjeta estructura de datos
     this.show = false;
     this.openClouse();
-    this.change = false;    
-    this.actId= -1; 
+    this.change = false;
+    this.actId = -1;
   }
 
   openClouse() { // Abre y cierra tarjetas de estructuras de datos
     if (this.show == true) {
       this.showAux = false;
-    } 
+    }
     else {
       this.showAux = true;
     }
@@ -490,7 +490,7 @@ export class StructureComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage - 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getStructuresVoid();
-    } 
+    }
     else {
       this.currentPage = 1;
       this.storageService.setPage(this.currentPage.toString())
@@ -525,7 +525,7 @@ export class StructureComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage + 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getStructuresVoid();
-    } 
+    }
     else {
       this.currentPage = this.totalPages;
       this.storageService.setPage(this.currentPage.toString())
@@ -542,16 +542,16 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   readStorage() { // Recupera datos en local storage
-    let pageString = this.storageService.getPage() ?? "1"; 
+    let pageString = this.storageService.getPage() ?? "1";
     this.currentPage = parseInt(pageString, 10);
-    pageString = this.storageService.getPerPage() ?? "15"; 
+    pageString = this.storageService.getPerPage() ?? "15";
     this.quantPage = parseInt(pageString, 10);
     this.search.value = this.storageService.getSearch() ?? "";
-    if(this.search.value!=""){
+    if (this.search.value != "") {
       //this.searched= true;
       clearTimeout(this.temp1);
       var $this = this;
-      this.temp3 = setTimeout( () => {
+      this.temp3 = setTimeout(() => {
         $this.getStructures(this.order, this.ordAux);
         $this.openClouse();
       }, 1);

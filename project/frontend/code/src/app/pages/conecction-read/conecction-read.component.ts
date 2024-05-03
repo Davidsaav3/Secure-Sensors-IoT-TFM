@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnDestroy, OnInit, HostListener } from "@angular/core";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StorageService } from '../../services/storage.service';
 import { HttpOptionsService } from '../../services/httpOptions.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: "app-conecction-read",
@@ -19,15 +19,15 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl+environment.url.conecctionRead+"";
-  postConecction: string = environment.baseUrl+environment.url.conecctionRead;
-  duplicateConecction: string = environment.baseUrl+environment.url.conecctionRead+"/duplicate";
-  getId: string = environment.baseUrl+environment.url.conecctionRead+"/id";
-  getIdSecret: string = environment.baseUrl+environment.url.conecctionRead+"/secret";
+  getConecction: string = environment.baseUrl + environment.url.conecctionRead + "";
+  postConecction: string = environment.baseUrl + environment.url.conecctionRead;
+  duplicateConecction: string = environment.baseUrl + environment.url.conecctionRead + "/duplicate";
+  getId: string = environment.baseUrl + environment.url.conecctionRead + "/id";
+  getIdSecret: string = environment.baseUrl + environment.url.conecctionRead + "/secret";
 
   passwordFieldType = 'password';
   passwordPattern = environment.password_pattern;;
@@ -38,7 +38,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   page = 1;
   total = 0;
   totalPage = 0;
-  showPass= false;
+  showPass = false;
 
   alt1 = true;
   alt2 = true;
@@ -89,25 +89,25 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   conecctions = {
     id: 0,
     description: "",
-    mqttQeue: "", 
-    appID: "", 
-    accessKey: "", 
-    subscribe: "", 
+    mqttQeue: "",
+    appID: "",
+    accessKey: "",
+    subscribe: "",
     enabled: true
   };
 
   conecctionsSecret = {
     id: 0,
-    accessKey: "", 
+    accessKey: "",
   };
 
   conecctionsCopy = {
     id: 0,
     description: "",
-    mqttQeue: "", 
-    appID: "", 
-    accessKey: "", 
-    subscribe: "", 
+    mqttQeue: "",
+    appID: "",
+    accessKey: "",
+    subscribe: "",
     enabled: true
   };
 
@@ -119,8 +119,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.getConecctions(this.order, this.ordAux);
     this.readStorage();
   }
-  
-  ngOnDestroy(){
+
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -143,7 +143,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) => {return a.description - b.description;});
+          this.data.sort((a: any, b: any) => { return a.description - b.description; });
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
@@ -165,12 +165,13 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
           this.data.sort((a: any, b: any) => {
             const valorA = a.correction_time_general || "";
             const valorB = b.correction_time_general || "";
-            return valorA.localeCompare(valorB);});
+            return valorA.localeCompare(valorB);
+          });
         }
       }
       if (ord == "DESC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) => {return b.description - a.description;});
+          this.data.sort((a: any, b: any) => { return b.description - a.description; });
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
@@ -196,7 +197,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
           });
         }
       }
-    } 
+    }
     else {
       this.getConecctions(id, ord);
     }
@@ -215,30 +216,30 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.data = [];
 
     this.http.get(`${this.getConecction}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
-    .subscribe(
-      (data: any) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
+      .subscribe(
+        (data: any) => {
+          this.charging = false;
+          if (data && data.length > 0 && data[0].total) {
+            this.totalPages = Math.ceil(data[0].total / this.quantPage);
+            this.total = data[0].total;
+          }
+          else {
+            this.totalPages = 0;
+            this.total = 0;
+          }
+          this.data = data;
+
+          if (this.data.length < this.quantPage) {
+            this.totalPage = this.total;
+          }
+          else {
+            this.totalPage = this.quantPage * this.currentPage;
+          }
+        },
+        (error) => {
+          console.error(error);
         }
-        this.data = data;
-  
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
-        }
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      );
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
@@ -249,47 +250,47 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
     if (!this.change && idActual != this.actId) {
       this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
+        .subscribe(
+          (data: any) => {
+            this.conecctions = data[0];
+            this.actId = idActual;
+            this.id = idActual;
+            this.openEdit();
+            this.state = 2;
+            let conecctions = { ...this.conecctions };
+            this.conecctionsCopy = {
+              id: conecctions.id,
+              description: conecctions.description,
+              mqttQeue: conecctions.mqttQeue,
+              appID: conecctions.appID,
+              accessKey: conecctions.accessKey,
+              subscribe: conecctions.subscribe,
+              enabled: conecctions.enabled
+            };
+            this.openClouse();
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+    }
+  }
+
+  getSecret() { // Obtiene secreto
+    this.users.id = this.id;
+    this.http.post(this.getIdSecret, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
-          this.conecctions = data[0];
-          this.actId = idActual;
-          this.id = idActual;
-          this.openEdit();
-          this.state = 2;
-          let conecctions = { ...this.conecctions };
-          this.conecctionsCopy = {
-            id: conecctions.id,
-            description: conecctions.description ,
-            mqttQeue: conecctions.mqttQeue, 
-            appID: conecctions.appID, 
-            accessKey: conecctions.accessKey, 
-            subscribe: conecctions.subscribe, 
-            enabled: conecctions.enabled
-          };
-          this.openClouse();
+          this.conecctionsSecret = data[0];
+          //console.log(data[0])
+          this.showPass = true;
         },
         (error) => {
           console.error(error);
         }
       );
-    }
   }
 
-  getSecret(idActual: any) { // Obtiene secreto
-    this.users.id= this.id;    
-    this.http.post(this.getIdSecret, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
-    .subscribe(
-      (data: any) => {
-        this.conecctionsSecret = data[0];
-        //console.log(data[0])
-        this.showPass= true;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-  
   /* NEW */
 
   newConecction(form: any) {
@@ -298,12 +299,12 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
         .subscribe(
           (data: any) => {
             this.id = data.id;
-            this.alertNew = true;  
-  
+            this.alertNew = true;
+
             this.temp1 = setTimeout(() => {
               this.alertNew = false;
             }, 2000);
-  
+
             this.openClouse();
             this.conecctions.id = data.id;
             let conecctions = { ...this.conecctions };
@@ -311,7 +312,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
             this.data.sort((a: { description: string }, b: { description: any }) => {
               if (typeof a.description === "string" && typeof b.description === "string") {
                 return a.description.localeCompare(b.description);
-              } 
+              }
               else {
                 return 1;
               }
@@ -327,15 +328,15 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     }
   }
 
-  openNew(id:any,description:any,mqttQeue:any,appID:any,accessKey:any,subscribe:any,enabled:any) { // Abre Nueva conexion
+  openNew(id: any, description: any, mqttQeue: any, appID: any, accessKey: any, subscribe: any, enabled: any) { // Abre Nueva conexion
 
     this.conecctions = {
       id: id,
-      description: description ,
-      mqttQeue: mqttQeue, 
-      appID: appID, 
-      accessKey: accessKey, 
-      subscribe: subscribe, 
+      description: description,
+      mqttQeue: mqttQeue,
+      appID: appID,
+      accessKey: accessKey,
+      subscribe: subscribe,
       enabled: enabled
     };
 
@@ -347,36 +348,36 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* EDIT */
 
   editConecction(form: any) { // Guardar datos de la conexión editado  
-    if (form.valid) {      
+    if (form.valid) {
       //console.log(this.conecctions)
       this.http.put(this.postConecction, JSON.stringify(this.conecctions), this.httpOptionsService.getHttpOptions())
         .subscribe(
-          (response: any) => {
+          () => {
             // Manejar la respuesta
           },
           (error) => {
             console.error("Error:", error);
           }
         );
-  
+
       // Eliminar la conexión anterior del arreglo y agregar la conexión editada
       this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
       let conecctions = this.conecctions;
       this.data.push(conecctions);
-  
+
       // Ordenar el arreglo por descripción (asumiendo que 'description' es una propiedad de 'conecctions')
       this.data.sort((a: any, b: any) => {
         if (a.description < b.description) return -1;
         if (a.description > b.description) return 1;
         return 0;
       });
-  
+
       // Establecer el ID actual y abrir el modo de edición
       this.actId = this.conecctions.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
-  
+
       // Ocultar el mensaje de éxito después de 2 segundos
       this.temp2 = setTimeout(() => {
         this.saveOk = false;
@@ -385,8 +386,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     // Marcar que se ha guardado y desmarcar el cambio
     this.saved = true;
     this.change = false;
-  }  
-  
+  }
+
   openEdit() { // Abre Editar conexión
     this.show = true;
     this.state = 2;
@@ -405,10 +406,10 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
           this.openNew(
             '',
             data.duplicatedDescription,
-            this.conecctions.mqttQeue, 
-            this.conecctions.appID, 
-            '', 
-            this.conecctions.subscribe, 
+            this.conecctions.mqttQeue,
+            this.conecctions.appID,
+            '',
+            this.conecctions.subscribe,
             this.conecctions.enabled
           );
           this.change = true;
@@ -423,8 +424,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteconecctions(idActual: any) { // Elimina conexión
-    let token = this.storageService.getToken() ?? ''; 
-    
+    let token = this.storageService.getToken() ?? '';
+
 
     var conecctions2 = {
       id: this.id,
@@ -437,14 +438,14 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     };
 
     this.http.delete(this.postConecction, options).subscribe(
-        (response: any) => {
-          // Realiza acciones con la respuesta si es necesario
-          //console.log('conecctions eliminados:', response);
-        },
-        (error: any) => {
-          console.error('Error al eliminar conexón:', error);
-        }
-      );
+      () => {
+        // Realiza acciones con la respuesta si es necesario
+        //console.log('conecctions eliminados:', response);
+      },
+      (error: any) => {
+        console.error('Error al eliminar conexón:', error);
+      }
+    );
     this.alertDelete = true;
 
     this.temp3 = setTimeout(() => {
@@ -500,7 +501,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   openClouse() { // Abre y cierra la tarjeta de conexiones
     if (this.show == true) {
       this.showAux = false;
-    } 
+    }
     else {
       this.showAux = true;
     }
@@ -511,7 +512,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.state = -1;
     this.openClouse();
     this.change = false;
-    this.actId= -1;
+    this.actId = -1;
   }
 
   clouseAll() { // Cierra todas las tarjetas
@@ -540,7 +541,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage - 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
-    } 
+    }
     else {
       this.currentPage = 1;
       this.storageService.setPage(this.currentPage.toString())
@@ -575,7 +576,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage + 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
-    } 
+    }
     else {
       this.currentPage = this.totalPages;
       this.storageService.setPage(this.currentPage.toString())
@@ -595,22 +596,22 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  resetPass(){
-    this.showPass= false;
-    this.users.password= "";
+  resetPass() {
+    this.showPass = false;
+    this.users.password = "";
   }
 
   readStorage() { // Recupera datos en local storage
-    let pageString = this.storageService.getPage() ?? "1"; 
+    let pageString = this.storageService.getPage() ?? "1";
     this.currentPage = parseInt(pageString, 10);
-    pageString = this.storageService.getPerPage() ?? "15"; 
+    pageString = this.storageService.getPerPage() ?? "15";
     this.quantPage = parseInt(pageString, 10);
     this.searchAuxArray.value = this.storageService.getSearch() ?? "";
-    if(this.searchAuxArray.value!=""){
+    if (this.searchAuxArray.value != "") {
       //this.searched= true;
       clearTimeout(this.temp1);
       var $this = this;
-      this.temp3 = setTimeout( () => {
+      this.temp3 = setTimeout(() => {
         $this.getConecctions(this.order, this.ordAux);
         $this.openClouse();
       }, 1);

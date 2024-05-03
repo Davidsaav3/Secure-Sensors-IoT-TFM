@@ -12,78 +12,78 @@ import { StorageService } from './services/storage.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  
-  title= environment.title;
-  postRefresh: string = environment.baseUrl+environment.url.users+'/refresh';
+
+  title = environment.title;
+  postRefresh: string = environment.baseUrl + environment.url.users + '/refresh';
   AppVersion = environment.AppVersion;
   activeLang = environment.languageLang;
-  constructor(private storageService: StorageService, private authService: AuthService,private translate: TranslateService, private http: HttpClient, public router: Router) {
+  constructor(private storageService: StorageService, private authService: AuthService, private translate: TranslateService, private http: HttpClient, public router: Router) {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
 
-  contador = 0; 
+  contador = 0;
 
   ngOnInit(): void {
     let consecutivoFallos = 0; // Contador de fallos consecutivos
 
     const intervalId = setInterval(async () => {
-        if (consecutivoFallos < environment.acces_token_times) {
-            try {
-                if (this.contador < environment.acces_token_frontend) {
-                    const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
-                    if (!newToken) {
-                        console.warn('La renovación del token ha fallado');
-                        consecutivoFallos++;
-                    } 
-                    else {
-                        this.contador++;
-                        consecutivoFallos = 0; // Reiniciar contador en caso de éxito
-                    }
-                } 
-                else {
-                    clearInterval(intervalId);
-                }
-            } catch (error) {
-                console.error('Error al renovar el token:', error);
-                consecutivoFallos++; // Incrementar contador en caso de fallo
+      if (consecutivoFallos < environment.acces_token_times) {
+        try {
+          if (this.contador < environment.acces_token_frontend) {
+            const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
+            if (!newToken) {
+              console.warn('La renovación del token ha fallado');
+              consecutivoFallos++;
             }
-        } 
-        else {
+            else {
+              this.contador++;
+              consecutivoFallos = 0; // Reiniciar contador en caso de éxito
+            }
+          }
+          else {
             clearInterval(intervalId);
-            this.logOut();
+          }
+        } catch (error) {
+          console.error('Error al renovar el token:', error);
+          consecutivoFallos++; // Incrementar contador en caso de fallo
         }
+      }
+      else {
+        clearInterval(intervalId);
+        this.logOut();
+      }
     }, environment.acces_token_timeout);
-}
+  }
 
-async renewToken(refreshToken: string): Promise<string | null> {
+  async renewToken(refreshToken: string): Promise<string | null> {
     try {
-        let token = this.storageService.getToken() ?? '';
+      let token = this.storageService.getToken() ?? '';
 
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json; charset=UTF-8',
-                'Authorization': `${token}`,
-            }),
-            withCredentials: true // Permitir el envío de cookies
-        };
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': `${token}`,
+        }),
+        withCredentials: true // Permitir el envío de cookies
+      };
 
-        const body = { refreshToken };
-        const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
-        if (!response || !response.token) {
-            console.error('Error al renovar el token');
-            return null;
-        }
+      const body = { refreshToken };
+      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
+      if (!response || !response.token) {
+        console.error('Error al renovar el token');
+        return null;
+      }
 
-        const newToken = response.token;
-        this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
-        return newToken;
-    } 
-    catch (error) {
-        // Realizar la lógica de cierre de sesión en caso de error
-        throw error; // Relanzar el error para ser capturado por el llamador
+      const newToken = response.token;
+      this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+      return newToken;
     }
-}
-  logOut(){
+    catch (error) {
+      // Realizar la lógica de cierre de sesión en caso de error
+      throw error; // Relanzar el error para ser capturado por el llamador
+    }
+  }
+  logOut() {
     this.storageService.setId('');
     this.storageService.setUsername('');
     this.storageService.setChange('');
@@ -110,10 +110,10 @@ async renewToken(refreshToken: string): Promise<string | null> {
   getCookie(name: string): string | null {  // Obtener cookie por nombre
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
-        const [cookieName, cookieValue] = cookie.trim().split('=');
-        if (cookieName === name) {
-            return cookieValue;
-        }
+      const [cookieName, cookieValue] = cookie.trim().split('=');
+      if (cookieName === name) {
+        return cookieValue;
+      }
     }
     return null;
   }

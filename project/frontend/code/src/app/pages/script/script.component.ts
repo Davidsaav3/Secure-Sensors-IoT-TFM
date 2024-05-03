@@ -1,10 +1,10 @@
-import { environment } from "../../environments/environment";
-import { Component, ElementRef, ViewChild, OnInit, OnDestroy, HostListener } from "@angular/core";
-import { Router } from "@angular/router";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { ClipboardService } from 'ngx-clipboard';
-import { StorageService } from '../../services/storage.service';
+import { environment } from "../../environments/environment";
 import { HttpOptionsService } from '../../services/httpOptions.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: "app-script",
@@ -13,24 +13,24 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 })
 
 export class ScriptComponent implements OnInit, OnDestroy {
-  parseInt(arg0: any) {
-  throw new Error('Method not implemented.');
-} 
+  parseInt() {
+    throw new Error('Method not implemented.');
+  }
 
-resultsPerPag = environment.resultsPerPag;
-@HostListener("window:resize", ["$event"])
-//@ViewChild('logTrace', {static: false}) logTraceElement1: ElementRef | undefined;
-//@ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
-//@ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
+  resultsPerPag = environment.resultsPerPag;
+  @HostListener("window:resize", ["$event"])
+  //@ViewChild('logTrace', {static: false}) logTraceElement1: ElementRef | undefined;
+  //@ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
+  //@ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
 
   backendURL: string = "http://localhost:5172/api/script";
-  date= '';
-  status= '';
+  date = '';
+  status = '';
 
-  getScripts: string = environment.baseUrl+environment.url.script+"";
-  postScript: string = environment.baseUrl+environment.url.script;
-  duplicateScripts: string = environment.baseUrl+environment.url.script+"/duplicate";
-  getId: string = environment.baseUrl+environment.url.script+"/id";
+  getScripts: string = environment.baseUrl + environment.url.script + "";
+  postScript: string = environment.baseUrl + environment.url.script;
+  duplicateScripts: string = environment.baseUrl + environment.url.script + "/duplicate";
+  getId: string = environment.baseUrl + environment.url.script + "/id";
 
   totalPages = 5;
   currentPage = 1;
@@ -44,7 +44,7 @@ resultsPerPag = environment.resultsPerPag;
   alt3 = true;
   alt4 = true;
   alt5 = true;
-  
+
   actId = 0;
   id = 0;
   state = -1;
@@ -77,8 +77,8 @@ resultsPerPag = environment.resultsPerPag;
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
-  changeCopy1= 0;
-  changeCopy2= 0;
+  changeCopy1 = 0;
+  changeCopy2 = 0;
 
   isRequestPending: boolean = false;
 
@@ -98,7 +98,7 @@ resultsPerPag = environment.resultsPerPag;
     username: "",
     log_date: "",
     log_code: "",
-    log_message : "",
+    log_message: "",
     log_trace: "",
 
   };
@@ -107,7 +107,7 @@ resultsPerPag = environment.resultsPerPag;
     value: "",
   };
 
-  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService,private clipboardService: ClipboardService, private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -116,7 +116,7 @@ resultsPerPag = environment.resultsPerPag;
     this.readStorage();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -129,7 +129,7 @@ resultsPerPag = environment.resultsPerPag;
   setScript(status: any): void {
     if (this.isRequestPending) {
       console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
-      return; 
+      return;
     }
     this.isRequestPending = true;
     let status1 = {
@@ -141,7 +141,7 @@ resultsPerPag = environment.resultsPerPag;
       },
       (error) => {
         console.error("Error al enviar la solicitud POST:", error);
-        this.isRequestPending = false; 
+        this.isRequestPending = false;
       }
     );
     setTimeout(() => {
@@ -150,7 +150,7 @@ resultsPerPag = environment.resultsPerPag;
   }
 
   /* */
-  
+
   copyToClipboard(textToCopy: string) {
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
@@ -176,7 +176,7 @@ resultsPerPag = environment.resultsPerPag;
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) => {return a.description - b.description;});
+          this.data.sort((a: any, b: any) => { return a.description - b.description; });
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
@@ -198,12 +198,13 @@ resultsPerPag = environment.resultsPerPag;
           this.data.sort((a: any, b: any) => {
             const valorA = a.correction_time_general || "";
             const valorB = b.correction_time_general || "";
-            return valorA.localeCompare(valorB);});
+            return valorA.localeCompare(valorB);
+          });
         }
       }
       if (ord == "DESC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) => {return b.description - a.description;});
+          this.data.sort((a: any, b: any) => { return b.description - a.description; });
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
@@ -229,7 +230,7 @@ resultsPerPag = environment.resultsPerPag;
           });
         }
       }
-    } 
+    }
     else {
       this.getScript(id, ord);
     }
@@ -248,31 +249,31 @@ resultsPerPag = environment.resultsPerPag;
     this.data = [];
 
     this.http.get(`${this.getScripts}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
-    .subscribe(
-      (data: any) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
-        }
-        this.data = data;
-        this.data.log_date = this.formatDateTime(data.log_date);
+      .subscribe(
+        (data: any) => {
+          this.charging = false;
+          if (data && data.length > 0 && data[0].total) {
+            this.totalPages = Math.ceil(data[0].total / this.quantPage);
+            this.total = data[0].total;
+          }
+          else {
+            this.totalPages = 0;
+            this.total = 0;
+          }
+          this.data = data;
+          this.data.log_date = this.formatDateTime(data.log_date);
 
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
+          if (this.data.length < this.quantPage) {
+            this.totalPage = this.total;
+          }
+          else {
+            this.totalPage = this.quantPage * this.currentPage;
+          }
+        },
+        (error) => {
+          console.error(error);
         }
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      );
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
@@ -283,32 +284,32 @@ resultsPerPag = environment.resultsPerPag;
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
     if (!this.change && idActual != this.actId) {
       this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
-      .subscribe(
-        (data: any) => {
-          this.script = data[0];
-          this.actId = idActual;
-          this.id = idActual;
-          this.openEdit();
-          this.state = 2;
-          let script = { ...this.script };
-          this.scriptCopy = {
-            id: script.id,
-            user_id: script.user_id ,
-            username: script.username, 
-            log_date: script.log_date, 
-            log_code: script.log_code, 
-            log_message: script.log_message, 
-            log_trace: script.log_trace
-          };
-          this.openClouse();
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+        .subscribe(
+          (data: any) => {
+            this.script = data[0];
+            this.actId = idActual;
+            this.id = idActual;
+            this.openEdit();
+            this.state = 2;
+            let script = { ...this.script };
+            this.scriptCopy = {
+              id: script.id,
+              user_id: script.user_id,
+              username: script.username,
+              log_date: script.log_date,
+              log_code: script.log_code,
+              log_message: script.log_message,
+              log_trace: script.log_trace
+            };
+            this.openClouse();
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
     }
   }
-  
+
   /* NEW */
 
   newScript(form: any) {
@@ -319,11 +320,11 @@ resultsPerPag = environment.resultsPerPag;
           (data: any) => {
             this.id = data.id;
             this.alertNew = true;
-  
-            this.temp1= setTimeout(() => {
+
+            this.temp1 = setTimeout(() => {
               this.alertNew = false;
             }, 2000);
-  
+
             this.openClouse();
             this.script.id = data.id;
             let script = { ...this.script };
@@ -331,7 +332,7 @@ resultsPerPag = environment.resultsPerPag;
             this.data.sort((a: { description: string }, b: { description: any }) => {
               if (typeof a.description === "string" && typeof b.description === "string") {
                 return a.description.localeCompare(b.description);
-              } 
+              }
               else {
                 return 1;
               }
@@ -348,16 +349,16 @@ resultsPerPag = environment.resultsPerPag;
     }
   }
 
-  openNew(id:any,user_id:any,username:any,log_date:any,log_code:any,log_message:any, log_trace:any) { // Abre Nueva conexion
+  openNew(id: any, user_id: any, username: any, log_date: any, log_code: any, log_message: any, log_trace: any) { // Abre Nueva conexion
 
     this.script = {
       id: id,
-      user_id: user_id ,
-      username: username, 
-      log_date: log_date, 
-      log_code: log_code, 
+      user_id: user_id,
+      username: username,
+      log_date: log_date,
+      log_code: log_code,
       log_message: log_message,
-      log_trace: log_trace, 
+      log_trace: log_trace,
     };
 
     this.show = true;
@@ -371,7 +372,7 @@ resultsPerPag = environment.resultsPerPag;
     if (form.valid) {
       this.http.put(this.postScript, JSON.stringify(this.script), this.httpOptionsService.getHttpOptions())
         .subscribe(
-          (response: any) => {
+          () => {
             // Respuesta
           },
           (error) => {
@@ -381,20 +382,20 @@ resultsPerPag = environment.resultsPerPag;
       this.data = this.data.filter((data: { id: number }) => data.id !== this.script.id);
       let script = this.script;
       this.data.push(script);
-      this.data.sort((a: any, b: any) => {return a.description - b.description;});
+      this.data.sort((a: any, b: any) => { return a.description - b.description; });
       this.actId = this.script.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
 
-      this.temp2= setTimeout(() => {
+      this.temp2 = setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
     this.saved = true;
     this.change = false;
   }
-  
+
   openEdit() { // Abre Editar conexión
     this.show = true;
     this.state = 2;
@@ -406,55 +407,55 @@ resultsPerPag = environment.resultsPerPag;
   duplicateScript(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
     if (!this.change && !this.change) {
       this.http.get(`${this.duplicateScripts}/${type}`, this.httpOptionsService.getHttpOptions())
-      .subscribe(
-        (data: any) => {
-          this.script = this.data.find((objeto: { id: any }) => objeto.id == num);
-          this.openClouse();
-          this.state = 0;
-    
-          this.http.get(`${this.getId}/${this.script.id}`, this.httpOptionsService.getHttpOptions())
-            .subscribe(
-              (data1: any) => {
-                this.script = data1[0];
-                this.actId = this.script.id;
-                this.id = this.script.id;
-                let script = { ...this.script };
-                this.scriptCopy = {
-                  id: script.id,
-                  user_id: script.user_id ,
-                  username: script.username, 
-                  log_date: script.log_date, 
-                  log_code: script.log_code, 
-                  log_message: script.log_message, 
-                  log_trace: script.log_trace
-                };
-                this.openNew(
-                  '',
-                  this.script.user_id,
-                  this.script.username, 
-                  this.script.log_date, 
-                  this.script.log_code, 
-                  this.script.log_message,    
-                  this.script.log_trace
-                );
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
-          this.change = true;
-        },
-        (error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
-        }
-      );
+        .subscribe(
+          () => {
+            this.script = this.data.find((objeto: { id: any }) => objeto.id == num);
+            this.openClouse();
+            this.state = 0;
+
+            this.http.get(`${this.getId}/${this.script.id}`, this.httpOptionsService.getHttpOptions())
+              .subscribe(
+                (data1: any) => {
+                  this.script = data1[0];
+                  this.actId = this.script.id;
+                  this.id = this.script.id;
+                  let script = { ...this.script };
+                  this.scriptCopy = {
+                    id: script.id,
+                    user_id: script.user_id,
+                    username: script.username,
+                    log_date: script.log_date,
+                    log_code: script.log_code,
+                    log_message: script.log_message,
+                    log_trace: script.log_trace
+                  };
+                  this.openNew(
+                    '',
+                    this.script.user_id,
+                    this.script.username,
+                    this.script.log_date,
+                    this.script.log_code,
+                    this.script.log_message,
+                    this.script.log_trace
+                  );
+                },
+                (error) => {
+                  console.error(error);
+                }
+              );
+            this.change = true;
+          },
+          (error) => {
+            console.error("Error al verificar la descripción duplicada:", error);
+          }
+        );
     }
   }
 
   /* DELETE */
 
   deletescript(idActual: any) { // Elimina conexión
-    let token = this.storageService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? '';
 
     var script2 = {
       id: this.id,
@@ -467,17 +468,17 @@ resultsPerPag = environment.resultsPerPag;
     };
 
     this.http.delete(this.postScript, options).subscribe(
-        (response: any) => {
-          // Realiza acciones con la respuesta si es necesario
-          //console.log('script eliminados:', response);
-        },
-        (error: any) => {
-          console.error('Error al eliminar conexón:', error);
-        }
-      );
+      () => {
+        // Realiza acciones con la respuesta si es necesario
+        //console.log('script eliminados:', response);
+      },
+      (error: any) => {
+        console.error('Error al eliminar conexón:', error);
+      }
+    );
     this.alertDelete = true;
 
-    this.temp3= setTimeout(() => {
+    this.temp3 = setTimeout(() => {
       this.alertDelete = false;
     }, 2000);
 
@@ -504,11 +505,11 @@ resultsPerPag = environment.resultsPerPag;
   rechargeForm() { // recarga conexión a su valor anterior
     this.script = {
       id: this.scriptCopy.id,
-      user_id: this.scriptCopy.user_id ,
-      username: this.scriptCopy.username, 
-      log_date: this.scriptCopy.log_date, 
-      log_code: this.scriptCopy.log_code, 
-      log_message: this.scriptCopy.log_message, 
+      user_id: this.scriptCopy.user_id,
+      username: this.scriptCopy.username,
+      log_date: this.scriptCopy.log_date,
+      log_code: this.scriptCopy.log_code,
+      log_message: this.scriptCopy.log_message,
       log_trace: this.scriptCopy.log_trace
     };
     this.change = false;
@@ -530,7 +531,7 @@ resultsPerPag = environment.resultsPerPag;
   openClouse() { // Abre y cierra la tarjeta de logs
     if (this.show == true) {
       this.showAux = false;
-    } 
+    }
     else {
       this.showAux = true;
     }
@@ -541,7 +542,7 @@ resultsPerPag = environment.resultsPerPag;
     this.state = -1;
     this.openClouse();
     this.change = false;
-    this.actId= -1;
+    this.actId = -1;
   }
 
   clouseAll() { // Cierra todas las tarjetas
@@ -570,7 +571,7 @@ resultsPerPag = environment.resultsPerPag;
       this.currentPage = this.currentPage - 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getScriptVoid();
-    } 
+    }
     else {
       this.currentPage = 1;
       this.storageService.setPage(this.currentPage.toString())
@@ -605,7 +606,7 @@ resultsPerPag = environment.resultsPerPag;
       this.currentPage = this.currentPage + 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getScriptVoid();
-    } 
+    }
     else {
       this.currentPage = this.totalPages;
       this.storageService.setPage(this.currentPage.toString())
@@ -642,20 +643,20 @@ resultsPerPag = environment.resultsPerPag;
   }
 
   readStorage() { // Recupera datos en local storage
-    let pageString = this.storageService.getPage() ?? "1"; 
+    let pageString = this.storageService.getPage() ?? "1";
     this.currentPage = parseInt(pageString, 10);
-    pageString = this.storageService.getPerPage() ?? "15"; 
+    pageString = this.storageService.getPerPage() ?? "15";
     this.quantPage = parseInt(pageString, 10);
     this.searchAuxArray.value = this.storageService.getSearch() ?? "";
-    if(this.searchAuxArray.value!=""){
+    if (this.searchAuxArray.value != "") {
       //this.searched= true;
       clearTimeout(this.temp1);
       var $this = this;
-      this.temp3 = setTimeout( () => {
+      this.temp3 = setTimeout(() => {
         $this.getScript(this.order, this.ordAux);
         $this.openClouse();
       }, 1);
     }
   }
-  
+
 }

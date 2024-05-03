@@ -1,13 +1,10 @@
-import { Component, ElementRef, OnInit, HostListener, OnDestroy} from "@angular/core";
-import { environment } from "../../environments/environment";
-import { Router } from '@angular/router';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; 
-import { StorageService } from '../../services/storage.service';
+import { Router } from '@angular/router';
+import { environment } from "../../environments/environment";
 import { HttpOptionsService } from '../../services/httpOptions.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: "app-login",
@@ -16,7 +13,7 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 })
 
 export class LoginComponent implements OnDestroy {
-  
+
   registerForm2: FormGroup = this.formBuilder.group({
     fa: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
   });
@@ -25,31 +22,31 @@ export class LoginComponent implements OnDestroy {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  postLogin: string = environment.baseUrl+environment.url.users+'/login';
+  postLogin: string = environment.baseUrl + environment.url.users + '/login';
 
-  cont: any= 0;
-  mostrar: any= false;
-  mostrar2: any= false;
-  mostrar3: any= false;
-  mostrar4: any= false;
-  mostrar5: any= false;
+  cont: any = 0;
+  mostrar: any = false;
+  mostrar2: any = false;
+  mostrar3: any = false;
+  mostrar4: any = false;
+  mostrar5: any = false;
   fa: string | undefined;
-  change1= false;
+  change1 = false;
 
   temp1: any = null;
   temp2: any = null;
   temp3: any = null;
 
-  alertCreNot= false;
-  alertServNot= false;
-  alertDifNot= false;
+  alertCreNot = false;
+  alertServNot = false;
+  alertDifNot = false;
   passwordPattern = environment.password_pattern;;
 
-  id= 1;
-  username= 'davidsaav';
-  token= '';
+  id = 1;
+  username = 'davidsaav';
+  token = '';
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private authService:AuthService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   formlogin = {
     user: "",
@@ -66,41 +63,40 @@ export class LoginComponent implements OnDestroy {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
   }
 
   login(form: any) {
-      let token = this.storageService.getToken() ?? '';
-      if (form.valid) {
-        const { user, password } = this.formlogin;
+    if (form.valid) {
+      const { user, password } = this.formlogin;
 
-        // Validar el nombre de usuario
-        if (!this.isValidUsername(user)) {
-            console.error("Nombre de usuario no válido");
-            return;
-        }
+      // Validar el nombre de usuario
+      if (!this.isValidUsername(user)) {
+        console.error("Nombre de usuario no válido");
+        return;
+      }
 
-        // Validar la contraseña
-        if (!this.isValidPassword(password)) {
-            console.error("Contraseña no válida");
-            return;
-        }
-  
-        // Codificar datos antes de enviarlos al servidor para prevenir XSS
-        const encodedFormLogin = {
-            user: encodeURIComponent(this.formlogin.user),
-            password: encodeURIComponent(this.formlogin.password)
-        };
+      // Validar la contraseña
+      if (!this.isValidPassword(password)) {
+        console.error("Contraseña no válida");
+        return;
+      }
 
-        // Realizar la solicitud HTTP
-        this.http.post(this.postLogin, JSON.stringify(this.formlogin), this.httpOptionsService.getHttpOptions())
+      // Codificar datos antes de enviarlos al servidor para prevenir XSS
+      const encodedFormLogin = {
+        user: encodeURIComponent(this.formlogin.user),
+        password: encodeURIComponent(this.formlogin.password)
+      };
+
+      // Realizar la solicitud HTTP
+      this.http.post(this.postLogin, JSON.stringify(this.formlogin), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
-            this.username= data.user;
-            this.id= data.id;
+            this.username = data.user;
+            this.id = data.id;
             this.saveStorage();
             this.storageService.setToken(data.token)
             this.setCookie('refresh_token', data.refresh_token);
@@ -111,21 +107,21 @@ export class LoginComponent implements OnDestroy {
             if (error.status === 401) {
               console.error("Credenciales incorrectas");
               this.alertCreNot = true;
-              this.temp1= setTimeout(() => {
+              this.temp1 = setTimeout(() => {
                 this.alertCreNot = false;
               }, 2000);
-            } 
+            }
             else if (error.status === 500) {
               console.error("Error en el servidor");
               this.alertServNot = true;
-              this.temp2= setTimeout(() => {
+              this.temp2 = setTimeout(() => {
                 this.alertServNot = false;
               }, 2000);
-            } 
+            }
             else {
               console.error("Error desconocido:", error);
               this.alertDifNot = true;
-              this.temp3= setTimeout(() => {
+              this.temp3 = setTimeout(() => {
                 this.alertDifNot = false;
               }, 2000);
             }
@@ -135,7 +131,7 @@ export class LoginComponent implements OnDestroy {
     }
 
   }
-    
+
   // Fnombre de usuario
   isValidUsername(username: string): boolean {
     return username.trim().length >= 3 && username.trim().length <= 20;
@@ -147,10 +143,10 @@ export class LoginComponent implements OnDestroy {
     const maxLength = 20;
     const passwordPattern = environment.password_pattern;;
     if (password.trim().length < minLength || password.trim().length > maxLength) {
-        return false;
+      return false;
     }
     if (!passwordPattern.test(password)) {
-        return false;
+      return false;
     }
     return true;
   }
@@ -162,8 +158,8 @@ export class LoginComponent implements OnDestroy {
 
   readStorage() { // Recupera datos del local storage
     const idString: string | null = this.storageService.getId();
-    const id: number = idString !== null ? parseInt(idString) : 1; 
-    this.id = id;    
+    const id: number = idString !== null ? parseInt(idString) : 1;
+    this.id = id;
     this.username = this.storageService.getUsername() ?? "davidsaav";
     this.token = this.storageService.getToken() ?? '';
   }

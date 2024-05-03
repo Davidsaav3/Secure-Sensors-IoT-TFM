@@ -1,19 +1,18 @@
-import {AfterViewInit,Component,ElementRef,OnDestroy,ViewChild,Injectable,} from "@angular/core";
+import { HttpClient } from '@angular/common/http';
+import { AfterViewInit, Component, ElementRef, Injectable, OnDestroy, ViewChild, } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
 import * as mapboxgl from "mapbox-gl";
-import { ActivatedRoute } from "@angular/router";
-import { DataSharingService } from "../../../services/data_sharing.service";
-import { Router } from "@angular/router";
 import { environment } from "../../../environments/environment";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StorageService } from '../../../services/storage.service';
+import { DataSharingService } from "../../../services/data_sharing.service";
 import { HttpOptionsService } from '../../../services/httpOptions.service';
+import { StorageService } from '../../../services/storage.service';
 
 interface MarkerAndColor {
   color: string;
   marker: mapboxgl.Marker;
 }
 
-(mapboxgl as any).accessToken =environment.accessTokenMap;
+(mapboxgl as any).accessToken = environment.accessTokenMap;
 @Component({
   selector: "app-devices-map",
   templateUrl: "./devices-map.component.html",
@@ -31,19 +30,19 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
-  idDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"/id";
+  idDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/id";
 
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     this.sharedLon,
     this.sharedLat
   );
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,private rutaActiva: ActivatedRoute,public rute1: Router,private dataSharingService: DataSharingService) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rute1: Router, private dataSharingService: DataSharingService) {
     this.rute = this.rute1.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
 
-  maxDevice: string = environment.baseUrl+environment.url.deviceConfigurations+"/max";
+  maxDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/max";
 
   @ViewChild("map") divMap?: ElementRef;
   map?: mapboxgl.Map;
@@ -52,7 +51,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   colorMap = environment.defaultMapsStyle;
 
   id: any;
-  state = 0; 
+  state = 0;
 
   ngOnInit(): void { // Inicialización
     this.readStorage();
@@ -60,70 +59,69 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.ruteAux = this.rute.split("/");
     if (this.ruteAux[2] == "new" || this.ruteAux[2] == "duplicate") {
       if (this.ruteAux[2] == "duplicate") {
-        this.state= 1;
+        this.state = 1;
         // 1. Duplicate
-        this.id=  parseInt(this.ruteAux[3]);
+        this.id = parseInt(this.ruteAux[3]);
       }
       if (this.ruteAux[3] == "new") {
-        this.state= 0;
+        this.state = 0;
         // 0. New
       }
       this.ngAfterViewInit();
     }
     if (this.ruteAux[2] == "edit") {
-      this.id= parseInt(this.ruteAux[3]);
+      this.id = parseInt(this.ruteAux[3]);
     }
   }
 
   /* AUX INIT */
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
-    let token = this.storageService.getToken() ?? ''; 
-    
 
-      if (this.ruteAux[2] == "new") {
-        if (!this.divMap) throw "No hay mapa";
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              this.map = this.createMap([
-                position.coords.longitude,
-                position.coords.latitude,
-              ]);
-              this.auxInit();
-            },
-            (error) => {
-              this.map = this.createMap([
-                -3.7036360462944913, 40.41686882952129,
-              ]);
-              //console.log("Error geo", error);
-              this.auxInit();
-            }
-          );
-        } 
-        else {
-          this.map = this.createMap([-3.7036360462944913, 40.41686882952129]);
-          //sconsole.log("Geo no compatible");
-          this.auxInit();
-        }
-      }
-      //
-      if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
-        this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
-          (data: any) => {
-            this.sharedLon = data[0].lon;
-            this.sharedLat = data[0].lat;
-            this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
-            this.map = this.createMap(this.currentLngLat);
-            this.deleteMarker();
-            this.createMarker(this.currentLngLat);
+
+    if (this.ruteAux[2] == "new") {
+      if (!this.divMap) throw "No hay mapa";
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.map = this.createMap([
+              position.coords.longitude,
+              position.coords.latitude,
+            ]);
             this.auxInit();
           },
-          (error) => {
-            console.error(error);
+          () => {
+            this.map = this.createMap([
+              -3.7036360462944913, 40.41686882952129,
+            ]);
+            //console.log("Error geo", error);
+            this.auxInit();
           }
         );
       }
+      else {
+        this.map = this.createMap([-3.7036360462944913, 40.41686882952129]);
+        //sconsole.log("Geo no compatible");
+        this.auxInit();
+      }
+    }
+    //
+    if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
+      this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
+        (data: any) => {
+          this.sharedLon = data[0].lon;
+          this.sharedLat = data[0].lat;
+          this.currentLngLat = new mapboxgl.LngLat(this.sharedLon, this.sharedLat);
+          this.map = this.createMap(this.currentLngLat);
+          this.deleteMarker();
+          this.createMarker(this.currentLngLat);
+          this.auxInit();
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    }
   }
 
   auxInit() { // Auxiliar de ngOnInit
@@ -152,7 +150,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           const inputArray = Array.from(inputs);
 
           for (const input of inputArray) {
-            input.onclick = (layer: any) => {
+            input.onclick = () => {
               if (this.map != null) {
                 this.map.setStyle("mapbox://styles/mapbox/" + this.colorMap);
               }
@@ -223,14 +221,14 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     setInterval(() => {
       try {
         this.dataSharingService.sharedLat$.subscribe((data) => {
-          if(data!=0)
+          if (data != 0)
             this.sharedLat = data;
         });
         this.dataSharingService.sharedLon$.subscribe((data) => {
-          if(data!=0)
+          if (data != 0)
             this.sharedLon = data;
         });
-        if (this.sharedLat != this.currentLngLat.lat ||this.sharedLon != this.currentLngLat.lng) {
+        if (this.sharedLat != this.currentLngLat.lat || this.sharedLon != this.currentLngLat.lng) {
           this.deleteMarker();
           this.currentLngLat = new mapboxgl.LngLat(
             this.sharedLon,
@@ -238,7 +236,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           );
           this.createMarker(this.currentLngLat);
         }
-      } 
+      }
       catch (error) {
         //this.ngOnDestroy();
       }
@@ -249,7 +247,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
         if (this.map) {
           this.map.resize();
         }
-      } 
+      }
       catch (error) {
         //this.ngOnDestroy();
       }
@@ -283,7 +281,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   }
 
   /* MAP STYLE */
-  
+
   changeMapStyle(event: any): void { // Cambiar el estilo del mapa
     if (this.map) {
       this.colorMap = event;

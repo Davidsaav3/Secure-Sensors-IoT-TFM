@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnInit, HostListener, OnDestroy } from "@angular/core";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StorageService } from '../../services/storage.service';
 import { HttpOptionsService } from '../../services/httpOptions.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: "app-users",
@@ -19,15 +19,15 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
-  getUser: string = environment.baseUrl+environment.url.users+"";
-  postUser: string = environment.baseUrl+environment.url.users;
-  postUserRevoke: string = environment.baseUrl+environment.url.users+"/revoke";
-  duplicateUser: string = environment.baseUrl+environment.url.users+"/duplicate";
-  getId: string = environment.baseUrl+environment.url.users+"/id";
+  getUser: string = environment.baseUrl + environment.url.users + "";
+  postUser: string = environment.baseUrl + environment.url.users;
+  postUserRevoke: string = environment.baseUrl + environment.url.users + "/revoke";
+  duplicateUser: string = environment.baseUrl + environment.url.users + "/duplicate";
+  getId: string = environment.baseUrl + environment.url.users + "/id";
 
   currentDate = this.getCurrentDate();
 
@@ -55,7 +55,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   saved = false;
   change = false;
   width = 0;
-  
+
   show = false;
   showAux = true;
   dupOk = false;
@@ -116,7 +116,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.readStorage();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -136,7 +136,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     const hours = ('0' + now.getHours()).slice(-2);
     const minutes = ('0' + now.getMinutes()).slice(-2);
     const seconds = ('0' + now.getSeconds()).slice(-2);
-  
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
@@ -157,7 +157,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "user") {
-          this.data.sort((a: any, b: any) => {return a.user - b.user;});
+          this.data.sort((a: any, b: any) => { return a.user - b.user; });
         }
         if (id == "password") {
           this.data.sort((a: any, b: any) => a.password.localeCompare(b.password));
@@ -165,13 +165,13 @@ export class UsersComponent implements OnInit, OnDestroy {
       }
       if (ord == "DESC") {
         if (id == "user") {
-          this.data.sort((a: any, b: any) => {return b.user - a.user;});
+          this.data.sort((a: any, b: any) => { return b.user - a.user; });
         }
         if (id == "password") {
           this.data.sort((a: any, b: any) => b.password.localeCompare(a.password));
         }
       }
-    } 
+    }
     else {
       this.getUsers(id, ord);
     }
@@ -190,30 +190,30 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.data = [];
 
     this.http.get(`${this.getUser}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
-    .subscribe(
-      (data: any) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
+      .subscribe(
+        (data: any) => {
+          this.charging = false;
+          if (data && data.length > 0 && data[0].total) {
+            this.totalPages = Math.ceil(data[0].total / this.quantPage);
+            this.total = data[0].total;
+          }
+          else {
+            this.totalPages = 0;
+            this.total = 0;
+          }
+          this.data = data;
+
+          if (this.data.length < this.quantPage) {
+            this.totalPage = this.total;
+          }
+          else {
+            this.totalPage = this.quantPage * this.currentPage;
+          }
+        },
+        (error) => {
+          console.error(error);
         }
-        this.data = data;
-  
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
-        }
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      );
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
@@ -222,39 +222,38 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.storageService.getToken() ?? ''; 
 
     if (!this.change && idActual != this.actId) {
       this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
-      .subscribe(
-        (data: any) => {
-          this.users = data[0];
-          this.actId = idActual;
-          this.id = idActual;
-          this.openEdit();
-          this.state = 2;
-          let users = { ...this.users };
-          this.usersCopy = {
-            id: users.id,
-            user: users.user,
-            password: users.password,
-            change_password: users.change_password,
-            token: users.token,
-            enabled: users.enabled,
-            revoke_date: users.revoke_date
-          };
-          this.openClouse();
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+        .subscribe(
+          (data: any) => {
+            this.users = data[0];
+            this.actId = idActual;
+            this.id = idActual;
+            this.openEdit();
+            this.state = 2;
+            let users = { ...this.users };
+            this.usersCopy = {
+              id: users.id,
+              user: users.user,
+              password: users.password,
+              change_password: users.change_password,
+              token: users.token,
+              enabled: users.enabled,
+              revoke_date: users.revoke_date
+            };
+            this.openClouse();
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
     }
   }
-  
+
   /* NEW */
 
-  newUser(form: any) {
+  newUser() {
     this.state = 1;
     this.http.post(this.postUser, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
       .subscribe(
@@ -262,7 +261,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.id = data.id;
           this.alertNew = true;
 
-          this.temp1= setTimeout(() => {
+          this.temp1 = setTimeout(() => {
             this.alertNew = false;
           }, 2000);
 
@@ -273,7 +272,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.data.sort((a: { user: string }, b: { user: any }) => {
             if (typeof a.user === "string" && typeof b.user === "string") {
               return a.user.localeCompare(b.user);
-            } 
+            }
             else {
               return 1;
             }
@@ -284,17 +283,17 @@ export class UsersComponent implements OnInit, OnDestroy {
         },
         (error) => {
           this.notRep = true;
-          this.temp2= setTimeout(() => {
+          this.temp2 = setTimeout(() => {
             this.notRep = false;
           }, 2000);
           console.error("Error:", error);
         }
       );
     this.change = false;
-    
+
   }
 
-  openNew(id:any,user:any,password:any,change_password:any,token:any,enabled:any,revoke_date:any) { // Abre Nuevo usuario
+  openNew(id: any, user: any, password: any, change_password: any, token: any, enabled: any, revoke_date: any) { // Abre Nuevo usuario
 
     this.users = {
       id: id,
@@ -313,14 +312,14 @@ export class UsersComponent implements OnInit, OnDestroy {
   transformPassword(password: string): string {
     return '*'.repeat(password.length);
   }
-  
+
   /* EDIT */
 
   editUser(form: any) { // Guardar datos del usuario editado
     if (form.valid) {
       this.http.put(this.postUser, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
         .subscribe(
-          (response: any) => {
+          () => {
             this.openEdit();
             // Respuesta
           },
@@ -331,20 +330,20 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.data = this.data.filter((data: { id: number }) => data.id !== this.users.id);
       let users = this.users;
       this.data.push(users);
-      this.data.sort((a: any, b: any) => {return a.user - b.user;});
+      this.data.sort((a: any, b: any) => { return a.user - b.user; });
       this.actId = this.users.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
 
-      this.temp3= setTimeout(() => {
+      this.temp3 = setTimeout(() => {
         this.saveOk = false;
       }, 2000);
     }
     this.saved = true;
     this.change = false;
   }
-  
+
   openEdit() { // Abre Editar usuario
     this.show = true;
     this.state = 2;
@@ -355,7 +354,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteUsers(idActual: any) { // Elimina usuario
-    let token = this.storageService.getToken() ?? ''; 
+    let token = this.storageService.getToken() ?? '';
     var users2 = {
       id: this.id,
     };
@@ -367,12 +366,12 @@ export class UsersComponent implements OnInit, OnDestroy {
     };
 
     this.http.delete(this.postUser, options).subscribe(
-      (response: any) => {
+      () => {
         this.alertDelete = true;
-        this.temp4= setTimeout(() => {
+        this.temp4 = setTimeout(() => {
           this.alertDelete = false;
         }, 2000);
-    
+
         this.data = this.data.filter((objeto: { id: any }) => objeto.id != idActual);
         this.clouse();
       },
@@ -410,13 +409,13 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.change = false;
   }
 
-  revokeUser(idActual: any){ // Quita token del usuario
+  revokeUser(idActual: any) { // Quita token del usuario
     let users = {
       id: idActual,
     };
     this.http.post(this.postUserRevoke, JSON.stringify(users), this.httpOptionsService.getHttpOptions())
       .subscribe(
-        (response: any) => {
+        () => {
           // Respuesta
         },
         (error) => {
@@ -426,10 +425,10 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.state = 2;
     this.saveOk = true;
 
-    this.temp6= setTimeout(() => {
+    this.temp6 = setTimeout(() => {
       this.saveOk = false;
     }, 2000);
-    
+
     this.saved = true;
     this.change = false;
   }
@@ -450,7 +449,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   openClouse() { // Abre y cierra la tarjeta de usuarios
     if (this.show == true) {
       this.showAux = false;
-    } 
+    }
     else {
       this.showAux = true;
     }
@@ -461,7 +460,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.state = -1;
     this.openClouse();
     this.change = false;
-    this.actId= -1;
+    this.actId = -1;
   }
 
   clouseAll() { // Cierra todas las tarjetas
@@ -491,7 +490,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage - 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
-    } 
+    }
     else {
       this.currentPage = 1;
       this.storageService.setPage(this.currentPage.toString())
@@ -526,7 +525,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage + 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
-    } 
+    }
     else {
       this.currentPage = this.totalPages;
       this.storageService.setPage(this.currentPage.toString())
@@ -547,16 +546,16 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   readStorage() { // Recupera datos en local storage
-    let pageString = this.storageService.getPage() ?? "1"; 
+    let pageString = this.storageService.getPage() ?? "1";
     this.currentPage = parseInt(pageString, 10);
-    pageString = this.storageService.getPerPage() ?? "15"; 
+    pageString = this.storageService.getPerPage() ?? "15";
     this.quantPage = parseInt(pageString, 10);
     this.searchAuxArray.value = this.storageService.getSearch() ?? "";
-    if(this.searchAuxArray.value!=""){
+    if (this.searchAuxArray.value != "") {
       //this.searched= true;
       clearTimeout(this.temp1);
       var $this = this;
-      this.temp3 = setTimeout( () => {
+      this.temp3 = setTimeout(() => {
         $this.getUsers(this.order, this.ordAux);
         $this.openClouse();
       }, 1);

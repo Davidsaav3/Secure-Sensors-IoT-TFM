@@ -1,9 +1,9 @@
-import { Component, ElementRef, OnDestroy, OnInit, HostListener } from "@angular/core";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { StorageService } from '../../services/storage.service';
 import { HttpOptionsService } from '../../services/httpOptions.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: "app-conecction-write",
@@ -19,15 +19,15 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl+environment.url.conecctionWrite+"";
-  postConecction: string = environment.baseUrl+environment.url.conecctionWrite;
-  duplicateConecction: string = environment.baseUrl+environment.url.conecctionWrite+"/duplicate";
-  getId: string = environment.baseUrl+environment.url.conecctionWrite+"/id";
-  getIdSecret: string = environment.baseUrl+environment.url.conecctionWrite+"/secret";
+  getConecction: string = environment.baseUrl + environment.url.conecctionWrite + "";
+  postConecction: string = environment.baseUrl + environment.url.conecctionWrite;
+  duplicateConecction: string = environment.baseUrl + environment.url.conecctionWrite + "/duplicate";
+  getId: string = environment.baseUrl + environment.url.conecctionWrite + "/id";
+  getIdSecret: string = environment.baseUrl + environment.url.conecctionWrite + "/secret";
 
   passwordFieldType = 'password';
   passwordPattern = environment.password_pattern;;
@@ -68,7 +68,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   dupNot = false;
   viewDup = -1;
   pencilDup = -1;
-  showPass= false;
+  showPass = false;
 
   searchAux = "search";
   order = "description";
@@ -84,21 +84,21 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   conecctions = {
     id: 0,
     description: "",
-    authorization: "", 
-    urlIngest: "", 
+    authorization: "",
+    urlIngest: "",
     enabled: true
   };
 
   conecctionsSecret = {
     id: 0,
-    authorization: "", 
+    authorization: "",
   };
 
   conecctionsCopy = {
     id: 0,
     description: "",
-    authorization: "", 
-    urlIngest: "", 
+    authorization: "",
+    urlIngest: "",
     enabled: true
   };
 
@@ -116,7 +116,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.readStorage();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -139,7 +139,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) => {return a.description - b.description;});
+          this.data.sort((a: any, b: any) => { return a.description - b.description; });
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
@@ -161,12 +161,13 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           this.data.sort((a: any, b: any) => {
             const valorA = a.correction_time_general || "";
             const valorB = b.correction_time_general || "";
-            return valorA.localeCompare(valorB);});
+            return valorA.localeCompare(valorB);
+          });
         }
       }
       if (ord == "DESC") {
         if (id == "description") {
-          this.data.sort((a: any, b: any) => {return b.description - a.description;});
+          this.data.sort((a: any, b: any) => { return b.description - a.description; });
         }
         if (id == "type") {
           this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
@@ -192,7 +193,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           });
         }
       }
-    } 
+    }
     else {
       this.getConecctions(id, ord);
     }
@@ -204,8 +205,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   }
 
   getConecctions(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
@@ -214,30 +214,30 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.data = [];
 
     this.http.get(`${this.getConecction}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
-    .subscribe(
-      (data: any) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
+      .subscribe(
+        (data: any) => {
+          this.charging = false;
+          if (data && data.length > 0 && data[0].total) {
+            this.totalPages = Math.ceil(data[0].total / this.quantPage);
+            this.total = data[0].total;
+          }
+          else {
+            this.totalPages = 0;
+            this.total = 0;
+          }
+          this.data = data;
+
+          if (this.data.length < this.quantPage) {
+            this.totalPage = this.total;
+          }
+          else {
+            this.totalPage = this.quantPage * this.currentPage;
+          }
+        },
+        (error) => {
+          console.error(error);
         }
-        this.data = data;
-  
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
-        }
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      );
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
@@ -246,50 +246,49 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     if (!this.change && idActual != this.actId) {
       this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
+        .subscribe(
+          (data: any) => {
+            this.conecctions = data[0];
+            this.actId = idActual;
+            this.id = idActual;
+            this.openEdit();
+            this.state = 2;
+            let conecctions = { ...this.conecctions };
+            this.conecctionsCopy = {
+              id: conecctions.id,
+              description: conecctions.description,
+              authorization: conecctions.authorization,
+              urlIngest: conecctions.urlIngest,
+              enabled: conecctions.enabled
+            };
+            this.openClouse();
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+    }
+  }
+
+  getSecret() { // Obtiene secreto
+    this.users.id = this.id;
+    this.http.post(this.getIdSecret, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
-          this.conecctions = data[0];
-          this.actId = idActual;
-          this.id = idActual;
-          this.openEdit();
-          this.state = 2;
-          let conecctions = { ...this.conecctions };
-          this.conecctionsCopy = {
-            id: conecctions.id,
-            description: conecctions.description ,
-            authorization: conecctions.authorization, 
-            urlIngest: conecctions.urlIngest, 
-            enabled: conecctions.enabled
-          };
-          this.openClouse();
+          this.conecctionsSecret = data[0];
+          //console.log(data[0])
+          this.showPass = true;
         },
         (error) => {
           console.error(error);
         }
       );
-    }
   }
 
-  getSecret(idActual: any) { // Obtiene secreto
-    this.users.id= this.id;    
-    this.http.post(this.getIdSecret, JSON.stringify(this.users), this.httpOptionsService.getHttpOptions())
-    .subscribe(
-      (data: any) => {
-        this.conecctionsSecret = data[0];
-        //console.log(data[0])
-        this.showPass= true;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-  
   /* NEW */
 
   newConecction(form: any) {
@@ -303,7 +302,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             this.temp1 = setTimeout(() => {
               this.alertNew = false;
             }, 2000);
-  
+
             this.openClouse();
             this.conecctions.id = data.id;
             let conecctions = { ...this.conecctions };
@@ -311,7 +310,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             this.data.sort((a: { description: string }, b: { description: any }) => {
               if (typeof a.description === "string" && typeof b.description === "string") {
                 return a.description.localeCompare(b.description);
-              } 
+              }
               else {
                 return 1;
               }
@@ -327,13 +326,13 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     }
   }
 
-  openNew(id:any,description:any,authorization:any,urlIngest:any,enabled:any) { // Abre Nueva conexion
+  openNew(id: any, description: any, authorization: any, urlIngest: any, enabled: any) { // Abre Nueva conexion
 
     this.conecctions = {
       id: id,
-      description: description ,
-      authorization: authorization, 
-      urlIngest: urlIngest, 
+      description: description,
+      authorization: authorization,
+      urlIngest: urlIngest,
       enabled: enabled,
     };
 
@@ -348,7 +347,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     if (form.valid) {
       this.http.put(this.postConecction, JSON.stringify(this.conecctions), this.httpOptionsService.getHttpOptions())
         .subscribe(
-          (response: any) => {
+          () => {
             // Respuesta
           },
           (error) => {
@@ -358,7 +357,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
       this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
       let conecctions = this.conecctions;
       this.data.push(conecctions);
-      this.data.sort((a: any, b: any) => {return a.description - b.description;});
+      this.data.sort((a: any, b: any) => { return a.description - b.description; });
       this.actId = this.conecctions.id;
       this.openEdit();
       this.state = 2;
@@ -371,7 +370,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.saved = true;
     this.change = false;
   }
-  
+
   openEdit() { // Abre Editar conexión
     this.show = true;
     this.state = 2;
@@ -381,8 +380,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateConecctions(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = this.storageService.getToken() ?? ''; 
-    
+
 
     if (!this.change && !this.change) {
       this.http.get(`${this.duplicateConecction}/${type}`, this.httpOptionsService.getHttpOptions()).subscribe(
@@ -393,8 +391,8 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           this.openNew(
             '',
             data.duplicatedescription,
-            '', 
-            this.conecctions.urlIngest, 
+            '',
+            this.conecctions.urlIngest,
             this.conecctions.enabled
           );
           this.change = true;
@@ -409,8 +407,8 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   /* DELETE */
 
   deleteconecctions(idActual: any) { // Elimina conexión
-    let token = this.storageService.getToken() ?? ''; 
-    
+    let token = this.storageService.getToken() ?? '';
+
 
     var conecctions2 = {
       id: this.id,
@@ -423,14 +421,14 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     };
 
     this.http.delete(this.postConecction, options).subscribe(
-        (response: any) => {
-          // Realiza acciones con la respuesta si es necesario
-          //console.log('conecctions eliminados:', response);
-        },
-        (error: any) => {
-          console.error('Error al eliminar conexón:', error);
-        }
-      );
+      () => {
+        // Realiza acciones con la respuesta si es necesario
+        //console.log('conecctions eliminados:', response);
+      },
+      (error: any) => {
+        console.error('Error al eliminar conexón:', error);
+      }
+    );
     this.alertDelete = true;
 
     this.temp3 = setTimeout(() => {
@@ -474,7 +472,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.currentPage = 1;
     this.quantPage = 15;
     this.page = 1;
-    this.searchAuxArray.value = "";    
+    this.searchAuxArray.value = "";
     this.storageService.setSearch(this.searchAuxArray.value)
     this.getConecctions(this.order, this.ordAux);
   }
@@ -484,7 +482,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   openClouse() { // Abre y cierra la tarjeta de conexiones
     if (this.show == true) {
       this.showAux = false;
-    } 
+    }
     else {
       this.showAux = true;
     }
@@ -495,7 +493,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.state = -1;
     this.openClouse();
     this.change = false;
-    this.actId= -1;
+    this.actId = -1;
   }
 
   clouseAll() { // Cierra todas las tarjetas
@@ -524,7 +522,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage - 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
-    } 
+    }
     else {
       this.currentPage = 1;
       this.storageService.setPage(this.currentPage.toString())
@@ -559,7 +557,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
       this.currentPage = this.currentPage + 10;
       this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
-    } 
+    }
     else {
       this.currentPage = this.totalPages;
       this.storageService.setPage(this.currentPage.toString())
@@ -574,27 +572,27 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
       this.getConecctionsVoid();
     }
   }
-  
+
   togglePasswordType() {
     this.passwordFieldType = this.passwordFieldType === 'password' ? 'text' : 'password';
   }
 
-  resetPass(){
-    this.showPass= false;
-    this.users.password= "";
+  resetPass() {
+    this.showPass = false;
+    this.users.password = "";
   }
 
   readStorage() { // Recupera datos en local storage
-    let pageString = this.storageService.getPage() ?? "1"; 
+    let pageString = this.storageService.getPage() ?? "1";
     this.currentPage = parseInt(pageString, 10);
-    pageString = this.storageService.getPerPage() ?? "15"; 
+    pageString = this.storageService.getPerPage() ?? "15";
     this.quantPage = parseInt(pageString, 10);
     this.searchAuxArray.value = this.storageService.getSearch() ?? "";
-    if(this.searchAuxArray.value!=""){
+    if (this.searchAuxArray.value != "") {
       //this.searched= true;
       clearTimeout(this.temp1);
       var $this = this;
-      this.temp3 = setTimeout( () => {
+      this.temp3 = setTimeout(() => {
         $this.getConecctions(this.order, this.ordAux);
         $this.openClouse();
       }, 1);
