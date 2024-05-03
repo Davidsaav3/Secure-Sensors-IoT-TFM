@@ -27,13 +27,13 @@ const cookieParser = require('cookie-parser');
     let values = [];
   
     if (text_search === 'search') {
-      query = `SELECT id, user, change_password, enabled, revoke_date, (SELECT COUNT(*) AS total FROM users) as total FROM users ORDER BY ? ? LIMIT ? OFFSET ?`;
-      values = [order, order_type, tam, act];
+      query = `SELECT id, user, change_password, enabled, revoke_date, (SELECT COUNT(*) AS total FROM users) as total FROM users ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
+      values = [tam, act];
     } 
     else {
-      query = `SELECT id, user, change_password , enabled, revoke_date, (SELECT COUNT(*) AS total FROM users WHERE user LIKE ? OR password LIKE ?) as total FROM users WHERE user LIKE ? OR password LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      query = `SELECT id, user, change_password , enabled, revoke_date, (SELECT COUNT(*) AS total FROM users WHERE user LIKE ? OR password LIKE ?) as total FROM users WHERE user LIKE ? OR password LIKE ? ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
       const likePattern = `%${text_search}%`;
-      values = Array(4).fill(likePattern).concat([order, order_type, tam, act]);
+      values = Array(4).fill(likePattern).concat([tam, act]);
     }
   
     con.query(query, values, (err, result) => {

@@ -17,10 +17,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   getVariableStructureList: string =environment.baseUrl+environment.url.variableDataStructure+"/get_list";
 
   constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
-    this.http.get(`${this.getVariableStructureList}`, {headers})
+    this.http.get(`${this.getVariableStructureList}`, this.httpOptionsService.getHttpOptions())
     .subscribe((quotesData: any) => {
       this.aux = quotesData[0].id;
     }, (error) => {
@@ -130,9 +127,6 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   getStructures(id: any, ord: any) { // Obtiene todas las estructuras de datos
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
@@ -144,7 +138,7 @@ export class StructureComponent implements OnInit, OnDestroy {
 
     this.charging = true;
     this.data = [];
-    this.http.get(`${this.getEstructure}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getEstructure}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
     .subscribe((data: any) => {
       this.charging = false;
       if (data && data.length > 0 && data[0].total) {
@@ -231,10 +225,7 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   getStructuresList() {
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
-    this.http.get(`${this.getVariableStructureList}`, {headers})
+    this.http.get(`${this.getVariableStructureList}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (quotesData: any) => {
           this.estructureVariable.structure.unshift(...quotesData);
@@ -366,11 +357,8 @@ export class StructureComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateStructures(num: any, description: any) { // Obtiene nombre de estructura de datos duplicada
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateEstructure}/${description}`, {headers}).subscribe(
+      this.http.get(`${this.duplicateEstructure}/${description}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.openClouse();
         this.state = 0;

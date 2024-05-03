@@ -327,11 +327,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   statusScript(): void { // STATUS //
-    let token = this.storageService.getToken() ?? ''; // parametrizar
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
     //('statusscript')
     //if(this.authService.isAuthenticated()){
-      this.http.get<any>(this.backendURL + "/script-status", {headers}).subscribe(
+      this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).subscribe(
         (data) => {
           this.date= data.date;
 

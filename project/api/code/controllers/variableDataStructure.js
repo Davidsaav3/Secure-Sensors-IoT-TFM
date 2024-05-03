@@ -19,13 +19,13 @@ const insertLog = require('../middleware/log');
     let queryParams = [];
   
     if (text_search === "search") {
-      query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure) as total FROM variable_data_structure ORDER BY ? ? LIMIT ? OFFSET ?`;
-      queryParams = [order, order_type, tam, act];
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure) as total FROM variable_data_structure ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
+      queryParams = [tam, act];
     } 
     else {
-      query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ?) as total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ?) as total FROM variable_data_structure WHERE description LIKE ? OR structure LIKE ? OR initial_byte LIKE ? ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
       const likePattern = `%${text_search}%`;
-      queryParams = Array(6).fill(likePattern).concat([order, order_type, tam, act]);
+      queryParams = Array(6).fill(likePattern).concat([tam, act]);
     }
   
     con.query(query, queryParams, (err, result) => {

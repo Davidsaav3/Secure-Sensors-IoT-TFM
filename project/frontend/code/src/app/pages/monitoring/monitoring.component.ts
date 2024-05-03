@@ -76,7 +76,7 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 
   searchAux = "search";
   order = "log_date";
-  ordAux = "ASC";
+  ordAux = "DESC";
 
   alertDelete: any = false;
   notDelete: any = false;
@@ -219,7 +219,7 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 
   getMonitoring(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
@@ -227,7 +227,7 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getMonitorings}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getMonitorings}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -262,10 +262,10 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     if (!this.change && idActual != this.actId) {
-      this.http.get(`${this.getId}/${idActual}`, {headers})
+      this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.monitoring = data[0];
@@ -312,9 +312,9 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
             this.monitoring.id = data.id;
             let monitoring = { ...this.monitoring };
             this.data.push(monitoring);
-            this.data.sort((a: { description: string }, b: { description: any }) => {
-              if (typeof a.description === "string" && typeof b.description === "string") {
-                return a.description.localeCompare(b.description);
+            this.data.sort((a: { log_date: string }, b: { log_date: any }) => {
+              if (typeof a.log_date === "string" && typeof b.log_date === "string") {
+                return a.log_date.localeCompare(b.log_date);
               } 
               else {
                 return 1;
@@ -389,17 +389,16 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 
   duplicateMonitoring(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateMonitorings}/${type}`, {headers})
+      this.http.get(`${this.duplicateMonitorings}/${type}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.monitoring = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
     
-          this.http.get(`${this.getId}/${this.monitoring.id}`, {headers})
+          this.http.get(`${this.getId}/${this.monitoring.id}`, this.httpOptionsService.getHttpOptions())
             .subscribe(
               (data1: any) => {
                 this.monitoring = data1[0];
@@ -442,7 +441,7 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 
   deletemonitoring(idActual: any) { // Elimina conexión
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     var monitoring2 = {
       id: this.id,

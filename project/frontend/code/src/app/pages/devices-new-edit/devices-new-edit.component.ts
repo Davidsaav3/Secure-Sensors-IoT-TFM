@@ -42,7 +42,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
 
   constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService,private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
@@ -59,7 +59,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     }
     
     if (this.ruteAux[2] == "new") {
-      this.http.get(this.getStructureList, {headers}).subscribe(
+      this.http.get(this.getStructureList, this.httpOptionsService.getHttpOptions()).subscribe(
         (quotesData: any) => {
           this.structures.structure = quotesData.data_estructure;
           this.auxFixed = quotesData.data_estructure[0].id_estructure;
@@ -171,13 +171,13 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     let token = this.storageService.getToken() ?? ''; 
     let headers = new HttpHeaders().set('Authorization', `${token}`);
-    
+
     this.devices.sensors = [];
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.getStructure(0);
   
-    this.http.get(this.getSensorsList, {headers}).subscribe(
+    this.http.get(this.getSensorsList, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.selectSensors.sensors = data;
       },
@@ -205,7 +205,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       if (this.ruteAux[2] == "duplicate") {
         this.state= 1;
         // 1. Duplicate
-        this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
+        this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
             this.devices = data[0];
             this.lat = this.devices.lat;
@@ -277,9 +277,9 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
 
   getDevices() { // Obtene el Dispositivo
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
-    this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
+    this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.devices = data[0];
         this.createDate();
@@ -351,9 +351,9 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
 
   getStructure(num: any) { // Obtiene las listas de estructuras de datos
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
-    this.http.get(`${this.getStructureList}`, {headers}).subscribe(
+    this.http.get(`${this.getStructureList}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (quotesData: any) => {
         if (num === 1) {
           this.structures.structure = quotesData.variable_data_structure;
@@ -374,7 +374,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
 
   newDevices(form: any) { // Guardar la información del Dispositivo
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     this.createDate();
     this.devices.createdAt = this.date;
@@ -401,7 +401,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           },
         ];
         this.devices.sensors = sensors_aux;
-        this.http.post<any>(this.postDevice, this.devices, {headers}).subscribe(
+        this.http.post<any>(this.postDevice, this.devices, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
             if(data.found==true){
               this.temp2= setTimeout(() => {
@@ -607,9 +607,9 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   
   rechargeMap() { // Recargar mapa a su estado anterior a la edición sin guardado
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
-    this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
+    this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.devices.lat = data[0].lat;
         this.devices.lon = data[0].lon;

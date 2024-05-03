@@ -22,13 +22,13 @@ const bcrypt = require('bcrypt');
     let values = [];
   
     if (text_search === 'search') {
-      query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write ORDER BY ? ? LIMIT ? OFFSET ?`;
-      values = [order, order_type, tam, act];
+      query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
+      values = [tam, act];
     } 
     else {
-      query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write WHERE description LIKE ? OR urLIngest LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      query = `SELECT id, description, urlIngest, enabled, (SELECT COUNT(*) AS total FROM conecction_write) as total FROM conecction_write WHERE description LIKE ? OR urLIngest LIKE ? ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
       const likePattern = `%${text_search}%`;
-      values = [likePattern, likePattern, order, order_type, tam, act];
+      values = [likePattern, likePattern, tam, act];
     }
   
     con.query(query, values, (err, result) => {

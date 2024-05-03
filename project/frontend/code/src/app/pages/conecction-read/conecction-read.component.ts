@@ -203,16 +203,13 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   }
 
   getConecctions(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     this.searchAux = this.searchAuxArray.value || "search";
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getConecction}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getConecction}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -245,11 +242,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     if (!this.change && idActual != this.actId) {
-      this.http.get(`${this.getId}/${idActual}`, {headers})
+      this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.conecctions = data[0];
@@ -397,11 +391,8 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateConecctions(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateConecction}/${type}`, {headers}).subscribe(
+      this.http.get(`${this.duplicateConecction}/${type}`, this.httpOptionsService.getHttpOptions()).subscribe(
         (data: any) => {
           this.conecctions = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
@@ -428,7 +419,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
 
   deleteconecctions(idActual: any) { // Elimina conexión
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     var conecctions2 = {
       id: this.id,

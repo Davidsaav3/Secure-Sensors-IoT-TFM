@@ -14,11 +14,11 @@
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div class="d-flex btn-group pb-3" role="group" aria-label="Toggle backend">
 						<button type="button" class="btn btn-success" [ngClass]="{ 'active': backendStatus }" (click)="setScript(1)">
-						{{ 'script.enable' | translate }}
+						{{ 'monitoring.enable' | translate }}
 						</button>
 
 						<button type="button" class="btn btn-danger" [ngClass]="{ 'active': !backendStatus }" (click)="setScript(0)">
-						{{ 'script.disable' | translate }}
+						{{ 'monitoring.disable' | translate }}
 						</button>
 					</div>	
 				</div>
@@ -41,46 +41,46 @@
 					<thead>
 						<tr style="background-color: #fff;">
 							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'log_date'}">
-								<svg *ngIf="alt1" (click)="alt1=false;getMonitoringLocal('log_date','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt1" (click)="alt1=false;getScriptLocal('log_date','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
-								<svg *ngIf="!alt1" (click)="alt1=true;getMonitoringLocal('log_date','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt1" (click)="alt1=true;getScriptLocal('log_date','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								</svg> {{ 'monitoring.date' | translate }}
 							</th>
 				
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'user_id'}">
-								<svg *ngIf="alt2" (click)="alt2=false;getMonitoringLocal('user_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt2" (click)="alt2=false;getScriptLocal('user_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt2" (click)="alt2=true;getMonitoringLocal('user_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt2" (click)="alt2=true;getScriptLocal('user_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.user_id' | translate }}
 							</th>
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'username'}">
-								<svg *ngIf="alt3" (click)="alt3=false;getMonitoringLocal('username','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt3" (click)="alt3=false;getScriptLocal('username','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt3" (click)="alt3=true;getMonitoringLocal('username','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt3" (click)="alt3=true;getScriptLocal('username','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.username' | translate }}
 							</th>
 
 							
 							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_status'}">
-								<svg *ngIf="alt5" (click)="alt5=false;getMonitoringLocal('log_status','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt5" (click)="alt5=false;getScriptLocal('log_status','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt5" (click)="alt5=true;getMonitoringLocal('log_status','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt5" (click)="alt5=true;getScriptLocal('log_status','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.log_status' | translate }}
 							</th>
 							
 							<!--<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_trace'}">
-								<svg *ngIf="alt9" (click)="alt9=false;getMonitoringLocal('log_trace','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt9" (click)="alt9=false;getScriptLocal('log_trace','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								  </svg>
-								<svg *ngIf="!alt9" (click)="alt9=true;getMonitoringLocal('log_trace','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+								<svg *ngIf="!alt9" (click)="alt9=true;getScriptLocal('log_trace','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
 									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
 								  </svg> {{ 'monitoring.log_trace' | translate }}
 							</th>-->
@@ -120,7 +120,7 @@
 				</div>
 				<div>
 
-					<select (change)="this.currentPage=1;getMonitoringLocal('description','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<select (change)="this.currentPage=1;getScriptLocal('description','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
 					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
 				</select>
 				</div>
@@ -168,16 +168,16 @@
 			<div class="col-12">
 				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
 					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'monitoring.duplicate' | translate }} {{monitoring.log_code}}</h1>
+						<h1 *ngIf="state==0" class="mb-0">{{ 'monitoring.duplicate' | translate }} {{script.log_code}}</h1>
 						<h1 *ngIf="state==1" class="mb-0">{{ 'monitoring.nuevo' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'monitoring.of' | translate }} {{ monitoring.log_code }}</h1>
+						<h1 *ngIf="state==2" class="mb-0">{{ 'monitoring.of' | translate }} {{ script.log_code }}</h1>
 					</div>
 
-					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ monitoring.id }}" [(ngModel)]="monitoring.id">
+					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ script.id }}" [(ngModel)]="script.id">
 
 					<div class="col-12 pt-2 form-group">
 						<label for="user_id">{{ 'sensors.user_id' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.user_id }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="monitoring['user_id']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.user_id }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="script['user_id']" required>
 						<div *ngIf="form.submitted && form.controls['user_id'].errors" class="text-danger">
 							<div *ngIf="form.controls['user_id'].errors['required']">{{ 'user_id' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -185,7 +185,7 @@
 
 					<div class="col-12 pt-2 form-group">
 						<label for="username">{{ 'monitoring.username' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.username }}" type="text" id="username" class="form-control" name="username" [(ngModel)]="monitoring['username']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.username }}" type="text" id="username" class="form-control" name="username" [(ngModel)]="script['username']" required>
 						<div *ngIf="form.submitted && form.controls['username'].errors" class="text-danger">
 							<div *ngIf="form.controls['username'].errors['required']">{{ 'monitoring.username' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -193,7 +193,7 @@
 
 					<div class="col-12 pt-2 form-group">
 						<label for="log_date">{{ 'monitoring.log_date' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.log_date }}" type="text" id="log_date" class="form-control" name="log_date" [(ngModel)]="monitoring['log_date']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_date }}" type="text" id="log_date" class="form-control" name="log_date" [(ngModel)]="script['log_date']" required>
 						<div *ngIf="form.submitted && form.controls['log_date'].errors" class="text-danger">
 							<div *ngIf="form.controls['log_date'].errors['required']">{{ 'monitoring.log_date' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -201,7 +201,7 @@
 
 					<div class="col-12 pt-2 form-group">
 						<label for="log_code">{{ 'monitoring.log_code' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.log_code }}" type="text" id="log_code" class="form-control" name="log_code" [(ngModel)]="monitoring['log_code']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_code }}" type="text" id="log_code" class="form-control" name="log_code" [(ngModel)]="script['log_code']" required>
 						<div *ngIf="form.submitted && form.controls['log_code'].errors" class="text-danger">
 							<div *ngIf="form.controls['log_code'].errors['required']">{{ 'monitoring.log_code' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -209,7 +209,7 @@
 
 					<div class="col-12 pt-2 form-group">
 						<label for="log_message">{{ 'monitoring.log_message' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.log_message }}" type="text" id="log_message" class="form-control" name="log_message" [(ngModel)]="monitoring['log_message']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_message }}" type="text" id="log_message" class="form-control" name="log_message" [(ngModel)]="script['log_message']" required>
 						<div *ngIf="form.submitted && form.controls['log_message'].errors" class="text-log_message">
 							<div *ngIf="form.controls['log_message'].errors['required']">{{ 'monitoring.log_message' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -217,7 +217,7 @@
 
 					<!--<div class="col-12 pt-2 form-group">
 						<label for="log_trace">{{ 'monitoring.log_trace' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ monitoring.log_trace }}" type="text" id="log_trace" class="form-control" name="log_trace" [(ngModel)]="monitoring['log_trace']" required>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_trace }}" type="text" id="log_trace" class="form-control" name="log_trace" [(ngModel)]="script['log_trace']" required>
 						<div *ngIf="form.submitted && form.controls['log_trace'].errors" class="text-log_trace">
 							<div *ngIf="form.controls['log_trace'].errors['required']">{{ 'monitoring.log_trace' | translate }} {{ 'required' | translate }}</div>
 						</div>
@@ -233,7 +233,7 @@
 						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button (click)="newMonitoring(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
+						<button (click)="newScript(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
 					</div>
 				</div>
 				<div class="row" *ngIf="state==2">
@@ -242,7 +242,7 @@
 						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button (click)="editMonitoring(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+						<button (click)="editScript(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
 					</div>
 					<div class="col-12 mt-3">
 						<div class="row d-flex" style="justify-content: flex-end;">
@@ -274,8 +274,8 @@
 						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
 					</div>
 					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deletemonitoring(this.id)">{{ 'sensors.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deletemonitoring(this.id)">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deletescript(this.id)">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deletescript(this.id)">{{ 'sensors.delete' | translate }}</button>
 					</div>
 				</div>
 			</div>

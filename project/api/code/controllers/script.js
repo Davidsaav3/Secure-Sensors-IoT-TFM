@@ -118,13 +118,13 @@ const { spawn } = require("child_process");
     let queryParams = [];
 
     if (text_search === 'search') {
-      query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script) as total FROM log_script ORDER BY ? ? LIMIT ? OFFSET ?`;
-      queryParams = [order, order_type, tam, act];
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script) as total FROM log_script ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
+      queryParams = [tam, act];
     } 
     else {
-      query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ?) as total FROM log WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      query = `SELECT *, (SELECT COUNT(*) AS total FROM log_script WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ?) as total FROM log WHERE id LIKE ? OR user_id LIKE ? OR username LIKE ? OR log_date LIKE ? OR log_trace LIKE ? OR log_status LIKE ? ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
       const likePattern = `%${text_search}%`;
-      queryParams = Array(12).fill(likePattern).concat([order, order_type, tam, act]);
+      queryParams = Array(12).fill(likePattern).concat([tam, act]);
     }
 
     con.query(query, queryParams, (err, result) => {

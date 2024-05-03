@@ -196,16 +196,13 @@ export class SensorsComponent implements OnInit, OnDestroy {
   }
 
   getSensors(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     this.searchAux = this.searchAuxArray.value || "search";
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -238,14 +235,13 @@ export class SensorsComponent implements OnInit, OnDestroy {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
-      this.http.get(`${this.getId}/${idActual}`, {headers})
+      this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.sensors = data[0];
+          console.log(this.sensors)
           this.actId = idActual;
           this.id = idActual;
           this.openEdit();
@@ -372,18 +368,15 @@ export class SensorsComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateSensors(num: any, type: any) { // Obtiene el nombre del sensor duplicado
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateSensor}/${type}`, {headers})
+      this.http.get(`${this.duplicateSensor}/${type}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.sensors = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
     
-          this.http.get(`${this.getId}/${this.sensors.id}`, {headers})
+          this.http.get(`${this.getId}/${this.sensors.id}`, this.httpOptionsService.getHttpOptions())
             .subscribe(
               (data1: any) => {
                 this.sensors = data1[0];
@@ -434,7 +427,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
 
   deleteSensors(idActual: any) { // Elimina sensor
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     var sensors2 = {
       id: this.id,

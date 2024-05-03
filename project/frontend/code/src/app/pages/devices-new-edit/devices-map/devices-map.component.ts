@@ -79,7 +79,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void { // Se ejecuta despues de ngOnInit
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
       if (this.ruteAux[2] == "new") {
         if (!this.divMap) throw "No hay mapa";
@@ -109,7 +109,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       }
       //
       if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
-        this.http.get(`${this.idDevice}/${this.id}`, {headers}).subscribe(
+        this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
             this.sharedLon = data[0].lon;
             this.sharedLat = data[0].lat;

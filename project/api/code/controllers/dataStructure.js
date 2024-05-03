@@ -19,13 +19,13 @@ const insertLog = require('../middleware/log');
     let values = [];
   
     if (text_search === 'search') {
-      query = `SELECT *, (SELECT description FROM variable_data_structure WHERE id = id_variable_data_structure LIMIT 1) as variable_description, (SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure ORDER BY ? ? LIMIT ? OFFSET ?`;
-      values = [order, order_type, tam, act];
+      query = `SELECT *, (SELECT description FROM variable_data_structure WHERE id = id_variable_data_structure LIMIT 1) as variable_description, (SELECT COUNT(*) AS total FROM data_estructure) as total FROM data_estructure ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
+      values = [tam, act];
     } 
     else {
-      query = `SELECT *, (SELECT description FROM variable_data_structure WHERE id = id_variable_data_structure LIMIT 1) as variable_description, (SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE ? OR configuration LIKE ? OR identifier_code LIKE ? OR id_variable_data_structure LIKE ?) as total FROM data_estructure WHERE description LIKE ? OR configuration LIKE ? OR identifier_code LIKE ? OR id_variable_data_structure LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?`;
+      query = `SELECT *, (SELECT description FROM variable_data_structure WHERE id = id_variable_data_structure LIMIT 1) as variable_description, (SELECT COUNT(*) AS total FROM data_estructure WHERE description LIKE ? OR configuration LIKE ? OR identifier_code LIKE ? OR id_variable_data_structure LIKE ?) as total FROM data_estructure WHERE description LIKE ? OR configuration LIKE ? OR identifier_code LIKE ? OR id_variable_data_structure LIKE ? ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
       const likePattern = `%${text_search}%`;
-      values = Array(8).fill(likePattern).concat([order, order_type, tam, act]);
+      values = Array(8).fill(likePattern).concat([tam, act]);
     }
   
     con.query(query, values, (err, result) => {

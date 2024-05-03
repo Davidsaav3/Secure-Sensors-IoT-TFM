@@ -1,4 +1,5 @@
 <app-navbar></app-navbar>
+<!--{{this.state}}{{this.show}}{{this.charging}}{{this.saved}}{{this.change}}-->
 <div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev ps-2': this.width<965, '': this.width>=965}">
 
 	<div class="cc2 cont mx-0 cont_recto" [ngClass]="{'c100': this.showAux==true || this.width<965, 'c10': this.showAux==false}">
@@ -173,13 +174,9 @@
 						</h1>
 						<h1 *ngIf="state==1" class="mb-0">
 							{{ 'users.new' | translate }}
-							<span *ngIf="users.user.includes('@'); else fullUser">{{ users.user.substring(0, users.user.indexOf('@')) }}</span>
-							<ng-template #fullUser>{{ users.user }}</ng-template>	
 						</h1>
 						<h1 *ngIf="state==2" class="mb-0">
 							{{ 'users.of' | translate }} 
-							<span *ngIf="users.user.includes('@'); else fullUser">{{ users.user.substring(0, users.user.indexOf('@')) }}</span>
-							<ng-template #fullUser>{{ users.user }}</ng-template>	
 						</h1>
 					</div>
 					
@@ -243,7 +240,7 @@
 						</div>
 					</div>
 
-					<div class="col-12 mt-2">
+					<div class="col-12 mt-2" *ngIf="state!=1">
 						{{ 'monitoring.log_date' | translate }}&nbsp;		
 						<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': users.revoke_date<=currentDate || users.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{users.revoke_date}}</p></span>
 						<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': users.revoke_date>currentDate || users.revoke_date==''}"><p class="mb-0 d-none d-md-none d-lg-block">{{users.revoke_date}}</p></span>

@@ -136,9 +136,6 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   }
 
   getStructure(id: any, ord: any) { // Obtiene todas las estructuras
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     if (this.search.value == "") {
@@ -149,7 +146,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
     }
     this.charging = true;
     this.data = [];
-    this.http.get(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers} )
+    this.http.get(`${this.getEstructure}/${this.searchParameter}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions() )
     .subscribe((data: any) => {
       this.charging = false;
       if (data && data.length > 0 && data[0].total) {
@@ -292,11 +289,8 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   /* DUPLICATE */
 
   duplicateStructure(num: any, description: any) { // Obtiene el nombre de una estructura duplicada
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateEstructure}/${description}`, {headers}).subscribe(
+      this.http.get(`${this.duplicateEstructure}/${description}`, this.httpOptionsService.getHttpOptions()).subscribe(
         (data: any) => {
           this.structure = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();

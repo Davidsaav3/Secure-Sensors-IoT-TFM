@@ -55,7 +55,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   saved = false;
   change = false;
   width = 0;
-  change2= false;
   
   show = false;
   showAux = true;
@@ -179,16 +178,13 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   getUsers(id: any, ord: any) {// Obtiene los usuarios pasando parametros de ordenación
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     this.searchAux = this.searchAuxArray.value || "search";
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getUser}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getUser}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -222,10 +218,9 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
 
     if (!this.change && idActual != this.actId) {
-      this.http.get(`${this.getId}/${idActual}`, {headers})
+      this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
           this.users = data[0];

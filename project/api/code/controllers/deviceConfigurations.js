@@ -11,15 +11,15 @@ const insertLog = require('../middleware/log');
   router.use(securityMiddleware);
 
   // NO
-  router.get("/:state/:search_text/:order_by/:ord_asc/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
+  router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/:devices_act/:pag_tam/:pag_pag/:pos_x_1/:pos_x_2/:pos_y_1/:pos_y_2", verifyToken, (req,res)=>{  /*/ GET  /*/
     let state= req.params.state;
     let search_text= req.params.search_text;
-    let order_by= req.params.order_by;
+    let order= req.params.order;
     let array_sensors= req.params.array_sensors;  
     let devices_act= parseInt(req.params.devices_act);
     let tam= parseInt(req.params.pag_pag);
     let act= (req.params.pag_tam-1)*parseInt(req.params.pag_pag);
-    let ord_asc= req.params.ord_asc;
+    let order_type= req.params.order_type;
     let sensors_act= req.params.sensors_act;
     let x1= req.params.pos_x_1;
     let x2= req.params.pos_x_2;
@@ -88,7 +88,7 @@ const insertLog = require('../middleware/log');
               LEFT JOIN device_configurations dc ON subquery.id = dc.id
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
               LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
-              order by ${order_by} ${ord_asc}`
+              order by ${order} ${order_type}`
               //console.log(variable)
               con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                 if (err) throw err;
@@ -126,7 +126,7 @@ const insertLog = require('../middleware/log');
                 }
                 //
                 
-                variable+= `order by ${order_by} ${ord_asc}`
+                variable+= `order by ${order} ${order_type}`
                 //console.log(variable)
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
@@ -166,8 +166,7 @@ const insertLog = require('../middleware/log');
                 if(devices_act!=2){
                   variable+= ` AND dc.enable=${devices_act}`
                 }*/
-                variable+= `
-                order by ${order_by} ${ord_asc}`
+                variable+= `order by ${order} ${order_type}`
                 con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
                   if (err) throw err;
                   const responseArray = auxGet(result);
@@ -255,7 +254,7 @@ const insertLog = require('../middleware/log');
           LEFT JOIN device_configurations dc ON subquery.id = dc.id
           LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
           LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id 
-          ORDER BY ${order_by} ${ord_asc};
+          ORDER BY ${order} ${order_type};
           `, function (err, result) {
               const responseArray = auxGet(result);
               // LOG - 200 //
@@ -280,27 +279,39 @@ const insertLog = require('../middleware/log');
       else{
         if(state=='0'){
           //console.log("LISTA BUSQUEDA POR TEXTO")
-            con.query(` SELECT
-            dc.*, -- Aquí puedes seleccionar los campos específicos que necesitas de device_configurations
-            st.id as sensor_id,
-            st.type as type_name,
-            sd.enable as sensor_enable,
-            sd.orden as sensor_orden,
-            (SELECT COUNT(*) FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR device_configurations.enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%') as total,
-            (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure 
-          FROM (
-            SELECT id
-            FROM device_configurations WHERE uid LIKE '%${search_text}%' OR alias LIKE '%${search_text}%' OR origin LIKE '%${search_text}%' OR description_origin LIKE '%${search_text}%' OR application_id LIKE '%${search_text}%' OR topic_name LIKE '%${search_text}%' OR typemeter LIKE '%${search_text}%' OR lat LIKE '%${search_text}%' OR lon LIKE '%${search_text}%' OR cota LIKE '%${search_text}%' OR timezone LIKE '%${search_text}%' OR enable LIKE '%${search_text}%' OR organizationid LIKE '%${search_text}%'
-            LIMIT ${tam}
-            OFFSET ${act}
-          ) AS subquery
-          LEFT JOIN device_configurations dc ON subquery.id = dc.id
-          LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
-          LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
-          ORDER BY ${order_by} ${ord_asc};`, function (err, result) {
+          let query = `SELECT
+          dc.*, 
+          st.id as sensor_id,
+          st.type as type_name,
+          sd.enable as sensor_enable,
+          sd.orden as sensor_orden,
+          (SELECT COUNT(*) FROM device_configurations WHERE uid LIKE ? OR alias LIKE ? OR origin LIKE ? OR description_origin LIKE ? OR application_id LIKE ? OR topic_name LIKE ? OR typemeter LIKE ? OR lat LIKE ? OR lon LIKE ? OR cota LIKE ? OR timezone LIKE ? OR device_configurations.enable LIKE ? OR organizationid LIKE ?) as total,
+          (SELECT description FROM data_estructure WHERE id_estructure=id_data_estructure) as data_estructure, 
+          (SELECT description FROM variable_data_structure WHERE variable_data_structure.id=id_data_estructure) as variable_data_structure 
+      FROM (
+          SELECT id
+          FROM device_configurations WHERE uid LIKE ? OR alias LIKE ? OR origin LIKE ? OR description_origin LIKE ? OR application_id LIKE ? OR topic_name LIKE ? OR typemeter LIKE ? OR lat LIKE ? OR lon LIKE ? OR cota LIKE ? OR timezone LIKE ? OR enable LIKE ? OR organizationid LIKE ?
+          LIMIT ? OFFSET ?
+      ) AS subquery
+      LEFT JOIN device_configurations dc ON subquery.id = dc.id
+      LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
+      LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id`;
+  
+      // Formatear la cadena de ordenamiento basada en order_type
+      if (order_type === 'DESC') {
+          query += ` ORDER BY ${order} DESC`;
+      } 
+      else {
+          query += ` ORDER BY ${order} ASC`;
+      }
+      con.query(query, [
+          `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`,`%${search_text}%`, `%${search_text}%`, tam, act
+      ], function (err, result) {
             if (err) throw err;
+            console.log(result[0].uid)
             const responseArray = auxGet(result);
             // LOG - 200 //
+            console.log(responseArray[0].uid)
             insertLog(req.user.id, req.user.user, '001-001-200-009', "200", "GET", JSON.stringify(req.params),'Dispositivos obtenidos 9', JSON.stringify(responseArray));
             res.json(responseArray);    
           });
@@ -325,40 +336,50 @@ const insertLog = require('../middleware/log');
 
   function auxGet(result) { //Función auxiliar de get
     const devicesWithSensors = {};
-  
+
     result.forEach((row) => {
-      const deviceId = row.id;
-      if (!devicesWithSensors[deviceId]) {
-        devicesWithSensors[deviceId] = {
-          id: deviceId,
-          topic_name: row.topic_name,
-          organizationid: row.organizationid,
-          uid: row.uid,
-          application_id: row.application_id,
-          alias: row.alias,
-          enable: row.enable,
-          updatedAt: row.updatedAt,
-          lat: row.lat,
-          lon: row.lon,
-          topic_name: row.topic_name,
-          total: row.total,
-          data_estructure: row.data_estructure,
-          variable_data_structure: row.variable_data_structure,
-          variable_configuration: row.variable_configuration,
-          sensors: [],
-        };
-      }
-      if (row.sensor_id) {
-        devicesWithSensors[deviceId].sensors.push({
-          type_name: row.type_name,
-          enable: row.sensor_enable,
-          orden: row.sensor_orden,
-        });
-      }
-      devicesWithSensors[deviceId].sensors.sort((a, b) => a.orden - b.orden);
+        const deviceId = row.id;
+        if (!devicesWithSensors[deviceId]) {
+            devicesWithSensors[deviceId] = {
+                id: deviceId,
+                topic_name: row.topic_name,
+                organizationid: row.organizationid,
+                uid: row.uid,
+                application_id: row.application_id,
+                alias: row.alias,
+                enable: row.enable,
+                updatedAt: row.updatedAt,
+                lat: row.lat,
+                lon: row.lon,
+                total: row.total,
+                data_estructure: row.data_estructure,
+                variable_data_structure: row.variable_data_structure,
+                variable_configuration: row.variable_configuration,
+                sensors: [],
+            };
+        }
+        if (row.sensor_id) {
+            devicesWithSensors[deviceId].sensors.push({
+                type_name: row.type_name,
+                enable: row.sensor_enable,
+                orden: row.sensor_orden,
+            });
+        }
     });
-    return Object.values(devicesWithSensors);
-  }
+
+    // Ordenar los sensores dentro de cada dispositivo
+    Object.values(devicesWithSensors).forEach((device) => {
+        device.sensors.sort((a, b) => a.orden - b.orden);
+    });
+
+    // Devolver los dispositivos manteniendo su orden y los sensores ordenados
+    return result.map((row) => {
+        const deviceId = row.id;
+        return devicesWithSensors[deviceId];
+    });
+}
+
+
 
   router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
     const id = parseInt(req.params.id);

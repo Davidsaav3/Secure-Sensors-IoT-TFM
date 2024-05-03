@@ -18,15 +18,15 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
   let values;
 
   if (text_search === 'search') {
-    query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, (SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ? ? LIMIT ? OFFSET ?`;
-    values = [order, order_type, tam, act];
+    query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, (SELECT COUNT(*) AS total FROM sensors_types) as total FROM sensors_types ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
+    values = [tam, act];
   } 
   else {
     query = `SELECT id, type, metric, description, position, correction_general, correction_time_general, discard_value, (SELECT COUNT(*) AS total FROM sensors_types WHERE type LIKE ? OR metric LIKE ? OR description LIKE ? OR errorvalue LIKE ? OR valuemax LIKE ? OR valuemin LIKE ?) as total FROM sensors_types
       WHERE type LIKE ? OR metric LIKE ? OR description LIKE ? OR errorvalue LIKE ? OR valuemax LIKE ? OR valuemin LIKE ?
-      ORDER BY ? ? LIMIT ? OFFSET ?`;
+      ORDER BY ${order} ${order_type} LIMIT ? OFFSET ?`;
     const likePattern = `%${text_search}%`;
-    values = Array(12).fill(likePattern).concat([order, order_type, tam, act]);
+    values = Array(12).fill(likePattern).concat([tam, act]);
   }
   con.query(query, values, (err, result) => {
     if (err) {
@@ -36,7 +36,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
       return res.status(500).json({ error: 'Error al obtener los tipos de sensores' });
     }
     // LOG - 200 //
-    insertLog(req.user.id, req.user.user, '002-001-200-001', "200", "GET", JSON.stringify(req.params), 'Tipos de sensores recuperados', JSON.stringify(result));
+    insertLog(req.user.id, req.user.user, '002-001-200-001', "200", "GET", JSON.stringify(req.params), 'Tipos de sensores recuperados', JSON.stringify(result));    
     res.send(result);
   });
 });

@@ -237,7 +237,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   getDevices() { // Obtiene los dispositivos
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     //console.log(this.search.value)
     this.temp1= setTimeout(() => { // Asincrono
@@ -433,7 +433,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
         // List
         this.data = [];
         this.charging = true;
-        this.http.get(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`, {headers}).subscribe(
+        this.http.get(`${this.getDevice}/0/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.currentPage}/${this.quantPage}/${posX1}/${posX2}/${posY1}/${posY2}`, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
             this.charging = false;
     
@@ -467,7 +467,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   
   getMapDevices(num: any) { // Auxiliar de orderDevices (Map)
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
+    
 
     this.getCornerCoordinates();
     let posX1 = "0";
@@ -488,7 +488,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.charging = true;
     return new Promise((resolve, reject) => {
-      this.http.get(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`, {headers}).subscribe(
+      this.http.get(`${this.getDevice}/1/${this.searchText}/${this.mark}/${this.ordAux}/${this.arraySensors}/${this.search.sensorsAct}/${this.search.devicesAct}/${this.pagTam}/${this.pag}/${posX1}/${posX2}/${posY1}/${posY2}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         let pass = false;
         this.charging = false;

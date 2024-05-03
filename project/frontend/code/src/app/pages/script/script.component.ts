@@ -29,9 +29,9 @@ backendStatus: boolean = false;
   status= '';
   postSensors: string = environment.baseUrl+environment.url.script;
 
-  getMonitorings: string = environment.baseUrl+environment.url.script+"";
-  postMonitoring: string = environment.baseUrl+environment.url.script;
-  duplicateMonitorings: string = environment.baseUrl+environment.url.script+"/duplicate";
+  getScripts: string = environment.baseUrl+environment.url.script+"";
+  postScript: string = environment.baseUrl+environment.url.script;
+  duplicateScripts: string = environment.baseUrl+environment.url.script+"/duplicate";
   getId: string = environment.baseUrl+environment.url.script+"/id";
   date_2: any;
 
@@ -77,7 +77,7 @@ backendStatus: boolean = false;
 
   searchAux = "search";
   order = "log_date";
-  ordAux = "ASC";
+  ordAux = "DESC";
 
   alertDelete: any = false;
   notDelete: any = false;
@@ -88,7 +88,7 @@ backendStatus: boolean = false;
   changeCopy1= 0;
   changeCopy2= 0;
 
-  monitoring = {
+  script = {
     id: 0,
     user_id: "",
     username: "",
@@ -98,7 +98,7 @@ backendStatus: boolean = false;
     log_trace: "",
   };
 
-  monitoringCopy = {
+  scriptCopy = {
     id: 0,
     user_id: "",
     username: "",
@@ -117,7 +117,7 @@ backendStatus: boolean = false;
   }
 
   ngOnInit(): void {
-    this.getMonitoring(this.order, this.ordAux);
+    this.getScript(this.order, this.ordAux);
     this.createDate();
   }
 
@@ -158,11 +158,11 @@ backendStatus: boolean = false;
 
   /* GET */
 
-  getMonitoringVoid() { // Obtiene los logs sin pasar arámetros
-    this.getMonitoring(this.order, this.ordAux);
+  getScriptVoid() { // Obtiene los logs sin pasar arámetros
+    this.getScript(this.order, this.ordAux);
   }
 
-  getMonitoringLocal(id: any, ord: any) { // Ordena columnas en local
+  getScriptLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
 
     if (this.totalPages <= 1 && false) {
@@ -223,7 +223,7 @@ backendStatus: boolean = false;
       }
     } 
     else {
-      this.getMonitoring(id, ord);
+      this.getScript(id, ord);
     }
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
@@ -232,17 +232,14 @@ backendStatus: boolean = false;
     }
   }
 
-  getMonitoring(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
+  getScript(id: any, ord: any) {// Obtiene los sesnores pasando parametros de ordenación
     this.order = id;
     this.rute = this.rutaActiva.routerState.snapshot.url;
     this.searchAux = this.searchAuxArray.value || "search";
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getMonitorings}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, {headers})
+    this.http.get(`${this.getScripts}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
     .subscribe(
       (data: any) => {
         this.charging = false;
@@ -276,27 +273,24 @@ backendStatus: boolean = false;
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
     if (!this.change && idActual != this.actId) {
-      this.http.get(`${this.getId}/${idActual}`, {headers})
+      this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
-          this.monitoring = data[0];
+          this.script = data[0];
           this.actId = idActual;
           this.id = idActual;
           this.openEdit();
           this.state = 2;
-          let monitoring = { ...this.monitoring };
-          this.monitoringCopy = {
-            id: monitoring.id,
-            user_id: monitoring.user_id ,
-            username: monitoring.username, 
-            log_date: monitoring.log_date, 
-            log_code: monitoring.log_code, 
-            log_message: monitoring.log_message, 
-            log_trace: monitoring.log_trace
+          let script = { ...this.script };
+          this.scriptCopy = {
+            id: script.id,
+            user_id: script.user_id ,
+            username: script.username, 
+            log_date: script.log_date, 
+            log_code: script.log_code, 
+            log_message: script.log_message, 
+            log_trace: script.log_trace
 
           };
           this.openClouse();
@@ -310,10 +304,10 @@ backendStatus: boolean = false;
   
   /* NEW */
 
-  newMonitoring(form: any) {
+  newScript(form: any) {
     this.state = 1;
     if (form.valid) {
-      this.http.post(this.postMonitoring, JSON.stringify(this.monitoring), this.httpOptionsService.getHttpOptions())
+      this.http.post(this.postScript, JSON.stringify(this.script), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.id = data.id;
@@ -324,9 +318,9 @@ backendStatus: boolean = false;
             }, 2000);
   
             this.openClouse();
-            this.monitoring.id = data.id;
-            let monitoring = { ...this.monitoring };
-            this.data.push(monitoring);
+            this.script.id = data.id;
+            let script = { ...this.script };
+            this.data.push(script);
             this.data.sort((a: { description: string }, b: { description: any }) => {
               if (typeof a.description === "string" && typeof b.description === "string") {
                 return a.description.localeCompare(b.description);
@@ -349,7 +343,7 @@ backendStatus: boolean = false;
 
   openNew(id:any,user_id:any,username:any,log_date:any,log_code:any,log_message:any, log_trace:any) { // Abre Nueva conexion
 
-    this.monitoring = {
+    this.script = {
       id: id,
       user_id: user_id ,
       username: username, 
@@ -366,9 +360,9 @@ backendStatus: boolean = false;
 
   /* EDIT */
 
-  editMonitoring(form: any) { // Guardar datos de la conexión editado
+  editScript(form: any) { // Guardar datos de la conexión editado
     if (form.valid) {
-      this.http.put(this.postMonitoring, JSON.stringify(this.monitoring), this.httpOptionsService.getHttpOptions())
+      this.http.put(this.postScript, JSON.stringify(this.script), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (response: any) => {
             // Respuesta
@@ -377,11 +371,11 @@ backendStatus: boolean = false;
             console.error("Error:", error);
           }
         );
-      this.data = this.data.filter((data: { id: number }) => data.id !== this.monitoring.id);
-      let monitoring = this.monitoring;
-      this.data.push(monitoring);
+      this.data = this.data.filter((data: { id: number }) => data.id !== this.script.id);
+      let script = this.script;
+      this.data.push(script);
       this.data.sort((a: any, b: any) => {return a.description - b.description;});
-      this.actId = this.monitoring.id;
+      this.actId = this.script.id;
       this.openEdit();
       this.state = 2;
       this.saveOk = true;
@@ -402,42 +396,39 @@ backendStatus: boolean = false;
 
   /* DUPLICATE */
 
-  duplicateMonitoring(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
-
+  duplicateScript(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
     if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateMonitorings}/${type}`, {headers})
+      this.http.get(`${this.duplicateScripts}/${type}`, this.httpOptionsService.getHttpOptions())
       .subscribe(
         (data: any) => {
-          this.monitoring = this.data.find((objeto: { id: any }) => objeto.id == num);
+          this.script = this.data.find((objeto: { id: any }) => objeto.id == num);
           this.openClouse();
           this.state = 0;
     
-          this.http.get(`${this.getId}/${this.monitoring.id}`, {headers})
+          this.http.get(`${this.getId}/${this.script.id}`, this.httpOptionsService.getHttpOptions())
             .subscribe(
               (data1: any) => {
-                this.monitoring = data1[0];
-                this.actId = this.monitoring.id;
-                this.id = this.monitoring.id;
-                let monitoring = { ...this.monitoring };
-                this.monitoringCopy = {
-                  id: monitoring.id,
-                  user_id: monitoring.user_id ,
-                  username: monitoring.username, 
-                  log_date: monitoring.log_date, 
-                  log_code: monitoring.log_code, 
-                  log_message: monitoring.log_message, 
-                  log_trace: monitoring.log_trace
+                this.script = data1[0];
+                this.actId = this.script.id;
+                this.id = this.script.id;
+                let script = { ...this.script };
+                this.scriptCopy = {
+                  id: script.id,
+                  user_id: script.user_id ,
+                  username: script.username, 
+                  log_date: script.log_date, 
+                  log_code: script.log_code, 
+                  log_message: script.log_message, 
+                  log_trace: script.log_trace
                 };
                 this.openNew(
                   '',
-                  this.monitoring.user_id,
-                  this.monitoring.username, 
-                  this.monitoring.log_date, 
-                  this.monitoring.log_code, 
-                  this.monitoring.log_message,    
-                  this.monitoring.log_trace
+                  this.script.user_id,
+                  this.script.username, 
+                  this.script.log_date, 
+                  this.script.log_code, 
+                  this.script.log_message,    
+                  this.script.log_trace
                 );
               },
               (error) => {
@@ -455,24 +446,23 @@ backendStatus: boolean = false;
 
   /* DELETE */
 
-  deletemonitoring(idActual: any) { // Elimina conexión
+  deletescript(idActual: any) { // Elimina conexión
     let token = this.storageService.getToken() ?? ''; 
-    let headers = new HttpHeaders().set('Authorization', `${token}`);
 
-    var monitoring2 = {
+    var script2 = {
       id: this.id,
     };
     const options = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`
       }),
-      body: monitoring2,
+      body: script2,
     };
 
-    this.http.delete(this.postMonitoring, options).subscribe(
+    this.http.delete(this.postScript, options).subscribe(
         (response: any) => {
           // Realiza acciones con la respuesta si es necesario
-          //console.log('monitoring eliminados:', response);
+          //console.log('script eliminados:', response);
         },
         (error: any) => {
           console.error('Error al eliminar conexón:', error);
@@ -497,21 +487,21 @@ backendStatus: boolean = false;
 
     this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
-        $this.getMonitoring(this.order, this.ordAux);
+        $this.getScript(this.order, this.ordAux);
         $this.openClouse();
       }
     }, 500);
   }
 
   rechargeForm() { // recarga conexión a su valor anterior
-    this.monitoring = {
-      id: this.monitoringCopy.id,
-      user_id: this.monitoringCopy.user_id ,
-      username: this.monitoringCopy.username, 
-      log_date: this.monitoringCopy.log_date, 
-      log_code: this.monitoringCopy.log_code, 
-      log_message: this.monitoringCopy.log_message, 
-      log_trace: this.monitoringCopy.log_trace
+    this.script = {
+      id: this.scriptCopy.id,
+      user_id: this.scriptCopy.user_id ,
+      username: this.scriptCopy.username, 
+      log_date: this.scriptCopy.log_date, 
+      log_code: this.scriptCopy.log_code, 
+      log_message: this.scriptCopy.log_message, 
+      log_trace: this.scriptCopy.log_trace
     };
     this.change = false;
   }
@@ -523,7 +513,7 @@ backendStatus: boolean = false;
     this.quantPage = 15;
     this.page = 1;
     this.searchAuxArray.value = "";
-    this.getMonitoring(this.order, this.ordAux);
+    this.getScript(this.order, this.ordAux);
   }
 
   /* TARJETAS */
@@ -561,55 +551,55 @@ backendStatus: boolean = false;
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     }
   }
 
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     } 
     else {
       this.currentPage = 1;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     }
   }
 
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
-    this.getMonitoringVoid();
+    this.getScriptVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     }
   }
 
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     } 
     else {
       this.currentPage = this.totalPages;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     }
   }
 
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
-      this.getMonitoringVoid();
+      this.getScriptVoid();
     }
   }
 
