@@ -21,19 +21,25 @@ export class AppComponent {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
 
+  contador = 0; 
+
   ngOnInit(): void { 
     // Inicializa
     //console.log('NGINIT APP')
     //if(this.authService.isAuthenticated()){
       //console.log('ARRANCANDO INT')
-      setInterval(async () => {
-        //if(this.authService.isAuthenticated()){
-          const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
-          if (!newToken) {
-            console.warn('La renovación del token ha fallado');
-          }
-        //}
-      }, environment.acces_token_timeout); //300000 y 5000
+      const intervalId = setInterval(async () => {
+        if (this.contador < environment.acces_token_times) { 
+            const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
+            if (!newToken) {
+                console.warn('La renovación del token ha fallado');
+            }
+            this.contador++; 
+        } 
+        else {
+            clearInterval(intervalId); 
+        }
+    }, environment.acces_token_timeout);
     //}
   }
 
@@ -57,6 +63,7 @@ export class AppComponent {
         console.error('Error al renovar el token');
         return null;
       }
+      this.contador= 0;
       const newToken = response.token;
       this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
       return newToken;

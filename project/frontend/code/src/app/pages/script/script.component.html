@@ -13,14 +13,14 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div class="d-flex btn-group pb-3" role="group" aria-label="Toggle backend">
-						<button type="button" class="btn btn-success" [ngClass]="{ 'active': backendStatus }" (click)="setScript(1)">
+						<button [disabled]="this.isRequestPending" type="button" class="btn btn-success" (click)="setScript(1)">
 						{{ 'monitoring.enable' | translate }}
 						</button>
 
-						<button type="button" class="btn btn-danger" [ngClass]="{ 'active': !backendStatus }" (click)="setScript(0)">
+						<button [disabled]="this.isRequestPending" type="button" class="btn btn-danger" (click)="setScript(0)">
 						{{ 'monitoring.disable' | translate }}
 						</button>
-					</div>	
+					</div>
 				</div>
 			</div>
 		</div>

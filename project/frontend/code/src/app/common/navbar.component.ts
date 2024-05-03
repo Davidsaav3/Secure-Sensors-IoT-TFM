@@ -52,6 +52,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   alertUserOk= false;
   alertPassNot= false;
   alertUserNot= false;
+  contador = 0; 
 
   postUser: string = environment.baseUrl+environment.url.users;
   but= false;
@@ -256,7 +257,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
           },
           (error) => {
-            console.log('HOLA')
             this.change_password = false;
             this.storageService.setChange("0");
             
@@ -318,11 +318,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
     event.target.value = event.target.value.replace(/\s/g, ''); 
   }
 
-  lanzarTimer(){
-    this.temp6= setTimeout(() => {
-      //console.log('DENTRO')
-      this.statusScript();
-    }, environment.acces_token_timeout); //parametrizar*/
+  lanzarTimer() {
+    const bucle = () => {
+      if (this.contador < environment.script_status_times) {
+        setTimeout(() => {
+          this.statusScript();
+          this.contador++;
+          bucle();
+        }, environment.acces_token_timeout);
+      }
+    };
+    bucle();
   }
 
   statusScript(): void { // STATUS //
@@ -330,6 +336,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     //if(this.authService.isAuthenticated()){
       this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).subscribe(
         (data) => {
+          this.contador= 0;
           this.date= data.date;
 
           const fechaOriginal = new Date(this.date);
@@ -369,6 +376,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         (error) => {
           console.error("Error al obtener el estado:", error);
           this.status= 2;
+          this.lanzarTimer();
         } 
       );
     //}

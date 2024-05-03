@@ -246,7 +246,7 @@ export class SensorsComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: any) => {
           this.sensors = data[0];
-          console.log(this.sensors)
+          //console.log(this.sensors)
           this.actId = idActual;
           this.id = idActual;
           this.openEdit();

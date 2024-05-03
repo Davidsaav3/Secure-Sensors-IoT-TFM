@@ -308,10 +308,10 @@ const insertLog = require('../middleware/log');
           `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`,`%${search_text}%`, `%${search_text}%`, tam, act
       ], function (err, result) {
             if (err) throw err;
-            console.log(result[0].uid)
+            //console.log(result[0].uid)
             const responseArray = auxGet(result);
             // LOG - 200 //
-            console.log(responseArray[0].uid)
+            //console.log(responseArray[0].uid)
             insertLog(req.user.id, req.user.user, '001-001-200-009', "200", "GET", JSON.stringify(req.params),'Dispositivos obtenidos 9', JSON.stringify(responseArray));
             res.json(responseArray);    
           });

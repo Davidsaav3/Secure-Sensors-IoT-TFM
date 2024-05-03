@@ -1,6 +1,6 @@
-<div class="mb-0 d-flex">
+<div class="m-0 d-flex flex-wrap justify-content-center align-items-center ">
     <div class="col-12 col-md-5 p-0">
-        <div class="nav nav-tabs mb-0 p-0 me-0" *ngIf="token !== '' && (ruteAux[1] === deviceConfigurations || ruteAux[1] === sensorsTypes || ruteAux[1] === dataStructure || ruteAux[1] === variableDataStructure) && ruteAux[2] !== 'edit' && ruteAux[2] !== 'new' && ruteAux[2] !== 'duplicate'">
+        <div class="nav nav-tabs mb-0 p-0 me-0" style="width: max-content;" *ngIf="token !== '' && (ruteAux[1] === deviceConfigurations || ruteAux[1] === sensorsTypes || ruteAux[1] === dataStructure || ruteAux[1] === variableDataStructure) && ruteAux[2] !== 'edit' && ruteAux[2] !== 'new' && ruteAux[2] !== 'duplicate'">
             <ul class="nav"  style="margin: 0px;">
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" [routerLink]="'/' + deviceConfigurations" [ngClass]="{'active': rute === '/' + deviceConfigurations}">{{ 'sensors.t1' | translate }}</a>
@@ -16,7 +16,7 @@
                 </li>
             </ul>
         </div>
-        <div class="nav nav-tabs mb-0 p-0" *ngIf="token !== '' && (ruteAux[1] === users || ruteAux[1] === conecctionRead || ruteAux[1] === conecctionWrite || ruteAux[1] === script || ruteAux[1] === monitoring) && ruteAux[2] !== 'edit' && ruteAux[2] !== 'new' && ruteAux[2] !== 'duplicate'">
+        <div class="nav nav-tabs mb-0 p-0" style="width: max-content;"  *ngIf="token !== '' && (ruteAux[1] === users || ruteAux[1] === conecctionRead || ruteAux[1] === conecctionWrite || ruteAux[1] === script || ruteAux[1] === monitoring) && ruteAux[2] !== 'edit' && ruteAux[2] !== 'new' && ruteAux[2] !== 'duplicate'">
             <ul class="nav" style="margin: 0px;">
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" [routerLink]="'/' + users" [ngClass]="{'active': rute === '/' + users}">{{ 'users.users' | translate }}</a>

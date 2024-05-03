@@ -23,19 +23,15 @@ resultsPerPag = environment.resultsPerPag;
 //@ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
 //@ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
 
-backendStatus: boolean = false; 
   backendURL: string = "http://localhost:5172/api/script";
   date= '';
   status= '';
-  postSensors: string = environment.baseUrl+environment.url.script;
 
   getScripts: string = environment.baseUrl+environment.url.script+"";
   postScript: string = environment.baseUrl+environment.url.script;
   duplicateScripts: string = environment.baseUrl+environment.url.script+"/duplicate";
   getId: string = environment.baseUrl+environment.url.script+"/id";
-  date_2: any;
 
-  mostrarTooltip = false;
   totalPages = 5;
   currentPage = 1;
   quantPage = 15;
@@ -48,11 +44,7 @@ backendStatus: boolean = false;
   alt3 = true;
   alt4 = true;
   alt5 = true;
-  alt6 = true;
-  alt7 = true;
-  alt8 = true;
-  alt9 = true;
-
+  
   actId = 0;
   id = 0;
   state = -1;
@@ -87,6 +79,8 @@ backendStatus: boolean = false;
   saveNot: any = false;
   changeCopy1= 0;
   changeCopy2= 0;
+
+  isRequestPending: boolean = false;
 
   script = {
     id: 0,
@@ -133,17 +127,26 @@ backendStatus: boolean = false;
   }
 
   setScript(status: any): void {
+    if (this.isRequestPending) {
+      console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
+      return; 
+    }
+    this.isRequestPending = true;
     let status1 = {
       status: status,
     };
-    this.http.post(this.backendURL+"/script", JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
+    this.http.post(this.backendURL + "/script", JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
       () => {
-        //console.log("Solicitud POST enviada exitosamente.");
+        console.log("Solicitud POST enviada exitosamente.");
       },
       (error) => {
         console.error("Error al enviar la solicitud POST:", error);
+        this.isRequestPending = false; 
       }
     );
+    setTimeout(() => {
+      this.isRequestPending = false;
+    }, environment.script_status_frontend);
   }
 
   /* */
@@ -296,7 +299,6 @@ backendStatus: boolean = false;
             log_code: script.log_code, 
             log_message: script.log_message, 
             log_trace: script.log_trace
-
           };
           this.openClouse();
         },

@@ -37,9 +37,9 @@ export class StorageService {
     this.lang = localStorage.getItem('lang') || 'es';
 
     this.setItemToLocalStorage('lang', this.lang);
-    this.setItemToLocalStorage('page', this.page);
-    this.setItemToLocalStorage('perpage', this.page);
-    this.setItemToLocalStorage('open', this.open);
+    //this.setItemToLocalStorage('page', this.page);
+    //this.setItemToLocalStorage('perpage', this.page);
+    //this.setItemToLocalStorage('open', this.open);
   }
 
   private setItemToLocalStorage(key: string, value: string | null): void {
