@@ -199,6 +199,9 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
     this.map?.remove();
+    this.storageService.setSearch('')
+    this.storageService.setPerPage('')
+    this.storageService.setPage('')
   }
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
@@ -772,8 +775,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   getDevicesLocal(id: any, ord: any) { // Ordenación de las columnas
+    this.storageService.setPerPage(this.quantPage.toString())
     //this.order= id;
-
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "uid") {
@@ -1019,6 +1022,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     this.openAux = JSON.parse(this.storageService.getOpen() ?? "true");
     this.colorMap = this.storageService.getMap() ?? environment.defaultMapsStyle;
     this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
+    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
     this.search.value = this.storageService.getSearch() ?? "";
     if(this.search.value!=""){
       this.searched= true;

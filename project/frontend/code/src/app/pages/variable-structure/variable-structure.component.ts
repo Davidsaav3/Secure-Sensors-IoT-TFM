@@ -85,6 +85,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void { // Inicializa
     this.getStructure(this.order, this.ordAux);
+    this.readStorage();
   }
 
   ngOnDestroy(){
@@ -92,6 +93,9 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
     //this.temp4.clearInterval();
+    this.storageService.setSearch('')
+    this.storageService.setPerPage('')
+    this.storageService.setPage('')
   }
   
   /* GET */
@@ -102,6 +106,8 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
 
   getStructureLocal(id: any, ord: any) { // Ordena las columnas de forma local
     this.order = id;
+    this.storageService.setPerPage(this.quantPage.toString())
+
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
         if (id == "description") {
@@ -342,6 +348,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   /* BÚSQUEDA */
 
   textSearch(event: any) { // Busqueda por texto
+    this.storageService.setSearch(this.search.value)
     this.currentPage = 1;
     clearTimeout(this.temp4);
     var $this = this;
@@ -370,6 +377,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
     this.quantPage = 15;
     this.page = 1;
     this.search.value = "";
+    this.storageService.setSearch(this.search.value)
     this.getStructure(this.order, this.ordAux);
   }
 
@@ -403,6 +411,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     }
   }
@@ -410,10 +419,12 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     } 
     else {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     }
   }
@@ -421,18 +432,21 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
+    this.storageService.setPage(this.currentPage.toString())
     this.getStructureVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     }
   }
@@ -440,10 +454,12 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     } 
     else {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
     }
   }
@@ -451,7 +467,23 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getStructureVoid();
+    }
+  }
+
+  readStorage() { // Recupera datos en local storage
+    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
+    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
+    this.search.value = this.storageService.getSearch() ?? "";
+    if(this.search.value!=""){
+      //this.searched= true;
+      clearTimeout(this.temp1);
+      var $this = this;
+      this.temp3 = setTimeout( () => {
+        $this.getStructure(this.order, this.ordAux);
+        $this.openClouse();
+      }, 1);
     }
   }
 }

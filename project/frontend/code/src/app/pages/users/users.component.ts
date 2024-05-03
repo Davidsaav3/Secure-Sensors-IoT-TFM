@@ -113,6 +113,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void { // Inicializa
     this.getUsers(this.order, this.ordAux);
+    this.readStorage();
   }
 
   ngOnDestroy(){
@@ -122,6 +123,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     //this.temp4.clearInterval();
     //this.temp5.clearInterval();
     //this.temp6.clearInterval();
+    this.storageService.setSearch('')
+    this.storageService.setPerPage('')
+    this.storageService.setPage('')
   }
 
   getCurrentDate(): string {
@@ -148,6 +152,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   getUsersLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
+    this.storageService.setPerPage(this.quantPage.toString())
 
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
@@ -380,6 +385,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   /* BÚSQUEDA */
 
   textSearch(event: any) { // Busca por texto
+    this.storageService.setSearch(this.searchAuxArray.value)
     this.currentPage = 1;
     clearTimeout(this.temp5);
     var $this = this;
@@ -435,6 +441,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.quantPage = 15;
     this.page = 1;
     this.searchAuxArray.value = "";
+    this.storageService.setSearch(this.searchAuxArray.value)
     this.getUsers(this.order, this.ordAux);
   }
 
@@ -461,6 +468,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.showAux = false;
     this.show = false;
     this.openClouse();
+    this.storageService.setPage(this.currentPage.toString())
     this.change = false;
   }
 
@@ -473,6 +481,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     }
   }
@@ -480,10 +489,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     } 
     else {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     }
   }
@@ -491,18 +502,21 @@ export class UsersComponent implements OnInit, OnDestroy {
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
+    this.storageService.setPage(this.currentPage.toString())
     this.getUsersVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     }
   }
@@ -510,10 +524,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     } 
     else {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     }
   }
@@ -521,11 +537,27 @@ export class UsersComponent implements OnInit, OnDestroy {
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getUsersVoid();
     }
   }
 
   removeSpaces(event: any) {
     event.target.value = event.target.value.replace(/\s/g, ''); // Esto elimina todos los espacios en blanco
+  }
+
+  readStorage() { // Recupera datos en local storage
+    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
+    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
+    this.searchAuxArray.value = this.storageService.getSearch() ?? "";
+    if(this.searchAuxArray.value!=""){
+      //this.searched= true;
+      clearTimeout(this.temp1);
+      var $this = this;
+      this.temp3 = setTimeout( () => {
+        $this.getUsers(this.order, this.ordAux);
+        $this.openClouse();
+      }, 1);
+    }
   }
 }

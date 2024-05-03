@@ -117,6 +117,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void { // Inicializa
     this.getConecctions(this.order, this.ordAux);
+    this.readStorage();
   }
   
   ngOnDestroy(){
@@ -124,6 +125,9 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
     //this.temp4.clearInterval();
+    this.storageService.setSearch('')
+    this.storageService.setPerPage('')
+    this.storageService.setPage('')
   }
 
   /* GET */
@@ -134,6 +138,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
 
   getConecctionsLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
+    this.storageService.setPerPage(this.quantPage.toString())
 
     if (this.totalPages <= 1 && false) {
       if (ord == "ASC") {
@@ -453,6 +458,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   /* BÚSQUEDA */
 
   textSearch(event: any) { // Busca por texto
+    this.storageService.setSearch(this.searchAuxArray.value)
     this.currentPage = 1;
     clearTimeout(this.temp4);
     var $this = this;
@@ -485,6 +491,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.quantPage = 15;
     this.page = 1;
     this.searchAuxArray.value = "";
+    this.storageService.setSearch(this.searchAuxArray.value)
     this.getConecctions(this.order, this.ordAux);
   }
 
@@ -523,6 +530,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     }
   }
@@ -530,10 +538,12 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     } 
     else {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     }
   }
@@ -541,18 +551,21 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
+    this.storageService.setPage(this.currentPage.toString())
     this.getConecctionsVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     }
   }
@@ -560,10 +573,12 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     } 
     else {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     }
   }
@@ -571,6 +586,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getConecctionsVoid();
     }
   }
@@ -582,5 +598,20 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
   resetPass(){
     this.showPass= false;
     this.users.password= "";
+  }
+
+  readStorage() { // Recupera datos en local storage
+    this.currentPage = parseInt(JSON.parse(this.storageService.getPage() ?? "1"), 10);
+    this.quantPage = parseInt(JSON.parse(this.storageService.getPerPage() ?? "15"), 10);
+    this.searchAuxArray.value = this.storageService.getSearch() ?? "";
+    if(this.searchAuxArray.value!=""){
+      //this.searched= true;
+      clearTimeout(this.temp1);
+      var $this = this;
+      this.temp3 = setTimeout( () => {
+        $this.getConecctions(this.order, this.ordAux);
+        $this.openClouse();
+      }, 1);
+    }
   }
 }

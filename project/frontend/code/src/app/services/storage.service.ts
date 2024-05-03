@@ -13,6 +13,7 @@ export class StorageService {
   private map: string | null = null;
   private open: string | null = null;
   private page: string | null = null;
+  private perpage: string | null = null;
   private search: string | null = null;
   private lang: string | null = 'es';
 
@@ -31,11 +32,13 @@ export class StorageService {
     this.map = localStorage.getItem('map') || null;
     this.open = localStorage.getItem('open') || null;
     this.page = localStorage.getItem('page') || null;
+    this.perpage = localStorage.getItem('perpage') || null;
     this.search = localStorage.getItem('search') || null;
     this.lang = localStorage.getItem('lang') || 'es';
 
     this.setItemToLocalStorage('lang', this.lang);
     this.setItemToLocalStorage('page', this.page);
+    this.setItemToLocalStorage('perpage', this.page);
     this.setItemToLocalStorage('open', this.open);
   }
 
@@ -118,6 +121,15 @@ export class StorageService {
   }
   getPage(): string | null {
     return this.page;
+  }
+
+  // per page //
+  setPerPage(perpage: string): void {
+    this.perpage =perpage;
+    this.setItemToLocalStorage('perpage', perpage);
+  }
+  getPerPage(): string | null {
+    return this.perpage;
   }
 
   // open //
