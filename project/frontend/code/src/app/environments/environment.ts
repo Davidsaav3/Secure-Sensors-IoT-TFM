@@ -37,29 +37,15 @@ export const environment = {
     // DESARROLLO //
     baseUrl: "http://localhost:5172/api",
 
-    /* 
-        url: {
-        deviceConfigurations: '/device_configurations',
-        sensorsTypes: '/sensors_types',
-        dataStructure: '/data_structure',
-        variableDataStructure: '/variable_data_structure',
-        users: '/users',
-        conecctionRead: '/conecction_read',
-        conecctionWrite: '/conecction_write',
-        script: '/script',
-        monitoring: '/monitoring',
-    },
-    */
-
     password_pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/,
-    acces_token_timeout: 5000,
-    script_status_timeout: 5000,
     title: 'Sensors IoT',
 
-    acces_token_times: 2,
-    script_status_times: 2,
-    script_status_frontend: 
-    11000,
-    acces_token_frontend: 6000,
+    acces_token_timeout: 5000, // Tiempa hasta lanzar otra vez la consulta
+    script_status_timeout: 5000,
 
+    acces_token_frontend: 6000, // Limite de segundos para poder hacerlo otra vez
+    script_status_frontend: 11000,
+
+    acces_token_times: 2, // Veces que lo intenta hasta que se detiene
+    script_status_times: 2,
 };

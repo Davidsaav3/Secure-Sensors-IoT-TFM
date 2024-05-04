@@ -68,7 +68,7 @@ router.use(securityMiddleware);
         //if (proceso.status) { 
           console.log("--- SCRIPT ENCENDIDO ---");
           console.log("");
-          insertLogScript(id, user, 0, '');
+          insertLogScript(id, user, 1, '');
         //}
       }
   
