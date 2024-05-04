@@ -9,7 +9,7 @@ export class StorageService {
   private date: string | null = null;
   private id: string | null = null;
   private username: string | null = null;
-  private pass: string | null = null;
+  private pass: string | null = "0";
   private map: string | null = null;
   private open: string | null = null;
   private page: string | null = null;
@@ -28,7 +28,7 @@ export class StorageService {
     this.date = localStorage.getItem('date') || null;
     this.id = localStorage.getItem('id') || null;
     this.username = localStorage.getItem('username') || null;
-    this.pass = localStorage.getItem('pass') || null;
+    this.pass = localStorage.getItem('pass') || "0";
     this.map = localStorage.getItem('map') || null;
     this.open = localStorage.getItem('open') || null;
     this.page = localStorage.getItem('page') || null;
@@ -37,6 +37,9 @@ export class StorageService {
     this.lang = localStorage.getItem('lang') || 'es';
 
     this.setItemToLocalStorage('lang', this.lang);
+    //this.setItemToLocalStorage('open', this.open);
+    //this.setItemToLocalStorage('pass', this.pass);
+
     //this.setItemToLocalStorage('page', this.page);
     //this.setItemToLocalStorage('perpage', this.page);
     //this.setItemToLocalStorage('open', this.open);

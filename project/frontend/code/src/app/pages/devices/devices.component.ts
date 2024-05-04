@@ -81,7 +81,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   dupOk = false;
   dupNot = false;
-  openAux = true;
+  openAux = "true";
   viewDup = -10;
   pencilDup = -10;
 
@@ -262,7 +262,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
       this.pagTam = 1;
       this.pag = 100000;
 
-      if (this.openAux == false) {
+      if (this.openAux == "false") {
 
         this.getMapDevices("1")
           .then((pass) => {
@@ -432,7 +432,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
       }
 
 
-      if (this.openAux == true) {
+      if (this.openAux == "true") {
         // List
         this.data = [];
         this.charging = true;
@@ -627,7 +627,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
         this.currentPitch = this.map!.getPitch();
       });
       this.map.on("moveend", () => {
-        if (this.openAux == false)
+        if (this.openAux == "false")
           this.getDevices();
       });
 
@@ -934,13 +934,13 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   /* TARJETAS */
 
   openMap() { // Abrir tarjeta mapa
-    this.openAux = false;
+    this.openAux = "false";
     this.getDevices();
     this.saveStorage();
   }
 
   openList() { // Abrir tarjeta lista dispositivos
-    this.openAux = true;
+    this.openAux = "true";
     this.getDevices();
     this.saveStorage();
   }
@@ -1014,15 +1014,14 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   /* LOCAL STORAGE */
 
   saveStorage() { // Guarda datos en local storage
-    this.storageService.setOpen(this.openAux.toString())
+    this.storageService.setOpen(this.openAux)
     this.storageService.setMap(this.colorMap)
   }
 
   readStorage() { // Recupera datos en local storage
-    let pageString = this.storageService.getOpen() ?? "true"
-    this.openAux = JSON.parse(pageString);
+    this.openAux = this.storageService.getOpen() ?? "true";
     this.colorMap = this.storageService.getMap() ?? environment.defaultMapsStyle;
-    pageString = this.storageService.getPage() ?? "1";
+    let pageString = this.storageService.getPage() ?? "1";
     this.currentPage = parseInt(pageString, 10);
     pageString = this.storageService.getPerPage() ?? "15";
     this.quantPage = parseInt(pageString, 10);

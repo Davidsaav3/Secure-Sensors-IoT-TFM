@@ -14,7 +14,7 @@ import { HttpOptionsService } from '../services/httpOptions.service';
 })
 
 export class NavbarComponent implements OnInit, OnDestroy {
-  
+
   @ViewChild('confirmDeleteModal2') confirmDeleteModal2!: ElementRef;
   @ViewChild('confirmDeleteModal3') confirmDeleteModal3!: ElementRef;
   @ViewChild('openModalButton') openModalButton: ElementRef | undefined;
@@ -37,31 +37,31 @@ export class NavbarComponent implements OnInit, OnDestroy {
   rute = "";
   isActive: boolean = false;
   ruteAux: any;
-  name= "settings"
-  change1= false;
-  change2= false;
+  name = "settings"
+  change1 = false;
+  change2 = false;
   passwordPattern = environment.password_pattern;
-  alerts= false;
-  change_password= false;
-  username= "davidsaav";
-  id= 1;
-  token= '';
-  token2= '';
+  alerts = false;
+  change_password = false;
+  username = "davidsaav";
+  id = 1;
+  token = '';
+  token2 = '';
 
-  alertPassOk= false;
-  alertUserOk= false;
-  alertPassNot= false;
-  alertUserNot= false;
-  contador = 0; 
+  alertPassOk = false;
+  alertUserOk = false;
+  alertPassNot = false;
+  alertUserNot = false;
+  contador = 0;
 
-  postUser: string = environment.baseUrl+environment.url.users;
-  but= false;
-  changed= false;
-  scriptEnable= false;
+  postUser: string = environment.baseUrl + environment.url.users;
+  but = false;
+  changed = false;
+  scriptEnable = false;
 
-  status = 2; 
-  date= ''; 
-  backendURL= "http://localhost:5172/api/script";
+  status = 2;
+  date = '';
+  backendURL = "http://localhost:5172/api/script";
 
   temp1: any;
   temp2: any;
@@ -80,7 +80,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     user: "",
   };
 
-  constructor(private httpOptionsService: HttpOptionsService,private storageService: StorageService, private authService: AuthService,private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private authService: AuthService, private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -91,37 +91,37 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void { // Inicializa
     this.lanzarTimer();
     if (this.storageService.getStatus()) {
-      let aux= this.storageService.getStatus();
-      
-      if(aux!=null)
-        this.status=  parseInt(aux, 10);
+      let aux = this.storageService.getStatus();
+
+      if (aux != null)
+        this.status = parseInt(aux, 10);
     }
-    else{
-      this.status= 2;
+    else {
+      this.status = 2;
     }
 
     if (this.storageService.getDate()) {
       let storedDate = this.storageService.getDate();
       if (storedDate !== null) {
         this.date = storedDate;
-      }   
+      }
     }
-    else{
-      this.date= '';
+    else {
+      this.date = '';
     }
-    
+
     this.readStorage();
     this.translate.use(this.activeLang);
     //('JUSTO ANTES')
     //if(this.authService.isAuthenticated()){
-      this.statusScript();
+    this.statusScript();
     //}
-    if(!this.authService.isAuthenticated()){
-      this.token2= '';
+    if (!this.authService.isAuthenticated()) {
+      this.token2 = '';
     }
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     //this.temp1.clearInterval();
     //this.temp2.clearInterval();
     //this.temp3.clearInterval();
@@ -139,7 +139,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.temp1= setTimeout(() => {
+    this.temp1 = setTimeout(() => {
       if (this.change_password) {
         this.openModal();
       }
@@ -147,19 +147,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   openModal() {
-    if(this.openModalButton!=null){
-    this.renderer.selectRootElement(this.openModalButton.nativeElement).click();
+    if (this.openModalButton != null) {
+      this.renderer.selectRootElement(this.openModalButton.nativeElement).click();
     }
   }
 
   clouseModal() {
-    if(this.clouseModalButton!=null){
+    if (this.clouseModalButton != null) {
       this.renderer.selectRootElement(this.clouseModalButton.nativeElement).click();
     }
   }
 
   clouseModalUser() {
-    if(this.clouseModalButton!=null){
+    if (this.clouseModalButton != null) {
       this.renderer.selectRootElement(this.clouseModalButton.nativeElement).click();
     }
   }
@@ -169,11 +169,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (modal) {
       if (this.change_password) {
         modal.setAttribute('data-bs-backdrop', 'static');
-        
+
         //modal.classList.add('show');
         //const modalInstance = new bootstrap.Modal(modal);
         //modalInstance.show();
-      } 
+      }
       else {
         modal.removeAttribute('data-bs-backdrop');
 
@@ -196,15 +196,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   onOptionSelected(event: any): void {
     const selectedOption = event.target.value;
     if (selectedOption === '1') {
-      
-    } 
+
+    }
     if (selectedOption === '2') {
       this.router.navigate(['/login']);
     }
   }
 
   changeUser(form: any) { // Editar perfil
-    this.formuserdata.id= this.id;
+    this.formuserdata.id = this.id;
 
     this.http.put(this.postUser, JSON.stringify(this.formuserdata), this.httpOptionsService.getHttpOptions())
       .subscribe(
@@ -213,16 +213,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
           //this.clouseModalUser();
           //console.log(data.user)
           this.setCookie('refresh_token', data.refresh_token);
-          this.storageService.setUsername(data.user);          
+          this.storageService.setUsername(data.user);
 
-          this.temp2= setTimeout(() => {
+          this.temp2 = setTimeout(() => {
             this.alertUserOk = false;
           }, 2000);
         },
         (error) => {
           console.error("Error:", error);
           this.alertUserNot = true;
-          this.temp3= setTimeout(() => {
+          this.temp3 = setTimeout(() => {
             this.alertUserNot = false;
           }, 2000);
         }
@@ -230,28 +230,28 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.change1 = false;
     //}
   }
-  
-    // Guardar cookie
-    setCookie(name: string, value: string, days: number = 1): void {
-      const expirationDate = new Date();
-      expirationDate.setDate(expirationDate.getDate() + days);
-      const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
-      document.cookie = cookieString;
-    }
+
+  // Guardar cookie
+  setCookie(name: string, value: string, days: number = 1): void {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + days);
+    const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
+    document.cookie = cookieString;
+  }
 
   changePassword(form: any) { // Cambiar contraseña  
     if (form.valid) {
-      this.formapassword.id= this.id;
-      
+      this.formapassword.id = this.id;
+
       this.http.put(this.postUser, JSON.stringify(this.formapassword), this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
             this.alertPassOk = true;
-            this.temp3= setTimeout(() => {
+            this.temp3 = setTimeout(() => {
               this.alertPassOk = false;
             }, 2000);
             this.change_password = false;
-  
+
             this.storageService.setChange("0");
             //this.clouseModal();
 
@@ -260,11 +260,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
           (error) => {
             this.change_password = false;
             this.storageService.setChange("0");
-            
+
             console.error("Error:", error);
 
             this.alertPassNot = true;
-            this.temp5= setTimeout(() => {
+            this.temp5 = setTimeout(() => {
               this.alertPassNot = false;
             }, 2000);
           }
@@ -272,7 +272,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.change1 = false;
     }
   }
-  
+
 
   saveStorage() { // Guarda datos en el local storage
     this.storageService.setLang(this.activeLang);
@@ -280,21 +280,32 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   readStorage() { // Recupera datos del local storage
     const idString: string | null = this.storageService.getId();
-    const id: number = idString !== null ? parseInt(idString) : 1; 
+    const id: number = idString !== null ? parseInt(idString) : 1;
     this.id = id;
     this.username = this.storageService.getUsername() ?? '';
     this.activeLang = this.storageService.getLang() ?? 'es';
     this.token = this.storageService.getToken() ?? '';
     this.token2 = this.storageService.getToken() ?? '';
     const storedValue = this.storageService.getChange();
-    this.change_password = storedValue !== null ? JSON.parse(storedValue) : false;
-    if(this.change_password){
+    this.change_password = storedValue !== null ? this.parseBool(storedValue) : false;
+    if (this.change_password) {
       this.setBackdropAttribute();
     }
-    this.formuserdata.user= this.username;
+    this.formuserdata.user = this.username;
   }
 
-  logOut(){
+  parseBool(str: any): boolean {
+    let dev = false;
+    if (str == 1) {
+      dev = true;
+    }
+    if (str == 0) {
+      dev = false;
+    }
+    return dev;
+  }
+
+  logOut() {
     this.storageService.setId('');
     this.storageService.setUsername('');
     this.storageService.setChange('');
@@ -303,8 +314,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.storageService.setToken('');
     this.storageService.setPage('1');
     this.storageService.setSearch('');
-    this.storageService.setOpen('');
-    this.storageService.setMap('');
+    this.storageService.setOpen('true');
+    this.storageService.setMap(environment.defaultMapsStyle);
     this.storageService.setPerPage('15');
 
     this.deleteCookie('refresh_token');
@@ -316,71 +327,70 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   removeSpaces(event: any) {
-    event.target.value = event.target.value.replace(/\s/g, ''); 
+    event.target.value = event.target.value.replace(/\s/g, '');
   }
 
   lanzarTimer() {
     let consecutivoFallos = 0; // Contador de fallos consecutivos
     const bucle = () => {
-        if (consecutivoFallos < environment.acces_token_times) {
-            setTimeout(() => {
-                this.statusScript().then(() => {
-                    consecutivoFallos = 0; // Reiniciar contador en caso de éxito
-                }).catch(() => {
-                    consecutivoFallos++; // Incrementar contador en caso de fallo
-                }).finally(() => {
-                    bucle(); // Llamar recursivamente al bucle
-                });
-            }, environment.acces_token_timeout);
-        }
+      if (consecutivoFallos < environment.script_status_times) { //  acces_token_
+        setTimeout(() => {
+          this.statusScript().then(() => {
+            consecutivoFallos = 0; // Reiniciar contador en caso de éxito
+          }).catch(() => {
+            consecutivoFallos++; // Incrementar contador en caso de fallo
+          }).finally(() => {
+            bucle(); // Llamar recursivamente al bucle
+          });
+        }, environment.script_status_timeout); // acces_token_
+      }
     };
     bucle();
-}
+  }
 
-async statusScript(): Promise<void> {
+  async statusScript(): Promise<void> {
     try {
-        const data = await this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).toPromise();
-        this.contador = 0;
-        this.date = data.date;
+      const data = await this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).toPromise();
+      this.contador = 0;
+      this.date = data.date;
 
-        const fechaOriginal = new Date(this.date);
-        fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
-        let anio = fechaOriginal.getFullYear();
-        let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
-        let dia = String(fechaOriginal.getDate()).padStart(2, '0');
-        let horas = String(fechaOriginal.getHours()).padStart(2, '0');
-        let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
-        let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
-        let milisegundos = fechaOriginal.getMilliseconds();
-        let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+      const fechaOriginal = new Date(this.date);
+      fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
+      let anio = fechaOriginal.getFullYear();
+      let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
+      let dia = String(fechaOriginal.getDate()).padStart(2, '0');
+      let horas = String(fechaOriginal.getHours()).padStart(2, '0');
+      let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
+      let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
+      let milisegundos = fechaOriginal.getMilliseconds();
+      let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
 
-        let fechaActual = new Date();
-        let fechaMenos5Segundos = new Date(fechaActual.getTime());
-        anio = fechaMenos5Segundos.getFullYear();
-        mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
-        dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
-        horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
-        minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
-        segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
-        let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+      let fechaActual = new Date();
+      let fechaMenos5Segundos = new Date(fechaActual.getTime());
+      anio = fechaMenos5Segundos.getFullYear();
+      mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
+      dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
+      horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
+      minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
+      segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
+      let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
 
-        //console.log(formatoPersonalizado)
-        //console.log(formatoPersonalizado2)
+      //console.log(formatoPersonalizado)
+      //console.log(formatoPersonalizado2)
 
-        if(formatoPersonalizado<formatoPersonalizado2){
-          this.status= 1;
-        }
-        if(formatoPersonalizado>formatoPersonalizado2){
-          this.status= 0;
-        }
-        this.storageService.setStatus(this.status.toString());
-        this.storageService.setDate(this.date.toString());
-        //this.lanzarTimer();
+      if (formatoPersonalizado < formatoPersonalizado2) {
+        this.status = 1;
+      }
+      if (formatoPersonalizado > formatoPersonalizado2) {
+        this.status = 0;
+      }
+      this.storageService.setStatus(this.status.toString());
+      this.storageService.setDate(this.date.toString());
+      //this.lanzarTimer();
     } catch (error) {
-        console.error("Error al obtener el estado:", error);
-        throw error; // Relanzar el error para ser capturado por el llamador
+      console.error("Error al obtener el estado:", error);
+      throw error; // Relanzar el error para ser capturado por el llamador
     }
-}
+  }
 
 }
-  

@@ -100,7 +100,7 @@ export class LoginComponent implements OnDestroy {
             this.saveStorage();
             this.storageService.setToken(data.token)
             this.setCookie('refresh_token', data.refresh_token);
-            this.storageService.setChange(data.change_password);
+            this.storageService.setChange(data.change_password.toString());
             this.router.navigate(['/devices']);
           },
           (error: any) => {

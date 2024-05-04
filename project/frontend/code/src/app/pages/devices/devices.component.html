@@ -6,47 +6,78 @@
 			<div class="col-12 col-lg-3 pb-3 d-flex">
 				<div>
 					<button type="button" class="btn hov" (click)="openList()">
-              <svg *ngIf="!viewList && !openAux" (mouseover)="viewList=true" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/>
-                <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/>
-                <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z"/>
-              </svg>
-              <svg *ngIf="viewList || openAux" (mouseout)="viewList=false" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-              </svg>
-            </button>
+						<svg *ngIf="!viewList && !openAux" (mouseover)="viewList=true"
+							xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+							class="bi bi-list-task mb-1" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z" />
+							<path
+								d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z" />
+							<path fill-rule="evenodd"
+								d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z" />
+						</svg>
+						<svg *ngIf="viewList || openAux" (mouseout)="viewList=false" xmlns="http://www.w3.org/2000/svg"
+							width="25" height="25" fill="currentColor" class="bi bi-list-task mb-1" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+						</svg>
+					</button>
 				</div>
-				<div >
+				<div>
 					<button type="button" class="btn hov" (click)="openMap()">
-              <svg *ngIf="!viewMap && openAux" (mouseover)="viewMap=true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-map mb-2" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z"></path>
-              </svg>
-              <svg *ngIf="viewMap || !openAux" (mouseout)="viewMap=false" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-map-fill mb-2" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.502.502 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5V.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.498.498 0 0 0-.196 0L5 14.09zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1-.5-.1z"/>
-              </svg>
-            </button>
+						<svg *ngIf="!viewMap && openAux" (mouseover)="viewMap=true" xmlns="http://www.w3.org/2000/svg"
+							width="22" height="22" fill="currentColor" class="bi bi-map mb-2" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.502.502 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103zM10 1.91l-4-.8v12.98l4 .8V1.91zm1 12.98 4-.8V1.11l-4 .8v12.98zm-6-.8V1.11l-4 .8v12.98l4-.8z">
+							</path>
+						</svg>
+						<svg *ngIf="viewMap || !openAux" (mouseout)="viewMap=false" xmlns="http://www.w3.org/2000/svg"
+							width="22" height="22" fill="currentColor" class="bi bi-map-fill mb-2" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.502.502 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5V.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.498.498 0 0 0-.196 0L5 14.09zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1-.5-.1z" />
+						</svg>
+					</button>
 				</div>
 				<div class="ps-2 w-100" style="position: relative;">
-					<input style="height: 40px;" id="search_1" name="search_1" (keyup)="onKeySearch($event)" [(ngModel)]="search.value" type="text" class="form-control" placeholder="{{ 'sensors.buscar_dispositivos' | translate }}" aria-label="Recipient's username" aria-DESCcribedby="basic-addon2">
-					<p style="position: absolute; cursor: pointer; top: 7px; right: 7px;"  (click)="deleteText()" class="btn-close" aria-label="Close"></p>
+					<input style="height: 40px;" id="search_1" name="search_1" (keyup)="onKeySearch($event)"
+						[(ngModel)]="search.value" type="text" class="form-control"
+						placeholder="{{ 'sensors.buscar_dispositivos' | translate }}" aria-label="Recipient's username"
+						aria-DESCcribedby="basic-addon2">
+					<p style="position: absolute; cursor: pointer; top: 7px; right: 7px;" (click)="deleteText()"
+						class="btn-close" aria-label="Close"></p>
 				</div>
 			</div>
 
 			<div class="col-12 col-lg-4">
 				<div class="row d-flex px-3">
-					<div class="col-8 col-lg-9 p-0 m-0 mb-3" style="position: relative; border-radius: 6px; border: 1px solid #d8d8d8 ; border-top-right-radius: 0em; border-bottom-right-radius: 0em;">
-						<ng-select [items]="selectSensorsCopy.sensors" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" bindLabel="name" appendTo="ng-select" [multiple]="true" [(ngModel)]="selectSensors.sensors" style="background-color: #E3E3E3;" class="selectpicker" aria-label="Default select example" id="sensors_1" name="sensors_1" style="height:fit-content;"></ng-select>
-						<svg style="position: absolute; top:10px; right:40px" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-              </svg>
+					<div class="col-8 col-lg-9 p-0 m-0 mb-3"
+						style="position: relative; border-radius: 6px; border: 1px solid #d8d8d8 ; border-top-right-radius: 0em; border-bottom-right-radius: 0em;">
+						<ng-select [items]="selectSensorsCopy.sensors"
+							(change)="filterDevices();this.search.value= '';this.currentPage= 1;" bindLabel="name"
+							appendTo="ng-select" [multiple]="true" [(ngModel)]="selectSensors.sensors"
+							style="background-color: #E3E3E3;" class="selectpicker" aria-label="Default select example"
+							id="sensors_1" name="sensors_1" style="height:fit-content;"></ng-select>
+						<svg style="position: absolute; top:10px; right:40px" xmlns="http://www.w3.org/2000/svg"
+							width="20" height="20" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
+							<path fill-rule="evenodd"
+								d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+						</svg>
 					</div>
 					<div class="col-4 col-lg-3 p-0 m-0 pb-3">
-						<select *ngIf="selectSensors.sensors.length!=0" style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_2" name="sensors_2" [(ngModel)]="search.sensorsAct">
+						<select *ngIf="selectSensors.sensors.length!=0"
+							style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;"
+							(change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select"
+							aria-label="Default select example" id="sensors_2" name="sensors_2"
+							[(ngModel)]="search.sensorsAct">
 							<option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
 							<option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
 							<option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
 						</select>
-						<select disabled *ngIf="selectSensors.sensors.length==0" disabled style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;" (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="sensors_3" name="sensors_3" [(ngModel)]="search.sensorsAct">
+						<select disabled *ngIf="selectSensors.sensors.length==0" disabled
+							style="border-top-left-radius: 0em; border-bottom-left-radius: 0em;"
+							(change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select"
+							aria-label="Default select example" id="sensors_3" name="sensors_3"
+							[(ngModel)]="search.sensorsAct">
 							<option selected [ngValue]="2">{{ 'sensors.all' | translate }}</option>
 							<option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
 							<option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
@@ -56,36 +87,43 @@
 			</div>
 
 			<div class="col-12 col-lg-2 p-0 m-0 pb-3 px-3">
-				<select (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select" aria-label="Default select example" id="devicesAct" name="devicesAct" [(ngModel)]="search.devicesAct">
-            <option selected [ngValue]="2">{{ 'sensors.all_devices' | translate }}</option>
-            <option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
-            <option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
-          </select>
+				<select (change)="filterDevices();this.search.value= '';this.currentPage= 1;" class="form-select"
+					aria-label="Default select example" id="devicesAct" name="devicesAct"
+					[(ngModel)]="search.devicesAct">
+					<option selected [ngValue]="2">{{ 'sensors.all_devices' | translate }}</option>
+					<option [ngValue]="1">{{ 'sensors.enable' | translate }}</option>
+					<option [ngValue]="0">{{ 'sensors.disable' | translate }}</option>
+				</select>
 			</div>
 
 			<div class="col-12 col-lg-3 pb-3">
 				<div class="row d-flex">
 					<div class="col-6">
-						<button style="width: -webkit-fill-available;" class="btn btn-secondary" type="button" (click)="deleteSearch();this.search.value= '';deleteSearch2()">{{ 'sensors.erase' | translate }}</button>
+						<button style="width: -webkit-fill-available;" class="btn btn-secondary" type="button"
+							(click)="deleteSearch();this.search.value= '';deleteSearch2()">{{ 'sensors.erase' |
+							translate }}</button>
 					</div>
 					<div class="col-6">
-						<button style="width: -webkit-fill-available;" type="button" class="btn btn-info" routerLink="/devices/new">{{ 'devices.edit.new_device' | translate }}</button>
+						<button style="width: -webkit-fill-available;" type="button" class="btn btn-info"
+							routerLink="/devices/new">{{ 'devices.edit.new_device' | translate }}</button>
 					</div>
 				</div>
 			</div>
-      
+
 		</div>
-		<div class="p-4 pt-0 mb-5" *ngIf="openAux==true" style="position: fixed; z-index: 1000; width: 97vw">
+		<div class="p-4 pt-0 mb-5" *ngIf="openAux=='true'" style="position: fixed; z-index: 1000; width: 97vw">
 			<div class="row">
 				<div class="over p-0 " style="height: 71vh; background-color: #fff;">
 
-					<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+					<div *ngIf="data.length<=0 && charging==false" class="col-12 d-flex"
+						style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 						<div style="height: min-content;">
 							<p style="font-size: x-large;">{{ 'no_devices' | translate }}</p>
 						</div>
 					</div>
 
-					<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+					<div *ngIf="charging" class="col-12 d-flex"
+						style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
 						<div class="spinner-border text-secondary" role="status">
 							<span class="visually-hidden">{{ 'loading' | translate }}</span>
 						</div>
@@ -96,112 +134,196 @@
 							<thead>
 								<tr>
 
-									<th style="cursor: pointer; width: 10%;z-index: 100;" class="single-line" [ngClass]="{'mark': mark == 'uid'}" scope="col">
-										<svg *ngIf="alt1" (click)="alt1=false;getDevicesLocal('uid','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        					<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      					</svg>
-										<svg *ngIf="!alt1" (click)="alt1=true;getDevicesLocal('uid','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        					<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      					</svg>{{ 'devices.edit.uid' | translate }}
+									<th style="cursor: pointer; width: 10%;z-index: 100;" class="single-line"
+										[ngClass]="{'mark': mark == 'uid'}" scope="col">
+										<svg *ngIf="alt1" (click)="alt1=false;getDevicesLocal('uid','DESC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+											<path
+												d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+										</svg>
+										<svg *ngIf="!alt1" (click)="alt1=true;getDevicesLocal('uid','ASC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+											<path
+												d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+										</svg>{{ 'devices.edit.uid' | translate }}
 									</th>
 
-									<th class="d-none d-md-none d-lg-block" [ngClass]="{'mark': mark == 'topic_name'}" style="cursor: pointer;" class="single-line" scope="col">
-										<svg *ngIf="alt2" (click)="alt2=false;getDevicesLocal('topic_name','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        					<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      					</svg>
-										<svg *ngIf="!alt2" (click)="alt2=true;getDevicesLocal('topic_name','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        					<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      					</svg>{{ 'devices.edit.topic' | translate }}
+									<th class="d-none d-md-none d-lg-block" [ngClass]="{'mark': mark == 'topic_name'}"
+										style="cursor: pointer;" class="single-line" scope="col">
+										<svg *ngIf="alt2" (click)="alt2=false;getDevicesLocal('topic_name','DESC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+											<path
+												d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+										</svg>
+										<svg *ngIf="!alt2" (click)="alt2=true;getDevicesLocal('topic_name','ASC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+											<path
+												d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+										</svg>{{ 'devices.edit.topic' | translate }}
 									</th>
 
-									<th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'application_id'}">
-										<svg *ngIf="alt3" (click)="alt3=false;getDevicesLocal('application_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        					<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      					</svg>
-										<svg *ngIf="!alt3" (click)="alt3=true;getDevicesLocal('application_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        					<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      					</svg>{{ 'devices.edit.aplication' | translate }}
+									<th class="d-none d-md-none d-lg-block" style="text-align: left; cursor: pointer;"
+										class="single-line" [ngClass]="{'mark': mark == 'application_id'}">
+										<svg *ngIf="alt3" (click)="alt3=false;getDevicesLocal('application_id','DESC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+											<path
+												d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+										</svg>
+										<svg *ngIf="!alt3" (click)="alt3=true;getDevicesLocal('application_id','ASC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+											<path
+												d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+										</svg>{{ 'devices.edit.aplication' | translate }}
 									</th>
 
-									<th style="cursor: pointer;" class="d-none d-lg-none d-xl-table-cell d-flex" scope="col">
+									<th style="cursor: pointer;" class="d-none d-lg-none d-xl-table-cell d-flex"
+										scope="col">
 										{{ 'conecctions.enabled' | translate }}
 									</th>
 									<th class="d-none d-md-none d-lg-none d-xl-table-cell d-flex" class="single-line">
 										{{ 'sensors.sensors' | translate }}
 									</th>
 
-									<th class="d-none d-md-none d-lg-none d-xl-table-cell d-flex" style="text-align: left; cursor: pointer;">
-										<svg *ngIf="alt4" (click)="alt4=false;getDevicesLocal('data_estructure','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        					<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      					</svg>
-										<svg *ngIf="!alt4" (click)="alt4=true;getDevicesLocal('data_estructure','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        					<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      					</svg>{{ 'structure.structure' | translate }}
+									<th class="d-none d-md-none d-lg-none d-xl-table-cell d-flex"
+										style="text-align: left; cursor: pointer;">
+										<svg *ngIf="alt4" (click)="alt4=false;getDevicesLocal('data_estructure','DESC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+											<path
+												d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+										</svg>
+										<svg *ngIf="!alt4" (click)="alt4=true;getDevicesLocal('data_estructure','ASC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+											<path
+												d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+										</svg>{{ 'structure.structure' | translate }}
 									</th>
 
-									<th class="d-none d-md-none d-lg-block" style="text-align: center; cursor: pointer;" class="single-line" [ngClass]="{'mark': mark == 'updatedAt'}">
-										<svg *ngIf="alt5" (click)="alt5=false;getDevicesLocal('updatedAt','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-                        					<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                      					</svg>
-										<svg *ngIf="!alt5" (click)="alt5=true;getDevicesLocal('updatedAt','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                        					<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                      					</svg>{{ 'mod' | translate }}
+									<th class="d-none d-md-none d-lg-block" style="text-align: center; cursor: pointer;"
+										class="single-line" [ngClass]="{'mark': mark == 'updatedAt'}">
+										<svg *ngIf="alt5" (click)="alt5=false;getDevicesLocal('updatedAt','DESC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+											<path
+												d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+										</svg>
+										<svg *ngIf="!alt5" (click)="alt5=true;getDevicesLocal('updatedAt','ASC')"
+											xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+											fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+											<path
+												d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+										</svg>{{ 'mod' | translate }}
 									</th>
 
-									<th scope="col" style="text-align: center;" class="single-line">{{ 'sensors.duplicate' | translate }}</th>
-									<th class="d-none d-md-none d-lg-block" style="text-align: center; " class="single-line">{{ 'sensors.edit' | translate }}</th>
+									<th scope="col" style="text-align: center;" class="single-line">{{
+										'sensors.duplicate' | translate }}</th>
+									<th class="d-none d-md-none d-lg-block" style="text-align: center; "
+										class="single-line">{{ 'sensors.edit' | translate }}</th>
 
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="over" tyle="display: block;" *ngFor="let quote of data; let i = index" style="cursor: pointer;">
+								<tr class="over" tyle="display: block;" *ngFor="let quote of data; let i = index"
+									style="cursor: pointer;">
 
-									<th class="rounded-0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.uid }}</th>
-									<td  [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.topic_name }}</td>
-									<td  [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.application_id }}</td>
+									<th class="rounded-0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{
+										quote.uid }}</th>
+									<td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.topic_name }}
+									</td>
+									<td [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.application_id
+										}}</td>
 
 									<td [routerLink]="['/devices/edit/', quote.id]" scope="col">
-										<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
-										<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
+										<span class="badge rounded-pill text-bg-success d-inline-block"
+											[class]="{'d-none': quote.enable==0}">
+											<p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate
+												}}</p>
+										</span>
+										<span class="badge rounded-pill text-bg-danger d-inline-block"
+											[class]="{'d-none': quote.enable==1}">
+											<p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate
+												}}</p>
+										</span>
 									</td>
 
-									<td scope="col" [routerLink]="['/devices/edit/', quote.id]" class="d-none d-lg-none d-xl-table-cell d-flex">
+									<td scope="col" [routerLink]="['/devices/edit/', quote.id]"
+										class="d-none d-lg-none d-xl-table-cell d-flex">
 										<div *ngIf="quote.sensors!=null">
 											<div *ngIf="quote.sensors.length>0">
-												<div *ngFor="let quote2 of quote.sensors" style="display: inline-block; height: min-content;">
-													<span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': quote2.enable==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
-													<span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': quote2.enable==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name }}</p></span>
+												<div *ngFor="let quote2 of quote.sensors"
+													style="display: inline-block; height: min-content;">
+													<span class="badge rounded-pill text-bg-success d-inline-block me-2"
+														[class]="{'d-none': quote2.enable==0}">
+														<p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name
+															}}</p>
+													</span>
+													<span class="badge rounded-pill text-bg-danger d-inline-block me-2"
+														[class]="{'d-none': quote2.enable==1}">
+														<p class="mb-0 d-none d-md-none d-lg-block">{{ quote2.type_name
+															}}</p>
+													</span>
 												</div>
 											</div>
-											<div *ngIf="quote.sensors.length<=0" style="display: inline-block; height: min-content;">
+											<div *ngIf="quote.sensors.length<=0"
+												style="display: inline-block; height: min-content;">
 												<p class="m-0">{{ 'sensors.sin_sensores' | translate }}</p>
 											</div>
 										</div>
 									</td>
 
-									<td class="d-none d-lg-none d-xl-table-cell d-flex" *ngIf="quote.variable_configuration==0" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure }}</td>
-									<td class="d-none d-lg-none d-xl-table-cell d-flex" *ngIf="quote.variable_configuration==1" [routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.variable_data_structure }}</td>
-									<td [routerLink]="['/devices/edit/', quote.id]" scope="col" style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
+									<td class="d-none d-lg-none d-xl-table-cell d-flex"
+										*ngIf="quote.variable_configuration==0"
+										[routerLink]="['/devices/edit/', quote.id]" scope="col">{{ quote.data_estructure
+										}}</td>
+									<td class="d-none d-lg-none d-xl-table-cell d-flex"
+										*ngIf="quote.variable_configuration==1"
+										[routerLink]="['/devices/edit/', quote.id]" scope="col">{{
+										quote.variable_data_structure }}</td>
+									<td [routerLink]="['/devices/edit/', quote.id]" scope="col"
+										style="text-align: center;">{{ formatDateTime(quote.updatedAt) }}</td>
 
-									<td (mouseout)="viewDup= -1" (mouseover)="viewDup=i" style="text-align: center;" routerLink="/devices/duplicate/{{quote.id}}">
-										<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
-                        					<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
-                        					<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
-                        					<path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
-                      					</svg>
-										<svg *ngIf="viewDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
-                        					<path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z"/>
-                        					<path d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5ZM8.5 6.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5a.5.5 0 0 1 1 0Z"/>
-                      					</svg>
+									<td (mouseout)="viewDup= -1" (mouseover)="viewDup=i" style="text-align: center;"
+										routerLink="/devices/duplicate/{{quote.id}}">
+										<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20"
+											height="20" fill="currentColor" class="bi bi-clipboard-plus"
+											viewBox="0 0 16 16">
+											<path fill-rule="evenodd"
+												d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z" />
+											<path
+												d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+											<path
+												d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+										</svg>
+										<svg *ngIf="viewDup==i" xmlns="http://www.w3.org/2000/svg" width="20"
+											height="20" fill="currentColor" class="bi bi-clipboard2-plus-fill"
+											viewBox="0 0 16 16">
+											<path
+												d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z" />
+											<path
+												d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5ZM8.5 6.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5a.5.5 0 0 1 1 0Z" />
+										</svg>
 									</td>
 
-									<td (mouseover)="pencilDup=i" (mouseout)="pencilDup=-10" [routerLink]="['/devices/edit/', quote.id]" style="text-align: center;">
-										<svg *ngIf="pencilDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                        					<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                      					</svg>
-										<svg *ngIf="pencilDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                        					<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                      					</svg>
+									<td (mouseover)="pencilDup=i" (mouseout)="pencilDup=-10"
+										[routerLink]="['/devices/edit/', quote.id]" style="text-align: center;">
+										<svg *ngIf="pencilDup!=i" xmlns="http://www.w3.org/2000/svg" width="20"
+											height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+											<path
+												d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+										</svg>
+										<svg *ngIf="pencilDup==i" xmlns="http://www.w3.org/2000/svg" width="20"
+											height="20" fill="currentColor" class="bi bi-pencil-fill"
+											viewBox="0 0 16 16">
+											<path
+												d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+										</svg>
 								</tr>
 							</tbody>
 						</table>
@@ -216,32 +338,40 @@
 						<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
 					</div>
 					<div>
-						<select (change)="getDevicesLocal('uid','ASC');this.currentPage=1" class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
-              <option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
-            </select>
+						<select (change)="getDevicesLocal('uid','ASC');this.currentPage=1" class="form-select ms-3"
+							aria-label="Default select example" id="quantPage" name="quantPage"
+							[(ngModel)]="this.quantPage">
+							<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion"
+								[selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
+						</select>
 					</div>
 				</div>
 				<div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
 					<nav aria-label="Page navigation example">
 						<ul *ngIf="data.length>0" class="pagination mt-2 mb-0">
 							<li class="page-item">
-								<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
+								<a class="page-link" style="cursor: pointer;" aria-label="Previous"
+									(click)="firstPage()">
 									<span aria-hidden="true">{{ 'first' | translate }}</span>
 								</a>
 							</li>
 							<li class="page-item" *ngIf="currentPage-10>0">
-								<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="previousPage10()">
+								<a class="page-link" style="cursor: pointer;" aria-label="Previous"
+									(click)="previousPage10()">
 									<span aria-hidden="true">&laquo; 10</span>
 								</a>
 							</li>
 							<li class="page-item" *ngIf="this.currentPage-1!=0">
-								<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{ this.currentPage-1 }}</a>
+								<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{
+									this.currentPage-1 }}</a>
 							</li>
 							<li class="page-item">
-								<a class="page-link mark" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
+								<a class="page-link mark" style="cursor: pointer;"
+									(click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
 							</li>
 							<li class="page-item" *ngIf="this.currentPage!=totalPages">
-								<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1 }}</a>
+								<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1
+									}}</a>
 							</li>
 							<li class="page-item" *ngIf="currentPage+10<totalPages">
 								<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="nextPage10()">
@@ -263,24 +393,36 @@
 			<div class="row" style="height: 75vh;">
 				<div id="map" style="position: relative;" #map style="height: 75vh;">
 					<div id="menu" style="position: absolute;">
-						<input *ngIf="colorMap=='streets-v12'" id="streets-v12" name="streets-v12" type="radio" name="rtoggle" value="streets" checked="checked">
-						<input *ngIf="colorMap!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()" id="streets-v12" type="radio" name="rtoggle" value="streets">
+						<input *ngIf="colorMap=='streets-v12'" id="streets-v12" name="streets-v12" type="radio"
+							name="rtoggle" value="streets" checked="checked">
+						<input *ngIf="colorMap!='streets-v12'" (click)="changeMapStyle('streets-v12');saveStorage()"
+							id="streets-v12" type="radio" name="rtoggle" value="streets">
 						<label for="streets-v12">{{ 'predeterminado' | translate }}</label>
 
-						<input *ngIf="colorMap=='satellite-streets-v12'" id="satellite-streets-v12" name="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite" checked="checked">
-						<input *ngIf="colorMap!='satellite-streets-v12'" (click)="changeMapStyle('satellite-streets-v12');saveStorage()" id="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite">
+						<input *ngIf="colorMap=='satellite-streets-v12'" id="satellite-streets-v12"
+							name="satellite-streets-v12" type="radio" name="rtoggle" class="ms-3" value="satellite"
+							checked="checked">
+						<input *ngIf="colorMap!='satellite-streets-v12'"
+							(click)="changeMapStyle('satellite-streets-v12');saveStorage()" id="satellite-streets-v12"
+							type="radio" name="rtoggle" class="ms-3" value="satellite">
 						<label for="satellite-streets-v12">{{ 'satelite' | translate }}</label>
 
-						<input *ngIf="colorMap=='outdoors-v12'" id="outdoors-v12" name="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3" checked="checked">
-						<input *ngIf="colorMap!='outdoors-v12'" (click)="changeMapStyle('outdoors-v12');saveStorage()" id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3">
+						<input *ngIf="colorMap=='outdoors-v12'" id="outdoors-v12" name="outdoors-v12" type="radio"
+							name="rtoggle" value="outdoors" class="ms-3" checked="checked">
+						<input *ngIf="colorMap!='outdoors-v12'" (click)="changeMapStyle('outdoors-v12');saveStorage()"
+							id="outdoors-v12" type="radio" name="rtoggle" value="outdoors" class="ms-3">
 						<label for="outdoors-v12">{{ 'relieve' | translate }}</label>
 
-						<input *ngIf="colorMap=='light-v11'" id="light-v11" name="light-v11" type="radio" name="rtoggle" value="light" class="ms-3" checked="checked">
-						<input *ngIf="colorMap!='light-v11'" (click)="changeMapStyle('light-v11');saveStorage()" id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3">
+						<input *ngIf="colorMap=='light-v11'" id="light-v11" name="light-v11" type="radio" name="rtoggle"
+							value="light" class="ms-3" checked="checked">
+						<input *ngIf="colorMap!='light-v11'" (click)="changeMapStyle('light-v11');saveStorage()"
+							id="light-v11" type="radio" name="rtoggle" value="light" class="ms-3">
 						<label for="light-v11">{{ 'claro' | translate }}</label>
 
-						<input *ngIf="colorMap=='dark-v11'" id="dark-v11" name="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3" checked="checked">
-						<input *ngIf="colorMap!='dark-v11'" (click)="changeMapStyle('dark-v11');saveStorage()" id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
+						<input *ngIf="colorMap=='dark-v11'" id="dark-v11" name="dark-v11" type="radio" name="rtoggle"
+							value="dark" class="ms-3" checked="checked">
+						<input *ngIf="colorMap!='dark-v11'" (click)="changeMapStyle('dark-v11');saveStorage()"
+							id="dark-v11" type="radio" name="rtoggle" value="dark" class="ms-3">
 						<label for="dark-v11">{{ 'oscuro' | translate }}</label>
 					</div>
 				</div>
@@ -289,23 +431,27 @@
 
 		<div class="toast-cont w-96" style="background-color: #fff;">
 			<div *ngIf="dupOk" class="top-0 end-0 p-3 w-96" style="background-color: #fff;">
-				<div role="alert" class="toast show align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+				<div role="alert" class="toast show align-items-center text-bg-primary border-0" role="alert"
+					aria-live="assertive" aria-atomic="true">
 					<div class="d-flex">
 						<div class="toast-body">
 							{{ 'devices.list.e1' | translate }}
 						</div>
-						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+							aria-label="Close"></button>
 					</div>
 				</div>
 			</div>
 
 			<div *ngIf="dupNot" class="top-0 end-0 p-3 w-96" style="background-color: #fff;">
-				<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+				<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert"
+					aria-live="assertive" aria-atomic="true">
 					<div class="d-flex">
 						<div class="toast-body">
 							{{ 'devices.list.e2' | translate }}
 						</div>
-						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+							aria-label="Close"></button>
 					</div>
 				</div>
 			</div>

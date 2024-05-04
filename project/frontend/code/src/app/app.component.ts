@@ -23,7 +23,7 @@ export class AppComponent {
 
   contador = 0;
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     let consecutivoFallos = 0; // Contador de fallos consecutivos
 
     const intervalId = setInterval(async () => {
@@ -82,7 +82,63 @@ export class AppComponent {
       // Realizar la lógica de cierre de sesión en caso de error
       throw error; // Relanzar el error para ser capturado por el llamador
     }
+  }*/
+
+  ngOnInit(): void {
+    // Inicializa
+    //console.log('NGINIT APP')
+    //if(this.authService.isAuthenticated()){
+    //console.log('ARRANCANDO INT')
+    const intervalId = setInterval(async () => {
+      if (this.contador < environment.acces_token_times) {
+        const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
+        if (!newToken) {
+          console.warn('La renovación del token ha fallado');
+          this.contador++;
+        }
+        else {
+          this.contador = 0;
+        }
+      }
+      else {
+        //clearInterval(intervalId);
+      }
+    }, environment.acces_token_timeout);
+    //}
   }
+
+  //ngOnDestroy
+
+  async renewToken(refreshToken: string): Promise<string | null> {
+    try {
+      let token = this.storageService.getToken() ?? '';
+
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': `${token}`,
+        }),
+        withCredentials: true // Permitir el envío de cookies
+      };
+
+      const body = { refreshToken };
+      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
+      if (!response || !response.token) {
+        console.error('Error al renovar el token');
+        return null;
+      }
+      this.contador = 0;
+      const newToken = response.token;
+      this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+      return newToken;
+    }
+    catch (error) {
+      this.logOut(); // Realizar la lógica de cierre de sesión en caso de error
+      console.error('Error al renovar el token:', error);
+      return null;
+    }
+  }
+
   logOut() {
     this.storageService.setId('');
     this.storageService.setUsername('');
@@ -92,10 +148,10 @@ export class AppComponent {
     this.storageService.setToken('');
     this.storageService.setPage('1');
     this.storageService.setSearch('');
-    this.storageService.setOpen('');
-    this.storageService.setMap('');
+    this.storageService.setOpen('true');
+    this.storageService.setMap(environment.defaultMapsStyle);
     this.storageService.setPerPage('15');
-
+    this.contador = 0;
     this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }

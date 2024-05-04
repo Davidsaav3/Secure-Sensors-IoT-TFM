@@ -4,7 +4,7 @@ export const environment = {
     resultsPerPag: [10, 15, 50, 100],
     accessTokenMap: 'pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ',
     defaultMapsStyle: 'streets-v12',
-    AppVersion: '2.6.0',   
+    AppVersion: '2.6.0',
 
     url: {
         deviceConfigurations: '/device_configurations',
@@ -43,9 +43,9 @@ export const environment = {
     acces_token_timeout: 5000, // Tiempa hasta lanzar otra vez la consulta
     script_status_timeout: 5000,
 
-    acces_token_frontend: 6000, // Limite de segundos para poder hacerlo otra vez
-    script_status_frontend: 11000,
-
-    acces_token_times: 2, // Veces que lo intenta hasta que se detiene
+    acces_token_times: 2,
     script_status_times: 2,
+
+    script_status_frontend: 11000,
+    acces_token_frontend: 5000,
 };
