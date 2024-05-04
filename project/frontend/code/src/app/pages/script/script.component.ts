@@ -27,7 +27,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
   status = '';
 
   getScripts: string = environment.baseUrl + environment.url.script;
-  postScript: string = environment.baseUrl + environment.url.script+ '/script';
+  postScript: string = environment.baseUrl + environment.url.script + '/script';
   duplicateScripts: string = environment.baseUrl + environment.url.script + "/duplicate";
   getId: string = environment.baseUrl + environment.url.script + "/id";
 
