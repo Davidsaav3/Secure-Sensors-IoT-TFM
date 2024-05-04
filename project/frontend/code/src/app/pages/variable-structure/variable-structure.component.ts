@@ -17,7 +17,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
 
   constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) { }
 
-  getEstructure: string = environment.baseUrl + environment.url.variableDataStructure + "";
+  getEstructure: string = environment.baseUrl + environment.url.variableDataStructure;
   postStructure: string = environment.baseUrl + environment.url.variableDataStructure;
   duplicateEstructure: string = environment.baseUrl + environment.url.variableDataStructure + "/duplicate";
 

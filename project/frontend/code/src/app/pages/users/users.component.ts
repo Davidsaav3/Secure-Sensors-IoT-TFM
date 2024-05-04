@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  getUser: string = environment.baseUrl + environment.url.users + "";
+  getUser: string = environment.baseUrl + environment.url.users;
   postUser: string = environment.baseUrl + environment.url.users;
   postUserRevoke: string = environment.baseUrl + environment.url.users + "/revoke";
   duplicateUser: string = environment.baseUrl + environment.url.users + "/duplicate";

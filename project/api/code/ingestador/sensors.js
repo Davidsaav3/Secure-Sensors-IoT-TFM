@@ -43,31 +43,12 @@ client.on('message', async (topic, message) => {
 */
  // act estado de db a 1
 
- scriptDAO.updateDate(); // try catch-> return ///////////////////////////////////////// AWAIT
+ scriptDAO.updateDate(); // Insertar la primera vez la fecha 
 
- function actualizarBD() {
+ function actualizarBD() { // Bucle principal de actualización de cfecha
    scriptDAO.updateDate(); 
    setTimeout(() => actualizarBD(), process.env.SCRIPT_RELOAD_TIME);
  }
- 
- /*async function actualizarBD() { // BUCLE PRINCIPAL
-   const status= scriptDAO.getStatus(); // try catch -> clouseScript()
-   console.log('SCRIPT FUNCIONANDO: '+ status)
-   if (status === 0) {
-     clouseScript();
-   } 
-   scriptDAO.updateDate(); // try catch -> clouseScript() 
-   setTimeout(() => actualizarBD(), process.env.SCRIPT_RELOAD_TIME);
- }*/
- 
- /*function clouseScript() { // PARAR SCRIPT
-   console.log('SCRIPT PARADO')
-   for (let i = 0; i < connection_config.length; i++) {
-     client[i].end();
-   }
-   insertLogScript('','', 0, '');
-   return 0;
- }*/
 
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas
 // para ver cadens de conexión mirar https://www.thethingsindustries.com/docs/integrations/mqtt/
@@ -342,6 +323,5 @@ const main = async (message) => {
 
 }
 
-//insertLogScript('','', 1, '');
-setTimeout(actualizarBD ,process.env.SCRIPT_RELOAD_TIME);
+setTimeout(actualizarBD ,process.env.SCRIPT_RELOAD_TIME); // Inicializa bucle
 

@@ -23,7 +23,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl + environment.url.conecctionWrite + "";
+  getConecction: string = environment.baseUrl + environment.url.conecctionWrite;
   postConecction: string = environment.baseUrl + environment.url.conecctionWrite;
   duplicateConecction: string = environment.baseUrl + environment.url.conecctionWrite + "/duplicate";
   getId: string = environment.baseUrl + environment.url.conecctionWrite + "/id";

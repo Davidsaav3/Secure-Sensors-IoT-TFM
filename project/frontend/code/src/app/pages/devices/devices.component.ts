@@ -30,7 +30,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, public sanitizer: DomSanitizer, private http: HttpClient, private router: Router, private translate: TranslateService) { }
 
-  getDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "";
+  getDevice: string = environment.baseUrl + environment.url.deviceConfigurations;
   getSensorsList: string = environment.baseUrl + environment.url.sensorsTypes + "/get_list";
 
   zoom: number = 7;

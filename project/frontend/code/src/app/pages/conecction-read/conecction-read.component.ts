@@ -23,7 +23,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl + environment.url.conecctionRead + "";
+  getConecction: string = environment.baseUrl + environment.url.conecctionRead;
   postConecction: string = environment.baseUrl + environment.url.conecctionRead;
   duplicateConecction: string = environment.baseUrl + environment.url.conecctionRead + "/duplicate";
   getId: string = environment.baseUrl + environment.url.conecctionRead + "/id";

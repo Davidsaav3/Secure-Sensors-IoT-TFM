@@ -23,12 +23,11 @@ export class ScriptComponent implements OnInit, OnDestroy {
   //@ViewChild('logTrace', {static: false}) logTraceElement2: ElementRef | undefined;
   //@ViewChild('logPar', {static: false}) logParElement: ElementRef | undefined;
 
-  backendURL: string = "http://localhost:5172/api/script";
   date = '';
   status = '';
 
-  getScripts: string = environment.baseUrl + environment.url.script + "";
-  postScript: string = environment.baseUrl + environment.url.script;
+  getScripts: string = environment.baseUrl + environment.url.script;
+  postScript: string = environment.baseUrl + environment.url.script+ '/script';
   duplicateScripts: string = environment.baseUrl + environment.url.script + "/duplicate";
   getId: string = environment.baseUrl + environment.url.script + "/id";
 
@@ -128,16 +127,16 @@ export class ScriptComponent implements OnInit, OnDestroy {
 
   setScript(status: any): void {
     if (this.isRequestPending) {
-      console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
+      //console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
       return;
     }
     this.isRequestPending = true;
     let status1 = {
       status: status,
     };
-    this.http.post(this.backendURL + "/script", JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
+    this.http.post(this.postScript, JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
       () => {
-        console.log("Solicitud POST enviada exitosamente.");
+        //console.log("Solicitud POST enviada exitosamente.");
       },
       (error) => {
         console.error("Error al enviar la solicitud POST:", error);
@@ -289,7 +288,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
             this.script = data[0];
             this.actId = idActual;
             this.id = idActual;
-            this.openEdit();
+            //this.openEdit();
             this.state = 2;
             let script = { ...this.script };
             this.scriptCopy = {
@@ -308,182 +307,6 @@ export class ScriptComponent implements OnInit, OnDestroy {
           }
         );
     }
-  }
-
-  /* NEW */
-
-  newScript(form: any) {
-    this.state = 1;
-    if (form.valid) {
-      this.http.post(this.postScript, JSON.stringify(this.script), this.httpOptionsService.getHttpOptions())
-        .subscribe(
-          (data: any) => {
-            this.id = data.id;
-            this.alertNew = true;
-
-            this.temp1 = setTimeout(() => {
-              this.alertNew = false;
-            }, 2000);
-
-            this.openClouse();
-            this.script.id = data.id;
-            let script = { ...this.script };
-            this.data.push(script);
-            this.data.sort((a: { description: string }, b: { description: any }) => {
-              if (typeof a.description === "string" && typeof b.description === "string") {
-                return a.description.localeCompare(b.description);
-              }
-              else {
-                return 1;
-              }
-            });
-            this.actId = this.id;
-            this.openEdit();
-            this.state = 2;
-          },
-          (error) => {
-            console.error("Error:", error);
-          }
-        );
-      this.change = false;
-    }
-  }
-
-  openNew(id: any, user_id: any, username: any, log_date: any, log_code: any, log_message: any, log_trace: any) { // Abre Nueva conexion
-
-    this.script = {
-      id: id,
-      user_id: user_id,
-      username: username,
-      log_date: log_date,
-      log_code: log_code,
-      log_message: log_message,
-      log_trace: log_trace,
-    };
-
-    this.show = true;
-    this.openClouse();
-  }
-
-
-  /* EDIT */
-
-  editScript(form: any) { // Guardar datos de la conexión editado
-    if (form.valid) {
-      this.http.put(this.postScript, JSON.stringify(this.script), this.httpOptionsService.getHttpOptions())
-        .subscribe(
-          () => {
-            // Respuesta
-          },
-          (error) => {
-            console.error("Error:", error);
-          }
-        );
-      this.data = this.data.filter((data: { id: number }) => data.id !== this.script.id);
-      let script = this.script;
-      this.data.push(script);
-      this.data.sort((a: any, b: any) => { return a.description - b.description; });
-      this.actId = this.script.id;
-      this.openEdit();
-      this.state = 2;
-      this.saveOk = true;
-
-      this.temp2 = setTimeout(() => {
-        this.saveOk = false;
-      }, 2000);
-    }
-    this.saved = true;
-    this.change = false;
-  }
-
-  openEdit() { // Abre Editar conexión
-    this.show = true;
-    this.state = 2;
-    this.showAux = false;
-  }
-
-  /* DUPLICATE */
-
-  duplicateScript(num: any, type: any) { // Obtiene el nombre de la conexión duplicada
-    if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateScripts}/${type}`, this.httpOptionsService.getHttpOptions())
-        .subscribe(
-          () => {
-            this.script = this.data.find((objeto: { id: any }) => objeto.id == num);
-            this.openClouse();
-            this.state = 0;
-
-            this.http.get(`${this.getId}/${this.script.id}`, this.httpOptionsService.getHttpOptions())
-              .subscribe(
-                (data1: any) => {
-                  this.script = data1[0];
-                  this.actId = this.script.id;
-                  this.id = this.script.id;
-                  let script = { ...this.script };
-                  this.scriptCopy = {
-                    id: script.id,
-                    user_id: script.user_id,
-                    username: script.username,
-                    log_date: script.log_date,
-                    log_code: script.log_code,
-                    log_message: script.log_message,
-                    log_trace: script.log_trace
-                  };
-                  this.openNew(
-                    '',
-                    this.script.user_id,
-                    this.script.username,
-                    this.script.log_date,
-                    this.script.log_code,
-                    this.script.log_message,
-                    this.script.log_trace
-                  );
-                },
-                (error) => {
-                  console.error(error);
-                }
-              );
-            this.change = true;
-          },
-          (error) => {
-            console.error("Error al verificar la descripción duplicada:", error);
-          }
-        );
-    }
-  }
-
-  /* DELETE */
-
-  deletescript(idActual: any) { // Elimina conexión
-    let token = this.storageService.getToken() ?? '';
-
-    var script2 = {
-      id: this.id,
-    };
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}`
-      }),
-      body: script2,
-    };
-
-    this.http.delete(this.postScript, options).subscribe(
-      () => {
-        // Realiza acciones con la respuesta si es necesario
-        //console.log('script eliminados:', response);
-      },
-      (error: any) => {
-        console.error('Error al eliminar conexón:', error);
-      }
-    );
-    this.alertDelete = true;
-
-    this.temp3 = setTimeout(() => {
-      this.alertDelete = false;
-    }, 2000);
-
-    this.data = this.data.filter((objeto: { id: any }) => objeto.id != idActual);
-    this.clouse();
   }
 
   /* BÚSQUEDA */

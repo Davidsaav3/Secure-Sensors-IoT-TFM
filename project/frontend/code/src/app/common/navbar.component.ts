@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   status = 2; 
   date= ''; 
-  backendURL: string = "http://localhost:5172/api/script";
+  backendURL= "http://localhost:5172/api/script";
 
   temp1: any;
   temp2: any;

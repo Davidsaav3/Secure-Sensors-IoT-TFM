@@ -25,7 +25,7 @@ export class StructureComponent implements OnInit, OnDestroy {
       });
   }
 
-  getEstructure: string = environment.baseUrl + environment.url.dataStructure + "";
+  getEstructure: string = environment.baseUrl + environment.url.dataStructure;
   postEstructure: string = environment.baseUrl + environment.url.dataStructure;
   duplicateEstructure: string = environment.baseUrl + environment.url.dataStructure + "/duplicate";
 
