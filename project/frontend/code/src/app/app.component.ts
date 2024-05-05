@@ -90,7 +90,7 @@ export class AppComponent {
     //if(this.authService.isAuthenticated()){
     //console.log('ARRANCANDO INT')
     const intervalId = setInterval(async () => {
-      console.log(this.contador)
+      //console.log(this.contador)
       if (this.contador < environment.acces_token_times) {
         const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
         if (!newToken) {

@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev ps-2': this.width<965, '': this.width>=965}">
+<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'ps-0': this.width<965, '': this.width>=965}">
 
 	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.showAux==true || this.width<965, 'c10': this.showAux==false}">
 		<div class="p-3 pb-0 pe-2">
@@ -166,96 +166,10 @@
 	<div class="cc2 cont mx-0" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
 		<form #form="ngForm" class="row needs-validation p-3">
 			<div class="col-12">
-				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'monitoring.duplicate' | translate }} {{script.log_code}}</h1>
-						<h1 *ngIf="state==1" class="mb-0">{{ 'monitoring.nuevo' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'monitoring.of' | translate }} {{ script.log_code }}</h1>
-					</div>
-
-					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ script.id }}" [(ngModel)]="script.id">
-
-					<div class="col-12 pt-2 form-group">
-						<label for="user_id">{{ 'sensors.user_id' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.user_id }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="script['user_id']" required>
-						<div *ngIf="form.submitted && form.controls['user_id'].errors" class="text-danger">
-							<div *ngIf="form.controls['user_id'].errors['required']">{{ 'user_id' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-12 pt-2 form-group">
-						<label for="username">{{ 'monitoring.username' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.username }}" type="text" id="username" class="form-control" name="username" [(ngModel)]="script['username']" required>
-						<div *ngIf="form.submitted && form.controls['username'].errors" class="text-danger">
-							<div *ngIf="form.controls['username'].errors['required']">{{ 'monitoring.username' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-12 pt-2 form-group">
-						<label for="log_date">{{ 'monitoring.log_date' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_date }}" type="text" id="log_date" class="form-control" name="log_date" [(ngModel)]="script['log_date']" required>
-						<div *ngIf="form.submitted && form.controls['log_date'].errors" class="text-danger">
-							<div *ngIf="form.controls['log_date'].errors['required']">{{ 'monitoring.log_date' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-12 pt-2 form-group">
-						<label for="log_code">{{ 'monitoring.log_code' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_code }}" type="text" id="log_code" class="form-control" name="log_code" [(ngModel)]="script['log_code']" required>
-						<div *ngIf="form.submitted && form.controls['log_code'].errors" class="text-danger">
-							<div *ngIf="form.controls['log_code'].errors['required']">{{ 'monitoring.log_code' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-12 pt-2 form-group">
-						<label for="log_message">{{ 'monitoring.log_message' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_message }}" type="text" id="log_message" class="form-control" name="log_message" [(ngModel)]="script['log_message']" required>
-						<div *ngIf="form.submitted && form.controls['log_message'].errors" class="text-log_message">
-							<div *ngIf="form.controls['log_message'].errors['required']">{{ 'monitoring.log_message' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<!--<div class="col-12 pt-2 form-group">
-						<label for="log_trace">{{ 'monitoring.log_trace' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ script.log_trace }}" type="text" id="log_trace" class="form-control" name="log_trace" [(ngModel)]="script['log_trace']" required>
-						<div *ngIf="form.submitted && form.controls['log_trace'].errors" class="text-log_trace">
-							<div *ngIf="form.controls['log_trace'].errors['required']">{{ 'monitoring.log_trace' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>-->
-
-				</div>
-			</div>
-
-
-			<div class="col-12 mt-3">
-				<div class="row" *ngIf="state==1 || state==0">
-					<div class="col-6">
-						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-					</div>
-					<div class="col-6">
-						<button ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
-					</div>
-				</div>
-				<div class="row" *ngIf="state==2">
-					<div class="col-6">
-						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
-					</div>
-					<div class="col-6">
-						<button type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-					</div>
-					<div class="col-12 mt-3">
-						<div class="row d-flex" style="justify-content: flex-end;">
-							<div class="col-6">
-								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" disabled *ngIf="change">{{ 'sensors.erase_sensor' | translate }}</button>
-								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" *ngIf="!change">{{ 'sensors.erase_sensor' | translate }}</button>
-							</div>
-						</div>
-					</div>
-				</div>
 			</div>
 		</form>
 	</div>
+	
 </div>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
