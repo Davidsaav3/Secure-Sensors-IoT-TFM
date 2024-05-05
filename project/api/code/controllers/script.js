@@ -76,7 +76,7 @@ async function script_aux(status, result, id, user, req) { // Agregar req como p
     if (status == 0 && date_now < date_script) {
       proceso.kill();
       if (!proceso.status) {
-        console.log("--- SCRIPT APAGADO ---");
+        console.log("--- SCRIPT APAGADO ---"); 
         console.log("");
         insertLogScript(id, user, 0, '');
       }
