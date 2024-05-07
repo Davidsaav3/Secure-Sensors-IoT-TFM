@@ -8,13 +8,13 @@ const insertLog = require('../middleware/log');
         const token = req.headers['authorization'];
         if (!token) {
             // LOG - 400 //
-            insertLog("", "", '009-001-400-001', "400", "TOKEN", '', 'Token no proporcionado', "");
+            insertLog("", "", '010-001-400-001', "400", "TOKEN", '', 'Token no proporcionado', "");
             return res.status(400).json({ error: 'Token no proporcionado' });
         }
         jwt.verify(token, SECRET_KEY, (err, decoded) => {
             if (err) {
                 // LOG - 400 //
-                insertLog("", "", '009-001-400-002', "400", "TOKEN", '', 'Token inválido', JSON.stringify(err));
+                insertLog("", "", '010-001-400-002', "400", "TOKEN", '', 'Token inválido', JSON.stringify(err));
                 return res.status(400).json({ error: 'Token inválido' });
             }
 
@@ -22,7 +22,7 @@ const insertLog = require('../middleware/log');
             con.query(query, [decoded.id, decoded.id], (err, results) => {
                 if (err || results.length === 0) {
                     // LOG - 400 //
-                    insertLog("", "", '009-001-400-003', "400", "TOKEN", '', 'Los datos del JWT no existen en la base de datos', "");
+                    insertLog("", "", '010-001-400-003', "400", "TOKEN", '', 'Los datos del JWT no existen en la base de datos', "");
                     return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos' });
                 }
                 jwt.verify(results[0].token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
@@ -34,14 +34,14 @@ const insertLog = require('../middleware/log');
                     }
                     else {
                         // LOG - 500 //
-                        insertLog("", "", '009-001-500-001', "400", "TOKEN", '', 'Error al validar token', "");
+                        insertLog("", "", '010-001-500-001', "400", "TOKEN", '', 'Error al validar token', "");
                         return res.status(500).json({ error: 'Token de refresco expirado' });
                     }
                     if (isNaN(req.user.id)) {
                         return res.status(400).json({ error: 'ID no válido' });
                     }
                     // LOG - 200 //
-                    //insertLog(req.user.id, req.user.user, '009-001-200-001', "200", "TOKEN", token, 'Token validado', "");
+                    //insertLog(req.user.id, req.user.user, '010-001-200-001', "200", "TOKEN", token, 'Token validado', "");
                     next();
                 });
             });
