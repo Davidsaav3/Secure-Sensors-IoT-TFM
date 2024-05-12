@@ -83,13 +83,17 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,
             (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure,`;
         if (devices_act != 2 && array_sensors == -1) {
-          //console.log("LISTA ACT")
+          if(process.env.verbose){
+            console.log("LISTA ACT")
+          }
           variable += ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations WHERE enable=${devices_act} LIMIT ${tam} OFFSET ${act} ) AS subquery 
               LEFT JOIN device_configurations dc ON subquery.id = dc.id
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
               LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
               order by ${order} ${order_type}`
-          //console.log(variable)
+              if(process.env.verbose){
+                console.log(variable)
+              }
           con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
             if (err) throw err;
             const responseArray = auxGet(result);
@@ -101,7 +105,9 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         //
         else {
           if (array_sensors != -1 && array_sensors != -2) {
-            //console.log("LISTA FILTRO TODOS Y ACT")
+            if(process.env.verbose){
+              console.log("LISTA FILTRO TODOS Y ACT")
+            }
             if (devices_act != 2) {
               variable += ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta} AND enable=${devices_act}) as total FROM (
                     SELECT id
@@ -127,7 +133,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             //
 
             variable += `order by ${order} ${order_type}`
-            //console.log(variable)
+            if(process.env.verbose) console.log(variable)
             con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
               if (err) throw err;
               const responseArray = auxGet(result);
@@ -137,7 +143,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             });
           }
           if (array_sensors == -2) {
-            //console.log("LISTA FILTRO NINGUNO Y ACT")
+            if(process.env.verbose) console.log("LISTA FILTRO NINGUNO Y ACT")
             if (devices_act != 2) {
               variable += ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) AND device_configurations.enable=${devices_act}) as total FROM (
                     SELECT id
@@ -181,7 +187,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         var variable = '';
         variable += ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable, sensors_devices.orden as sensor_orden,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure FROM device_configurations `
         if (devices_act != 2 && array_sensors == -1) {
-          //console.log("MAPA ACT")
+          if(process.env.verbose) console.log("MAPA ACT")
           variable += `LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
               LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
               WHERE device_configurations.enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
@@ -196,7 +202,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         //
         else {
           if (array_sensors != -1 && array_sensors != -2) {
-            //console.log("MAPA FILTRO TODOS Y ACT")
+            if(process.env.verbose) console.log("MAPA FILTRO TODOS Y ACT")
             variable += ` 
                 LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
                 LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -214,7 +220,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             });
           }
           if (array_sensors == -2) {
-            //console.log("MAPA FILTRO NINGUNO Y ACT")
+            if(process.env.verbose) console.log("MAPA FILTRO NINGUNO Y ACT")
             variable += ` 
                 LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
                 LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -236,7 +242,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
     }
     else {
       if (state == '0') {
-        //console.log("LISTA SIMPLE")
+        if(process.env.verbose==true) console.log("LISTA SIMPLE")
         con.query(` SELECT
             dc.*,
             st.id as sensor_id,
@@ -263,7 +269,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         });
       }
       else {
-        //console.log("MAPA SIMPLE")
+        if(process.env.verbose) console.log("MAPA SIMPLE")
         con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,sensors_devices.orden as sensor_orden,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -278,7 +284,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
   }
   else {
     if (state == '0') {
-      //console.log("LISTA BUSQUEDA POR TEXTO")
+      if(process.env.verbose) console.log("LISTA BUSQUEDA POR TEXTO")
       let query = `SELECT
           dc.*, 
           st.id as sensor_id,
@@ -308,16 +314,16 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, tam, act
       ], function (err, result) {
         if (err) throw err;
-        //console.log(result[0].uid)
+        if(process.env.verbose) console.log(result[0].uid)
         const responseArray = auxGet(result);
         // LOG - 200 //
-        //console.log(responseArray[0].uid)
+        if(process.env.verbose) console.log(responseArray[0].uid)
         insertLog(req.user.id, req.user.user, '001-001-200-009', "200", "GET", JSON.stringify(req.params), 'Dispositivos obtenidos 9', JSON.stringify(responseArray));
         res.json(responseArray);
       });
     }
     else {
-      //console.log("MAPA BUSQUEDA POR TEXTO")
+      if(process.env.verbose) console.log("MAPA BUSQUEDA POR TEXTO")
       con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable ,sensors_devices.orden as sensor_orden 
             FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
@@ -606,9 +612,13 @@ router.get("/duplicate/:uid", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
 });
 
 router.post("", verifyToken, (req, res) => { // POST Y DELETE //
-  const {
+  let {
     uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, createdAt, updatedAt, id_data_estructure, variable_configuration
   } = req.body;
+
+  //let updatedAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
+  createdAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
+  updatedAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   if (!uid) {
     // LOG - 400 //
@@ -756,9 +766,10 @@ function auxPost(sensors, id_exp) {
 }
 
 router.put("", verifyToken, (req, res) => { // UPDATE //
-  const {
+  let {
     uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
   } = req.body;
+  updatedAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   if (!uid || !topic_name) {
     // LOG - 400 //

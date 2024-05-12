@@ -63,7 +63,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
   const { id, user } = req.user;
 
   // Validación de entrada
-  if (status === undefined) {
+  if (status === undefined) { // != 1 o 0
     insertLog(req.user.id, req.user.user, '009-002-400-001', "400", "POST", JSON.stringify(req.body), 'Se requiere un estado para activar o desactivar el script', '');
     return res.status(400).json({ error: 'Se requiere un estado para activar o desactivar el script' });
   }
@@ -78,13 +78,15 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
       } 
       else {
           try {
-              console.log('')
-              console.log('OREDEN ENTRANTE-> ' + status)
-              console.log('ESTADO ACTUAL -> ' + result[0].status)
-              console.log('')
+            if(process.env.verbose){
+              //console.log('')
+              //console.log('Estado ENTRANTE-> ' + status)
+              //console.log('ESTADO ACTUAL -> ' + result[0].status)
+              //console.log('')
+            }
 
               // Llamar a la función auxiliar de script
-              await script_aux(status, result, id, user, req); // Pasar req aquí
+              await script_aux(status, result, id, user, req.body.status); // Pasar req aquí
               
               //insertLog(req.user.id, req.user.user, '009-002-200-001', "200", "POST", JSON.stringify(req.body), 'Estado cambiado con exito', JSON.stringify(err));
               res.status(200).json({ message: "Estado cambiado con exito" });
@@ -99,39 +101,40 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
 
 
 
-  async function script_aux(status, result, id, user, req) { // Agregar req como parámetro
+  async function script_aux(status, result, id, user, status2) { // Agregar req como parámetro
     return new Promise(async (resolve, reject) => {
-
-      // Imprimir la última fecha almacenada + 5 segundos
-      let date = new Date();
-      const date_now = await formatearFecha(date);
-      console.log('FECHA ACTUAL -> ' + date_now)
-
-      // Imprimir la fecha actual
-      date = new Date(result[0].date);
-      date.setMilliseconds(date.getMilliseconds() + 5000);
-      const date_script = await formatearFecha(date);
-      console.log('ULTIMA FECHA SCRIPT +5-> ' + date_script)
+      
+      let aux = (new Date(result[0].date).getTime() + 5000) > Date.now() ? 1 : 0;
       console.log('')
-
-      // Si la fecha actual es mayor que la última fecha de encendido + 5 segundos -> se puede encender porque está apagado
-      if (status == 1 && date_now > date_script) {
-        proceso = await runScript(id, user, req.body);
-        //console.log(proceso.status)
-        //if (proceso.status) { 
-        console.log("--- SCRIPT ENCENDIDO ---");
-        console.log("");
-        insertLogScript(id, user, 1, '');
-        //}
+      console.log('Estado ENTRANTE-> ' + status)
+      console.log('ESTADO ACTUAL -> ' + aux)
+      console.log('')
+    
+      if (status == 1 && aux==0) {
+        proceso = await runScript(id, user, status2);
+        if(process.env.verbose) console.log(proceso.status)
+        if (proceso) { 
+          if(process.env.verbose) console.log("--- SCRIPT ENCENDIDO ---");
+          if(process.env.verbose) console.log("");
+          insertLogScript(id, user, 1, '');
+        }
+        else{
+          if(process.env.verbose) console.log("Error al arrancar el Script")
+        }
       }
 
-      // Si la fecha actual es menor que la última fecha de encendido + 5 segundos -> se puede apagar porque está encendido
-      if (status == 0 && date_now < date_script) {
-        proceso.kill();
-        if (!proceso.status) {
-          console.log("--- SCRIPT APAGADO ---"); 
-          console.log("");
-          insertLogScript(id, user, 0, '');
+      if (status == 0 && aux==1) {
+          try {
+            proceso.kill();
+            if (process.env.verbose) {
+                console.log("--- SCRIPT APAGADO ---"); 
+                console.log("");
+            }
+            insertLogScript(id, user, 0, '');
+        } 
+        catch (error) {
+          insertLog(id, user, '009-001-600-006', "600", "", status2, 'Error al apagar el script', JSON.stringify(error));
+          console.error("Ocurrió un error:", error);
         }
       }
 
@@ -139,38 +142,40 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
     });
   }
 
-
-  async function formatearFecha(fecha) { // Formato de la fecha
-    let anio = fecha.getFullYear();
-    let mes = String(fecha.getMonth() + 1).padStart(2, '0');
-    let dia = String(fecha.getDate()).padStart(2, '0');
-    let horas = String(fecha.getHours()).padStart(2, '0');
-    let minutos = String(fecha.getMinutes()).padStart(2, '0');
-    let segundos = String(fecha.getSeconds()).padStart(2, '0');
-    return `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
-  }
-
-
-  async function runScript(id, user, body) { // RUN SCRIPT //
+  async function runScript(id, user, status2) { // RUN SCRIPT //
     return new Promise((resolve, reject) => {
-      let proceso = spawn('node', ['../code/ingestador/sensors']);
-      proceso.stdout.on('data', (data) => {
-        console.log(`[SALIDA]-> ${data}`);
-      });
-      proceso.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-        insertLog(id, user, '009-001-500-004', "500", "", JSON.stringify(body), 'Error al activar o desactivar el script (stderr)', '');
-      });
-      proceso.on('error', (error) => {
-        console.error(`Error: ${error.message}`);
-        insertLog(id, user, '009-001-500-005', "500", "", JSON.stringify(body), 'Error al activar o desactivar el script (error)', '');
+      try {
+        let proceso = spawn('node', ['../code/ingestador/sensors']); 
+        if (!proceso) {
+          if (process.env.verbose) console.log("CATCH")
+          insertLog(id, user, '009-001-600-001', "600", "Ruta no encontrada en el script", status2, '', error);
+          resolve(null);
+          return;
+        }
+  
+        proceso.stdout.on('data', (data) => {
+          if (process.env.verbose) console.log(`[SALIDA]-> ${data}`);
+        });
+        proceso.stderr.on('stderr', (stderr) => {
+          console.error(`stderr: ${stderr}`);
+          insertLog(id, user, '009-001-600-002', "600", "", status2, 'STD-Error en el script (stderr): ', JSON.stringify(stderr));
+        });
+        proceso.on('error', (error) => {
+          console.error(`Error: ${error.message}`);
+          insertLog(id, user, '009-001-600-003', "600", "", status2, 'Error en el script (error): ', JSON.stringify(error));
+          reject(error);
+        });
+        proceso.on('close', (code) => {
+          if (process.env.verbose) console.log(`[APAGADO]`);
+          insertLog(id, user, '009-001-600-004', "600", "", status2, 'Proceso recibe señal de cerrado (salida con código)', JSON.stringify(code));
+        });
+        resolve(proceso);
+      } 
+      catch (error) {
+        console.error(`Error en la ejecución del script: ${error.message}`);
+        insertLog(id, user, '009-001-600-005', "600", "", status2, 'Error en la ejecución del script', JSON.stringify(error));
         reject(error);
-      });
-      proceso.on('close', (code) => {
-        console.log(`[APAGADO]-> ${code}`);
-        insertLog(id, user, '009-001-500-006', "500", "", JSON.stringify(body), '`Error al activar o desactivar el script (salida con código)', '');
-      });
-      resolve(proceso);
+      }
     });
   }
 

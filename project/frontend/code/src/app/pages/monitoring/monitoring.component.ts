@@ -112,10 +112,15 @@ export class MonitoringComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
-    //this.temp4.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+    
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
     this.storageService.setPage('1')
@@ -125,7 +130,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
         .then(() => {
-          //console.log('Texto copiado al portapapeles: ', textToCopy);
+          if(environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
           console.error('Error al copiar texto al portapapeles: ', error);

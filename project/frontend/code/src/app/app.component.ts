@@ -1,17 +1,17 @@
-import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from "./environments/environment"
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from "@angular/router";
 import { AuthService } from './services/auth.service';
 import { StorageService } from './services/storage.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
 
   title = environment.title;
   postRefresh: string = environment.baseUrl + environment.url.users + '/refresh';
@@ -20,92 +20,47 @@ export class AppComponent {
   constructor(private storageService: StorageService, private authService: AuthService, private translate: TranslateService, private http: HttpClient, public router: Router) {
     this.translate.setDefaultLang(this.activeLang[0]);
   }
-
+  consecutivoFallos= 0;
   contador = 0;
-
-  /*ngOnInit(): void {
-    let consecutivoFallos = 0; // Contador de fallos consecutivos
-
-    const intervalId = setInterval(async () => {
-      if (consecutivoFallos < environment.acces_token_times) {
-        try {
-          if (this.contador < environment.acces_token_frontend) {
-            const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
-            if (!newToken) {
-              console.warn('La renovación del token ha fallado');
-              consecutivoFallos++;
-            }
-            else {
-              this.contador++;
-              consecutivoFallos = 0; // Reiniciar contador en caso de éxito
-            }
-          }
-          else {
-            clearInterval(intervalId);
-          }
-        } catch (error) {
-          console.error('Error al renovar el token:', error);
-          consecutivoFallos++; // Incrementar contador en caso de fallo
-        }
-      }
-      else {
-        clearInterval(intervalId);
-        this.logOut();
-      }
-    }, environment.acces_token_timeout);
-  }
-
-  async renewToken(refreshToken: string): Promise<string | null> {
-    try {
-      let token = this.storageService.getToken() ?? '';
-
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': `${token}`,
-        }),
-        withCredentials: true // Permitir el envío de cookies
-      };
-
-      const body = { refreshToken };
-      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
-      if (!response || !response.token) {
-        console.error('Error al renovar el token');
-        return null;
-      }
-
-      const newToken = response.token;
-      this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
-      return newToken;
-    }
-    catch (error) {
-      // Realizar la lógica de cierre de sesión en caso de error
-      throw error; // Relanzar el error para ser capturado por el llamador
-    }
-  }*/
+  temp1: any= null;
 
   ngOnInit(): void {
     // Inicializa
-    //console.log('NGINIT APP')
+    if(environment.verbose) console.log('NGINIT APP')
     //if(this.authService.isAuthenticated()){
-    //console.log('ARRANCANDO INT')
-    const intervalId = setInterval(async () => {
-      //console.log(this.contador)
-      if (this.contador < environment.acces_token_times) {
-        const newToken = await this.renewToken(this.getCookie('refresh_token') ?? '');
-        if (!newToken) {
-          this.contador++;
-          console.warn('La renovación del token ha fallado');
-        }
-        else {
-          this.contador = 0;
-        }
-      }
-      else {
-        //clearInterval(intervalId);
-      }
-    }, environment.acces_token_timeout);
+    if(environment.verbose) console.log('ARRANCANDO INT')
+
+    //if(this.authService.isAuthenticated()){
+      //this.lanzarTimer();
     //}
+  }
+
+  ngOnDestroy() {
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+  }
+
+  lanzarTimer() {
+    if(environment.verbose) console.log("LANZAR TIMER")
+    this.consecutivoFallos = 0; // Contador de fallos consecutivos
+    const bucle = (t: number) => {
+      if (this.consecutivoFallos <= environment.acces_token_times) { //  acces_token_
+        this.temp1= setTimeout(() => {
+          if(environment.verbose) console.log(this.consecutivoFallos)
+          this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
+             // Reiniciar contador en caso de éxito
+          }).catch(() => {
+            this.consecutivoFallos++; // Incrementar contador en caso de fallo
+          }).finally(() => {
+            bucle(environment.acces_token_timeout); // Llamar recursivamente al bucle
+          });
+        }, t); // acces_token_
+      }
+      else{
+        this.logOut();
+      }
+    };
+    bucle(0);
   }
 
   //ngOnDestroy
@@ -122,19 +77,38 @@ export class AppComponent {
         withCredentials: true // Permitir el envío de cookies
       };
 
+      let newToken= null;
       const body = { refreshToken };
-      const response = await this.http.post<any>(this.postRefresh, body, httpOptions).toPromise();
-      if (!response || !response.token) {
-        console.error('Error al renovar el token');
-        return null;
+      if(this.authService.isAuthenticated()){
+        this.http.post<any>(this.postRefresh, body, httpOptions).subscribe(
+          (response: any) => {
+            if (!response || !response.token) {
+              console.error('Error al renovar el token');
+              //return null;
+            }
+            newToken = response.token;
+            this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+            if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){
+              this.consecutivoFallos = 0;
+            }
+            else{
+              this.consecutivoFallos++;
+            }
+          },
+          (error) => {
+            console.error('Error al renovar el token');
+            this.consecutivoFallos++;
+          }
+        );
+      
       }
-      this.contador = 0;
-      const newToken = response.token;
-      this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+      else{
+        this.consecutivoFallos++;
+      }
       return newToken;
     }
     catch (error) {
-      this.logOut(); // Realizar la lógica de cierre de sesión en caso de error
+      //this.logOut(); // Realizar la lógica de cierre de sesión en caso de error
       console.error('Error al renovar el token:', error);
       return null;
     }

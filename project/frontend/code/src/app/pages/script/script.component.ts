@@ -116,10 +116,15 @@ export class ScriptComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
-    //this.temp4.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
     this.storageService.setPage('1')
@@ -127,7 +132,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
 
   setScript(status: any): void {
     if (this.isRequestPending) {
-      //console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
+      if(environment.verbose) console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
       return;
     }
     this.isRequestPending = true;
@@ -136,7 +141,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
     };
     this.http.post(this.postScript, JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
       () => {
-        //console.log("Solicitud POST enviada exitosamente.");
+        if(environment.verbose) console.log("Solicitud POST enviada exitosamente.");
       },
       (error) => {
         console.error("Error al enviar la solicitud POST:", error);
@@ -154,7 +159,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
         .then(() => {
-          //console.log('Texto copiado al portapapeles: ', textToCopy);
+          if(environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
           console.error('Error al copiar texto al portapapeles: ', error);

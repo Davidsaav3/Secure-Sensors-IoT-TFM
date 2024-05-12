@@ -117,10 +117,15 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
-    //this.temp4.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+    
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
     this.storageService.setPage('1')
@@ -280,7 +285,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: any) => {
           this.conecctionsSecret = data[0];
-          //console.log(data[0])
+          if(environment.verbose) console.log(data[0])
           this.showPass = true;
         },
         (error) => {
@@ -423,7 +428,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.http.delete(this.postConecction, options).subscribe(
       () => {
         // Realiza acciones con la respuesta si es necesario
-        //console.log('conecctions eliminados:', response);
+        if(environment.verbose) console.log('conecctions eliminados:');
       },
       (error: any) => {
         console.error('Error al eliminar conexón:', error);

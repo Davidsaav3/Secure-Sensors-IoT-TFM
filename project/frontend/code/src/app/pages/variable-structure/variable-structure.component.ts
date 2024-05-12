@@ -89,10 +89,15 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() { // Destructor
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
-    //this.temp4.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
     this.storageService.setPage('1')

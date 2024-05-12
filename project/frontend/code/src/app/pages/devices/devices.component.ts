@@ -58,6 +58,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   temp1: any = null;
   temp2: any = null;
   temp3: any = null;
+  temp4: any = null;
 
   idsParam: any;
   idsParam1: any;
@@ -195,9 +196,15 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+    
     this.map?.remove();
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
@@ -206,7 +213,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
     this.createMap();
-    //console.log('Versión de Mapbox GL JS:', mapboxgl.version);
+    if(environment.verbose) console.log('Versión de Mapbox GL JS:', mapboxgl.version);
   }
 
   auxInit() { // Auxiliar de ngOnInit
@@ -242,7 +249,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     let token = this.storageService.getToken() ?? '';
 
 
-    //console.log(this.search.value)
+    if(environment.verbose) console.log(this.search.value)
     this.temp1 = setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
@@ -267,7 +274,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
         this.getMapDevices("1")
           .then((pass) => {
             if (pass || this.searched) {
-              //console.log(this.data)
+              if(environment.verbose) console.log(this.data)
 
               this.searched = false;
               for (let index = 0; index < this.markers.length; index++) {
@@ -288,8 +295,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
                 let enable = parseInt(quote.id);
                 this.addMarker(coords, color, name, enable, quote);
               }
-              //console.log(this.markers)
-              //console.log(this.markers);
+              if(environment.verbose) console.log(this.markers)
+              if(environment.verbose) console.log(this.markers);
 
               this.temp2 = setTimeout(() => { // Asincrono
                 if (this.map != null) {
@@ -581,7 +588,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
               bearing: this.currentRotation,
               pitch: this.currentPitch,
             });
-            //console.log("Error geo", error);
+            if(environment.verbose) console.log("Error geo", error);
             this.auxInit();
             this.map.setMaxZoom(22);
             this.map.boxZoom.disable();
@@ -597,7 +604,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
           bearing: this.currentRotation,
           pitch: this.currentPitch,
         });
-        //console.log("Geo no compatible");
+        if(environment.verbose) console.log("Geo no compatible");
         this.auxInit();
         this.map.setMaxZoom(22);
         this.map.boxZoom.disable();
@@ -1030,7 +1037,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
       this.searched = true;
       clearTimeout(this.temp1);
       var $this = this;
-      this.temp3 = setTimeout(function () {
+      this.temp4 = setTimeout(function () {
         $this.getDevices();
       }, 1);
     }

@@ -53,6 +53,9 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   id: any;
   state = 0;
 
+  temp1: any = null;
+  temp2: any = null;
+
   ngOnInit(): void { // Inicialización
     this.readStorage();
     this.rute = this.rute1.routerState.snapshot.url;
@@ -94,7 +97,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
             this.map = this.createMap([
               -3.7036360462944913, 40.41686882952129,
             ]);
-            //console.log("Error geo", error);
+            if(environment.verbose) console.log("Error geo");
             this.auxInit();
           }
         );
@@ -218,40 +221,46 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
       });
     }
 
-    setInterval(() => {
-      try {
-        this.dataSharingService.sharedLat$.subscribe((data) => {
-          if (data != 0)
-            this.sharedLat = data;
-        });
-        this.dataSharingService.sharedLon$.subscribe((data) => {
-          if (data != 0)
-            this.sharedLon = data;
-        });
-        if (this.sharedLat != this.currentLngLat.lat || this.sharedLon != this.currentLngLat.lng) {
-          this.deleteMarker();
-          this.currentLngLat = new mapboxgl.LngLat(
-            this.sharedLon,
-            this.sharedLat
-          );
-          this.createMarker(this.currentLngLat);
+    const bucle1 = (t: number) => {
+      this.temp1= setTimeout(() => {
+        try {
+          this.dataSharingService.sharedLat$.subscribe((data) => {
+            if (data != 0)
+              this.sharedLat = data;
+          });
+          this.dataSharingService.sharedLon$.subscribe((data) => {
+            if (data != 0)
+              this.sharedLon = data;
+          });
+          if (this.sharedLat != this.currentLngLat.lat || this.sharedLon != this.currentLngLat.lng) {
+            this.deleteMarker();
+            this.currentLngLat = new mapboxgl.LngLat(
+              this.sharedLon,
+              this.sharedLat
+            );
+            this.createMarker(this.currentLngLat);
+          }
         }
-      }
-      catch (error) {
-        //this.ngOnDestroy();
-      }
-    }, 50);
+        catch (error) {
+          //this.ngOnDestroy();
+        }
+      }, 50);
+    };
+    bucle1(0);
     //
-    setInterval(() => {
-      try {
-        if (this.map) {
-          this.map.resize();
+    const bucle2 = (t: number) => {
+      this.temp2= setTimeout(() => {
+        try {
+          if (this.map) {
+            this.map.resize();
+          }
         }
-      }
-      catch (error) {
-        //this.ngOnDestroy();
-      }
-    }, 10);
+        catch (error) {
+          //this.ngOnDestroy();
+        }
+      }, 10);
+    };
+    bucle2(0);
   }
 
   /* CREATE / DESTROY */
@@ -278,6 +287,10 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     } catch (error) {
       console.error("Error al eliminar el mapa:", error);
     }
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
   }
 
   /* MAP STYLE */

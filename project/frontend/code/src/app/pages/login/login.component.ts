@@ -64,9 +64,12 @@ export class LoginComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
   }
 
   login(form: any) {

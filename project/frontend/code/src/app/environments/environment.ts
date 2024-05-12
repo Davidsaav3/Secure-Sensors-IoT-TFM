@@ -43,9 +43,11 @@ export const environment = {
     acces_token_timeout: 5000, // Tiempa hasta lanzar otra vez la consulta
     script_status_timeout: 5000,
 
-    acces_token_times: 1,
+    acces_token_times: 2,
     script_status_times: 2,
 
     script_status_frontend: 11000,
     acces_token_frontend: 5000,
+
+    verbose: false,
 };

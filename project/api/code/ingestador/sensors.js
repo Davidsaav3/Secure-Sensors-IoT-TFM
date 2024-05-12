@@ -71,7 +71,9 @@ for (let i = 0; i < connection_config.length; i++) {
       //await main(message);
       console.log(message)
     } catch (error) {
-      console.log(error)
+      if(process.env.verbose){
+        console.log(error)
+      }
     }
   });
 }

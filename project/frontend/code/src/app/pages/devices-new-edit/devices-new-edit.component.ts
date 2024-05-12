@@ -249,27 +249,37 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
       this.createDate();
     }
 
-    setInterval(() => {
-      this.dataSharingService.sharedAct$.subscribe((data) => {
-        if (data != false) {
-          this.changed = data;
-        }
-      });
-      this.readStorage();
-    }, 10);
+    const bucle = (t: number) => {
+        this.temp7= setTimeout(() => {
+          this.dataSharingService.sharedAct$.subscribe((data) => {
+            if (data != false) {
+              this.changed = data;
+            }
+          });
+          this.readStorage();
+        }, 10);
+    };
+    bucle(0);
 
     this.onResize();
     this.showLarge = false;
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
-    //this.temp4.clearInterval();
-    //this.temp5.clearInterval();
-    //this.temp6.clearInterval();
-    //this.temp7.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+    if(this.temp5!=null) 
+      clearTimeout(this.temp5);
+    if(this.temp6!=null) 
+      clearTimeout(this.temp6);
+    if(this.temp7!=null) 
+      clearTimeout(this.temp7);
   }
 
   /* GET */
@@ -290,8 +300,8 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         if (data[0].variable_configuration == undefined || data[0].variable_configuration == null) {
           this.devices.variable_configuration = 0;
         }
-        //console.log(this.devices.lat)
-        //console.log(this.devices.lon)
+        if(environment.verbose) console.log(this.devices.lat)
+        if(environment.verbose) console.log(this.devices.lon)
         this.updateSharedLat();
         this.updateSharedLon();
       },
@@ -376,7 +386,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     this.devices.createdAt = this.date;
     this.devices.updatedAt = this.date;
     this.getShared();
-    //console.log(this.devices)
+    if(environment.verbose) console.log(this.devices)
 
     if (form.valid) {
       if (this.devices.sensors.length == 0) {
@@ -409,7 +419,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
             }
             else {
               this.id = data.insertId;
-              //console.log(data.insertId);
+              if(environment.verbose) console.log(data.insertId);
               this.newSensors();
             }
           },
@@ -433,7 +443,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
               else {
                 this.id = data.insertId;
-                //console.log(data.insertId);
+                if(environment.verbose) console.log(data.insertId);
                 this.newSensors();
               }
             },
@@ -510,8 +520,8 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.sensors = [];
       }
       else {
-        //console.log(this.devices.lat)
-        //console.log(this.devices.lon)
+        if(environment.verbose) console.log(this.devices.lat)
+        if(environment.verbose) console.log(this.devices.lon)
         this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {

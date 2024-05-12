@@ -55,6 +55,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   contador = 0;
 
   postUser: string = environment.baseUrl + environment.url.users;
+  postRefresh: string = environment.baseUrl + environment.url.users + '/refresh';
+
   but = false;
   changed = false;
   scriptEnable = false;
@@ -68,7 +70,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   temp3: any;
   temp4: any;
   temp5: any;
-  temp6: any;
+  temp6: any= null;
+  temp7: any= null;
 
   formapassword = {
     id: this.id,
@@ -87,9 +90,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   passwordFieldType = 'password';
   passwordFieldType1 = 'password';
+  consecutivoFallos= 0;
 
   ngOnInit(): void { // Inicializa
-    this.lanzarTimer();
+    if(this.authService.isAuthenticated()){
+      if(environment.verbose) console.log("IDENTIFICADO")
+      this.lanzarTimer();
+      this.lanzarTimer2();
+    }
     if (this.storageService.getStatus()) {
       let aux = this.storageService.getStatus();
 
@@ -114,7 +122,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.translate.use(this.activeLang);
     //('JUSTO ANTES')
     //if(this.authService.isAuthenticated()){
-    this.statusScript();
+    //this.statusScript();
     //}
     if (!this.authService.isAuthenticated()) {
       this.token2 = '';
@@ -122,12 +130,20 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this.temp1.clearInterval();
-    //this.temp2.clearInterval();
-    //this.temp3.clearInterval();
-    //this.temp4.clearInterval();
-    //this.temp5.clearInterval();
-    //this.temp6.clearInterval();
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+    if(this.temp5!=null) 
+      clearTimeout(this.temp5);
+    if(this.temp6!=null) 
+      clearTimeout(this.temp6);
+    if(this.temp7!=null) 
+      clearTimeout(this.temp7);
   }
 
   togglePasswordType() {
@@ -211,7 +227,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         (data: any) => {
           this.alertUserOk = true;
           //this.clouseModalUser();
-          //console.log(data.user)
+          if(environment.verbose) console.log(data.user)
           this.setCookie('refresh_token', data.refresh_token);
           this.storageService.setUsername(data.user);
 
@@ -229,14 +245,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       );
     this.change1 = false;
     //}
-  }
-
-  // Guardar cookie
-  setCookie(name: string, value: string, days: number = 1): void {
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + days);
-    const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
-    document.cookie = cookieString;
   }
 
   changePassword(form: any) { // Cambiar contraseña  
@@ -305,6 +313,124 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return dev;
   }
 
+  deleteCookie(name: string): void {  // Eliminar cookie por nombre
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+  }
+
+  removeSpaces(event: any) {
+    event.target.value = event.target.value.replace(/\s/g, '');
+  }
+
+  lanzarTimer() {
+    if(environment.verbose) console.log("LANZAR TIMER")
+    let consecutivoFallos = 0; 
+    const bucle = (t: number) => {
+      if (consecutivoFallos < environment.script_status_times) { 
+        this.temp6= setTimeout(() => {
+          this.statusScript().then(() => {
+            consecutivoFallos = 0; 
+          }).catch(() => {
+            consecutivoFallos++;
+          }).finally(() => {
+            bucle(environment.script_status_timeout); 
+          });
+        }, t); 
+      }
+    };
+    bucle(0);
+  }
+
+  lanzarTimer2() {
+    this.consecutivoFallos = 0; 
+    const bucle = (t: number) => {
+      if (this.consecutivoFallos < environment.acces_token_times) { 
+        this.temp7= setTimeout(() => {
+          this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
+          }).catch(() => {
+            this.consecutivoFallos++; 
+          }).finally(() => {
+            bucle(environment.acces_token_timeout); 
+          });
+        }, t); 
+      }
+      else{
+        this.logOut();
+      }
+    };
+    bucle(0);
+  }
+  
+  
+
+  async statusScript(): Promise<void> {
+    try {
+      const data = await this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).toPromise();
+      this.contador = 0;
+      this.date = data.date;
+
+      // Fecha actual es +5 se, el estado es 1
+      this.status = (new Date(this.date).getTime() + 5000) > Date.now() ? 1 : 0;
+
+      this.storageService.setStatus(this.status.toString());
+      this.storageService.setDate(this.date.toString());
+    } 
+    catch (error) {
+      console.error("Error al obtener el estado:", error);
+      throw error; 
+    }
+  }
+
+  //
+
+  async renewToken(refreshToken: string): Promise<string | null> {
+    try {
+      let token = this.storageService.getToken() ?? '';
+
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': `${token}`,
+        }),
+        withCredentials: true // Permitir el envío de cookies
+      };
+
+      let newToken= null;
+      const body = { refreshToken };
+      if(this.authService.isAuthenticated()){
+        this.http.post<any>(this.postRefresh, body, httpOptions).subscribe(
+          (response: any) => {
+            if (!response || !response.token) {
+              console.error('Error al renovar el token');
+              //return null;
+            }
+            newToken = response.token;
+            this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+            if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){
+              this.consecutivoFallos = 0;
+            }
+            else{
+              this.consecutivoFallos++;
+            }
+          },
+          (error) => {
+            console.error('Error al renovar el token');
+            this.consecutivoFallos++;
+          }
+        );
+      
+      }
+      else{
+        this.consecutivoFallos++;
+      }
+      return newToken;
+    }
+    catch (error) {
+      //this.logOut(); // Realizar la lógica de cierre de sesión en caso de error
+      console.error('Error al renovar el token:', error);
+      return null;
+    }
+  }
+
   logOut() {
     this.storageService.setId('');
     this.storageService.setUsername('');
@@ -317,80 +443,27 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.storageService.setOpen('true');
     this.storageService.setMap(environment.defaultMapsStyle);
     this.storageService.setPerPage('15');
-
+    this.contador = 0;
     this.deleteCookie('refresh_token');
     this.router.navigate(['/login']);
   }
 
-  deleteCookie(name: string): void {  // Eliminar cookie por nombre
-    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+  setCookie(name: string, value: string, days: number = 7): void {  // Guardar cookie
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + days);
+    const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
+    document.cookie = cookieString;
   }
 
-  removeSpaces(event: any) {
-    event.target.value = event.target.value.replace(/\s/g, '');
-  }
-
-  lanzarTimer() {
-    let consecutivoFallos = 0; // Contador de fallos consecutivos
-    const bucle = () => {
-      if (consecutivoFallos < environment.script_status_times) { //  acces_token_
-        setTimeout(() => {
-          this.statusScript().then(() => {
-            consecutivoFallos = 0; // Reiniciar contador en caso de éxito
-          }).catch(() => {
-            consecutivoFallos++; // Incrementar contador en caso de fallo
-          }).finally(() => {
-            bucle(); // Llamar recursivamente al bucle
-          });
-        }, environment.script_status_timeout); // acces_token_
+  getCookie(name: string): string | null {  // Obtener cookie por nombre
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.trim().split('=');
+      if (cookieName === name) {
+        return cookieValue;
       }
-    };
-    bucle();
-  }
-
-  async statusScript(): Promise<void> {
-    try {
-      const data = await this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).toPromise();
-      this.contador = 0;
-      this.date = data.date;
-
-      const fechaOriginal = new Date(this.date);
-      fechaOriginal.setMilliseconds(fechaOriginal.getMilliseconds() + 5000);
-      let anio = fechaOriginal.getFullYear();
-      let mes = String(fechaOriginal.getMonth() + 1).padStart(2, '0');
-      let dia = String(fechaOriginal.getDate()).padStart(2, '0');
-      let horas = String(fechaOriginal.getHours()).padStart(2, '0');
-      let minutos = String(fechaOriginal.getMinutes()).padStart(2, '0');
-      let segundos = String(fechaOriginal.getSeconds()).padStart(2, '0');
-      let milisegundos = fechaOriginal.getMilliseconds();
-      let formatoPersonalizado2 = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
-
-      let fechaActual = new Date();
-      let fechaMenos5Segundos = new Date(fechaActual.getTime());
-      anio = fechaMenos5Segundos.getFullYear();
-      mes = String(fechaMenos5Segundos.getMonth() + 1).padStart(2, '0'); // Agregar cero a la izquierda si es necesario
-      dia = String(fechaMenos5Segundos.getDate()).padStart(2, '0');
-      horas = String(fechaMenos5Segundos.getHours()).padStart(2, '0');
-      minutos = String(fechaMenos5Segundos.getMinutes()).padStart(2, '0');
-      segundos = String(fechaMenos5Segundos.getSeconds()).padStart(2, '0');
-      let formatoPersonalizado = `${anio}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
-
-      //console.log(formatoPersonalizado)
-      //console.log(formatoPersonalizado2)
-
-      if (formatoPersonalizado < formatoPersonalizado2) {
-        this.status = 1;
-      }
-      if (formatoPersonalizado > formatoPersonalizado2) {
-        this.status = 0;
-      }
-      this.storageService.setStatus(this.status.toString());
-      this.storageService.setDate(this.date.toString());
-      //this.lanzarTimer();
-    } catch (error) {
-      console.error("Error al obtener el estado:", error);
-      throw error; // Relanzar el error para ser capturado por el llamador
     }
+    return null;
   }
 
 }
