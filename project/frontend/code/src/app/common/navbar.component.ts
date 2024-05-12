@@ -90,7 +90,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   passwordFieldType = 'password';
   passwordFieldType1 = 'password';
-  consecutivoFallos= 0;
+  consecutivoFallos1= 0;
+  consecutivoFallos2= 0;
 
   ngOnInit(): void { // Inicializa
     if(this.authService.isAuthenticated()){
@@ -323,33 +324,47 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   lanzarTimer() {
     if(environment.verbose) console.log("LANZAR TIMER")
-    let consecutivoFallos = 0; 
+    this.consecutivoFallos1 = 0; 
     const bucle = (t: number) => {
-      if (consecutivoFallos < environment.script_status_times) { 
+      if (this.consecutivoFallos1 < environment.script_status_times) { 
         this.temp6= setTimeout(() => {
           this.statusScript().then(() => {
-            consecutivoFallos = 0; 
+            this.consecutivoFallos1 = 0; 
           }).catch(() => {
-            consecutivoFallos++;
+            this.consecutivoFallos1++;
           }).finally(() => {
-            bucle(environment.script_status_timeout); 
+            if (this.consecutivoFallos1 > 0) { 
+              bucle(0);
+            }
+            else{
+              bucle(environment.script_status_timeout);
+            }
           });
         }, t); 
+      }
+      else{
+        this.status= 2;
+        //this.logOut();
       }
     };
     bucle(0);
   }
 
   lanzarTimer2() {
-    this.consecutivoFallos = 0; 
+    this.consecutivoFallos2 = 0; 
     const bucle = (t: number) => {
-      if (this.consecutivoFallos < environment.acces_token_times) { 
+      if (this.consecutivoFallos2 < environment.acces_token_times) { 
         this.temp7= setTimeout(() => {
           this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
           }).catch(() => {
-            this.consecutivoFallos++; 
+            this.consecutivoFallos2++; 
           }).finally(() => {
-            bucle(environment.acces_token_timeout-environment.acces_token_dif); 
+            if (this.consecutivoFallos2 > 0) { 
+              bucle(0);
+            }
+            else{
+              bucle(environment.acces_token_timeout-environment.acces_token_dif);
+            }
           });
         }, t); 
       }
@@ -357,7 +372,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.logOut();
       }
     };
-    bucle(0);
+    bucle(environment.acces_token_timeout-environment.acces_token_dif);
   }
   
   
@@ -407,24 +422,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
             this.storageService.setToken(newToken); 
 
             environment.acces_token_timeout = parseInt(response.date);
-            //console.log(environment.acces_token_timeout)
+            if(environment.verbose) console.log(environment.acces_token_timeout)
 
             if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){
-              this.consecutivoFallos = 0;
+              this.consecutivoFallos2 = 0;
             }
             else{
-              this.consecutivoFallos++;
+              this.consecutivoFallos2++;
             }
           },
           (error) => {
             console.error('Error al renovar el token');
-            this.consecutivoFallos++;
+            this.consecutivoFallos2++;
           }
         );
       
       }
       else{
-        this.consecutivoFallos++;
+        this.consecutivoFallos2++;
       }
       return newToken;
     }
