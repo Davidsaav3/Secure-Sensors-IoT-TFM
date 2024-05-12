@@ -1,0 +1,343 @@
+<app-navbar></app-navbar>
+<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'ps-0': this.width<965, '': this.width>=965}">
+
+	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.showAux==true || this.width<965, 'c10': this.showAux==false}">
+		<div class="p-3 pb-0 pe-2">
+			<div class="row d-flex">
+				<div class="col-6 col-sm-6 col-lg-3 mb-3">
+					<div class="w-100 d-flex" style="position: relative;">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'monitoring.find' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'monitoring.find' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+						<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;"   (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
+					</div>
+				</div>
+				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
+					<div>
+						<!--<button type="button" class="btn btn-info" (click)="openNew(1,'','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'nueva_conexion' | translate }}</button>
+					--></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
+			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+				<div class="spinner-border text-secondary" role="status">
+					<span class="visually-hidden">{{ 'loading' | translate }}</span>
+				</div>
+			</div>
+			<div *ngIf="data.length<=0 && charging==false && this.state!=1" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+				<div style="height: min-content;">
+					<p style="font-size: x-large;">{{ 'no_logs' | translate }}</p>
+				</div>
+			</div>
+			<div *ngIf="data.length>0 || this.state==1" class="col-12 pe-0 over" style="max-height: 71vh;">
+				<table class="table" [ngClass]="{'table-hover': !change}">
+					<thead>
+						<tr style="background-color: #fff;">
+							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'log_date'}">
+								<svg *ngIf="alt1" (click)="alt1=false;getMonitoringLocal('log_date','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								</svg>
+								<svg *ngIf="!alt1" (click)="alt1=true;getMonitoringLocal('log_date','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								</svg> {{ 'monitoring.date' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'user_id'}">
+								<svg *ngIf="alt2" (click)="alt2=false;getMonitoringLocal('user_id','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt2" (click)="alt2=true;getMonitoringLocal('user_id','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.user_id' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'username'}">
+								<svg *ngIf="alt3" (click)="alt3=false;getMonitoringLocal('username','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt3" (click)="alt3=true;getMonitoringLocal('username','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.username' | translate }}
+							</th>
+
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_method'}">
+								<svg *ngIf="alt4" (click)="alt4=false;getMonitoringLocal('log_method','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt4" (click)="alt4=true;getMonitoringLocal('log_method','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_method' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_status'}">
+								<svg *ngIf="alt5" (click)="alt5=false;getMonitoringLocal('log_status','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt5" (click)="alt5=true;getMonitoringLocal('log_status','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_status' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_code'}">
+								<svg *ngIf="alt6" (click)="alt6=false;getMonitoringLocal('log_code','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt6" (click)="alt6=true;getMonitoringLocal('log_code','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_code' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_message'}">
+								<svg *ngIf="alt7" (click)="alt7=false;getMonitoringLocal('log_message','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt7" (click)="alt7=true;getMonitoringLocal('log_message','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_message' | translate }}
+							</th>
+
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_parameters'}">
+								<svg *ngIf="alt8" (click)="alt8=false;getMonitoringLocal('log_parameters','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt8" (click)="alt8=true;getMonitoringLocal('log_parameters','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_parameters' | translate }}
+							</th>
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'log_trace'}">
+								<svg *ngIf="alt9" (click)="alt9=false;getMonitoringLocal('log_trace','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt9" (click)="alt9=true;getMonitoringLocal('log_trace','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'monitoring.log_trace' | translate }}
+							</th>
+						</tr>
+					</thead>
+					<tbody *ngFor="let quote of data; let i = index">
+						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_date }}</td>
+
+							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span *ngIf="quote.user_id" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0">{{ quote.user_id }}</p></span>
+							</td>
+							<td  class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span *ngIf="quote.username" class="badge rounded-pill text-bg-secondary d-inline-block me-2" ><p class="mb-0">{{ quote.username }}</p></span>
+							</td>
+
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}"><strong>{{ quote.log_method }}</strong></td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">
+								<span class="badge rounded-pill text-bg-success d-inline-block me-2" [class]="{'d-none': (quote.log_status>=400 && quote.log_status<500) || (quote.log_status>=500)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+								<span class="badge rounded-pill text-bg-warning d-inline-block me-2" [class]="{'d-none': (quote.log_status>=200 && quote.log_status<400) || (quote.log_status>=500)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block me-2" [class]="{'d-none': (quote.log_status>=400 && quote.log_status<500) || (quote.log_status>=200 && quote.log_status<400)}"><p class="mb-0 d-none d-md-none d-lg-block">{{ quote.log_status }}</p></span>
+							</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_code }}</td>
+							<td class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}">{{ quote.log_message }}</td>
+
+							<td data-bs-toggle="modal" data-bs-target="#exampleModal2" class="truncate-text" [attr.title]="quote.log_parameters " class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="changeCopy1=i">{{ this.quote.log_parameters.length > 50 ? this.quote.log_parameters.substring(0, 30) + '...' : quote.log_parameters }}</td>
+							<td data-bs-toggle="modal" data-bs-target="#exampleModal3" class="truncate-text" [attr.title]="quote.log_trace" class="d-table-cell small" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="changeCopy2=i">{{ this.quote.log_trace.length > 50 ? this.quote.log_trace.substring(0, 30) + '...' : quote.log_trace }}</td>
+						</tr>
+						
+					</tbody>
+					
+				</table>
+			</div>
+		</div>
+
+		<div class="row" style="background-color: #fff;border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
+			<div class="col-12 col-lg-6 d-flex mt-3">
+				<div>
+					<!-- totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}} -->
+					<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
+				</div>
+				<div>
+
+					<select (change)="this.currentPage=1;getMonitoringLocal('log_date','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
+				</select>
+				</div>
+			</div>
+			<div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
+				<nav aria-label="Page navigation example">
+					<ul *ngIf="data.length>0" class="pagination mt-3 mb-0">
+						<li class="page-item">
+							<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
+								<span aria-hidden="true">{{ 'first' | translate }}</span>
+							</a>
+						</li>
+						<li class="page-item" *ngIf="currentPage-10>0">
+							<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="previousPage10()">
+								<span aria-hidden="true">&laquo; 10</span>
+							</a>
+						</li>
+						<li class="page-item" *ngIf="this.currentPage-1!=0">
+							<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{ this.currentPage-1 }}</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link mark" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
+						</li>
+						<li class="page-item" *ngIf="this.currentPage!=totalPages">
+							<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1 }}</a>
+						</li>
+						<li class="page-item" *ngIf="currentPage+10<totalPages">
+							<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="nextPage10()">
+								<span aria-hidden="true">10 &raquo;</span>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="lastPage()">
+								<span aria-hidden="true">{{ 'last' | translate }}</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+
+	<div class="cc2 cont mx-0" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
+		<form #form="ngForm" class="row needs-validation p-3">
+			<div class="col-12">
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="margin: 30px; max-width: calc(100% - 60px);">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'monitoring.log_parameters' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div *ngIf="data[changeCopy1]" class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+				<p #logTraceElement1 *ngIf="data[changeCopy1].log_parameters" class="not">{{data[changeCopy1].log_parameters}}</p>
+				<p *ngIf="!data[changeCopy1].log_parameters" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-6" *ngIf="data[changeCopy1]">
+						<button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy1].log_parameters}" style="width: 100%" (click)="copyToClipboard(data[changeCopy1].log_parameters)">{{ 'sensors.copy' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="margin: 30px; max-width: calc(100% - 60px);">
+        <div class="modal-content" style="width: 100%;">
+            <div class="modal-header" style="border-bottom: 0px;">
+                <h3 class="modal-title">{{ 'monitoring.log_trace' | translate }}</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div *ngIf="data[changeCopy2]" class="modal-body" style="overflow-x: auto; white-space: nowrap;">
+                <p #logTraceElement2 *ngIf="data[changeCopy2].log_trace" class="not">{{data[changeCopy2].log_trace}}</p>
+                <p *ngIf="!data[changeCopy2].log_trace" class="not" id="logTrace">{{ 'sensors.data' | translate }}</p>
+            </div>
+            <div class="modal-footer" style="border-top: 0px;">
+                <div class="row">
+                    <div class="col-6">
+                        <button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+                    </div>
+                    <div class="col-6" *ngIf="data[changeCopy1]">
+                        <button type="button navb" class="btn btn-info" [ngClass]="{'disabled': !data[changeCopy2].log_trace}" style="width: 100%" (click)="copyToClipboard(data[changeCopy2].log_trace)">{{ 'sensors.copy' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="toast-cont">
+
+	<div *ngIf="dupOk" class="top-0 right-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e7' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="dupNot" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e8' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="alertDelete" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e3' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="notDelete" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e6' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="alertNew" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e4' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="notNew" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e5' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="saveOk" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e2' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="saveNot" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'monitoring.e1' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+</div>

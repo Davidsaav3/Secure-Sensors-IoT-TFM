@@ -1,9 +1,11 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
 import { DataSharingService } from "../../services/data_sharing.service";
 import { environment } from "../../environments/environment";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { StorageService } from '../../services/storage.service';
+import { HttpOptionsService } from '../../services/httpOptions.service';
 
 @Component({
   selector: "app-devices-new-edit",
@@ -11,53 +13,69 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class DevicesNewEditComponent implements OnInit {
+export class DevicesNewEditComponent implements OnInit, OnDestroy {
 
   sharedLat: any = "";
   sharedLon: any = "";
   date: any;
-  
+
   state = 0; // 0 new // 1 duplicate // 2 edit
   rute = "";
-  ruteAux: any= 0;
+  ruteAux: any = 0;
   cont = 0;
 
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
+  temp5: any = null;
+  temp6: any = null;
+  temp7: any = null;
+
   @HostListener("window:resize", ["$event"])
-  
+
   onResize() {
     window.resizeBy(-1, 0);
     this.resize();
   }
   public id: any;
 
-  constructor(private http: HttpClient,private router: Router,private dataSharingService: DataSharingService,private rutaActiva: ActivatedRoute,) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, private router: Router, private dataSharingService: DataSharingService, private rutaActiva: ActivatedRoute,) {
+
+
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.createDate();
 
     if (this.ruteAux[2] == "edit" || this.ruteAux[2] == "duplicate") {
-      this.id = parseInt(this.rutaActiva.snapshot.params["id"]);
+      const idParam = this.rutaActiva.snapshot.params["id"];
+      if (!isNaN(idParam) && Number.isInteger(Number(idParam))) {
+        this.id = parseInt(idParam, 10);
+      }
+      else {
+        console.error("El parámetro 'id' no es un número entero válido.");
+      }
     }
-    
+
     if (this.ruteAux[2] == "new") {
-      this.http.get(this.getStructureList).subscribe(
+      this.http.get(this.getStructureList, this.httpOptionsService.getHttpOptions()).subscribe(
         (quotesData: any) => {
           this.structures.structure = quotesData.data_estructure;
           this.auxFixed = quotesData.data_estructure[0].id_estructure;
           this.devices.id_data_estructure = this.auxFixed;
         },
-        (error:any) => {
+        (error: any) => {
           console.error(error);
         }
       );
     }
   }
 
-  idDevice: string = environment.baseUrl+environment.deviceConfigurations+"/id";
-  postDevice: string = environment.baseUrl+environment.deviceConfigurations;
-  getStructureList: string = environment.baseUrl+environment.dataStructure+"/get_list";
-  duplicateDevice: string = environment.baseUrl+environment.deviceConfigurations+"/duplicate";
-  getSensorsList: string = environment.baseUrl+environment.sensorsTypes+"/get_list";
+  idDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/id";
+  postDevice: string = environment.baseUrl + environment.url.deviceConfigurations;
+  getStructureList: string = environment.baseUrl + environment.url.dataStructure + "/get_list";
+  duplicateDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/duplicate";
+  getSensorsList: string = environment.baseUrl + environment.url.sensorsTypes + "/get_list";
 
   alt1 = true;
   alt2 = true;
@@ -150,12 +168,15 @@ export class DevicesNewEditComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    let token = this.storageService.getToken() ?? '';
+    let headers = new HttpHeaders().set('Authorization', `${token}`);
+
     this.devices.sensors = [];
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
     this.getStructure(0);
-  
-    this.http.get(this.getSensorsList).subscribe(
+
+    this.http.get(this.getSensorsList, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.selectSensors.sensors = data;
       },
@@ -163,12 +184,12 @@ export class DevicesNewEditComponent implements OnInit {
         console.error(error);
       }
     );
-  
+
     if (this.ruteAux[2] == "edit") {
       this.showLarge = false;
       this.getDevices();
-  
-      setTimeout(() => { // Asincrono
+
+      this.temp1 = setTimeout(() => { // Asincrono
         this.dataSharingService.sharedLat$.subscribe((data) => {
           this.devices.lat = data;
         });
@@ -177,13 +198,13 @@ export class DevicesNewEditComponent implements OnInit {
         });
       }, 1);
     }
-  
+
     if (this.ruteAux[2] == "new" || this.ruteAux[2] == "duplicate") {
 
       if (this.ruteAux[2] == "duplicate") {
-        this.state= 1;
+        this.state = 1;
         // 1. Duplicate
-        this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+        this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
             this.devices = data[0];
             this.lat = this.devices.lat;
@@ -199,7 +220,7 @@ export class DevicesNewEditComponent implements OnInit {
               this.devices.sensors[index].id_device = this.id;
             }
 
-            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text' }).subscribe(
+            this.http.get(`${this.duplicateDevice}/${this.devices.uid}`, { responseType: 'text', headers }).subscribe(
               (data: string) => {
                 this.devices.uid = data;
               },
@@ -216,7 +237,7 @@ export class DevicesNewEditComponent implements OnInit {
       }
 
       if (this.ruteAux[2] == "new") {
-        this.state= 0;
+        this.state = 0;
         // 0. New
         this.devices.lat = 0;
         this.devices.lon = 0;
@@ -227,24 +248,46 @@ export class DevicesNewEditComponent implements OnInit {
       this.getShared();
       this.createDate();
     }
-  
-    setInterval(() => {
-      this.dataSharingService.sharedAct$.subscribe((data) => {
-        if (data != false) {
-          this.changed = data;
-        }
-      });
-      this.readStorage();
-    }, 10);
-  
+
+    const bucle = (t: number) => {
+        this.temp7= setTimeout(() => {
+          this.dataSharingService.sharedAct$.subscribe((data) => {
+            if (data != false) {
+              this.changed = data;
+            }
+          });
+          this.readStorage();
+        }, 10);
+    };
+    bucle(0);
+
     this.onResize();
     this.showLarge = false;
   }
-  
+
+  ngOnDestroy() {
+    if(this.temp1!=null) 
+      clearTimeout(this.temp1);
+    if(this.temp2!=null) 
+      clearTimeout(this.temp2);
+    if(this.temp3!=null) 
+      clearTimeout(this.temp3);
+    if(this.temp4!=null) 
+      clearTimeout(this.temp4);
+    if(this.temp5!=null) 
+      clearTimeout(this.temp5);
+    if(this.temp6!=null) 
+      clearTimeout(this.temp6);
+    if(this.temp7!=null) 
+      clearTimeout(this.temp7);
+  }
+
   /* GET */
 
   getDevices() { // Obtene el Dispositivo
-    this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+
+
+    this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.devices = data[0];
         this.createDate();
@@ -257,8 +300,8 @@ export class DevicesNewEditComponent implements OnInit {
         if (data[0].variable_configuration == undefined || data[0].variable_configuration == null) {
           this.devices.variable_configuration = 0;
         }
-        //console.log(this.devices.lat)
-        //console.log(this.devices.lon)
+        if(environment.verbose) console.log(this.devices.lat)
+        if(environment.verbose) console.log(this.devices.lon)
         this.updateSharedLat();
         this.updateSharedLon();
       },
@@ -266,7 +309,7 @@ export class DevicesNewEditComponent implements OnInit {
         console.error(error);
       }
     );
-    
+
   }
 
   getSensorsLocal(id: any, ord: any) { // Ordena columnas de sensores
@@ -277,19 +320,19 @@ export class DevicesNewEditComponent implements OnInit {
         this.devices.sensors.sort((a: any, b: any) => Number(a.position) - Number(b.position));
       }
       if (id == "datafield") {
-        this.devices.sensors.sort((a: any, b: any) =>a.datafield.localeCompare(b.datafield));
+        this.devices.sensors.sort((a: any, b: any) => a.datafield.localeCompare(b.datafield));
       }
       if (id == "nodata") {
-        this.devices.sensors.sort((a: any, b: any) =>a.nodata.localeCompare(b.nodata));
+        this.devices.sensors.sort((a: any, b: any) => a.nodata.localeCompare(b.nodata));
       }
       if (id == "correction_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.correction_specific.localeCompare(b.correction_specific));
+        this.devices.sensors.sort((a: any, b: any) => a.correction_specific.localeCompare(b.correction_specific));
       }
       if (id == "correction_time_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.correction_time_specific.localeCompare(b.correction_time_specific));
+        this.devices.sensors.sort((a: any, b: any) => a.correction_time_specific.localeCompare(b.correction_time_specific));
       }
       if (id == "topic_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>a.topic_specific.localeCompare(b.topic_specific));
+        this.devices.sensors.sort((a: any, b: any) => a.topic_specific.localeCompare(b.topic_specific));
       }
     }
     if (ord == "DESC") {
@@ -297,29 +340,32 @@ export class DevicesNewEditComponent implements OnInit {
         this.devices.sensors.sort((a: any, b: any) => Number(b.position) - Number(a.position));
       }
       if (id == "datafield") {
-        this.devices.sensors.sort((a: any, b: any) =>b.datafield.localeCompare(a.datafield));
+        this.devices.sensors.sort((a: any, b: any) => b.datafield.localeCompare(a.datafield));
       }
       if (id == "nodata") {
-        this.devices.sensors.sort((a: any, b: any) =>b.nodata.localeCompare(a.nodata));
+        this.devices.sensors.sort((a: any, b: any) => b.nodata.localeCompare(a.nodata));
       }
       if (id == "correction_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.correction_specific.localeCompare(a.correction_specific));
+        this.devices.sensors.sort((a: any, b: any) => b.correction_specific.localeCompare(a.correction_specific));
       }
       if (id == "correction_time_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.correction_time_specific.localeCompare(a.correction_time_specific));
+        this.devices.sensors.sort((a: any, b: any) => b.correction_time_specific.localeCompare(a.correction_time_specific));
       }
       if (id == "topic_specific") {
-        this.devices.sensors.sort((a: any, b: any) =>b.topic_specific.localeCompare(a.topic_specific));
+        this.devices.sensors.sort((a: any, b: any) => b.topic_specific.localeCompare(a.topic_specific));
       }
     }
   }
 
   getStructure(num: any) { // Obtiene las listas de estructuras de datos
-    this.http.get(`${this.getStructureList}`).subscribe(
+
+
+    this.http.get(`${this.getStructureList}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (quotesData: any) => {
         if (num === 1) {
           this.structures.structure = quotesData.variable_data_structure;
-        } else {
+        }
+        else {
           this.structures.structure = quotesData.data_estructure;
         }
         this.auxVariable = quotesData.variable_data_structure[0].id_estructure;
@@ -334,11 +380,13 @@ export class DevicesNewEditComponent implements OnInit {
   /* NEW */
 
   newDevices(form: any) { // Guardar la información del Dispositivo
+
+
     this.createDate();
     this.devices.createdAt = this.date;
     this.devices.updatedAt = this.date;
     this.getShared();
-    //console.log(this.devices)
+    if(environment.verbose) console.log(this.devices)
 
     if (form.valid) {
       if (this.devices.sensors.length == 0) {
@@ -359,23 +407,19 @@ export class DevicesNewEditComponent implements OnInit {
           },
         ];
         this.devices.sensors = sensors_aux;
-        this.http.post<any>(this.postDevice, this.devices, {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json; charset=UTF-8'
-          })
-        }).subscribe(
+        this.http.post<any>(this.postDevice, this.devices, this.httpOptionsService.getHttpOptions()).subscribe(
           (data: any) => {
-            if(data.found==true){
-              setTimeout(() => {
+            if (data.found == true) {
+              this.temp2 = setTimeout(() => {
                 this.actNot = false;
               }, 2000);
-              this.actNot= true;
+              this.actNot = true;
               this.devices.createdAt = '';
               this.devices.updatedAt = '';
             }
-            else{
-              this.id= data.insertId;
-              //console.log(data.insertId);
+            else {
+              this.id = data.insertId;
+              if(environment.verbose) console.log(data.insertId);
               this.newSensors();
             }
           },
@@ -384,23 +428,22 @@ export class DevicesNewEditComponent implements OnInit {
           }
         );
         this.devices.sensors = [];
-      } 
+      }
       else {
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
-        this.http.post<any>(this.postDevice, this.devices, httpOptions)
+        this.http.post<any>(this.postDevice, this.devices, this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data) => {
-              if(data.found==true){
-                setTimeout(() => {
+              if (data.found == true) {
+                this.temp3 = setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
-                this.actNot= true;        
+                this.actNot = true;
                 this.devices.createdAt = '';
-                this.devices.updatedAt = '';     
+                this.devices.updatedAt = '';
               }
-              else{
-                this.id= data.insertId;
-                //console.log(data.insertId);
+              else {
+                this.id = data.insertId;
+                if(environment.verbose) console.log(data.insertId);
                 this.newSensors();
               }
             },
@@ -431,6 +474,7 @@ export class DevicesNewEditComponent implements OnInit {
   /* EDIT */
 
   editDevices(form: any) { // Edita la información del Dispositivo
+
     this.getShared();
     this.createDate();
     this.devices.updatedAt = this.date;
@@ -453,23 +497,22 @@ export class DevicesNewEditComponent implements OnInit {
           },
         ];
         this.devices.sensors = sensors_aux;
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
-        this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
+        this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
-              if(data.found==true){
-                setTimeout(() => {
+              if (data.found == true) {
+                this.temp4 = setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
-                this.actNot= true;             
-              }    
-              else{
+                this.actNot = true;
+              }
+              else {
                 this.actOk = true;
-                setTimeout(() => {
+                this.temp4 = setTimeout(() => {
                   this.actOk = false;
                 }, 2000);
-              }   
-           },
+              }
+            },
             (error) => {
               console.error("Error:", error);
             }
@@ -477,24 +520,23 @@ export class DevicesNewEditComponent implements OnInit {
         this.devices.sensors = [];
       }
       else {
-        //console.log(this.devices.lat)
-        //console.log(this.devices.lon)
-        const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
-        this.http.put(this.postDevice, JSON.stringify(this.devices), httpOptions)
+        if(environment.verbose) console.log(this.devices.lat)
+        if(environment.verbose) console.log(this.devices.lon)
+        this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
-              if(data.found==true){
-                setTimeout(() => {
+              if (data.found == true) {
+                this.temp5 = setTimeout(() => {
                   this.actNot = false;
                 }, 2000);
-                this.actNot= true;             
-              }      
-            else{
-              this.actOk = true;
-              setTimeout(() => {
-                this.actOk = false;
-              }, 2000);
-            }
+                this.actNot = true;
+              }
+              else {
+                this.actOk = true;
+                this.temp6 = setTimeout(() => {
+                  this.actOk = false;
+                }, 2000);
+              }
             },
             (error) => {
               console.error("Error:", error);
@@ -511,16 +553,18 @@ export class DevicesNewEditComponent implements OnInit {
   /* DELET */
 
   deleteDevices(idActual: any) { // Elimina el Dispositivo
+    let token = this.storageService.getToken() ?? '';
+
     var devices = {
       id: idActual,
     };
     const httpOptions = {
-      headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'}),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json; charset=UTF-8', 'Authorization': `${token}` }),
       body: JSON.stringify(devices)
     };
     this.http.delete(this.postDevice, httpOptions)
       .subscribe(
-        (response: any) => {
+        () => {
           this.router.navigate(["/devices"]);
         },
         (error) => {
@@ -565,9 +609,11 @@ export class DevicesNewEditComponent implements OnInit {
   }
 
   /* RECHARGE */
-  
+
   rechargeMap() { // Recargar mapa a su estado anterior a la edición sin guardado
-    this.http.get(`${this.idDevice}/${this.id}`).subscribe(
+
+
+    this.http.get(`${this.idDevice}/${this.id}`, this.httpOptionsService.getHttpOptions()).subscribe(
       (data: any) => {
         this.devices.lat = data[0].lat;
         this.devices.lon = data[0].lon;
@@ -654,13 +700,12 @@ export class DevicesNewEditComponent implements OnInit {
   /* LOCAL STORAGE */
 
   readStorage() { // Recupera datos de local storage
-    this.activeLang = localStorage.getItem("activeLang") ?? "es";
+    this.activeLang = this.storageService.getLang() ?? "es";
   }
 
   async getStructuresList(event: any) {
     let num = event.target.checked ? 1 : 0;
     try {
-      const result = await this.getStructure(num);
       this.devices.variable_configuration = num;
       if (num == 0) {
         this.devices.id_data_estructure = this.auxFixed;

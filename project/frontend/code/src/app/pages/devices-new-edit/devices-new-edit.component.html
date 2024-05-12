@@ -115,7 +115,7 @@
 								<div style="position: relative;" class="col-md-12">
 									<div class="d-flex" style="justify-content: space-between;">
 										<div style="width: -webkit-fill-available;">
-											<label for="id_data_estructure">{{ 'structure' | translate }}</label>
+											<label for="id_data_estructure">{{ 'structure.structure' | translate }}</label>
 											<select style="position: relative" type="select" (ngModelChange)="changed=true" [value]="devices['id_data_estructure']" type="text" id="id_data_estructure" class="form-control" name="id_data_estructure" [(ngModel)]="devices['id_data_estructure']">
                                                 <ng-container *ngFor="let id of structures.structure;let j=index">
                                                     <option [selected]="id.id_estructure==devices['id_data_estructure']" value="{{id.id_estructure}}">{{id.description}}</option>
@@ -127,7 +127,7 @@
                                                 </svg>
 											</div>
 											<div *ngIf="form.submitted && form.controls['id_data_estructure'].errors" class="text-danger">
-												<div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'structure' | translate }} {{ 'required' | translate }}</div>
+												<div *ngIf="form.controls['id_data_estructure'].errors['required']">{{ 'structure.structure' | translate }} {{ 'required' | translate }}</div>
 											</div>
 										</div>
 										<div >

@@ -4,29 +4,30 @@ import { DeviceComponent } from './pages/device.component';
 import { SensorsComponent } from './pages/sensors/sensors.component';
 import { StructureComponent } from './pages/structure/structure.component';
 import { VariableStructureComponent } from './pages/variable-structure/variable-structure.component';
+import { environment } from '../app/environments/environment';
 
 const routes: Routes = [
   {
-    path:'devices', component: DeviceComponent
-  },
-  { 
-    path:'sensors', component: SensorsComponent
-  },
-  { 
-    path:'structure', component: StructureComponent
-  },
-  { 
-    path:'variable-structure', component: VariableStructureComponent
+    path: environment.rute.deviceConfigurations, component: DeviceComponent
   },
   {
-    path:'**',
-    redirectTo: 'devices'
+    path: environment.rute.sensorsTypes, component: SensorsComponent
+  },
+  {
+    path: environment.rute.dataStructure, component: StructureComponent
+  },
+  {
+    path: environment.rute.variableDataStructure, component: VariableStructureComponent
+  },
+  {
+    path: '**',
+    redirectTo: environment.rute.deviceConfigurations
   },
 ]
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 
 export class AppRoutingModule { }

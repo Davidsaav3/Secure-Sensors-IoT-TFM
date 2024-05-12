@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, HostListener } from "@angular/core";
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpOptionsService } from '../../services/httpOptions.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: "app-sensors",
@@ -9,22 +11,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ["../../app.component.css"],
 })
 
-export class SensorsComponent implements OnInit {
+export class SensorsComponent implements OnInit, OnDestroy {
   resultsPerPag = environment.resultsPerPag;
-  @HostListener("window:resize", ["$event"])
-  onResize() {
-    window.resizeBy(-1, 0);
-    this.resize();
+
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
+
   }
 
-  constructor(private http: HttpClient,public rutaActiva: Router, private elementRef: ElementRef) {
-    this.resize();
-  }
-
-  getSensor: string = environment.baseUrl+environment.sensorsTypes+"/get";
-  postSensors: string = environment.baseUrl+environment.sensorsTypes;
-  duplicateSensor: string = environment.baseUrl+environment.sensorsTypes+"/duplicate";
-  getId: string = environment.baseUrl+environment.sensorsTypes+"/id";
+  getSensor: string = environment.baseUrl + environment.url.sensorsTypes;
+  getId: string = environment.baseUrl + environment.url.sensorsTypes + "/id";
 
   totalPages = 5;
   currentPage = 1;
@@ -50,8 +45,7 @@ export class SensorsComponent implements OnInit {
   saved = false;
   change = false;
   width = 0;
-  timeout: any = null;
-  
+
   show = false;
   showAux = true;
   dupOk = false;
@@ -69,6 +63,11 @@ export class SensorsComponent implements OnInit {
   notNew: any = false;
   saveOk: any = false;
   saveNot: any = false;
+
+  temp1: any = null;
+  temp2: any = null;
+  temp3: any = null;
+  temp4: any = null;
 
   sensors = {
     id: 0,
@@ -104,6 +103,17 @@ export class SensorsComponent implements OnInit {
 
   ngOnInit(): void { // Inicializa
     this.getSensors(this.order, this.ordAux);
+    this.readStorage();
+  }
+
+  ngOnDestroy() {
+    this.storageService.setSearch('')
+    this.storageService.setPerPage('15')
+    this.storageService.setPage('1')
+    //this.temp1.clearInterval();
+    //this.temp2.clearInterval();
+    //this.temp3.clearInterval();
+    //this.temp4.clearInterval();
   }
 
   /* GET */
@@ -114,68 +124,8 @@ export class SensorsComponent implements OnInit {
 
   getSensorsLocal(id: any, ord: any) { // Ordena columnas en local
     this.order = id;
-
-    if (this.totalPages <= 1 && false) {
-      if (ord == "ASC") {
-        if (id == "position") {
-          this.data.sort((a: any, b: any) => {return a.position - b.position;});
-        }
-        if (id == "type") {
-          this.data.sort((a: any, b: any) => a.type.localeCompare(b.type));
-        }
-        if (id == "metric") {
-          this.data.sort((a: any, b: any) => a.metric.localeCompare(b.metric));
-        }
-        if (id == "description") {
-          this.data.sort((a: any, b: any) => a.description.localeCompare(b.description));
-        }
-        if (id == "correction_general") {
-          this.data.sort((a: any, b: any) => {
-            const valorA = a.correction_general || "";
-            const valorB = b.correction_general || "";
-            return valorA.localeCompare(valorB);
-          });
-        }
-        if (id == "correction_time_general") {
-          this.data.sort((a: any, b: any) => {
-            const valorA = a.correction_time_general || "";
-            const valorB = b.correction_time_general || "";
-            return valorA.localeCompare(valorB);});
-        }
-      }
-      if (ord == "DESC") {
-        if (id == "position") {
-          this.data.sort((a: any, b: any) => {return b.position - a.position;});
-        }
-        if (id == "type") {
-          this.data.sort((a: any, b: any) => b.type.localeCompare(a.type));
-        }
-        if (id == "metric") {
-          this.data.sort((a: any, b: any) => b.metric.localeCompare(a.metric));
-        }
-        if (id == "description") {
-          this.data.sort((a: any, b: any) => b.description.localeCompare(a.description));
-        }
-        if (id == "correction_general") {
-          this.data.sort((a: any, b: any) => {
-            const valorA = b.correction_general || "";
-            const valorB = a.correction_general || "";
-            return valorA.localeCompare(valorB);
-          });
-        }
-        if (id == "correction_time_general") {
-          this.data.sort((a: any, b: any) => {
-            const valorA = b.correction_time_general || "";
-            const valorB = a.correction_time_general || "";
-            return valorA.localeCompare(valorB);
-          });
-        }
-      }
-    } 
-    else {
-      this.getSensors(id, ord);
-    }
-
+    this.storageService.setPerPage(this.quantPage.toString())
+    this.getSensors(id, ord);
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
       sectionElement.scrollIntoView({ behavior: "smooth" });
@@ -189,31 +139,31 @@ export class SensorsComponent implements OnInit {
     this.charging = true;
     this.data = [];
 
-    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`)
-    .subscribe(
-      (data: any) => {
-        this.charging = false;
-        if (data && data.length > 0 && data[0].total) {
-          this.totalPages = Math.ceil(data[0].total / this.quantPage);
-          this.total = data[0].total;
-        } 
-        else {
-          this.totalPages = 0;
-          this.total = 0;
+    this.http.get(`${this.getSensor}/${this.searchAux}/${this.order}/${ord}/${this.currentPage}/${this.quantPage}`, this.httpOptionsService.getHttpOptions())
+      .subscribe(
+        (data: any) => {
+          this.charging = false;
+          if (data && data.length > 0 && data[0].total) {
+            this.totalPages = Math.ceil(data[0].total / this.quantPage);
+            this.total = data[0].total;
+          }
+          else {
+            this.totalPages = 0;
+            this.total = 0;
+          }
+          this.data = data;
+
+          if (this.data.length < this.quantPage) {
+            this.totalPage = this.total;
+          }
+          else {
+            this.totalPage = this.quantPage * this.currentPage;
+          }
+        },
+        (error) => {
+          console.error(error);
         }
-        this.data = data;
-  
-        if (this.data.length < this.quantPage) {
-          this.totalPage = this.total;
-        } 
-        else {
-          this.totalPage = this.quantPage * this.currentPage;
-        }
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+      );
 
     const sectionElement = this.elementRef.nativeElement.querySelector(".mark_select");
     if (sectionElement) {
@@ -222,236 +172,51 @@ export class SensorsComponent implements OnInit {
   }
 
   orderColumn(idActual: any) { // Ordena columnas haciendo una consulta
-    if (!this.change && idActual != this.actId) {
-      this.http.get(`${this.getId}/${idActual}`)
-      .subscribe(
-        (data: any) => {
-          this.sensors = data[0];
-          this.actId = idActual;
-          this.id = idActual;
-          this.openEdit();
-          this.state = 2;
-          let sensors = { ...this.sensors };
-          this.sensorsCopy = {
-            id: sensors.id,
-            type: sensors.type,
-            metric: sensors.metric,
-            description: sensors.description,
-            errorvalue: sensors.errorvalue,
-            valuemax: sensors.valuemax,
-            valuemin: sensors.valuemin,
-            position: sensors.position,
-            correction_general: sensors.correction_general,
-            correction_time_general: sensors.correction_time_general,
-            discard_value: sensors.discard_value,
-          };
-          this.openClouse();
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
-  }
-  
-  /* NEW */
 
-  newSensor(form: any) {
-    this.state = 1;
-    if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
-      this.http.post(this.postSensors, JSON.stringify(this.sensors), httpOptions)
+    if (!this.change && idActual != this.actId) {
+      this.http.get(`${this.getId}/${idActual}`, this.httpOptionsService.getHttpOptions())
         .subscribe(
           (data: any) => {
-            this.id = data.id;
-            this.alertNew = true;
-  
-            setTimeout(() => {
-              this.alertNew = false;
-            }, 2000);
-  
-            this.openClouse();
-            this.sensors.id = data.id;
-            let sensors = { ...this.sensors };
-            this.data.push(sensors);
-            this.data.sort((a: { position: string }, b: { position: any }) => {
-              if (typeof a.position === "string" && typeof b.position === "string") {
-                return a.position.localeCompare(b.position);
-              } else {
-                return 1;
-              }
-            });
-            this.actId = this.id;
-            this.openEdit();
+            this.sensors = data[0];
+            if(environment.verbose) console.log(this.sensors)
+            this.actId = idActual;
+            this.id = idActual;
+            //this.openEdit();
             this.state = 2;
+            let sensors = { ...this.sensors };
+            this.sensorsCopy = {
+              id: sensors.id,
+              type: sensors.type,
+              metric: sensors.metric,
+              description: sensors.description,
+              errorvalue: sensors.errorvalue,
+              valuemax: sensors.valuemax,
+              valuemin: sensors.valuemin,
+              position: sensors.position,
+              correction_general: sensors.correction_general,
+              correction_time_general: sensors.correction_time_general,
+              discard_value: sensors.discard_value,
+            };
+            //this.openClouse();
           },
           (error) => {
-            console.error("Error:", error);
+            console.error(error);
           }
         );
-      this.change = false;
     }
-  }
-
-  openNew(id:any,type:any,metric:any,description:any,errorvalue:any,valuemax:any,valuemin:any,position:any,correction_general:any,correction_time_general:any,discard_value:any) { // Abre Nuevo sensor
-
-    this.sensors = {
-      id: id,
-      type: type,
-      metric: metric,
-      description: description,
-      errorvalue: errorvalue,
-      valuemax: valuemax,
-      valuemin: valuemin,
-      position: position,
-      correction_general: correction_general,
-      correction_time_general: correction_time_general,
-      discard_value: discard_value,
-    };
-
-    this.show = true;
-    this.openClouse();
-  }
-
-
-  /* EDIT */
-
-  editSensor(form: any) { // Guardar datos del sensor editado
-    if (form.valid) {
-      const httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json; charset=UTF-8'})};
-      this.http.put(this.postSensors, JSON.stringify(this.sensors), httpOptions)
-        .subscribe(
-          (response: any) => {
-            // Respuesta
-          },
-          (error) => {
-            console.error("Error:", error);
-          }
-        );
-      this.data = this.data.filter((data: { id: number }) => data.id !== this.sensors.id);
-      let sensors = this.sensors;
-      this.data.push(sensors);
-      this.data.sort((a: any, b: any) => {return a.position - b.position;});
-      this.actId = this.sensors.id;
-      this.openEdit();
-      this.state = 2;
-      this.saveOk = true;
-
-      setTimeout(() => {
-        this.saveOk = false;
-      }, 2000);
-    }
-    this.saved = true;
-    this.change = false;
-  }
-  
-  openEdit() { // Abre Editar sensor
-    this.show = true;
-    this.state = 2;
-    this.showAux = false;
-  }
-
-  /* DUPLICATE */
-
-  duplicateSensors(num: any, type: any) { // Obtiene el nombre del sensor duplicado
-    if (!this.change && !this.change) {
-      this.http.get(`${this.duplicateSensor}/${type}`)
-      .subscribe(
-        (data: any) => {
-          this.sensors = this.data.find((objeto: { id: any }) => objeto.id == num);
-          this.openClouse();
-          this.state = 0;
-    
-          this.http.get(`${this.getId}/${this.sensors.id}`)
-            .subscribe(
-              (data1: any) => {
-                this.sensors = data1[0];
-                this.actId = this.sensors.id;
-                this.id = this.sensors.id;
-                let sensors = { ...this.sensors };
-                this.sensorsCopy = {
-                  id: sensors.id,
-                  type: sensors.type,
-                  metric: sensors.metric,
-                  description: sensors.description,
-                  errorvalue: sensors.errorvalue,
-                  valuemax: sensors.valuemax,
-                  valuemin: sensors.valuemin,
-                  position: sensors.position,
-                  correction_general: sensors.correction_general,
-                  correction_time_general: sensors.correction_time_general,
-                  discard_value: sensors.discard_value,
-                };
-                this.openNew(
-                  '',
-                  data.duplicatedSensor,
-                  this.sensors.metric,
-                  this.sensors.description,
-                  this.sensors.errorvalue,
-                  this.sensors.valuemax,
-                  this.sensors.valuemin,
-                  this.sensors.position,
-                  this.sensors.correction_general,
-                  this.sensors.correction_time_general,
-                  this.sensors.discard_value
-                );
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
-          this.change = true;
-        },
-        (error) => {
-          console.error("Error al verificar la descripción duplicada:", error);
-        }
-      );
-    }
-  }
-
-  /* DELETE */
-
-  deleteSensors(idActual: any) { // Elimina sensor
-    var sensors2 = {
-      id: this.id,
-    };
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json; charset=UTF-8',
-      }),
-      body: sensors2,
-    };
-
-    this.http.delete(this.postSensors, options).subscribe(
-        (response: any) => {
-          // Realiza acciones con la respuesta si es necesario
-          //console.log('Sensors eliminados:', response);
-        },
-        (error: any) => {
-          console.error('Error al eliminar sensores:', error);
-        }
-      );
-    this.alertDelete = true;
-
-    setTimeout(() => {
-      this.alertDelete = false;
-    }, 2000);
-
-    this.data = this.data.filter((objeto: { id: any }) => objeto.id != idActual);
-    this.clouse();
   }
 
   /* BÚSQUEDA */
 
   textSearch(event: any) { // Busca por texto
+    this.storageService.setSearch(this.searchAuxArray.value)
     this.currentPage = 1;
-    clearTimeout(this.timeout);
+    clearTimeout(this.temp4);
     var $this = this;
 
-    this.timeout = setTimeout(() => {
+    this.temp4 = setTimeout(() => {
       if (event.keyCode != 13) {
         $this.getSensors(this.order, this.ordAux);
-        $this.openClouse();
       }
     }, 500);
   }
@@ -480,37 +245,8 @@ export class SensorsComponent implements OnInit {
     this.quantPage = 15;
     this.page = 1;
     this.searchAuxArray.value = "";
+    this.storageService.setSearch(this.searchAuxArray.value)
     this.getSensors(this.order, this.ordAux);
-  }
-
-  /* TARJETAS */
-
-  openClouse() { // Abre y cierra la tarjeta de sensores
-    if (this.show == true) {
-      this.showAux = false;
-    } 
-    else {
-      this.showAux = true;
-    }
-  }
-
-  clouse() { // Cierra tarjetas
-    this.show = false;
-    this.state = -1;
-    this.openClouse();
-    this.change = false;
-    this.actId= -1;
-  }
-
-  clouseAll() { // Cierra todas las tarjetas
-    this.showAux = false;
-    this.show = false;
-    this.openClouse();
-    this.change = false;
-  }
-
-  resize(): void { // Redimensiona tarjetas
-    this.width = window.innerWidth;
   }
 
   /* PAGINACIÓN */
@@ -518,6 +254,7 @@ export class SensorsComponent implements OnInit {
   firstPage(): void { // Primera pagina
     if (this.currentPage != 1) {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
     }
   }
@@ -525,10 +262,12 @@ export class SensorsComponent implements OnInit {
   previousPage10(): void { // 10 paginas mas
     if (this.currentPage - 10 > 1) {
       this.currentPage = this.currentPage - 10;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
-    } 
+    }
     else {
       this.currentPage = 1;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
     }
   }
@@ -536,18 +275,21 @@ export class SensorsComponent implements OnInit {
   previousPage(): void { // Pagina anterior
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
     }
   }
 
   Page(num: any): void { // Pagina actual
     this.currentPage = num;
+    this.storageService.setPage(this.currentPage.toString())
     this.getSensorsVoid();
   }
 
   nextPage(): void { // Pagina siguiente
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
     }
   }
@@ -555,18 +297,42 @@ export class SensorsComponent implements OnInit {
   nextPage10(): void { // 10 paginas menos
     if (this.currentPage + 10 < this.totalPages) {
       this.currentPage = this.currentPage + 10;
-      this.getSensorsVoid();
-    } 
-    else {
-      this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
     }
+    else {
+      this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
+      this.getSensorsVoid();
+    }
+
   }
 
   lastPage(): void { // Ultima pagina
     if (this.currentPage != this.totalPages) {
       this.currentPage = this.totalPages;
+      this.storageService.setPage(this.currentPage.toString())
       this.getSensorsVoid();
     }
   }
+
+  /* STORAGE */
+
+  readStorage() { // Recupera datos en local storage
+    let pageString = this.storageService.getPage() ?? "1";
+    this.currentPage = parseInt(pageString, 10);
+    pageString = this.storageService.getPerPage() ?? "15";
+    this.quantPage = parseInt(pageString, 10);
+    this.searchAuxArray.value = this.storageService.getSearch() ?? "";
+    if (this.searchAuxArray.value != "") {
+      //this.searched= true;
+      clearTimeout(this.temp1);
+      var $this = this;
+      this.temp3 = setTimeout(() => {
+        $this.getSensors(this.order, this.ordAux);
+      }, 1);
+    }
+  }
+
 }
+

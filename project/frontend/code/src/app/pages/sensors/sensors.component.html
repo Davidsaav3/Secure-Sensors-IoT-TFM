@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
 					<div>
-						<button type="button" class="btn btn-info" (click)="openNew('','','','',null,null,null,0,'','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
+						<button type="button" class="btn btn-info" [ngClass]="{'disabled': change || change}">{{ 'sensors.nuevo_sensor' | translate }}</button>
 					</div>
 				</div>
 			</div>
@@ -35,7 +35,7 @@
 					<thead>
 						<tr style="background-color: #fff;">
 							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'position'}">
-								<svg *ngIf="alt1" (click)="alt1=false;getSensorsLocal('position','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+								<svg *ngIf="alt1" (click)="alt1 = false; getSensorsLocal('position', 'DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
 									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
 								</svg>
 								<svg *ngIf="!alt1" (click)="alt1=true;getSensorsLocal('position','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
@@ -59,12 +59,15 @@
 								  </svg> {{ 'sensors.metric' | translate }}
 							</th>
 							<th class="d-none d-md-none d-lg-table-cell" scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'description'}">
-								<svg *ngIf="alt4" (click)="alt4=false;getSensorsLocal('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
-									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-								  </svg>
-								<svg *ngIf="!alt4" (click)="alt4=true;getSensorsLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-								  </svg> {{ 'sensors.description' | translate }}
+									<svg *ngIf="alt4" (click)="alt4=false;getSensors('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+										<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+									</svg>
+								<div *ngIf="!alt4" (click)="alt4=true;getSensors('description','ASC')"> 
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+										<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+									</svg>
+								</div>
+								{{ 'sensors.description' | translate }}
 							</th>
 							<th *ngIf="show==false" scope="col" style="cursor: pointer; text-align: center;" [ngClass]="{'mark': order == 'correction_general'}">
 								<svg *ngIf="alt6" (click)="alt6=false;getSensorsLocal('correction_general','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
@@ -97,7 +100,7 @@
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.correction_general }}</td>
 							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" *ngIf="show==false" (click)="orderColumn(quote.id)">{{ quote.correction_time_general }}</td>
 
-							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateSensors(quote.id,quote.type)">
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;">
 								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
 									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
 									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
@@ -173,181 +176,6 @@
 		</div>
 	</div>
 
-	<div class="cc2 cont mx-0" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
-		<form #form="ngForm" class="row needs-validation p-3">
-			<div class="col-12">
-				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-
-					<div class="col-12">
-						<h1 *ngIf="state==0" class="mb-0">{{ 'sensors.duplicate' | translate }} {{sensors.type}}</h1>
-						<h1 *ngIf="state==1" class="mb-0">{{ 'sensors.nuevo_sensor' | translate }}</h1>
-						<h1 *ngIf="state==2" class="mb-0">{{ 'sensors.of' | translate }} {{ sensors.type }}</h1>
-					</div>
-
-					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ sensors.id }}" [(ngModel)]="sensors.id">
-
-					<div class="col-12 pt-2 form-group">
-						<label for="type">{{ 'sensors.type' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.type }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="sensors['type']" required type>
-						<div *ngIf="form.submitted && form.controls['type'].errors" class="text-danger">
-							<div *ngIf="form.controls['type'].errors['required']">{{ 'sensors.type' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-12 col-md-6 mt-2">
-						<label for="metric">{{ 'sensors.metric' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.metric }}" type="text" id="metric" class="form-control" name="metric" [(ngModel)]="sensors['metric']" required type>
-						<div *ngIf="form.submitted && form.controls['metric'].errors" class="text-danger">
-							<div *ngIf="form.controls['metric'].errors['required']">{{ 'sensors.metric' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 mt-2">
-						<label for="position">{{ 'sensors.order' | translate }}</label>
-						<input type="number" min="0" maxlength="11" (ngModelChange)="change=true" value="{{ sensors.position }}" id="position" class="form-control" name="position" [(ngModel)]="sensors['position']">
-						<div *ngIf="form.submitted && form.controls['position'].errors" class="text-danger">
-							<div *ngIf="form.controls['position'].errors['required']">{{ 'sensors.order' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-md-12 mt-2">
-						<label for="description">{{ 'sensors.description' | translate }}</label>
-						<input maxlength="45" (ngModelChange)="change=true" value="{{ sensors.description }}" type="text" id="description" class="form-control" name="description" [(ngModel)]="sensors['description']" type>
-						<div *ngIf="form.submitted && form.controls['description'].errors" class="text-danger">
-							<div *ngIf="form.controls['description'].errors['required']">{{ 'sensors.description' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 mt-2" [ngClass]="{'mt-2': this.width>=965}">
-						<label for="errorvalue">{{ 'sensors.error_value' | translate }}</label>
-						<input type="number" (ngModelChange)="change=true" value="{{ sensors.errorvalue }}" id="errorvalue" class="form-control" name="errorvalue" [(ngModel)]="sensors['errorvalue']">
-						<div *ngIf="form.submitted && form.controls['errorvalue'].errors" class="text-danger">
-							<div *ngIf="form.controls['errorvalue'].errors['required']">{{ 'sensors.error_value' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-md-6 mt-2" [ngClass]="{'mt-2': this.width>=965}">
-						<label for="time_general">{{ 'sensors.time_general' | translate }}</label>
-						<input  placeholder="ej: +4" (ngModelChange)="change=true" placeholder="ej: time+4" value="{{ sensors.correction_time_general }}" type="text" id="time_general" class="form-control" name="time_general" [(ngModel)]="sensors['correction_time_general']" type>
-						<div *ngIf="form.submitted && form.controls['time_general'].errors" class="text-danger">
-							<div *ngIf="form.controls['time_general'].errors['required']">{{ 'sensors.time_general' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-6 mt-2">
-						<label for="valuemin">{{ 'sensors.value_min' | translate }}</label>
-						<input step="0.01" type="number" (ngModelChange)="change=true" value="{{ sensors.valuemin }}" id="valuemin" class="form-control" name="valuemin" [(ngModel)]="sensors['valuemin']">
-						<div *ngIf="form.submitted && form.controls['valuemin'].errors" class="text-danger">
-							<div *ngIf="form.controls['valuemin'].errors['required']">{{ 'sensors.value_min' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-6 mt-2">
-						<label for="valuemax">{{ 'sensors.value_max' | translate }}</label>
-						<input step="0.01" type="number" (ngModelChange)="change=true" value="{{ sensors.valuemax }}" id="valuemax" class="form-control" name="valuemax" [(ngModel)]="sensors['valuemax']">
-						<div *ngIf="form.submitted && form.controls['valuemax'].errors" class="text-danger">
-							<div *ngIf="form.controls['valuemax'].errors['required']">{{ 'sensors.value_max' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-md-12 mt-2">
-						<label for="general">{{ 'sensors.general' | translate }}</label>
-						<input placeholder="ej: value/3" (ngModelChange)="change=true" placeholder="ej: value/3" value="{{ sensors.correction_general }}" type="text" id="general" class="form-control" name="general" [(ngModel)]="sensors['correction_general']" type>
-						<div *ngIf="form.submitted && form.controls['general'].errors" class="text-danger">
-							<div *ngIf="form.controls['general'].errors['required']">{{ 'sensors.general' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-					<div class="col-md-12 mt-2">
-						<label for="discard_value">{{ 'sensors.discard_value' | translate }}</label>
-						<input (ngModelChange)="change=true" value="{{ sensors.discard_value }}" type="text" id="discard_value" class="form-control" name="discard_value" [(ngModel)]="sensors['discard_value']" type>
-						<div *ngIf="form.submitted && form.controls['discard_value'].errors" class="text-danger">
-							<div *ngIf="form.controls['discard_value'].errors['required']">{{ 'sensors.discard_value' | translate }} {{ 'required' | translate }}</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-
-
-			<div class="col-12 mt-3">
-				<div class="row" *ngIf="state==1 || state==0">
-					<div class="col-6">
-						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-					</div>
-					<div class="col-6">
-						<button (click)="newSensor(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
-					</div>
-				</div>
-				<div class="row" *ngIf="state==2">
-					<div class="col-6">
-						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
-						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
-					</div>
-					<div class="col-6">
-						<button (click)="editSensor(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
-					</div>
-					<div class="col-12 mt-3">
-						<div class="row d-flex" style="justify-content: flex-end;">
-							<div class="col-6">
-								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" disabled *ngIf="change">{{ 'sensors.erase_sensor' | translate }}</button>
-								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" *ngIf="!change">{{ 'sensors.erase_sensor' | translate }}</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header" style="border-bottom: 0px;">
-				<h3 class="modal-title">{{ 'sensors.m1.1' | translate }}</h3>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p class="not">{{ 'sensors.m1.2' | translate }}</p>
-			</div>
-			<div class="modal-footer" style="border-top: 0px;">
-				<div class="row">
-					<div class="col-6">
-						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
-					</div>
-					<div class="col-6">
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteSensors(this.id)">{{ 'sensors.delete' | translate }}</button>
-						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteSensors(this.id)">{{ 'sensors.delete' | translate }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header" style="border-bottom: 0px;">
-				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p class="not">{{ 'irreversible' | translate }}</p>
-			</div>
-			<div class="modal-footer" style="border-top: 0px;">
-				<div class="row">
-					<div class="col-7">
-						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
-					</div>
-					<div class="col-5">
-						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
 
 <div class="toast-cont">

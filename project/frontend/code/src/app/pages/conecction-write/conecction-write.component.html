@@ -1,0 +1,452 @@
+<app-navbar></app-navbar>
+<div class="m-0 p-0 row d-flex" style="justify-content: space-evenly" [ngClass]="{'rev ps-2': this.width<965, '': this.width>=965}">
+
+	<div class="cc2 cont mx-0" [ngClass]="{'c100': this.showAux==true || this.width<965, 'c10': this.showAux==false}">
+		<div class="p-3 pb-0 pe-2">
+			<div class="row d-flex">
+				<div class="col-6 col-sm-6 col-lg-3 mb-3">
+					<div class="w-100 d-flex" style="position: relative;">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'buscar_conexiones' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" readonly *ngIf="change || change">
+						<input (keyup)="textSearch($event)" id="searchAux" name="searchAux" type="text" [(ngModel)]="searchAuxArray.value" class="form-control" placeholder="{{ 'buscar_conexiones' | translate }}" aria-label="Recipient's username" aria-describedby="basic-addon2" *ngIf="!change && !change">
+						<p style="cursor: pointer; position: absolute; top: 7px; right: 7px;"   (click)="deleteSearch()" class="btn-close" aria-label="Close"></p>
+					</div>
+				</div>
+				<div class="col-6 col-sm-6 col-lg-9 d-flex " style="justify-content: flex-end;">
+					<div>
+						<button type="button" class="btn btn-info" (click)="openNew(1,'','','','');this.state=1" [ngClass]="{'disabled': change || change}">{{ 'nueva_conexion' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row flex-row-reverse pe-3" style="height: 71vh;">
+			<div *ngIf="charging" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+				<div class="spinner-border text-secondary" role="status">
+					<span class="visually-hidden">{{ 'loading' | translate }}</span>
+				</div>
+			</div>
+			<div *ngIf="data.length<=0 && charging==false && this.state!=1" class="col-12 d-flex" style="justify-content: center; align-content: center;align-items: center; height: 74vh; background-color: white;">
+				<div style="height: min-content;">
+					<p style="font-size: x-large;">{{ 'no_conecctions' | translate }}</p>
+				</div>
+			</div>
+			<div *ngIf="data.length>0 || this.state==1" class="col-12 pe-0 over" style="max-height: 71vh;">
+				<table class="table" [ngClass]="{'table-hover': !change}">
+					<thead>
+						<tr style="background-color: #fff;">
+							<th scope="col" style="cursor: pointer; z-index: 100;" [ngClass]="{'mark': order == 'description'}">
+								<svg *ngIf="alt1" (click)="alt1=false;getConecctionsLocal('description','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								</svg>
+								<svg *ngIf="!alt1" (click)="alt1=true;getConecctionsLocal('description','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								</svg> {{ 'sensors.description' | translate }}
+							</th>
+							
+							<th scope="col" style="cursor: pointer;" [ngClass]="{'mark': order == 'urlIngest'}">
+								<svg *ngIf="alt3" (click)="alt3=false;getConecctionsLocal('urlIngest','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt3" (click)="alt3=true;getConecctionsLocal('urlIngest','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'conecctions.urlIngest' | translate }}
+							</th>
+							<th style="cursor: pointer;" scope="col" [ngClass]="{'mark': order == 'enabled'}">
+								<svg *ngIf="alt7" (click)="alt7=false;getConecctionsLocal('enabled','DESC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16">
+									<path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+								  </svg>
+								<svg *ngIf="!alt7" (click)="alt7=true;getConecctionsLocal('enabled','ASC')" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+									<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+								  </svg> {{ 'conecctions.enabled' | translate }}
+							</th>
+						
+							<th scope="col" style="text-align: center;">{{ 'sensors.duplicate' | translate }}</th>
+							<th scope="col" style="text-align: center;">{{ 'sensors.edit' | translate }}</th>
+						</tr>
+					</thead>
+					<tbody *ngFor="let quote of data; let i = index">
+						<tr [ngClass]="{'mark_select': actId == quote.id && state==2}" style="cursor: pointer;" [ngClass]="{'disabled': change}">
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.description }}</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">{{ quote.urlIngest }}</td>
+
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (click)="orderColumn(quote.id)">
+								<span class="badge rounded-pill text-bg-success d-inline-block" [class]="{'d-none': quote.enabled==0}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.enable' | translate }}</p></span>
+								<span class="badge rounded-pill text-bg-danger d-inline-block" [class]="{'d-none': quote.enabled==1}"><p class="mb-0 d-none d-md-none d-lg-block">{{ 'sensors.disable' | translate }}</p></span>
+							</td>
+
+							<td class="d-table-cell disabled" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseout)="viewDup= -1" (mouseover)="viewDup= i" style="text-align: center;" (click)="duplicateConecctions(quote.id,quote.description)"><!--(click)="duplicateConecctions(quote.id,quote.description)"-->
+								<svg *ngIf="viewDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard-plus" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
+									<path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
+									<path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
+								</svg>
+								<svg *ngIf="viewDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-clipboard2-plus-fill" viewBox="0 0 16 16">
+									<path d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z"/>
+									<path d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5ZM8.5 6.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5a.5.5 0 0 1 1 0Z"/>
+							  </svg>
+							</td>
+							<td class="d-table-cell" [ngClass]="{'mark': actId == quote.id && state==2}" (mouseover)="pencilDup= i" (mouseout)="pencilDup= -1" (click)="orderColumn(quote.id)" style="color: black; text-align: center;">
+								<svg *ngIf="pencilDup!=i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+									<path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+								</svg>
+								<svg *ngIf="pencilDup==i" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
+									<path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+								</svg>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div class="row" style="background-color: #fff;border-bottom-right-radius: 15px; border-bottom-left-radius: 15px;">
+			<div class="col-12 col-lg-6 d-flex mt-3">
+				<div>
+					<!-- totalPages: {{totalPages}} quantPage: {{quantPage}} currentPage: {{currentPage}} -->
+					<p class="p-0 mt-1">{{((quantPage)*(currentPage-1))+1}} - {{totalPage}} de {{total}}</p>
+				</div>
+				<div>
+
+					<select (change)="this.currentPage=1;getConecctionsLocal('description','ASC'); " class="form-select ms-3" aria-label="Default select example" id="quantPage" name="quantPage" [(ngModel)]="this.quantPage">
+					<option *ngFor="let opcion of this.resultsPerPag" [value]="opcion" [selected]="opcion == 15">{{ opcion }} {{ 'res' | translate }}</option>
+				</select>
+				</div>
+			</div>
+			<div class="col-12 col-lg-6 d-flex" style="justify-content: flex-end;">
+				<nav aria-label="Page navigation example">
+					<ul *ngIf="data.length>0" class="pagination mt-3 mb-0">
+						<li class="page-item">
+							<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="firstPage()">
+								<span aria-hidden="true">{{ 'first' | translate }}</span>
+							</a>
+						</li>
+						<li class="page-item" *ngIf="currentPage-10>0">
+							<a class="page-link" style="cursor: pointer;" aria-label="Previous" (click)="previousPage10()">
+								<span aria-hidden="true">&laquo; 10</span>
+							</a>
+						</li>
+						<li class="page-item" *ngIf="this.currentPage-1!=0">
+							<a class="page-link" style="cursor: pointer;" (click)="previousPage()">{{ this.currentPage-1 }}</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link mark" style="cursor: pointer;" (click)="Page(this.currentPage)"><strong>{{ this.currentPage }}</strong></a>
+						</li>
+						<li class="page-item" *ngIf="this.currentPage!=totalPages">
+							<a class="page-link" style="cursor: pointer;" (click)="nextPage()">{{ this.currentPage+1 }}</a>
+						</li>
+						<li class="page-item" *ngIf="currentPage+10<totalPages">
+							<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="nextPage10()">
+								<span aria-hidden="true">10 &raquo;</span>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" style="cursor: pointer;" aria-label="Next" (click)="lastPage()">
+								<span aria-hidden="true">{{ 'last' | translate }}</span>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div>
+
+	<div class="cc2 cont mx-0" *ngIf="show" [ngClass]="{'sensores_2_100': this.width<965, 'sensores_2_20': this.width>=965}">
+		<form #form="ngForm" class="row needs-validation p-3">
+			<div class="col-12">
+				<div class="row" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+
+					<div class="col-12">
+						<h1 *ngIf="state==0" class="mb-0">{{ 'conecctions.duplicate' | translate }} {{conecctions.description}}</h1>
+						<h1 *ngIf="state==1" class="mb-0">{{ 'conecctions.nuevo' | translate }}</h1>
+						<h1 *ngIf="state==2" class="mb-0">{{ 'conecctions.of' | translate }} {{ conecctions.description }}</h1>
+					</div>
+
+					<input *ngIf="state==2" ng-class="myForm.input.$valid ? '' : 'has-danger'" (ngModelChange)="change=true" type="text" class="form-control d-none" #campo="ngModel" id="id" name="id" value="{{ conecctions.id }}" [(ngModel)]="conecctions.id">
+
+					<div class="col-8 pt-2 form-group">
+						<label for="description">{{ 'sensors.description' | translate }}</label>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.description }}" type="text" id="type" class="form-control" name="type" [(ngModel)]="conecctions['description']" required>
+						<div *ngIf="form.submitted && form.controls['description'] && form.controls['description'].errors">
+							<div *ngIf="form.controls['description'].errors && form.controls['description'].errors['required']">{{ 'description' | translate }} {{ 'required' | translate }}</div>
+						</div>
+				
+					</div>
+
+					<div class="col-4 pt-2 form-group">
+						<label for="enabled">{{ 'conecctions.enabled' | translate }}</label>
+						<div class="form-check form-switch ps-0">
+							<label class="toggle tt2 t2">
+								<input maxlength="4" type="checkbox" (ngModelChange)="change=true" id="check" name="check" [(ngModel)]="conecctions['enabled']">
+								<span class="slider"></span>
+								<span class="labels t2" [attr.data-on]="'sensors.enable' | translate" [attr.data-off]="'sensors.disable' | translate"></span>
+							</label>
+						</div>
+						<div *ngIf="form.submitted && form.controls['enabled'] && form.controls['enabled'].errors" class="text-danger">
+							<div *ngIf="form.controls['enabled'].errors && form.controls['enabled'].errors['required']">{{ 'conecctions.enabled' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					
+					</div>
+
+					<div [ngClass]="{'col-8': state === 2, 'col-12': state === 0 || state === 1}" class="pt-2 form-group">
+						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctions['authorization']">
+						<div *ngIf="form.submitted && form.controls['authorization'] && form.controls['authorization'].errors" class="text-danger">
+							<div *ngIf="form.controls['authorization'].errors && form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					
+					</div>
+
+					<div *ngIf="state==2" class="col-4 ps-2 pt-2 form-group" style="display: flex; flex-direction: column;">
+						<label for="authorization">&nbsp;</label>
+						<button style="width: 100%; border: #e2e2e2 1px solid; " type="button" class="btn" (click)="getSecret()" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye me-2" viewBox="0 0 16 16">
+								<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"></path>
+								<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"></path>
+							</svg>{{ 'show2' | translate }}
+						</button>
+					</div>
+
+					<div class="col-12 pt-2 form-group">
+						<label for="urlIngest">{{ 'conecctions.urlIngest' | translate }}</label>
+						<input maxlength="45" (ngModelChange)="change=true" value="{{ conecctions.urlIngest }}" type="text" id="urlIngest" class="form-control" name="urlIngest" [(ngModel)]="conecctions['urlIngest']" required>
+						<div *ngIf="form.submitted && form.controls['urlIngest'] && form.controls['urlIngest'].errors" class="text-danger">
+							<div *ngIf="form.controls['urlIngest'].errors && form.controls['urlIngest'].errors['required']">{{ 'conecctions.urlIngest' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="col-12 mt-3">
+				<div class="row" *ngIf="state==1 || state==0">
+					<div class="col-6">
+						<button type="button navb" class="btn btn-secondary text-light navb" (click)="clouseAll()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button (click)="newConecction(form)" ng-click="ocultar = true" type="button navb submit" class="btn btn-info navb me-3" style="width: 100%" [ngClass]="{'disabled': !change && this.state!=0}">{{ 'sensors.save' | translate }}</button>
+					</div>
+				</div>
+				<div class="row" *ngIf="state==2">
+					<div class="col-6">
+						<button *ngIf="change==false" type="button navb" class="btn btn-secondary text-light navb" (click)="clouse()" style="width: 100%">{{ 'sensors.exit' | translate }}</button>
+						<button *ngIf="change==true" type="button navb" class="btn btn-secondary text-light navb" style="width: 100%" data-bs-toggle="modal" data-bs-target="#exampleModal1">{{ 'reset.data' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button (click)="editConecction(form)" type="submit" type="button navb submit" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.save' | translate }}</button>
+					</div>
+					<div class="col-12 mt-3">
+						<div class="row d-flex" style="justify-content: flex-end;">
+							<div class="col-6">
+								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" disabled *ngIf="change">{{ 'sensors.erase_sensor' | translate }}</button>
+								<button type="button" class="btn btn-danger navb me-3" data-bs-toggle="modal" style="width: 100%" data-bs-target="#exampleModal" *ngIf="!change">{{ 'sensors.erase_sensor' | translate }}</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'conecctions.m1.1' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'conecctions.m1.2' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-6">
+						<button type="button" class="btn btn-secondary text-light" data-bs-dismiss="modal">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-6">
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" disabled *ngIf="change" (click)="deleteconecctions(this.id)">{{ 'sensors.delete' | translate }}</button>
+						<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-danger" data-bs-dismiss="modal" *ngIf="!change" (click)="deleteconecctions(this.id)">{{ 'sensors.delete' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'reset.data2' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="not">{{ 'irreversible' | translate }}</p>
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-7">
+						<button style="width: max-content;" type="button" class="btn btn-secondary pe-4" data-bs-dismiss="modal" (click)="rechargeForm()">{{ 'reset.data' | translate }}</button>
+					</div>
+					<div class="col-5">
+						<button type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-info" style="width: 100%" [ngClass]="{'disabled': !change}">{{ 'sensors.cancel' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="border-bottom: 0px;">
+				<h3 class="modal-title">{{ 'conecctions.authorization' | translate }}</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-0">
+				<!---->
+				<form *ngIf="!showPass" #form="ngForm" class="row needs-validation p-3 pt-0">
+					<div class="col-12 mt-2">
+						<label for="password">{{ 'users.password' | translate }}</label>
+						<div class="input-group">
+							<input (ngModelChange)="change=true" [(ngModel)]="users['password']" maxlength="45" minlength="8" type="{{ passwordFieldType }}" id="password" class="form-control" name="password" autocomplete>
+							<span (click)="togglePasswordType()" class="input-group-text" id="inputGroupPrepend2" style="cursor: pointer;">
+								<svg *ngIf="this.passwordFieldType=='password'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+									<path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+									<path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+								</svg>
+								<svg *ngIf="this.passwordFieldType=='text'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash" viewBox="0 0 16 16">
+									<path d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7 7 0 0 0-2.79.588l.77.771A6 6 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755q-.247.248-.517.486z"/>
+									<path d="M11.297 9.176a3.5 3.5 0 0 0-4.474-4.474l.823.823a2.5 2.5 0 0 1 2.829 2.829zm-2.943 1.299.822.822a3.5 3.5 0 0 1-4.474-4.474l.823.823a2.5 2.5 0 0 0 2.829 2.829"/>
+									<path d="M3.35 5.47q-.27.24-.518.487A13 13 0 0 0 1.172 8l.195.288c.335.48.83 1.12 1.465 1.755C4.121 11.332 5.881 12.5 8 12.5c.716 0 1.39-.133 2.02-.36l.77.772A7 7 0 0 1 8 13.5C3 13.5 0 8 0 8s.939-1.721 2.641-3.238l.708.709zm10.296 8.884-12-12 .708-.708 12 12z"/>
+								</svg>
+							</span>
+						</div>
+						<div *ngIf="form.submitted && form.controls['password'] && form.controls['password'].errors" class="text-danger">
+							<div *ngIf="form.controls['password'].errors['required']">{{ 'password' | translate }} {{ 'required' | translate }}</div>
+							<div *ngIf="form.controls['password'].errors['minlength']">{{ 'min_length' | translate }}</div>
+							<div *ngIf="form.controls['password'].value && !form.controls['password'].value.match(passwordPattern)">
+								{{ 'complexity' | translate }}
+							</div>      
+						</div>  
+						
+					</div>
+				</form>
+				<!---->
+				<form *ngIf="showPass" #form="ngForm" class="row needs-validation p-3 pt-0">
+					<div class="col-12 pt-2 form-group">
+						<label for="authorization">{{ 'conecctions.authorization' | translate }}</label>
+						<input disabled data-bs-toggle="modal" data-bs-target="#exampleModal2" maxlength="45" (ngModelChange)="change=true" value="{{ conecctionsSecret.authorization }}" type="text" id="authorization" class="form-control" name="authorization" [(ngModel)]="conecctionsSecret['authorization']" required>
+						<div *ngIf="form.submitted && form.controls['authorization'] && form.controls['authorization'].errors" class="text-danger">
+							<div *ngIf="form.controls['authorization'].errors && form.controls['authorization'].errors['required']">{{ 'conecctions.authorization' | translate }} {{ 'required' | translate }}</div>
+						</div>
+					
+					</div>
+				</form>
+				<!---->
+			</div>
+			<div class="modal-footer" style="border-top: 0px;">
+				<div class="row">
+					<div class="col-5">
+						<button (click)="resetPass()" type="button navb" data-bs-toggle="modal" data-bs-target="#exampleModal2" class="btn btn-secondary"  style="width: max-content;">{{ 'sensors.exit' | translate }}</button>
+					</div>
+					<div class="col-7">
+						<button (click)="getSecret()" style="width: max-content;" type="button" class="btn btn-info pe-4" [ngClass]="{'disabled': showPass}" (click)="rechargeForm()">{{ 'sensors.send' | translate }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="toast-cont">
+
+	<div *ngIf="dupOk" class="top-0 right-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e7' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="dupNot" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e8' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="alertDelete" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e3' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="notDelete" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e6' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="alertNew" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e4' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="notNew" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e5' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="saveOk" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e2' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="saveNot" class="top-0 end-0 p-3">
+		<div role="alert" class="toast show align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="d-flex">
+				<div class="toast-body">
+					{{ 'conecctions.e1' | translate }}
+				</div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+		</div>
+	</div>
+</div>
