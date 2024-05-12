@@ -93,10 +93,10 @@ router.post("/login", (req, res) => { // LOGIN //
             jwt.verify(user.token, REFRESH_SECRET_KEY, (verifyErr, decoded) => {
               if (verifyErr) {
                 // token caducado o inválido
-                const newRefreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
+                const newRefreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKEN_TIME });
 
                 const currentDate = new Date();
-                const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
+                const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
                 const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
                 // Actualizar token_refresh
@@ -142,10 +142,10 @@ router.post("/login", (req, res) => { // LOGIN //
           }
           else {
             // No token_refresh, generar nuevo
-            const refreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
+            const refreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKEN_TIME });
 
             const currentDate = new Date();
-            const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
+            const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
             const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
             // Actualizar el nuevo token_refresh
@@ -256,7 +256,7 @@ router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
       }
 
       const currentDate = new Date();
-      const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
+      const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
       const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
       const query = "INSERT INTO users (user, password, change_password, enabled, revoke_date) VALUES (?, ?, ?, ?, ?)";
@@ -287,9 +287,9 @@ router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
   const { id, user, password, change_password, enabled, token } = req.body;
   const tokenX = req.headers['authorization'];
 
-  const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKE_TIME });
+  const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKEN_TIME });
   const currentDate = new Date();
-  const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_SECONDS));
+  const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
   const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
   if (!id && (user || password)) {
@@ -441,7 +441,7 @@ router.post('/refresh', cookieParser(), (req, res) => {
   //const refreshToken = req.cookies.refresh_token;
   const { refreshToken } = req.body;
 
-  // token de actualización existey
+  // token de actualización existe
   if (!refreshToken) {
     // LOG - 400 //
     insertLog("", "", '005-007-400-001', "400", "POST", "", 'Error al refrescar el token', 'El token de refresco no fue proporcionado');
@@ -463,13 +463,20 @@ router.post('/refresh', cookieParser(), (req, res) => {
         insertLog("", "", '005-007-400-003', "400", "POST", '', 'Error al refrescar el token', 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado');
         return res.status(400).json({ error: 'Los datos del JWT no existen en la base de datos o el usuario está deshabilitado' });
       }
-      const newAccessToken = jwt.sign({ user: results[0].user, id: userId }, SECRET_KEY, { expiresIn: process.env.ACCESS_TOKEN_TIME });
+      
+      // Firmar el nuevo token con la fecha de caducidad
+      const newAccessToken = jwt.sign({ user: results[0].user, id: userId, expiration: process.env.ACCESS_TOKEN_TIME }, SECRET_KEY);
+
       // LOG - 200 //
       //insertLog("", "", '005-007-200-001', "200", "POST", refreshToken, 'Token refrescado', '');
-      res.status(200).json({ token: newAccessToken });
+      
+      // Devolver el nuevo token junto con la fecha de caducidad
+      //console.log(formattedFutureDate)
+      res.status(200).json({ token: newAccessToken, date: process.env.ACCESS_TOKEN_SECONDS });
     });
   });
 });
+
 
 
 

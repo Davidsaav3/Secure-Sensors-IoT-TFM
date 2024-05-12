@@ -78,13 +78,6 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
       } 
       else {
           try {
-            if(process.env.verbose){
-              //console.log('')
-              //console.log('Estado ENTRANTE-> ' + status)
-              //console.log('ESTADO ACTUAL -> ' + result[0].status)
-              //console.log('')
-            }
-
               // Llamar a la función auxiliar de script
               await script_aux(status, result, id, user, req.body.status); // Pasar req aquí
               
@@ -110,9 +103,10 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
       console.log('ESTADO ACTUAL -> ' + aux)
       console.log('')
     
+      // Estado entrante 1 -> Encender
+      // Estado entrante 0 -> Apagar
       if (status == 1 && aux==0) {
         proceso = await runScript(id, user, status2);
-        if(process.env.verbose) console.log(proceso.status)
         if (proceso) { 
           if(process.env.verbose) console.log("--- SCRIPT ENCENDIDO ---");
           if(process.env.verbose) console.log("");

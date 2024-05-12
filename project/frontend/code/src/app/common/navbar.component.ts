@@ -349,7 +349,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           }).catch(() => {
             this.consecutivoFallos++; 
           }).finally(() => {
-            bucle(environment.acces_token_timeout); 
+            bucle(environment.acces_token_timeout-environment.acces_token_dif); 
           });
         }, t); 
       }
@@ -404,7 +404,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
               //return null;
             }
             newToken = response.token;
-            this.storageService.setToken(newToken); // Almacenar el nuevo token en el almacenamiento local
+            this.storageService.setToken(newToken); 
+
+            environment.acces_token_timeout = parseInt(response.date);
+            //console.log(environment.acces_token_timeout)
+
             if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){
               this.consecutivoFallos = 0;
             }

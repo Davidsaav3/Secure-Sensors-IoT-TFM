@@ -40,14 +40,15 @@ export const environment = {
     password_pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/,
     title: 'Sensors IoT',
 
-    acces_token_timeout: 5000, // Tiempa hasta lanzar otra vez la consulta
-    script_status_timeout: 5000,
+    acces_token_timeout: 300000, // Milisegundos hasta que se cduque el token de acceso
+    script_status_timeout: 5000, // Milisegundos hasta lanzar el obtener script
 
-    acces_token_times: 2,
-    script_status_times: 2,
+    acces_token_times: 3, // Veces que intenta obtener el tokend e acceso
+    script_status_times: 3, // Veces que intenta obtener ele stado del script
 
-    script_status_frontend: 11000,
-    acces_token_frontend: 5000,
+    script_status_frontend: 10000, // Tiempo de espera para desbloquear boton de obtener estado
+
+    acces_token_dif: 5000, // acces_token_timeout-acces_token_dif= Tiempo que espera para lanzarlo
 
     verbose: false,
 };
