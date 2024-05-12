@@ -19,7 +19,6 @@ const mqtt = require('mqtt');
 
 /* Credenciales */
 const connection_config = config.connection_config;
-const ingest_config = config.ingest_config;
 
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas
 // para ver cadens de conexión mirar https://www.thethingsindustries.com/docs/integrations/mqtt/
@@ -41,7 +40,6 @@ client.on('message', async (topic, message) => {
   }
 });
 */
- // act estado de db a 1
 
  scriptDAO.updateDate(); // Insertar la primera vez la fecha 
 

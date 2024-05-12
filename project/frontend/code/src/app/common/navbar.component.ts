@@ -322,7 +322,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     event.target.value = event.target.value.replace(/\s/g, '');
   }
 
-  lanzarTimer() {
+  lanzarTimer() { // Timer para actualizar el estado del script
     if(environment.verbose) console.log("LANZAR TIMER")
     this.consecutivoFallos1 = 0; 
     const bucle = (t: number) => {
@@ -344,13 +344,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }
       else{
         this.status= 2;
-        //this.logOut();
       }
     };
     bucle(0);
   }
 
-  lanzarTimer2() {
+  lanzarTimer2() { // Timer para actualizar token de acceso
     this.consecutivoFallos2 = 0; 
     const bucle = (t: number) => {
       if (this.consecutivoFallos2 < environment.acces_token_times) { 
@@ -397,7 +396,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   //
 
-  async renewToken(refreshToken: string): Promise<string | null> {
+  async renewToken(refreshToken: string): Promise<string | null> { // Llaamada de renovación de token de acceso
     try {
       let token = this.storageService.getToken() ?? '';
 
@@ -416,15 +415,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
           (response: any) => {
             if (!response || !response.token) {
               console.error('Error al renovar el token');
-              //return null;
             }
             newToken = response.token;
             this.storageService.setToken(newToken); 
 
             environment.acces_token_timeout = parseInt(response.date);
-            if(environment.verbose) console.log(environment.acces_token_timeout)
+            if(environment.verbose) console.log(environment.acces_token_timeout) // imprime milisegundos de vida del token
 
-            if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){
+            if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){ // Control de los fallos
               this.consecutivoFallos2 = 0;
             }
             else{
@@ -444,7 +442,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return newToken;
     }
     catch (error) {
-      //this.logOut(); // Realizar la lógica de cierre de sesión en caso de error
       console.error('Error al renovar el token:', error);
       return null;
     }

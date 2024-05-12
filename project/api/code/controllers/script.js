@@ -47,11 +47,13 @@ let proceso;
           insertLog(req.user.id, req.user.user, '009-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos al obtener el log de script', '');
           return res.status(500).json({ error: 'Error en la base de datos al obtener el log de script' });
         }
+        
         // Validación de resultados de consulta
         if (!result || result.length === 0) {
           insertLog(req.user.id, req.user.user, '009-001-404-001', "404", "GET", JSON.stringify(req.params), 'No se encontraron resultados al obtener el log de script', '');
           return res.status(404).json({ error: 'No se encontraron resultados al obtener el log de script' });
         }
+
       //insertLog(req.user.id, req.user.user, '009-001-200-001', "200", "GET", JSON.stringify(req.params), 'Log de script obtenido', '');
       res.send(result);
     });
@@ -79,7 +81,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
       else {
           try {
               // Llamar a la función auxiliar de script
-              await script_aux(status, result, id, user, req.body.status); // Pasar req aquí
+              await script_aux(status, result, id, user, req.body.status);
               
               //insertLog(req.user.id, req.user.user, '009-002-200-001', "200", "POST", JSON.stringify(req.body), 'Estado cambiado con exito', JSON.stringify(err));
               res.status(200).json({ message: "Estado cambiado con exito" });
@@ -104,7 +106,6 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
       console.log('')
     
       // Estado entrante 1 -> Encender
-      // Estado entrante 0 -> Apagar
       if (status == 1 && aux==0) {
         proceso = await runScript(id, user, status2);
         if (proceso) { 
@@ -117,6 +118,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
         }
       }
 
+      // Estado entrante 0 -> Apagar
       if (status == 0 && aux==1) {
           try {
             proceso.kill();
