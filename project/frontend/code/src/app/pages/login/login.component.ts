@@ -78,13 +78,13 @@ export class LoginComponent implements OnDestroy {
 
       // Validar el nombre de usuario
       if (!this.isValidUsername(user)) {
-        console.error("Nombre de usuario no válido");
+        if(environment.verbose_error) console.error("Nombre de usuario no válido");
         return;
       }
 
       // Validar la contraseña
       if (!this.isValidPassword(password)) {
-        console.error("Contraseña no válida");
+        if(environment.verbose_error) console.error("Contraseña no válida");
         return;
       }
 
@@ -108,21 +108,21 @@ export class LoginComponent implements OnDestroy {
           },
           (error: any) => {
             if (error.status === 401) {
-              console.error("Credenciales incorrectas");
+              if(environment.verbose_error) console.error("Credenciales incorrectas");
               this.alertCreNot = true;
               this.temp1 = setTimeout(() => {
                 this.alertCreNot = false;
               }, 2000);
             }
             else if (error.status === 500) {
-              console.error("Error en el servidor");
+              if(environment.verbose_error) console.error("Error en el servidor");
               this.alertServNot = true;
               this.temp2 = setTimeout(() => {
                 this.alertServNot = false;
               }, 2000);
             }
             else {
-              console.error("Error desconocido:", error);
+              if(environment.verbose_error) console.error("Error desconocido:", error);
               this.alertDifNot = true;
               this.temp3 = setTimeout(() => {
                 this.alertDifNot = false;

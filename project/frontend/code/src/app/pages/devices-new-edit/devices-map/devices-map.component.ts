@@ -121,7 +121,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           this.auxInit();
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
     }
@@ -285,7 +285,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
         this.map.remove();
       }
     } catch (error) {
-      console.error("Error al eliminar el mapa:", error);
+      if(environment.verbose_error) console.error("Error al eliminar el mapa:", error);
     }
     if(this.temp1!=null) 
       clearTimeout(this.temp1);

@@ -242,7 +242,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
 
@@ -275,7 +275,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
             this.openClouse();
           },
           (error) => {
-            console.error(error);
+            if(environment.verbose_error) console.error(error);
           }
         );
     }
@@ -291,7 +291,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
           this.showPass = true;
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
   }
@@ -326,7 +326,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
             this.openEdit();
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
       this.change = false;
@@ -361,7 +361,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
             // Manejar la respuesta
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
 
@@ -420,7 +420,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
           this.change = true;
         },
         (error) => {
-          console.error('Error al verificar la descripción duplicada:', error);
+          if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }
@@ -448,7 +448,7 @@ export class ConecctionReadComponent implements OnInit, OnDestroy {
         if(environment.verbose) console.log('conecctions eliminados:');
       },
       (error: any) => {
-        console.error('Error al eliminar conexón:', error);
+        if(environment.verbose_error) console.error('Error al eliminar conexón:', error);
       }
     );
     this.alertDelete = true;

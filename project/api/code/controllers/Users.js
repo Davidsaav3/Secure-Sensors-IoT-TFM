@@ -38,7 +38,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
   con.query(query, values, (err, result) => {
     if (err) {
-      console.error(err);
+      if(process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '005-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener los usuarios', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener los usuarios' });
@@ -81,7 +81,7 @@ router.post("/login", (req, res) => { // LOGIN //
       // comp contraseñas
       bcrypt.compare(password, user.password, (bcryptErr, bcryptResult) => {
         if (bcryptErr) {
-          console.error("Error al comparar contraseñas:", bcryptErr);
+          if(process.env.VERBOSE_ERROR) console.error("Error al comparar contraseñas:", bcryptErr);
           // LOG - 500 //
           insertLog(user.id, user.user, '005-002-500-002', "500", "POST", '', 'Error 2 al hacer login', JSON.stringify(bcryptErr));
           return res.status(500).json({ error: 'Error 2 al hacer login' });
@@ -96,14 +96,14 @@ router.post("/login", (req, res) => { // LOGIN //
                 const newRefreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKEN_TIME });
 
                 const currentDate = new Date();
-                const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
+                const futureDate = new Date(currentDate.getTime() + parseInt(process.env.REFRESH_TOKEN_SECONDS));
                 const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
                 // Actualizar token_refresh
                 const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
                 con.query(updateQuery, [newRefreshToken, formattedFutureDate, user.id], (updateErr, updateResult) => {
                   if (updateErr) {
-                    console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+                    if(process.env.VERBOSE_ERROR) console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                     // LOG - 500 //
                     insertLog(user.id, user.user, '005-002-500-003', "500", "POST", '', 'Error 3 al hacer login', JSON.stringify(updateErr));
                     return res.status(500).json({ error: 'Error 3 al hacer login' });
@@ -145,14 +145,14 @@ router.post("/login", (req, res) => { // LOGIN //
             const refreshToken = jwt.sign({ user: user.user, id: user.id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKEN_TIME });
 
             const currentDate = new Date();
-            const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
+            const futureDate = new Date(currentDate.getTime() + parseInt(process.env.REFRESH_TOKEN_SECONDS));
             const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
             // Actualizar el nuevo token_refresh
             const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
             con.query(updateQuery, [refreshToken, formattedFutureDate, user.id], (updateErr, updateResult) => {
               if (updateErr) {
-                console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+                if(process.env.VERBOSE_ERROR) console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
                 // LOG - 500 //
                 insertLog(user.id, user.user, '005-002-500-004', "500", "POST", '', 'Error 4 al hacer login', JSON.stringify(updateErr));
                 return res.status(500).json({ error: 'Error 4 al hacer login' });
@@ -210,7 +210,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
   const query = "SELECT id, user, change_password, enabled , revoke_date FROM users WHERE id = ?";
   con.query(query, [id], (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '005-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener usuario', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener usuario' });
@@ -256,7 +256,7 @@ router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
       }
 
       const currentDate = new Date();
-      const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
+      const futureDate = new Date(currentDate.getTime() + parseInt(process.env.REFRESH_TOKEN_SECONDS));
       const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
       const query = "INSERT INTO users (user, password, change_password, enabled, revoke_date) VALUES (?, ?, ?, ?, ?)";
@@ -289,7 +289,7 @@ router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
 
   const refreshToken = jwt.sign({ user: user, id: id }, REFRESH_SECRET_KEY, { expiresIn: process.env.REFRESH_TOKEN_TIME });
   const currentDate = new Date();
-  const futureDate = new Date(currentDate.getTime() + parseInt(process.env.ACCESS_TOKEN_TIME));
+  const futureDate = new Date(currentDate.getTime() + parseInt(process.env.REFRESH_TOKEN_SECONDS));
   const formattedFutureDate = futureDate.toISOString().slice(0, 19).replace('T', ' ');
 
   if (!id && (user || password)) {
@@ -318,7 +318,7 @@ router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
         const updateQuery = "UPDATE users SET token = ?, revoke_date = ? WHERE id = ?";
         con.query(updateQuery, [refreshToken, formattedFutureDate, userId], (updateErr, updateResult) => {
           if (updateErr) {
-            console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
+            if(process.env.VERBOSE_ERROR) console.error("Error al actualizar token_refresh en la base de datos:", updateErr);
             // LOG - 500 //
             insertLog(user.id, user.user, '005-005-500-001', "500", "PUT", JSON.stringify(req.body), 'Error 1 al editar usuario', JSON.stringify(updateErr));
             return res.status(500).json({ error: 'Error 1 al editar usuario' });
@@ -491,7 +491,7 @@ router.post("/revoke", verifyToken, (req, res) => {  /*/ REVOKE  /*/
   const query = "UPDATE users SET token = '', revoke_date = NOW() WHERE id = ?";
   con.query(query, [id], (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '005-008-500-002', "500", "POST", "", 'Error al revocar el token', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al revocar el token' });

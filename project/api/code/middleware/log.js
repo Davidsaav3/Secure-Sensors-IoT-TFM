@@ -13,7 +13,7 @@ router.use(express.json())
     con.query(query, [user_id, username, log_date, log_code, log_status, log_method, truncarCadena(log_parameters, longitudMaxima), log_message, truncarCadena(log_trace, longitudMaxima)], (err, result) => {
         if (err) {
             // registra el error el propio log
-            console.error("Error al insertar en el registro:", err);
+            if(process.env.VERBOSE_ERROR) console.error("Error al insertar en el registro:", err);
         }
         if (callback) {
             callback(err, result);

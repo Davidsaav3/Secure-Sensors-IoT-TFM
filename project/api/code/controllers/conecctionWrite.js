@@ -33,7 +33,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
     con.query(query, values, (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 //
             insertLog(req.user.id, req.user.user, '007-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de escritura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener la conexión de escritura' });
@@ -56,7 +56,7 @@ router.get("/id/:id", verifyToken, (req, res) => { /*/ ID  /*/
     const query = "SELECT id, description, urlIngest, enabled FROM conecction_write WHERE id = ?";
     con.query(query, [id, id], (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error al obtener la conexión de escritura
             insertLog(req.user.id, req.user.user, '007-002-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de escritura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener la conexión de escritura' });
@@ -78,7 +78,7 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
     let query = `SELECT description FROM conecction_write`;
     con.query(query, (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error al duplicar la conexión de escritura
             insertLog(req.user.id, req.user.user, '007-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la conexión de escritura', JSON.stringify(err));
             return res.status(500).send("Error al duplicar la conexión de escritura");
@@ -216,7 +216,7 @@ router.post("/secret", verifyToken, (req, res) => { /*/ SECRET  /*/
 
     con.query(query, [parseInt(req.user.id)], (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error al obtener la contraseña del usuario
             insertLog(req.user.id, req.user.user, '007-007-500-001', "500", "POST", JSON.stringify(req.params), 'Error al obtener la contraseña del usuario', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener la contraseña del usuario' });
@@ -224,7 +224,7 @@ router.post("/secret", verifyToken, (req, res) => { /*/ SECRET  /*/
         else {
             bcrypt.compare(password, result[0].password, (bcryptErr, bcryptResult) => {
                 if (bcryptErr) {
-                    console.error("Error al comparar contraseñas:", bcryptErr);
+                    if(process.env.VERBOSE_ERROR) console.error("Error al comparar contraseñas:", bcryptErr);
                     // LOG - 500 - Error al comparar contraseñas
                     insertLog(req.user.id, req.user.user, '007-007-500-002', "500", "POST", JSON.stringify(req.body), 'Error al comparar contraseñas', JSON.stringify(bcryptErr));
                     return res.status(500).json({ error: 'Error al comparar contraseñas' });
@@ -233,7 +233,7 @@ router.post("/secret", verifyToken, (req, res) => { /*/ SECRET  /*/
                     const query = "SELECT authorization FROM conecction_write WHERE id = ?";
                     con.query(query, [id], (err, result) => {
                         if (err) {
-                            console.error(err);
+                            if(process.env.VERBOSE_ERROR) console.error(err);
                             // LOG - 500 - Error al obtener la autorización de escritura
                             insertLog(req.user.id, req.user.user, '007-007-500-003', "500", "POST", JSON.stringify(req.params), 'Error al obtener la autorización de escritura', JSON.stringify(err));
                             return res.status(500).json({ error: 'Error al obtener la autorización de escritura' });

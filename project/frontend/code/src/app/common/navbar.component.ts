@@ -237,7 +237,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           }, 2000);
         },
         (error) => {
-          console.error("Error:", error);
+          if(environment.verbose_error) console.error("Error:", error);
           this.alertUserNot = true;
           this.temp3 = setTimeout(() => {
             this.alertUserNot = false;
@@ -270,7 +270,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
             this.change_password = false;
             this.storageService.setChange("0");
 
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
 
             this.alertPassNot = true;
             this.temp5 = setTimeout(() => {
@@ -322,6 +322,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     event.target.value = event.target.value.replace(/\s/g, '');
   }
 
+  
   lanzarTimer() { // Timer para actualizar el estado del script
     if(environment.verbose) console.log("LANZAR TIMER")
     this.consecutivoFallos1 = 0; 
@@ -389,7 +390,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.storageService.setDate(this.date.toString());
     } 
     catch (error) {
-      console.error("Error al obtener el estado:", error);
+      if(environment.verbose_error) console.error("Error al obtener el estado:", error);
       throw error; 
     }
   }
@@ -414,7 +415,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.http.post<any>(this.postRefresh, body, httpOptions).subscribe(
           (response: any) => {
             if (!response || !response.token) {
-              console.error('Error al renovar el token');
+              if(environment.verbose_error) console.error('Error al renovar el token');
             }
             newToken = response.token;
             this.storageService.setToken(newToken); 
@@ -430,7 +431,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
             }
           },
           (error) => {
-            console.error('Error al renovar el token');
+            if(environment.verbose_error) console.error('Error al renovar el token');
             this.consecutivoFallos2++;
           }
         );
@@ -442,7 +443,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return newToken;
     }
     catch (error) {
-      console.error('Error al renovar el token:', error);
+      if(environment.verbose_error) console.error('Error al renovar el token:', error);
       return null;
     }
   }

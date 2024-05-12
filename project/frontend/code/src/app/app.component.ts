@@ -83,7 +83,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.http.post<any>(this.postRefresh, body, httpOptions).subscribe(
           (response: any) => {
             if (!response || !response.token) {
-              console.error('Error al renovar el token');
+              if(environment.verbose_error) console.error('Error al renovar el token');
             }
             newToken = response.token;
             this.storageService.setToken(newToken); 
@@ -91,8 +91,6 @@ export class AppComponent implements OnInit, OnDestroy {
             const endDate = new Date(response.date);
             const now = new Date();
             environment.acces_token_timeout = endDate.getTime() - now.getTime() - environment.acces_token_dif;
-            console.log("hola1 "+response.date)
-            console.log("hola2 "+environment.acces_token_timeout)
 
             if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){
               this.consecutivoFallos = 0;
@@ -102,7 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
             }
           },
           (error) => {
-            console.error('Error al renovar el token');
+            if(environment.verbose_error) console.error('Error al renovar el token');
             this.consecutivoFallos++;
           }
         );
@@ -114,7 +112,7 @@ export class AppComponent implements OnInit, OnDestroy {
       return newToken;
     }
     catch (error) {
-      console.error('Error al renovar el token:', error);
+      if(environment.verbose_error) console.error('Error al renovar el token:', error);
       return null;
     }
   }

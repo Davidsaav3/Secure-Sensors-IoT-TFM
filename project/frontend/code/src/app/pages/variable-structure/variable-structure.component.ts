@@ -154,7 +154,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
           this.totalPage = this.quantPage * this.currentPage;
         }
       }, (error) => {
-        console.error(error);
+        if(environment.verbose_error) console.error(error);
       });
   }
 
@@ -208,7 +208,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
             this.state = 2;
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
 
@@ -248,7 +248,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            console.error(error);
+            if(environment.verbose_error) console.error(error);
           }
         );
       this.data = this.data.filter((data: { id: string }) => parseInt(data.id) !== this.structure.id);
@@ -288,7 +288,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
           this.change = true;
         },
         (error) => {
-          console.error('Error al verificar la descripción duplicada:', error);
+          if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }
@@ -313,7 +313,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
         // Procesa la respuesta aquí si es necesario
       },
       (error: any) => {
-        console.error(error);
+        if(environment.verbose_error) console.error(error);
       }
     );
     this.alertDelete = true;

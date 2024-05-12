@@ -314,10 +314,10 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, `%${search_text}%`, tam, act
       ], function (err, result) {
         if (err) throw err;
-        if(process.env.verbose) console.log(result[0].uid)
+        //if(process.env.verbose) console.log(result[0].uid)
         const responseArray = auxGet(result);
         // LOG - 200 //
-        if(process.env.verbose) console.log(responseArray[0].uid)
+        //if(process.env.verbose) console.log(responseArray[0].uid)
         insertLog(req.user.id, req.user.user, '001-001-200-009', "200", "GET", JSON.stringify(req.params), 'Dispositivos obtenidos 9', JSON.stringify(responseArray));
         res.json(responseArray);
       });
@@ -393,7 +393,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
   let query1 = `SELECT variable_configuration FROM device_configurations WHERE id=?`;
   con.query(query1, [id], (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-002-500-001', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos 1', JSON.stringify(err));
       return res.status(500).json({ error: 'Error en la base de datos 1' });
@@ -439,7 +439,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
 
       con.query(query, [id], (err, result) => {
         if (err) {
-          console.error("Error:", err);
+          if(process.env.VERBOSE_ERROR) console.error("Error:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-002-500-002', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos 2', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos 2' });
@@ -458,7 +458,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
 
           con.query(query, [id], (err, result) => {
             if (err) {
-              console.error("Error:", err);
+              if(process.env.VERBOSE_ERROR) console.error("Error:", err);
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '001-002-500-003', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos 3', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos 3' });
@@ -581,7 +581,7 @@ router.get("/duplicate/:uid", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
   let query = `SELECT uid FROM device_configurations`;
   con.query(query, (err, result) => {
     if (err) {
-      console.error(err);
+      if(process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar dispositivo', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al duplicar dispositivo' });
@@ -635,7 +635,7 @@ router.post("", verifyToken, (req, res) => { // POST Y DELETE //
   const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ?';
   con.query(queryCheckUid, [uid], (err, result) => {
     if (err) {
-      console.error('Error:', err);
+      if(process.env.VERBOSE_ERROR) console.error('Error:', err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 1', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al crear el dispositivo 1' });
@@ -658,7 +658,7 @@ router.post("", verifyToken, (req, res) => { // POST Y DELETE //
         ],
         (err, result) => {
           if (err) {
-            console.error("Error:", err);
+            if(process.env.VERBOSE_ERROR) console.error("Error:", err);
             // LOG - 500 //
             insertLog(req.user.id, req.user.user, '001-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 2', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al crear el dispositivo 2' });
@@ -681,7 +681,7 @@ function auxPost(sensors, id_exp) {
 
   con.beginTransaction((err) => {
     if (err) {
-      console.error("Error al iniciar la transacción:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error al iniciar la transacción:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-004-500-003', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 3', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al crear el dispositivo 3' });
@@ -690,7 +690,7 @@ function auxPost(sensors, id_exp) {
     if (Array.isArray(newRecords) && newRecords.length > 0 || newRecords[0].id === -1) {
       con.query("DELETE FROM sensors_devices WHERE id_device = ?", [id_exp], (err) => {
         if (err) {
-          console.error("Error al eliminar registros existentes:", err);
+          if(process.env.VERBOSE_ERROR) console.error("Error al eliminar registros existentes:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-004-500-004', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 4', JSON.stringify(err));
           con.rollback(() => {
@@ -717,7 +717,7 @@ function auxPost(sensors, id_exp) {
                 VALUES ?
               `, [insertQueries], (err, result) => {
             if (err) {
-              console.error("Error al insertar los nuevos registros:", err);
+              if(process.env.VERBOSE_ERROR) console.error("Error al insertar los nuevos registros:", err);
               con.rollback(() => {
                 res.status(500).json({ error: 'Error en la base de datos' });
                 // LOG - 500 //
@@ -727,7 +727,7 @@ function auxPost(sensors, id_exp) {
             else {
               con.commit((err) => {
                 if (err) {
-                  console.error("Error al confirmar la transacción:", err);
+                  if(process.env.VERBOSE_ERROR) console.error("Error al confirmar la transacción:", err);
                   con.rollback(() => {
                     res.status(500).json({ error: 'Error en la base de datos' });
                     // LOG - 500 //
@@ -746,7 +746,7 @@ function auxPost(sensors, id_exp) {
     else {
       con.commit((err) => {
         if (err) {
-          console.error("Error al confirmar la transacción:", err);
+          if(process.env.VERBOSE_ERROR) console.error("Error al confirmar la transacción:", err);
           con.rollback(() => {
 
             // LOG - 500 //
@@ -780,7 +780,7 @@ router.put("", verifyToken, (req, res) => { // UPDATE //
   const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
   con.query(queryCheckUid, [uid, id7], (err, result) => {
     if (err) {
-      console.error('Error:', err);
+      if(process.env.VERBOSE_ERROR) console.error('Error:', err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-005-500-001', "500", "PUT", JSON.stringify(req.body), 'Error al actualizar el dispositivo 1', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al actualizar el dispositivo 1' });
@@ -799,7 +799,7 @@ router.put("", verifyToken, (req, res) => { // UPDATE //
 
       con.query(queryUpdate, values, (err, result) => {
         if (err) {
-          console.error("Error:", err);
+          if(process.env.VERBOSE_ERROR) console.error("Error:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-005-500-002', "500", "PUT", JSON.stringify(req.body), 'Error al actualizar el dispositivo 2', JSON.stringify(err));
           return res.status(500).json({ error: 'Error al actualizar el dispositivo 2' });

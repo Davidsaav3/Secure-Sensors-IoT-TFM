@@ -33,7 +33,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
     con.query(query, values, (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 //
             insertLog(req.user.id, req.user.user, '006-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de lectura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener la conexión de lectura' });
@@ -57,7 +57,7 @@ router.get("/id/:id", verifyToken, (req, res) => { /*/ ID  /*/
 
     con.query(query, [id], (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 //
             insertLog(req.user.id, req.user.user, '006-002-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener la conexión de lectura por ID', JSON.stringify(err));
             return res.status(500).json({ error: 'Error en la base de datos' });
@@ -87,7 +87,7 @@ router.get("/duplicate/:description", verifyToken, (req, res) => { /*/ DUPLICATE
 
     con.query(query, (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error en la base de datos
             insertLog(req.user.id, req.user.user, '006-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la conexión de lectura', JSON.stringify(err));
             return res.status(500).send("Error en la base de datos");
@@ -124,7 +124,7 @@ router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
     const query = "INSERT INTO conecction_read (description, mqttQeue, appID, subscribe, enabled, accessKey) VALUES (?, ?, ?, ?, ?, ?)";
     con.query(query, [description, mqttQeue, appID, subscribe, enabled, encryptedMessage], (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error en la base de datos
             insertLog(req.user.id, req.user.user, '006-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear una conexión de lectura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error en la base de datos' });
@@ -189,7 +189,7 @@ router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
 
     con.query(query, values, (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error en la base de datos
             insertLog(req.user.id, req.user.user, '006-005-500-001', "500", "PUT", JSON.stringify(req.body), 'Error al editar la conexión de escritura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error en la base de datos' });
@@ -218,7 +218,7 @@ router.delete("", verifyToken, (req, res) => {  /*/ DELETE  /*/
 
     con.query("DELETE FROM conecction_read WHERE id = ?", id, function (err, result) {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error en la base de datos
             insertLog(req.user.id, req.user.user, '006-006-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar la conexión de lectura', JSON.stringify(err));
             return res.status(500).json({ error: 'Error en la base de datos' });
@@ -247,7 +247,7 @@ router.post("/secret", verifyToken, (req, res) => {  /*/ SECRET  /*/
     const query = "SELECT password FROM users WHERE id = ?";
     con.query(query, [req.user.id], (err, result) => {
         if (err) {
-            console.error(err);
+            if(process.env.VERBOSE_ERROR) console.error(err);
             // LOG - 500 - Error en la base de datos
             insertLog(req.user.id, req.user.user, '006-007-500-001', "500", "POST", JSON.stringify(req.body), 'Error en la base de datos al obtener la contraseña', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener el secreto de lectura' });
@@ -255,7 +255,7 @@ router.post("/secret", verifyToken, (req, res) => {  /*/ SECRET  /*/
 
         bcrypt.compare(password, result[0].password, (bcryptErr, bcryptResult) => {
             if (bcryptErr) {
-                console.error("Error al comparar contraseñas:", bcryptErr);
+                if(process.env.VERBOSE_ERROR) console.error("Error al comparar contraseñas:", bcryptErr);
                 // LOG - 500 - Error al comparar contraseñas
                 insertLog(req.user.id, req.user.user, '006-007-500-002', "500", "POST", JSON.stringify(req.body), 'Error al comparar contraseñas', JSON.stringify(bcryptErr));
                 return res.status(500).json({ error: 'Error al obtener el secreto de lectura' });
@@ -264,7 +264,7 @@ router.post("/secret", verifyToken, (req, res) => {  /*/ SECRET  /*/
                 const query = "SELECT accessKey FROM conecction_read WHERE id = ?";
                 con.query(query, [id], (err, result) => {
                     if (err) {
-                        console.error(err);
+                        if(process.env.VERBOSE_ERROR) console.error(err);
                         // LOG - 500 - Error en la base de datos
                         insertLog(req.user.id, req.user.user, '006-007-500-003', "500", "POST", JSON.stringify(req.params), 'Error en la base de datos al obtener el secreto de lectura', JSON.stringify(err));
                         return res.status(500).json({ error: 'Error al obtener el secreto de lectura' });

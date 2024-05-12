@@ -21,7 +21,7 @@ export class StructureComponent implements OnInit, OnDestroy {
       .subscribe((quotesData: any) => {
         this.aux = quotesData[0].id;
       }, (error) => {
-        console.error("Error al obtener datos de estructura variable:", error);
+        if(environment.verbose_error) console.error("Error al obtener datos de estructura variable:", error);
       });
   }
 
@@ -166,7 +166,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           this.totalPage = this.quantPage * this.currentPage;
         }
       }, (error) => {
-        console.error("Error al obtener datos de estructura:", error);
+        if(environment.verbose_error) console.error("Error al obtener datos de estructura:", error);
       });
   }
 
@@ -241,7 +241,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           this.estructureVariable.structure.unshift(...quotesData);
         },
         (error) => {
-          console.error("Error al obtener datos de estructura variable:", error);
+          if(environment.verbose_error) console.error("Error al obtener datos de estructura variable:", error);
         }
       );
   }
@@ -276,7 +276,7 @@ export class StructureComponent implements OnInit, OnDestroy {
             this.state = 2;
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
 
@@ -333,7 +333,7 @@ export class StructureComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
       this.data = this.data.filter((data: { id_estructure: string }) => data.id_estructure !== this.estructure.id_estructure);
@@ -375,7 +375,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           this.openNew("1", data.duplicatedDescription, this.estructure.configuration, this.estructure.identifier_code, this.estructure.id_variable_data_structure, this.estructure.variable_description);
           this.change = true;
         }, (error: any) => {
-          console.error("Error al verificar la descripción duplicada:", error);
+          if(environment.verbose_error) console.error("Error al verificar la descripción duplicada:", error);
         });
     }
   }
@@ -401,7 +401,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           // Manejar la respuesta aquí si es necesario
         },
         (error) => {
-          console.error("Error:", error);
+          if(environment.verbose_error) console.error("Error:", error);
         }
       );
 

@@ -30,7 +30,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
   con.query(query, values, (err, result) => {
     if (err) {
-      console.error(err);
+      if(process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '003-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener las estructuras de datos', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener las estructuras de datos' });
@@ -80,7 +80,7 @@ router.get("/get_list", verifyToken, (req, res) => { /*/ GET LIST /*/
       res.send(responseObj);
     })
     .catch((err) => {
-      console.error(err);
+      if(process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 - Error al obtener la lista de estructura de datos
       insertLog(req.user.id, req.user.user, '003-002-500-001', "500", "GET", "", 'Error al obtener la lista de estructura de datos', JSON.stringify(err));
       res.status(500).json({ error: 'Error al obtener la lista de estructura de datos' });
@@ -95,7 +95,7 @@ router.get("/duplicate/:description", verifyToken, (req, res) => {  /*/ DUPLICAT
 
   con.query(query, (err, result) => {
     if (err) {
-      console.error(err);
+      if(process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '003-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la estructura de datos', JSON.stringify(err));
       return res.status(500).send("Error al duplicar la estructura de datos");
@@ -127,7 +127,7 @@ router.post("", verifyToken, (req, res) => {  /*/ POST  /*/
   const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
   const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
 
-  if (!id_variable_data_structure) {
+  if (!description) {
     // LOG - 400 //
     insertLog(req.user.id, req.user.user, '003-004-400-001', "400", "POST", JSON.stringify(req.body), "Description es requerido al crear una estructura de datos", "");
     return res.status(400).json({ error: 'Description es requerido al crear una estructura de datos' });
@@ -160,7 +160,7 @@ router.put("", verifyToken, (req, res) => {  /*/ UPDATE  /*/
   const identifier_code = req.body.identifier_code === "" ? null : req.body.identifier_code;
   const id_variable_data_structure = req.body.id_variable_data_structure === "" ? null : req.body.id_variable_data_structure;
 
-  if (!id_estructure) {
+  if (!id_estructure || !description) {
     // LOG - 400 //
     insertLog(req.user.id, req.user.user, '003-005-400-001', "400", "PUT", JSON.stringify(req.body), 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos', "");
     return res.status(400).json({ error: 'Se requiere el ID del usuario y al menos un campo para editar la estructura de datos' });

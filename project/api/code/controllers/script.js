@@ -43,7 +43,7 @@ let proceso;
 
     con.query(query, queryParams, (err, result) => {
         if (err) {
-          console.error("Error en la consulta:", err);
+          if(process.env.VERBOSE_ERROR) console.error("Error en la consulta:", err);
           insertLog(req.user.id, req.user.user, '009-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos al obtener el log de script', '');
           return res.status(500).json({ error: 'Error en la base de datos al obtener el log de script' });
         }
@@ -73,7 +73,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
   let query = "SELECT status, date FROM script WHERE id = 0";
   con.query(query, [status], async (err, result) => {
       if (err) {
-          console.error("Error en la consulta:", err);
+          if(process.env.VERBOSE_ERROR) console.error("Error en la consulta:", err);
           // Insertar registro de error en la base de datos
           insertLog(req.user.id, req.user.user, '009-002-500-001', "500", "POST", JSON.stringify(req.body), 'Error en la base de datos al activar o desactivar el script', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos al activar o desactivar el script' });
@@ -130,7 +130,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
         } 
         catch (error) {
           insertLog(id, user, '009-001-600-006', "600", "", status2, 'Error al apagar el script', JSON.stringify(error));
-          console.error("Ocurrió un error:", error);
+          if(process.env.VERBOSE_ERROR) console.error("Ocurrió un error:", error);
         }
       }
 
@@ -153,11 +153,11 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
           if (process.env.verbose) console.log(`[SALIDA]-> ${data}`);
         });
         proceso.stderr.on('stderr', (stderr) => {
-          console.error(`stderr: ${stderr}`);
+          if(process.env.VERBOSE_ERROR) console.error(`stderr: ${stderr}`);
           insertLog(id, user, '009-001-600-002', "600", "", status2, 'STD-Error en el script (stderr): ', JSON.stringify(stderr));
         });
         proceso.on('error', (error) => {
-          console.error(`Error: ${error.message}`);
+          if(process.env.VERBOSE_ERROR) console.error(`Error: ${error.message}`);
           insertLog(id, user, '009-001-600-003', "600", "", status2, 'Error en el script (error): ', JSON.stringify(error));
           reject(error);
         });
@@ -168,7 +168,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
         resolve(proceso);
       } 
       catch (error) {
-        console.error(`Error en la ejecución del script: ${error.message}`);
+        if(process.env.VERBOSE_ERROR) console.error(`Error en la ejecución del script: ${error.message}`);
         insertLog(id, user, '009-001-600-005', "600", "", status2, 'Error en la ejecución del script', JSON.stringify(error));
         reject(error);
       }
@@ -182,7 +182,7 @@ router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
 
     con.query(query, [], (err, result) => {
         if (err) {
-            console.error("Error en la consulta:", err);
+            if(process.env.VERBOSE_ERROR) console.error("Error en la consulta:", err);
             // Registrar el error en el sistema de logs
             insertLog(id, user, '009-003-500-001', "500", "GET", '', 'Error al obtener el estado del script', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al obtener el estado del script' });

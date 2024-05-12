@@ -30,7 +30,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
   }
   con.query(query, values, (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener los tipos de sensores', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener los tipos de sensores' });
@@ -47,7 +47,7 @@ router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/
 
   con.query(query, (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-002-500-001', "500", "GET", "", 'Error al obtener la lista de tipos de sensores ', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener la lista de tipos de sensores' });
@@ -71,7 +71,7 @@ router.get("/duplicate/:type", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
   let query = `SELECT type FROM sensors_types`;
   con.query(query, (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar el tipo de sensor', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al duplicar el tipo de sensor' });
@@ -107,7 +107,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID  /*/
   const query = "SELECT * FROM sensors_types WHERE id = ?";
   con.query(query, [id], (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-004-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener los tipo de sensor', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener los tipo de sensor' });
@@ -147,7 +147,7 @@ router.post("", verifyToken, (req, res) => {  /*/  POST  /*/
 
   con.query(query, values, (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-004-500-001', "500", "POST", JSON.stringify(req.params), 'Error en la base de datos al crear el tipo de sensor', JSON.stringify(err));
       return res.status(500).json({ error: 'Error en la base de datos al crear el tipo de sensor' });
@@ -188,7 +188,7 @@ router.put("", verifyToken, (req, res) => {  /*/  UPDATE  /*/
 
   con.query(query, values, (err, result) => {
     if (err) {
-      console.error("Error:", err);
+      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-006-500-001', "500", "PUT", JSON.stringify(req.body), 'Error en la base de datos al editar el tipo de sensor', JSON.stringify(err));
       return res.status(500).json({ error: 'Error en la base de datos al editar el tipo de sensor' });
@@ -211,7 +211,7 @@ router.delete("", verifyToken, (req, res) => {  /*/  DELETE  /*/
 
   con.query("DELETE FROM sensors_types WHERE id = ?", id, function (err, result) {
     if (err) {
-      console.error(err);
+      if(process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '002-007-500-001', "500", "DELETE", JSON.stringify(req.body), 'Error al eliminar el tipo de sensor', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al eliminar el tipo de sensor' });

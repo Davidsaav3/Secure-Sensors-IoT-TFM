@@ -89,20 +89,20 @@ export class UsersComponent implements OnInit, OnDestroy {
     id: 0,
     user: "",
     password: "",
-    change_password: true,
+    change_password: 1,
     token: "",
     enabled: 1,
-    revoke_date: "24-02-2001"
+    revoke_date: "24-02-2001 00:00:00"
   };
 
   usersCopy = {
     id: 0,
     user: "",
     password: "",
-    change_password: true,
+    change_password: 1,
     token: "",
     enabled: 1,
-    revoke_date: "24-02-2001"
+    revoke_date: "24-02-2001 00:00:00"
   };
 
   searchAuxArray = {
@@ -137,13 +137,13 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   getCurrentDate(): string {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = ('0' + (now.getMonth() + 1)).slice(-2);
-    const day = ('0' + now.getDate()).slice(-2);
-    const hours = ('0' + now.getHours()).slice(-2);
-    const minutes = ('0' + now.getMinutes()).slice(-2);
-    const seconds = ('0' + now.getSeconds()).slice(-2);
-
+    const year = now.getUTCFullYear();
+    const month = ('0' + (now.getUTCMonth() + 1)).slice(-2);
+    const day = ('0' + now.getUTCDate()).slice(-2);
+    const hours = ('0' + now.getUTCHours()).slice(-2);
+    const minutes = ('0' + now.getUTCMinutes()).slice(-2);
+    const seconds = ('0' + now.getUTCSeconds()).slice(-2);
+    
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
@@ -218,7 +218,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
 
@@ -252,7 +252,7 @@ export class UsersComponent implements OnInit, OnDestroy {
             this.openClouse();
           },
           (error) => {
-            console.error(error);
+            if(environment.verbose_error) console.error(error);
           }
         );
     }
@@ -293,7 +293,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.temp2 = setTimeout(() => {
             this.notRep = false;
           }, 2000);
-          console.error("Error:", error);
+          if(environment.verbose_error) console.error("Error:", error);
         }
       );
     this.change = false;
@@ -331,7 +331,7 @@ export class UsersComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
       this.data = this.data.filter((data: { id: number }) => data.id !== this.users.id);
@@ -383,7 +383,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.clouse();
       },
       (error: any) => {
-        console.error('Error al eliminar usuario:', error);
+        if(environment.verbose_error) console.error('Error al eliminar usuario:', error);
       }
     );
   }
@@ -426,7 +426,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           // Respuesta
         },
         (error) => {
-          console.error("Error:", error);
+          if(environment.verbose_error) console.error("Error:", error);
         }
       );
     this.state = 2;

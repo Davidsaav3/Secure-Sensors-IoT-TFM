@@ -240,7 +240,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
 
@@ -273,7 +273,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             this.openClouse();
           },
           (error) => {
-            console.error(error);
+            if(environment.verbose_error) console.error(error);
           }
         );
     }
@@ -289,7 +289,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           this.showPass = true;
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
   }
@@ -324,7 +324,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             this.openEdit();
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
       this.change = false;
@@ -356,7 +356,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            console.error("Error:", error);
+            if(environment.verbose_error) console.error("Error:", error);
           }
         );
       this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
@@ -403,7 +403,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           this.change = true;
         },
         (error) => {
-          console.error('Error al verificar la descripción duplicada:', error);
+          if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }
@@ -431,7 +431,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
         if(environment.verbose) console.log('conecctions eliminados:');
       },
       (error: any) => {
-        console.error('Error al eliminar conexón:', error);
+        if(environment.verbose_error) console.error('Error al eliminar conexón:', error);
       }
     );
     this.alertDelete = true;

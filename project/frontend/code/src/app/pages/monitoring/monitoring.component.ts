@@ -133,7 +133,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
           if(environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
-          console.error('Error al copiar texto al portapapeles: ', error);
+          if(environment.verbose_error) console.error('Error al copiar texto al portapapeles: ', error);
         });
     }
   }
@@ -184,7 +184,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
 
@@ -292,17 +292,19 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     this.date = this.formatDateTime(new Date());
   }
 
-  formatDateTime(date2: any) { // Formato fecha
+  formatDateTime(date2: any) { // Formatea la fecha
     let dat = "";
-    const date = new Date(date2);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    dat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    if (isNaN(date.getFullYear())) {
+    const now = new Date(date2);
+    const year = now.getUTCFullYear();
+    const month = ('0' + (now.getUTCMonth() + 1)).slice(-2);
+    const day = ('0' + now.getUTCDate()).slice(-2);
+    const hours = ('0' + now.getUTCHours()).slice(-2);
+    const minutes = ('0' + now.getUTCMinutes()).slice(-2);
+    const seconds = ('0' + now.getUTCSeconds()).slice(-2);
+
+    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    if (isNaN(now.getUTCFullYear())) {
       dat = "";
     }
     return dat;

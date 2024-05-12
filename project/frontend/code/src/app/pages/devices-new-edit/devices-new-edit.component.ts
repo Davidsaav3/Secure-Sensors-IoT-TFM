@@ -53,7 +53,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.id = parseInt(idParam, 10);
       }
       else {
-        console.error("El parámetro 'id' no es un número entero válido.");
+        if(environment.verbose_error) console.error("El parámetro 'id' no es un número entero válido.");
       }
     }
 
@@ -65,7 +65,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           this.devices.id_data_estructure = this.auxFixed;
         },
         (error: any) => {
-          console.error(error);
+          if(environment.verbose_error) console.error(error);
         }
       );
     }
@@ -181,7 +181,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.selectSensors.sensors = data;
       },
       (error) => {
-        console.error(error);
+        if(environment.verbose_error) console.error(error);
       }
     );
 
@@ -225,12 +225,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
                 this.devices.uid = data;
               },
               (error) => {
-                console.error('Error al verificar la descripción duplicada:', error);
+                if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
               }
             );
           },
           (error) => {
-            console.error(error);
+            if(environment.verbose_error) console.error(error);
           }
         );
         this.changed = true;
@@ -306,7 +306,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.updateSharedLon();
       },
       (error) => {
-        console.error(error);
+        if(environment.verbose_error) console.error(error);
       }
     );
 
@@ -372,7 +372,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.auxFixed = quotesData.data_estructure[0].id_estructure;
       },
       (error) => {
-        console.error(error);
+        if(environment.verbose_error) console.error(error);
       }
     );
   }
@@ -424,7 +424,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
             }
           },
           (error) => {
-            console.error(error);
+            if(environment.verbose_error) console.error(error);
           }
         );
         this.devices.sensors = [];
@@ -448,7 +448,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
             },
             (error) => {
-              console.error(error);
+              if(environment.verbose_error) console.error(error);
             }
           );
       }
@@ -514,7 +514,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
             },
             (error) => {
-              console.error("Error:", error);
+              if(environment.verbose_error) console.error("Error:", error);
             }
           );
         this.devices.sensors = [];
@@ -539,7 +539,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
             },
             (error) => {
-              console.error("Error:", error);
+              if(environment.verbose_error) console.error("Error:", error);
             }
           );
       }
@@ -568,7 +568,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           this.router.navigate(["/devices"]);
         },
         (error) => {
-          console.error("Error:", error);
+          if(environment.verbose_error) console.error("Error:", error);
         }
       );
   }
@@ -623,7 +623,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.updateSharedLon();
       },
       (error) => {
-        console.error(error);
+        if(environment.verbose_error) console.error(error);
       }
     );
     this.changed = false;
@@ -714,7 +714,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.id_data_estructure = this.auxVariable;
       }
     } catch (error) {
-      console.error("Error:", error);
+      if(environment.verbose_error) console.error("Error:", error);
     }
   }
 
@@ -724,17 +724,19 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     this.date = this.formatDateTime(new Date());
   }
 
-  formatDateTime(date2: any) { // Formato fecha
+  formatDateTime(date2: any) { // Formatea la fecha
     let dat = "";
-    const date = new Date(date2);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    dat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    if (isNaN(date.getFullYear())) {
+    const now = new Date(date2);
+    const year = now.getUTCFullYear();
+    const month = ('0' + (now.getUTCMonth() + 1)).slice(-2);
+    const day = ('0' + now.getUTCDate()).slice(-2);
+    const hours = ('0' + now.getUTCHours()).slice(-2);
+    const minutes = ('0' + now.getUTCMinutes()).slice(-2);
+    const seconds = ('0' + now.getUTCSeconds()).slice(-2);
+
+    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    if (isNaN(now.getUTCFullYear())) {
       dat = "";
     }
     return dat;
