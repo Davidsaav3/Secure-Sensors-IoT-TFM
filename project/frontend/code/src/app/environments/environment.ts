@@ -41,7 +41,7 @@ export const environment = {
     password_pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/,
     title: 'Sensors IoT',
 
-    acces_token_timeout: 10000, // Milisegundos hasta que se cduque el token de acceso 300000
+    acces_token_timeout: 300000, // Milisegundos hasta que se cduque el token de acceso //300000 //10000
     script_status_timeout: 5000, // Milisegundos hasta lanzar el obtener script
 
     acces_token_times: 3, // Veces que intenta obtener el tokend e acceso

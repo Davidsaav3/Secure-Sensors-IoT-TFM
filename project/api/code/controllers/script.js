@@ -51,7 +51,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
     // Validación de resultados de consulta
     if (!result || result.length === 0) {
       insertLog(req.user.id, req.user.user, '009-001-404-001', "404", "GET", JSON.stringify(req.params), 'No se encontraron resultados al obtener el log de script', '');
-      return res.status(404).json({ error: 'No se encontraron resultados al obtener el log de script' });
+      //return res.status(404).json({ error: 'No se encontraron resultados al obtener el log de script' });
     }
 
     //insertLog(req.user.id, req.user.user, '009-001-200-001', "200", "GET", JSON.stringify(req.params), 'Log de script obtenido', '');
@@ -60,7 +60,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 });
 
 
-router.post("/script", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
+router.post("", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
   const status = req.body.status;
   const { id, user } = req.user;
 

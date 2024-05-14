@@ -30,7 +30,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
   con.query(query, values, (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '003-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener las estructuras de datos', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener las estructuras de datos' });
@@ -80,7 +80,7 @@ router.get("/get_list", verifyToken, (req, res) => { /*/ GET LIST /*/
       res.send(responseObj);
     })
     .catch((err) => {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 - Error al obtener la lista de estructura de datos
       insertLog(req.user.id, req.user.user, '003-002-500-001', "500", "GET", "", 'Error al obtener la lista de estructura de datos', JSON.stringify(err));
       res.status(500).json({ error: 'Error al obtener la lista de estructura de datos' });
@@ -95,7 +95,7 @@ router.get("/duplicate/:description", verifyToken, (req, res) => {  /*/ DUPLICAT
 
   con.query(query, (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '003-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la estructura de datos', JSON.stringify(err));
       return res.status(500).send("Error al duplicar la estructura de datos");

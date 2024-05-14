@@ -30,7 +30,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
   con.query(query, queryParams, (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '004-001-500-001', "500", "GET", JSON.stringify(req.params), 'Error al obtener las estructuras de datos variables', JSON.stringify(err));
       return res.status(500).send("Error interno del servidor");
@@ -46,7 +46,7 @@ router.get("/get_list", verifyToken, (req, res) => {  /*/ GET LIST /*/
   let query = `SELECT id, description, structure, initial_byte FROM variable_data_structure ORDER BY description ASC`;
   con.query(query, (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '004-002-500-001', "500", "GET", "", 'Error al obtener la lista de estructura de datos variables', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al obtener la lista de estructura de datos variables' });
@@ -70,7 +70,7 @@ router.get("/duplicate/:description", verifyToken, (req, res) => {  /*/ DUPLICAT
   let query = `SELECT description FROM variable_data_structure WHERE description = ${escapedDescription}`;
   con.query(query, (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '004-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar la estructura de datos variable', JSON.stringify(err));
       return res.status(500).send("Error al duplicar la estructura de datos variable");

@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, HostListener, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ClipboardService } from 'ngx-clipboard';
 import { environment } from "../../environments/environment";
 import { HttpOptionsService } from '../../services/httpOptions.service';
 import { StorageService } from '../../services/storage.service';
@@ -27,7 +26,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
   status = '';
 
   getScripts: string = environment.domain + environment.baseUrl + environment.url.script;
-  postScript: string = environment.domain + environment.baseUrl + environment.url.script + '/script';
+  postScript: string = environment.domain + environment.baseUrl + environment.url.script;
   duplicateScripts: string = environment.domain + environment.baseUrl + environment.url.script + "/duplicate";
   getId: string = environment.domain + environment.baseUrl + environment.url.script + "/id";
 

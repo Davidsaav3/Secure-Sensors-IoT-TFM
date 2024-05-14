@@ -17,12 +17,8 @@ export class AuthService {
   }
 
   postRefresh: string = environment.domain + environment.baseUrl + environment.url.users + '/refresh';
-  consecutivoFallos1 = 0;
-  consecutivoFallos2 = 0;
-  temp6: any = null;
-  temp7: any = null;
-  status = 2;
-  date = '';
+  refreshError = 0;
+  temp: any = null;
 
   isAuthenticated(): boolean {
     let isAuthenticated = false;
@@ -34,23 +30,21 @@ export class AuthService {
   }
 
   stopTimer() {
-    if (this.temp6 != null)
-      clearTimeout(this.temp6);
-    if (this.temp7 != null)
-      clearTimeout(this.temp7);
+    if (this.temp != null)
+      clearTimeout(this.temp);
   }
 
   lanzarTimer() { // Timer para actualizar token de acceso
-    this.consecutivoFallos2 = 0;
+    this.refreshError = 0;
     const bucle = (t: number) => {
-      if (this.consecutivoFallos2 < environment.acces_token_times) {
-        this.temp7 = setTimeout(() => {
+      if (this.refreshError < environment.acces_token_times) {
+        this.temp = setTimeout(() => {
           if (environment.verbose) console.log("obtengo token")
           this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
           }).catch(() => {
-            this.consecutivoFallos2++;
+            this.refreshError++;
           }).finally(() => {
-            if (this.consecutivoFallos2 > 0) {
+            if (this.refreshError > 0) {
               bucle(0);
             }
             else {
@@ -95,21 +89,21 @@ export class AuthService {
             if (environment.verbose) console.log(environment.acces_token_timeout) // imprime milisegundos de vida del token
 
             if (response.token != undefined && response.token != null && response.token != '' && response.token != "{}") { // Control de los fallos
-              this.consecutivoFallos2 = 0;
+              this.refreshError = 0;
             }
             else {
-              this.consecutivoFallos2++;
+              this.refreshError++;
             }
           },
           (error) => {
             if (environment.verbose_error) console.error('Error al renovar el token');
-            this.consecutivoFallos2++;
+            this.refreshError++;
           }
         );
 
       }
       else {
-        this.consecutivoFallos2++;
+        this.refreshError++;
       }
       return newToken;
     }
