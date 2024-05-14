@@ -4,7 +4,7 @@ export const environment = {
     resultsPerPag: [10, 15, 50, 100],
     accessTokenMap: 'pk.eyJ1IjoiZGF2aWRzYWF2MyIsImEiOiJjbGl1cmZ4NG8wMTZqM2ZwNW1pcW85bGo4In0.ye1F3KfhnRZruosNYoAYYQ',
     defaultMapsStyle: 'streets-v12',
-    AppVersion: '2.7.0',
+    AppVersion: '2.7.1',
 
     url: {
         deviceConfigurations: '/device_configurations',
@@ -35,7 +35,8 @@ export const environment = {
     //baseUrl: "http://localhost/api",
 
     // DESARROLLO //
-    baseUrl: "http://localhost:5172/api",
+    domain: "http://localhost:5172",
+    baseUrl: "/sensors/api",
 
     password_pattern: /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/,
     title: 'Sensors IoT',
@@ -51,5 +52,5 @@ export const environment = {
     acces_token_dif: 5000, // acces_token_timeout-acces_token_dif= Tiempo que espera para lanzarlo
 
     verbose: false,
-    verbose_error: true,
+    verbose_error: false,
 };

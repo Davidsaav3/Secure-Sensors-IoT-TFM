@@ -17,9 +17,9 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
 
   constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) { }
 
-  getEstructure: string = environment.baseUrl + environment.url.variableDataStructure;
-  postStructure: string = environment.baseUrl + environment.url.variableDataStructure;
-  duplicateEstructure: string = environment.baseUrl + environment.url.variableDataStructure + "/duplicate";
+  getEstructure: string = environment.domain + environment.baseUrl + environment.url.variableDataStructure;
+  postStructure: string = environment.domain + environment.baseUrl + environment.url.variableDataStructure;
+  duplicateEstructure: string = environment.domain + environment.baseUrl + environment.url.variableDataStructure + "/duplicate";
 
   totalPages = 5;
   currentPage = 1;
@@ -89,13 +89,13 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() { // Destructor
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
 
     this.storageService.setSearch('')
@@ -154,7 +154,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
           this.totalPage = this.quantPage * this.currentPage;
         }
       }, (error) => {
-        if(environment.verbose_error) console.error(error);
+        if (environment.verbose_error) console.error(error);
       });
   }
 
@@ -208,7 +208,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
             this.state = 2;
           },
           (error) => {
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
           }
         );
 
@@ -248,7 +248,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            if(environment.verbose_error) console.error(error);
+            if (environment.verbose_error) console.error(error);
           }
         );
       this.data = this.data.filter((data: { id: string }) => parseInt(data.id) !== this.structure.id);
@@ -288,7 +288,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
           this.change = true;
         },
         (error) => {
-          if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
+          if (environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }
@@ -313,7 +313,7 @@ export class VariableStructureComponent implements OnInit, OnDestroy {
         // Procesa la respuesta aquí si es necesario
       },
       (error: any) => {
-        if(environment.verbose_error) console.error(error);
+        if (environment.verbose_error) console.error(error);
       }
     );
     this.alertDelete = true;

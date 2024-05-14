@@ -6,9 +6,9 @@ const table_device_configuration = async (ttn_device_id, ttn_application_id) => 
     try {
         let [res, meta] = await sequalize.query(query);
         return res[0];
-    } 
+    }
     catch (error) {
-        console.log('deviceConfigurationDato - Error al realizar query');
+        if (process.env.verbose) console.log('deviceConfigurationDato - Error al realizar query');
     }
     return null;
 }

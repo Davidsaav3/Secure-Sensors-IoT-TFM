@@ -6,7 +6,6 @@ import { Component, ViewChild, ElementRef, Renderer2, OnDestroy, OnInit } from '
 import { AuthService } from '../services/auth.service';
 import { StorageService } from '../services/storage.service';
 import { HttpOptionsService } from '../services/httpOptions.service';
-import { TimerService } from '../services/timer.service';
 
 @Component({
   selector: "app-navbar",
@@ -55,8 +54,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   alertUserNot = false;
   contador = 0;
 
-  postUser: string = environment.baseUrl + environment.url.users;
-  postRefresh: string = environment.baseUrl + environment.url.users + '/refresh';
+  postUser: string = environment.domain + environment.baseUrl + environment.url.users;
+  getScriptStatus: string = environment.domain + environment.baseUrl + environment.url.script + '/script-status';
 
   but = false;
   changed = false;
@@ -64,7 +63,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   status = 2;
   date = '';
-  backendURL = "http://localhost:5172/api/script";
 
   temp1: any;
   temp2: any;
@@ -84,7 +82,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     user: "",
   };
 
-  constructor(private timerService: TimerService, private httpOptionsService: HttpOptionsService, private storageService: StorageService, private authService: AuthService, private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, public authService: AuthService, private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
@@ -98,8 +96,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.authService.isAuthenticated()) {
       if (environment.verbose) console.log("IDENTIFICADO")
       this.lanzarTimer();
-      //this.timerService.lanzarTimer();
-      //this.lanzarTimer2();
     }
     if (this.storageService.getStatus()) {
       let aux = this.storageService.getStatus();
@@ -316,10 +312,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
     return dev;
   }
 
-  deleteCookie(name: string): void {  // Eliminar cookie por nombre
-    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
-  }
-
   removeSpaces(event: any) {
     event.target.value = event.target.value.replace(/\s/g, '');
   }
@@ -352,36 +344,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     bucle(0);
   }
 
-  lanzarTimer2() { // Timer para actualizar token de acceso
-    this.consecutivoFallos2 = 0;
-    const bucle = (t: number) => {
-      if (this.consecutivoFallos2 < environment.acces_token_times) {
-        this.temp7 = setTimeout(() => {
-          this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
-          }).catch(() => {
-            this.consecutivoFallos2++;
-          }).finally(() => {
-            if (this.consecutivoFallos2 > 0) {
-              bucle(0);
-            }
-            else {
-              bucle(environment.acces_token_timeout - environment.acces_token_dif);
-            }
-          });
-        }, t);
-      }
-      else {
-        this.logOut();
-      }
-    };
-    bucle(0);
-  }
-
-
 
   async statusScript(): Promise<void> {
     try {
-      const data = await this.http.get<any>(this.backendURL + "/script-status", this.httpOptionsService.getHttpOptions()).toPromise();
+      const data = await this.http.get<any>(this.getScriptStatus, this.httpOptionsService.getHttpOptions()).toPromise();
       this.contador = 0;
       this.date = data.date;
 
@@ -397,92 +363,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  //
-
-  async renewToken(refreshToken: string): Promise<string | null> { // Llaamada de renovación de token de acceso
-    try {
-      let token = this.storageService.getToken() ?? '';
-
-      const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': `${token}`,
-        }),
-        withCredentials: true // Permitir el envío de cookies
-      };
-
-      let newToken = null;
-      const body = { refreshToken };
-      if (this.authService.isAuthenticated()) {
-        this.http.post<any>(this.postRefresh, body, httpOptions).subscribe(
-          (response: any) => {
-            if (!response || !response.token) {
-              if (environment.verbose_error) console.error('Error al renovar el token');
-            }
-            newToken = response.token;
-            this.storageService.setToken(newToken);
-
-            environment.acces_token_timeout = parseInt(response.date);
-            if (environment.verbose) console.log(environment.acces_token_timeout) // imprime milisegundos de vida del token
-
-            if (response.token != undefined && response.token != null && response.token != '' && response.token != "{}") { // Control de los fallos
-              this.consecutivoFallos2 = 0;
-            }
-            else {
-              this.consecutivoFallos2++;
-            }
-          },
-          (error) => {
-            if (environment.verbose_error) console.error('Error al renovar el token');
-            this.consecutivoFallos2++;
-          }
-        );
-
-      }
-      else {
-        this.consecutivoFallos2++;
-      }
-      return newToken;
-    }
-    catch (error) {
-      if (environment.verbose_error) console.error('Error al renovar el token:', error);
-      return null;
-    }
-  }
-
-  logOut() {
-    this.storageService.setId('');
-    this.storageService.setUsername('');
-    this.storageService.setChange('');
-    this.storageService.setStatus('');
-    this.storageService.setDate('');
-    this.storageService.setToken('');
-    this.storageService.setPage('1');
-    this.storageService.setSearch('');
-    this.storageService.setOpen('true');
-    this.storageService.setMap(environment.defaultMapsStyle);
-    this.storageService.setPerPage('15');
-    this.contador = 0;
-    this.deleteCookie('refresh_token');
-    this.router.navigate(['/login']);
-  }
 
   setCookie(name: string, value: string, days: number = 7): void {  // Guardar cookie
     const expirationDate = new Date();
     expirationDate.setDate(expirationDate.getDate() + days);
     const cookieString = `${name}=${value};expires=${expirationDate.toUTCString()};path=/`;
     document.cookie = cookieString;
-  }
-
-  getCookie(name: string): string | null {  // Obtener cookie por nombre
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.trim().split('=');
-      if (cookieName === name) {
-        return cookieValue;
-      }
-    }
-    return null;
   }
 
 }

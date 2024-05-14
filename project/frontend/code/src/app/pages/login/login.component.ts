@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from "../../environments/environment";
 import { HttpOptionsService } from '../../services/httpOptions.service';
 import { StorageService } from '../../services/storage.service';
-import { TimerService } from '../../services/timer.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: "app-login",
@@ -23,7 +23,7 @@ export class LoginComponent implements OnDestroy {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  postLogin: string = environment.baseUrl + environment.url.users + '/login';
+  postLogin: string = environment.domain + environment.baseUrl + environment.url.users + '/login';
 
   cont: any = 0;
   mostrar: any = false;
@@ -41,13 +41,13 @@ export class LoginComponent implements OnDestroy {
   alertCreNot = false;
   alertServNot = false;
   alertDifNot = false;
-  passwordPattern = environment.password_pattern;;
+  passwordPattern = environment.password_pattern;
 
   id = 1;
   username = 'davidsaav';
   token = '';
 
-  constructor(private timerService: TimerService, private httpOptionsService: HttpOptionsService, private storageService: StorageService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
+  constructor(private authService: AuthService, private httpOptionsService: HttpOptionsService, private storageService: StorageService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   formlogin = {
     user: "",
@@ -105,7 +105,7 @@ export class LoginComponent implements OnDestroy {
             this.storageService.setToken(data.token)
             this.setCookie('refresh_token', data.refresh_token);
             this.storageService.setChange(data.change_password.toString());
-            this.timerService.lanzarTimer();
+            this.authService.lanzarTimer();
             this.router.navigate(['/devices']);
           },
           (error: any) => {

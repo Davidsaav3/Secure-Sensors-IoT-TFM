@@ -23,11 +23,11 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  getConecction: string = environment.baseUrl + environment.url.conecctionWrite;
-  postConecction: string = environment.baseUrl + environment.url.conecctionWrite;
-  duplicateConecction: string = environment.baseUrl + environment.url.conecctionWrite + "/duplicate";
-  getId: string = environment.baseUrl + environment.url.conecctionWrite + "/id";
-  getIdSecret: string = environment.baseUrl + environment.url.conecctionWrite + "/secret";
+  getConecction: string = environment.domain + environment.baseUrl + environment.url.conecctionWrite;
+  postConecction: string = environment.domain + environment.baseUrl + environment.url.conecctionWrite;
+  duplicateConecction: string = environment.domain + environment.baseUrl + environment.url.conecctionWrite + "/duplicate";
+  getId: string = environment.domain + environment.baseUrl + environment.url.conecctionWrite + "/id";
+  getIdSecret: string = environment.domain + environment.baseUrl + environment.url.conecctionWrite + "/secret";
 
   passwordFieldType = 'password';
   passwordPattern = environment.password_pattern;;
@@ -117,15 +117,15 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
-    
+
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
     this.storageService.setPage('1')
@@ -240,7 +240,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
 
@@ -273,7 +273,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             this.openClouse();
           },
           (error) => {
-            if(environment.verbose_error) console.error(error);
+            if (environment.verbose_error) console.error(error);
           }
         );
     }
@@ -285,11 +285,11 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: any) => {
           this.conecctionsSecret = data[0];
-          if(environment.verbose) console.log(data[0])
+          if (environment.verbose) console.log(data[0])
           this.showPass = true;
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
   }
@@ -324,7 +324,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             this.openEdit();
           },
           (error) => {
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
           }
         );
       this.change = false;
@@ -356,7 +356,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
           }
         );
       this.data = this.data.filter((data: { id: number }) => data.id !== this.conecctions.id);
@@ -403,7 +403,7 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
           this.change = true;
         },
         (error) => {
-          if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
+          if (environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
         }
       );
     }
@@ -428,10 +428,10 @@ export class ConecctionWriteComponent implements OnInit, OnDestroy {
     this.http.delete(this.postConecction, options).subscribe(
       () => {
         // Realiza acciones con la respuesta si es necesario
-        if(environment.verbose) console.log('conecctions eliminados:');
+        if (environment.verbose) console.log('conecctions eliminados:');
       },
       (error: any) => {
-        if(environment.verbose_error) console.error('Error al eliminar conexón:', error);
+        if (environment.verbose_error) console.error('Error al eliminar conexón:', error);
       }
     );
     this.alertDelete = true;

@@ -30,8 +30,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, public sanitizer: DomSanitizer, private http: HttpClient, private router: Router, private translate: TranslateService) { }
 
-  getDevice: string = environment.baseUrl + environment.url.deviceConfigurations;
-  getSensorsList: string = environment.baseUrl + environment.url.sensorsTypes + "/get_list";
+  getDevice: string = environment.domain + environment.baseUrl + environment.url.deviceConfigurations;
+  getSensorsList: string = environment.domain + environment.baseUrl + environment.url.sensorsTypes + "/get_list";
 
   zoom: number = 7;
   map?: mapboxgl.Map;
@@ -189,22 +189,22 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
         }
       },
       (error: any) => {
-        if(environment.verbose_error) console.error('Error al obtener datos:', error);
+        if (environment.verbose_error) console.error('Error al obtener datos:', error);
       }
     );
     this.readStorage();
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
-    
+
     this.map?.remove();
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
@@ -213,7 +213,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
 
   ngAfterViewInit(): void { // Se ejecuta después de ngOnInit
     this.createMap();
-    if(environment.verbose) console.log('Versión de Mapbox GL JS:', mapboxgl.version);
+    if (environment.verbose) console.log('Versión de Mapbox GL JS:', mapboxgl.version);
   }
 
   auxInit() { // Auxiliar de ngOnInit
@@ -249,7 +249,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     let token = this.storageService.getToken() ?? '';
 
 
-    if(environment.verbose) console.log(this.search.value)
+    if (environment.verbose) console.log(this.search.value)
     this.temp1 = setTimeout(() => { // Asincrono
       if (this.search.value == "") {
         this.searchText = "search";
@@ -274,7 +274,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
         this.getMapDevices("1")
           .then((pass) => {
             if (pass || this.searched) {
-              if(environment.verbose) console.log(this.data)
+              if (environment.verbose) console.log(this.data)
 
               this.searched = false;
               for (let index = 0; index < this.markers.length; index++) {
@@ -295,8 +295,8 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
                 let enable = parseInt(quote.id);
                 this.addMarker(coords, color, name, enable, quote);
               }
-              if(environment.verbose) console.log(this.markers)
-              if(environment.verbose) console.log(this.markers);
+              if (environment.verbose) console.log(this.markers)
+              if (environment.verbose) console.log(this.markers);
 
               this.temp2 = setTimeout(() => { // Asincrono
                 if (this.map != null) {
@@ -434,7 +434,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
             }
           })
           .catch((error: any) => {
-            if(environment.verbose_error) console.error("Error al obtener los datos:", error);
+            if (environment.verbose_error) console.error("Error al obtener los datos:", error);
           });
       }
 
@@ -468,7 +468,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
             }
           },
           (error) => {
-            if(environment.verbose_error) console.error('Error al obtener datos:', error);
+            if (environment.verbose_error) console.error('Error al obtener datos:', error);
           }
         );
       }
@@ -539,7 +539,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
           }
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
           reject(error);
         }
       );
@@ -588,7 +588,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
               bearing: this.currentRotation,
               pitch: this.currentPitch,
             });
-            if(environment.verbose) console.log("Error geo", error);
+            if (environment.verbose) console.log("Error geo", error);
             this.auxInit();
             this.map.setMaxZoom(22);
             this.map.boxZoom.disable();
@@ -604,7 +604,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
           bearing: this.currentRotation,
           pitch: this.currentPitch,
         });
-        if(environment.verbose) console.log("Geo no compatible");
+        if (environment.verbose) console.log("Geo no compatible");
         this.auxInit();
         this.map.setMaxZoom(22);
         this.map.boxZoom.disable();
@@ -1055,7 +1055,7 @@ export class DevicesComponent implements AfterViewInit, OnDestroy, OnInit {
     const minutes = ('0' + now.getUTCMinutes()).slice(-2);
     const seconds = ('0' + now.getUTCSeconds()).slice(-2);
 
-    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    dat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     if (isNaN(now.getUTCFullYear())) {
       dat = "";

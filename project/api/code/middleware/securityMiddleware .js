@@ -1,7 +1,7 @@
 const securityMiddleware = (req, res, next) => {
   // Establece los encabezados de seguridad aquí
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Strict-Transport-Security', 'max-age=${process.env.TRANSPORT_SECURITY_AGE}; includeSubDomains');
+  res.setHeader('Strict-Transport-Security', `max-age=${process.env.TRANSPORT_SECURITY_AGE}; includeSubDomains`);
   res.setHeader('Content-Security-Policy', "default-src 'self'; geolocation 'self'");
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');

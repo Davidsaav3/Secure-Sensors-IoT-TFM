@@ -51,7 +51,7 @@ router.get("/:text_search/:order/:order_type/:pag_tam/:pag_pag", verifyToken, (r
 
 
 // AÑADIR: rateLimiterMiddleware !!!!!!!!!!!!!!!!
-router.post("/login", (req, res) => { // LOGIN //
+router.post("/login", rateLimiterMiddleware, (req, res) => { // LOGIN //
   const { user, password } = req.body;
 
   if (!user || !password) {
@@ -471,7 +471,6 @@ router.post('/refresh', cookieParser(), (req, res) => {
       //insertLog("", "", '005-007-200-001', "200", "POST", refreshToken, 'Token refrescado', '');
 
       // Devolver el nuevo token junto con la fecha de caducidad
-      //console.log(formattedFutureDate)
       res.status(200).json({ token: newAccessToken, date: process.env.ACCESS_TOKEN_SECONDS });
     });
   });

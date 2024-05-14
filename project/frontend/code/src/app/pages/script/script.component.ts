@@ -26,10 +26,10 @@ export class ScriptComponent implements OnInit, OnDestroy {
   date = '';
   status = '';
 
-  getScripts: string = environment.baseUrl + environment.url.script;
-  postScript: string = environment.baseUrl + environment.url.script + '/script';
-  duplicateScripts: string = environment.baseUrl + environment.url.script + "/duplicate";
-  getId: string = environment.baseUrl + environment.url.script + "/id";
+  getScripts: string = environment.domain + environment.baseUrl + environment.url.script;
+  postScript: string = environment.domain + environment.baseUrl + environment.url.script + '/script';
+  duplicateScripts: string = environment.domain + environment.baseUrl + environment.url.script + "/duplicate";
+  getId: string = environment.domain + environment.baseUrl + environment.url.script + "/id";
 
   totalPages = 5;
   currentPage = 1;
@@ -116,13 +116,13 @@ export class ScriptComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
 
     this.storageService.setSearch('')
@@ -132,7 +132,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
 
   setScript(status: any): void {
     if (this.isRequestPending) {
-      if(environment.verbose) console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
+      if (environment.verbose) console.log("La solicitud ya está en curso. Espera 5 segundos antes de enviar otra vez.");
       return;
     }
     this.isRequestPending = true;
@@ -141,10 +141,10 @@ export class ScriptComponent implements OnInit, OnDestroy {
     };
     this.http.post(this.postScript, JSON.stringify(status1), this.httpOptionsService.getHttpOptions()).subscribe(
       () => {
-        if(environment.verbose) console.log("Solicitud POST enviada exitosamente.");
+        if (environment.verbose) console.log("Solicitud POST enviada exitosamente.");
       },
       (error) => {
-        if(environment.verbose_error) console.error("Error al enviar la solicitud POST:", error);
+        if (environment.verbose_error) console.error("Error al enviar la solicitud POST:", error);
         this.isRequestPending = false;
       }
     );
@@ -159,10 +159,10 @@ export class ScriptComponent implements OnInit, OnDestroy {
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
         .then(() => {
-          if(environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
+          if (environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
-          if(environment.verbose_error) console.error('Error al copiar texto al portapapeles: ', error);
+          if (environment.verbose_error) console.error('Error al copiar texto al portapapeles: ', error);
         });
     }
   }
@@ -275,7 +275,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
 
@@ -308,7 +308,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
             this.openClouse();
           },
           (error) => {
-            if(environment.verbose_error) console.error(error);
+            if (environment.verbose_error) console.error(error);
           }
         );
     }
@@ -464,7 +464,7 @@ export class ScriptComponent implements OnInit, OnDestroy {
     const minutes = ('0' + now.getUTCMinutes()).slice(-2);
     const seconds = ('0' + now.getUTCSeconds()).slice(-2);
 
-    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    dat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     if (isNaN(now.getUTCFullYear())) {
       dat = "";

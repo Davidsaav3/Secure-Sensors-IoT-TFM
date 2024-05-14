@@ -14,20 +14,20 @@ import { HttpOptionsService } from '../../services/httpOptions.service';
 export class StructureComponent implements OnInit, OnDestroy {
 
   resultsPerPag = environment.resultsPerPag;
-  getVariableStructureList: string = environment.baseUrl + environment.url.variableDataStructure + "/get_list";
+  getVariableStructureList: string = environment.domain + environment.baseUrl + environment.url.variableDataStructure + "/get_list";
 
   constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private http: HttpClient, public rutaActiva: Router, private elementRef: ElementRef) {
     this.http.get(`${this.getVariableStructureList}`, this.httpOptionsService.getHttpOptions())
       .subscribe((quotesData: any) => {
         this.aux = quotesData[0].id;
       }, (error) => {
-        if(environment.verbose_error) console.error("Error al obtener datos de estructura variable:", error);
+        if (environment.verbose_error) console.error("Error al obtener datos de estructura variable:", error);
       });
   }
 
-  getEstructure: string = environment.baseUrl + environment.url.dataStructure;
-  postEstructure: string = environment.baseUrl + environment.url.dataStructure;
-  duplicateEstructure: string = environment.baseUrl + environment.url.dataStructure + "/duplicate";
+  getEstructure: string = environment.domain + environment.baseUrl + environment.url.dataStructure;
+  postEstructure: string = environment.domain + environment.baseUrl + environment.url.dataStructure;
+  duplicateEstructure: string = environment.domain + environment.baseUrl + environment.url.dataStructure + "/duplicate";
 
   totalPages = 5;
   currentPage = 1;
@@ -115,13 +115,13 @@ export class StructureComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
 
     this.storageService.setSearch('')
@@ -166,7 +166,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           this.totalPage = this.quantPage * this.currentPage;
         }
       }, (error) => {
-        if(environment.verbose_error) console.error("Error al obtener datos de estructura:", error);
+        if (environment.verbose_error) console.error("Error al obtener datos de estructura:", error);
       });
   }
 
@@ -241,7 +241,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           this.estructureVariable.structure.unshift(...quotesData);
         },
         (error) => {
-          if(environment.verbose_error) console.error("Error al obtener datos de estructura variable:", error);
+          if (environment.verbose_error) console.error("Error al obtener datos de estructura variable:", error);
         }
       );
   }
@@ -276,7 +276,7 @@ export class StructureComponent implements OnInit, OnDestroy {
             this.state = 2;
           },
           (error) => {
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
           }
         );
 
@@ -333,7 +333,7 @@ export class StructureComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
           }
         );
       this.data = this.data.filter((data: { id_estructure: string }) => data.id_estructure !== this.estructure.id_estructure);
@@ -375,7 +375,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           this.openNew("1", data.duplicatedDescription, this.estructure.configuration, this.estructure.identifier_code, this.estructure.id_variable_data_structure, this.estructure.variable_description);
           this.change = true;
         }, (error: any) => {
-          if(environment.verbose_error) console.error("Error al verificar la descripción duplicada:", error);
+          if (environment.verbose_error) console.error("Error al verificar la descripción duplicada:", error);
         });
     }
   }
@@ -401,7 +401,7 @@ export class StructureComponent implements OnInit, OnDestroy {
           // Manejar la respuesta aquí si es necesario
         },
         (error) => {
-          if(environment.verbose_error) console.error("Error:", error);
+          if (environment.verbose_error) console.error("Error:", error);
         }
       );
 

@@ -41,17 +41,12 @@ client.on('message', async (topic, message) => {
 });
 */
 
- scriptDAO.updateDate(); // Insertar la primera vez la fecha 
-
- function actualizarBD() { // Bucle principal de actualización de cfecha
-   scriptDAO.updateDate(); 
-   setTimeout(() => actualizarBD(), process.env.SCRIPT_RELOAD_TIME);
- }
+scriptDAO.updateDate(); // Insertar la primera vez la fecha 
 
 // Nos conectamos a MQTT y nos conectamos al topic de las sondas
 // para ver cadens de conexión mirar https://www.thethingsindustries.com/docs/integrations/mqtt/
 
-var client= {};
+var client = {};
 
 for (let i = 0; i < connection_config.length; i++) {
   client[i] = mqtt.connect(connection_config[i].mqttQeue, {
@@ -69,7 +64,7 @@ for (let i = 0; i < connection_config.length; i++) {
       //await main(message);
       console.log(message)
     } catch (error) {
-      if(process.env.verbose){
+      if (process.env.verbose) {
         console.log(error)
       }
     }
@@ -82,7 +77,7 @@ const main = async (message) => {
 
   // Si no hay mensaje o es null
   if (message == null || message == undefined) {
-    console.log('No message');
+    if (process.env.verbose) console.log('No message');
     return;
   }
 
@@ -161,7 +156,7 @@ const main = async (message) => {
   let ttn_data = 0;
 
   ttn_data = methods.decode(ttn_uplink, arrayDecodefunction, numBytes);
-  if (ttn_data.length<=0) return;
+  if (ttn_data.length <= 0) return;
 
   let listaValores = Object.values(ttn_data);
 
@@ -323,5 +318,10 @@ const main = async (message) => {
 
 }
 
-setTimeout(actualizarBD ,process.env.SCRIPT_RELOAD_TIME); // Inicializa bucle
+function actualizarBD() { // Bucle principal de actualización de cfecha
+  scriptDAO.updateDate();
+  setTimeout(actualizarBD, process.env.SCRIPT_RELOAD_TIME);
+}
+
+setTimeout(actualizarBD, process.env.SCRIPT_RELOAD_TIME); // Inicializa bucle
 

@@ -53,7 +53,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.id = parseInt(idParam, 10);
       }
       else {
-        if(environment.verbose_error) console.error("El parámetro 'id' no es un número entero válido.");
+        if (environment.verbose_error) console.error("El parámetro 'id' no es un número entero válido.");
       }
     }
 
@@ -65,17 +65,17 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           this.devices.id_data_estructure = this.auxFixed;
         },
         (error: any) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
     }
   }
 
-  idDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/id";
-  postDevice: string = environment.baseUrl + environment.url.deviceConfigurations;
-  getStructureList: string = environment.baseUrl + environment.url.dataStructure + "/get_list";
-  duplicateDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/duplicate";
-  getSensorsList: string = environment.baseUrl + environment.url.sensorsTypes + "/get_list";
+  idDevice: string = environment.domain + environment.baseUrl + environment.url.deviceConfigurations + "/id";
+  postDevice: string = environment.domain + environment.baseUrl + environment.url.deviceConfigurations;
+  getStructureList: string = environment.domain + environment.baseUrl + environment.url.dataStructure + "/get_list";
+  duplicateDevice: string = environment.domain + environment.baseUrl + environment.url.deviceConfigurations + "/duplicate";
+  getSensorsList: string = environment.domain + environment.baseUrl + environment.url.sensorsTypes + "/get_list";
 
   alt1 = true;
   alt2 = true;
@@ -181,7 +181,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.selectSensors.sensors = data;
       },
       (error) => {
-        if(environment.verbose_error) console.error(error);
+        if (environment.verbose_error) console.error(error);
       }
     );
 
@@ -225,12 +225,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
                 this.devices.uid = data;
               },
               (error) => {
-                if(environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
+                if (environment.verbose_error) console.error('Error al verificar la descripción duplicada:', error);
               }
             );
           },
           (error) => {
-            if(environment.verbose_error) console.error(error);
+            if (environment.verbose_error) console.error(error);
           }
         );
         this.changed = true;
@@ -250,14 +250,14 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     }
 
     const bucle = (t: number) => {
-        this.temp7= setTimeout(() => {
-          this.dataSharingService.sharedAct$.subscribe((data) => {
-            if (data != false) {
-              this.changed = data;
-            }
-          });
-          this.readStorage();
-        }, 10);
+      this.temp7 = setTimeout(() => {
+        this.dataSharingService.sharedAct$.subscribe((data) => {
+          if (data != false) {
+            this.changed = data;
+          }
+        });
+        this.readStorage();
+      }, 10);
     };
     bucle(0);
 
@@ -266,19 +266,19 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
-    if(this.temp5!=null) 
+    if (this.temp5 != null)
       clearTimeout(this.temp5);
-    if(this.temp6!=null) 
+    if (this.temp6 != null)
       clearTimeout(this.temp6);
-    if(this.temp7!=null) 
+    if (this.temp7 != null)
       clearTimeout(this.temp7);
   }
 
@@ -300,13 +300,13 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         if (data[0].variable_configuration == undefined || data[0].variable_configuration == null) {
           this.devices.variable_configuration = 0;
         }
-        if(environment.verbose) console.log(this.devices.lat)
-        if(environment.verbose) console.log(this.devices.lon)
+        if (environment.verbose) console.log(this.devices.lat)
+        if (environment.verbose) console.log(this.devices.lon)
         this.updateSharedLat();
         this.updateSharedLon();
       },
       (error) => {
-        if(environment.verbose_error) console.error(error);
+        if (environment.verbose_error) console.error(error);
       }
     );
 
@@ -372,7 +372,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.auxFixed = quotesData.data_estructure[0].id_estructure;
       },
       (error) => {
-        if(environment.verbose_error) console.error(error);
+        if (environment.verbose_error) console.error(error);
       }
     );
   }
@@ -386,7 +386,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     this.devices.createdAt = this.date;
     this.devices.updatedAt = this.date;
     this.getShared();
-    if(environment.verbose) console.log(this.devices)
+    if (environment.verbose) console.log(this.devices)
 
     if (form.valid) {
       if (this.devices.sensors.length == 0) {
@@ -419,12 +419,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
             }
             else {
               this.id = data.insertId;
-              if(environment.verbose) console.log(data.insertId);
+              if (environment.verbose) console.log(data.insertId);
               this.newSensors();
             }
           },
           (error) => {
-            if(environment.verbose_error) console.error(error);
+            if (environment.verbose_error) console.error(error);
           }
         );
         this.devices.sensors = [];
@@ -443,12 +443,12 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
               else {
                 this.id = data.insertId;
-                if(environment.verbose) console.log(data.insertId);
+                if (environment.verbose) console.log(data.insertId);
                 this.newSensors();
               }
             },
             (error) => {
-              if(environment.verbose_error) console.error(error);
+              if (environment.verbose_error) console.error(error);
             }
           );
       }
@@ -514,14 +514,14 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
             },
             (error) => {
-              if(environment.verbose_error) console.error("Error:", error);
+              if (environment.verbose_error) console.error("Error:", error);
             }
           );
         this.devices.sensors = [];
       }
       else {
-        if(environment.verbose) console.log(this.devices.lat)
-        if(environment.verbose) console.log(this.devices.lon)
+        if (environment.verbose) console.log(this.devices.lat)
+        if (environment.verbose) console.log(this.devices.lon)
         this.http.put(this.postDevice, JSON.stringify(this.devices), this.httpOptionsService.getHttpOptions())
           .subscribe(
             (data: any) => {
@@ -539,7 +539,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
               }
             },
             (error) => {
-              if(environment.verbose_error) console.error("Error:", error);
+              if (environment.verbose_error) console.error("Error:", error);
             }
           );
       }
@@ -568,7 +568,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
           this.router.navigate(["/devices"]);
         },
         (error) => {
-          if(environment.verbose_error) console.error("Error:", error);
+          if (environment.verbose_error) console.error("Error:", error);
         }
       );
   }
@@ -623,7 +623,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.updateSharedLon();
       },
       (error) => {
-        if(environment.verbose_error) console.error(error);
+        if (environment.verbose_error) console.error(error);
       }
     );
     this.changed = false;
@@ -714,7 +714,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
         this.devices.id_data_estructure = this.auxVariable;
       }
     } catch (error) {
-      if(environment.verbose_error) console.error("Error:", error);
+      if (environment.verbose_error) console.error("Error:", error);
     }
   }
 
@@ -734,7 +734,7 @@ export class DevicesNewEditComponent implements OnInit, OnDestroy {
     const minutes = ('0' + now.getUTCMinutes()).slice(-2);
     const seconds = ('0' + now.getUTCSeconds()).slice(-2);
 
-    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    dat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     if (isNaN(now.getUTCFullYear())) {
       dat = "";

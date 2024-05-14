@@ -83,17 +83,17 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             (select description from data_estructure where id_estructure=id_data_estructure) as data_estructure,
             (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure,`;
         if (devices_act != 2 && array_sensors == -1) {
-          if(process.env.verbose){
-            console.log("LISTA ACT")
+          if (process.env.verbose) {
+            if (process.env.verbose) console.log("LISTA ACT")
           }
           variable += ` (SELECT COUNT(*) AS total FROM device_configurations WHERE device_configurations.enable=${devices_act}) as total FROM ( SELECT id FROM device_configurations WHERE enable=${devices_act} LIMIT ${tam} OFFSET ${act} ) AS subquery 
               LEFT JOIN device_configurations dc ON subquery.id = dc.id
               LEFT JOIN sensors_devices sd ON subquery.id = sd.id_device
               LEFT JOIN sensors_types st ON sd.id_type_sensor = st.id  
               order by ${order} ${order_type}`
-              if(process.env.verbose){
-                console.log(variable)
-              }
+          if (process.env.verbose) {
+            if (process.env.verbose) console.log(variable)
+          }
           con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
             if (err) throw err;
             const responseArray = auxGet(result);
@@ -105,8 +105,8 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         //
         else {
           if (array_sensors != -1 && array_sensors != -2) {
-            if(process.env.verbose){
-              console.log("LISTA FILTRO TODOS Y ACT")
+            if (process.env.verbose) {
+              if (process.env.verbose) console.log("LISTA FILTRO TODOS Y ACT")
             }
             if (devices_act != 2) {
               variable += ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id IN ${consulta} AND enable=${devices_act}) as total FROM (
@@ -133,7 +133,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             //
 
             variable += `order by ${order} ${order_type}`
-            if(process.env.verbose) console.log(variable)
+            if (process.env.verbose) console.log(variable)
             con.query(variable, function (err, result) { /////////////////////////////////////////////////////////
               if (err) throw err;
               const responseArray = auxGet(result);
@@ -143,7 +143,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             });
           }
           if (array_sensors == -2) {
-            if(process.env.verbose) console.log("LISTA FILTRO NINGUNO Y ACT")
+            if (process.env.verbose) console.log("LISTA FILTRO NINGUNO Y ACT")
             if (devices_act != 2) {
               variable += ` (SELECT COUNT(*) AS total FROM device_configurations where device_configurations.id NOT IN (SELECT id_device FROM sensors_devices) AND device_configurations.enable=${devices_act}) as total FROM (
                     SELECT id
@@ -187,7 +187,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         var variable = '';
         variable += ` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable, sensors_devices.orden as sensor_orden,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure, (select description from variable_data_structure where variable_data_structure.id=id_data_estructure) as variable_data_structure FROM device_configurations `
         if (devices_act != 2 && array_sensors == -1) {
-          if(process.env.verbose) console.log("MAPA ACT")
+          if (process.env.verbose) console.log("MAPA ACT")
           variable += `LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
               LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
               WHERE device_configurations.enable=${devices_act} AND lon BETWEEN ${xx1} AND ${xx2} AND lat BETWEEN ${yy1} AND ${yy2}`
@@ -202,7 +202,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         //
         else {
           if (array_sensors != -1 && array_sensors != -2) {
-            if(process.env.verbose) console.log("MAPA FILTRO TODOS Y ACT")
+            if (process.env.verbose) console.log("MAPA FILTRO TODOS Y ACT")
             variable += ` 
                 LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
                 LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -220,7 +220,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
             });
           }
           if (array_sensors == -2) {
-            if(process.env.verbose) console.log("MAPA FILTRO NINGUNO Y ACT")
+            if (process.env.verbose) console.log("MAPA FILTRO NINGUNO Y ACT")
             variable += ` 
                 LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
                 LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -242,7 +242,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
     }
     else {
       if (state == '0') {
-        if(process.env.verbose==true) console.log("LISTA SIMPLE")
+        if (process.env.verbose) console.log("LISTA SIMPLE")
         con.query(` SELECT
             dc.*,
             st.id as sensor_id,
@@ -269,7 +269,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
         });
       }
       else {
-        if(process.env.verbose) console.log("MAPA SIMPLE")
+        if (process.env.verbose) console.log("MAPA SIMPLE")
         con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable,sensors_devices.orden as sensor_orden,(select description from data_estructure where id_estructure=id_data_estructure) as data_estructure FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
             LEFT JOIN sensors_types ON sensors_devices.id_type_sensor = sensors_types.id 
@@ -284,7 +284,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
   }
   else {
     if (state == '0') {
-      if(process.env.verbose) console.log("LISTA BUSQUEDA POR TEXTO")
+      if (process.env.verbose) console.log("LISTA BUSQUEDA POR TEXTO")
       let query = `SELECT
           dc.*, 
           st.id as sensor_id,
@@ -323,7 +323,7 @@ router.get("/:state/:search_text/:order/:order_type/:array_sensors/:sensors_act/
       });
     }
     else {
-      if(process.env.verbose) console.log("MAPA BUSQUEDA POR TEXTO")
+      if (process.env.verbose) console.log("MAPA BUSQUEDA POR TEXTO")
       con.query(` SELECT device_configurations.*, sensors_types.id as sensor_id, sensors_types.type as type_name, sensors_devices.enable as sensor_enable ,sensors_devices.orden as sensor_orden 
             FROM device_configurations
             LEFT JOIN sensors_devices ON device_configurations.id = sensors_devices.id_device 
@@ -393,7 +393,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
   let query1 = `SELECT variable_configuration FROM device_configurations WHERE id=?`;
   con.query(query1, [id], (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error("Error:", err);
+      if (process.env.VERBOSE_ERROR) console.error("Error:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-002-500-001', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos 1', JSON.stringify(err));
       return res.status(500).json({ error: 'Error en la base de datos 1' });
@@ -439,7 +439,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
 
       con.query(query, [id], (err, result) => {
         if (err) {
-          if(process.env.VERBOSE_ERROR) console.error("Error:", err);
+          if (process.env.VERBOSE_ERROR) console.error("Error:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-002-500-002', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos 2', JSON.stringify(err));
           return res.status(500).json({ error: 'Error en la base de datos 2' });
@@ -458,7 +458,7 @@ router.get("/id/:id", verifyToken, (req, res) => {  /*/ ID /*/
 
           con.query(query, [id], (err, result) => {
             if (err) {
-              if(process.env.VERBOSE_ERROR) console.error("Error:", err);
+              if (process.env.VERBOSE_ERROR) console.error("Error:", err);
               // LOG - 500 //
               insertLog(req.user.id, req.user.user, '001-002-500-003', "500", "GET", JSON.stringify(req.params), 'Error en la base de datos 3', JSON.stringify(err));
               return res.status(500).json({ error: 'Error en la base de datos 3' });
@@ -581,7 +581,7 @@ router.get("/duplicate/:uid", verifyToken, (req, res) => {  /*/ DUPLICATE  /*/
   let query = `SELECT uid FROM device_configurations`;
   con.query(query, (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error(err);
+      if (process.env.VERBOSE_ERROR) console.error(err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-003-500-001', "500", "GET", JSON.stringify(req.params), 'Error al duplicar dispositivo', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al duplicar dispositivo' });
@@ -617,8 +617,8 @@ router.post("", verifyToken, (req, res) => { // POST Y DELETE //
   } = req.body;
 
   //let updatedAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
-  createdAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
-  updatedAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
+  createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   if (!uid) {
     // LOG - 400 //
@@ -635,7 +635,7 @@ router.post("", verifyToken, (req, res) => { // POST Y DELETE //
   const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ?';
   con.query(queryCheckUid, [uid], (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error('Error:', err);
+      if (process.env.VERBOSE_ERROR) console.error('Error:', err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-004-500-001', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 1', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al crear el dispositivo 1' });
@@ -658,7 +658,7 @@ router.post("", verifyToken, (req, res) => { // POST Y DELETE //
         ],
         (err, result) => {
           if (err) {
-            if(process.env.VERBOSE_ERROR) console.error("Error:", err);
+            if (process.env.VERBOSE_ERROR) console.error("Error:", err);
             // LOG - 500 //
             insertLog(req.user.id, req.user.user, '001-004-500-002', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 2', JSON.stringify(err));
             return res.status(500).json({ error: 'Error al crear el dispositivo 2' });
@@ -681,7 +681,7 @@ function auxPost(sensors, id_exp) {
 
   con.beginTransaction((err) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error("Error al iniciar la transacción:", err);
+      if (process.env.VERBOSE_ERROR) console.error("Error al iniciar la transacción:", err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-004-500-003', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 3', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al crear el dispositivo 3' });
@@ -690,7 +690,7 @@ function auxPost(sensors, id_exp) {
     if (Array.isArray(newRecords) && newRecords.length > 0 || newRecords[0].id === -1) {
       con.query("DELETE FROM sensors_devices WHERE id_device = ?", [id_exp], (err) => {
         if (err) {
-          if(process.env.VERBOSE_ERROR) console.error("Error al eliminar registros existentes:", err);
+          if (process.env.VERBOSE_ERROR) console.error("Error al eliminar registros existentes:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-004-500-004', "500", "POST", JSON.stringify(req.body), 'Error al crear el dispositivo 4', JSON.stringify(err));
           con.rollback(() => {
@@ -717,7 +717,7 @@ function auxPost(sensors, id_exp) {
                 VALUES ?
               `, [insertQueries], (err, result) => {
             if (err) {
-              if(process.env.VERBOSE_ERROR) console.error("Error al insertar los nuevos registros:", err);
+              if (process.env.VERBOSE_ERROR) console.error("Error al insertar los nuevos registros:", err);
               con.rollback(() => {
                 res.status(500).json({ error: 'Error en la base de datos' });
                 // LOG - 500 //
@@ -727,7 +727,7 @@ function auxPost(sensors, id_exp) {
             else {
               con.commit((err) => {
                 if (err) {
-                  if(process.env.VERBOSE_ERROR) console.error("Error al confirmar la transacción:", err);
+                  if (process.env.VERBOSE_ERROR) console.error("Error al confirmar la transacción:", err);
                   con.rollback(() => {
                     res.status(500).json({ error: 'Error en la base de datos' });
                     // LOG - 500 //
@@ -746,7 +746,7 @@ function auxPost(sensors, id_exp) {
     else {
       con.commit((err) => {
         if (err) {
-          if(process.env.VERBOSE_ERROR) console.error("Error al confirmar la transacción:", err);
+          if (process.env.VERBOSE_ERROR) console.error("Error al confirmar la transacción:", err);
           con.rollback(() => {
 
             // LOG - 500 //
@@ -769,7 +769,7 @@ router.put("", verifyToken, (req, res) => { // UPDATE //
   let {
     uid, alias, origin, description_origin, application_id, topic_name, typemeter, lat, lon, cota, timezone, enable, organizationid, updatedAt, id_data_estructure, variable_configuration, id: id7,
   } = req.body;
-  updatedAt= new Date().toISOString().slice(0, 19).replace('T', ' ');
+  updatedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
   if (!uid || !topic_name) {
     // LOG - 400 //
@@ -780,7 +780,7 @@ router.put("", verifyToken, (req, res) => { // UPDATE //
   const queryCheckUid = 'SELECT * FROM device_configurations WHERE uid = ? AND id != ?';
   con.query(queryCheckUid, [uid, id7], (err, result) => {
     if (err) {
-      if(process.env.VERBOSE_ERROR) console.error('Error:', err);
+      if (process.env.VERBOSE_ERROR) console.error('Error:', err);
       // LOG - 500 //
       insertLog(req.user.id, req.user.user, '001-005-500-001', "500", "PUT", JSON.stringify(req.body), 'Error al actualizar el dispositivo 1', JSON.stringify(err));
       return res.status(500).json({ error: 'Error al actualizar el dispositivo 1' });
@@ -799,7 +799,7 @@ router.put("", verifyToken, (req, res) => { // UPDATE //
 
       con.query(queryUpdate, values, (err, result) => {
         if (err) {
-          if(process.env.VERBOSE_ERROR) console.error("Error:", err);
+          if (process.env.VERBOSE_ERROR) console.error("Error:", err);
           // LOG - 500 //
           insertLog(req.user.id, req.user.user, '001-005-500-002', "500", "PUT", JSON.stringify(req.body), 'Error al actualizar el dispositivo 2', JSON.stringify(err));
           return res.status(500).json({ error: 'Error al actualizar el dispositivo 2' });

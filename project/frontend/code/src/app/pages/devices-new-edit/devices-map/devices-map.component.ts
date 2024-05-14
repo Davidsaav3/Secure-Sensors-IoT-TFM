@@ -30,7 +30,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
   sharedLat: any = 38.3855908932305;
   sharedLon: any = -0.5098796883778505;
   sharedCota: any = 10;
-  idDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/id";
+  idDevice: string = environment.domain + environment.baseUrl + environment.url.deviceConfigurations + "/id";
 
   currentLngLat: mapboxgl.LngLat = new mapboxgl.LngLat(
     this.sharedLon,
@@ -42,7 +42,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     this.ruteAux = this.rute.split("/");
   }
 
-  maxDevice: string = environment.baseUrl + environment.url.deviceConfigurations + "/max";
+  maxDevice: string = environment.domain + environment.baseUrl + environment.url.deviceConfigurations + "/max";
 
   @ViewChild("map") divMap?: ElementRef;
   map?: mapboxgl.Map;
@@ -97,7 +97,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
             this.map = this.createMap([
               -3.7036360462944913, 40.41686882952129,
             ]);
-            if(environment.verbose) console.log("Error geo");
+            if (environment.verbose) console.log("Error geo");
             this.auxInit();
           }
         );
@@ -121,7 +121,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
           this.auxInit();
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
     }
@@ -222,7 +222,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     }
 
     const bucle1 = (t: number) => {
-      this.temp1= setTimeout(() => {
+      this.temp1 = setTimeout(() => {
         try {
           this.dataSharingService.sharedLat$.subscribe((data) => {
             if (data != 0)
@@ -249,7 +249,7 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
     bucle1(0);
     //
     const bucle2 = (t: number) => {
-      this.temp2= setTimeout(() => {
+      this.temp2 = setTimeout(() => {
         try {
           if (this.map) {
             this.map.resize();
@@ -285,11 +285,11 @@ export class DevicesMapComponent implements AfterViewInit, OnDestroy {
         this.map.remove();
       }
     } catch (error) {
-      if(environment.verbose_error) console.error("Error al eliminar el mapa:", error);
+      if (environment.verbose_error) console.error("Error al eliminar el mapa:", error);
     }
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
   }
 

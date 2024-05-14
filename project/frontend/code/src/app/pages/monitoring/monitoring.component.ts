@@ -23,8 +23,8 @@ export class MonitoringComponent implements OnInit, OnDestroy {
 
   }
 
-  getMonitorings: string = environment.baseUrl + environment.url.monitoring;
-  getId: string = environment.baseUrl + environment.url.monitoring + "/id";
+  getMonitorings: string = environment.domain + environment.baseUrl + environment.url.monitoring;
+  getId: string = environment.domain + environment.baseUrl + environment.url.monitoring + "/id";
   date: any;
 
   mostrarTooltip = false;
@@ -112,15 +112,15 @@ export class MonitoringComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
-    
+
     this.storageService.setSearch('')
     this.storageService.setPerPage('15')
     this.storageService.setPage('1')
@@ -130,10 +130,10 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy)
         .then(() => {
-          if(environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
+          if (environment.verbose) console.log('Texto copiado al portapapeles: ', textToCopy);
         })
         .catch((error) => {
-          if(environment.verbose_error) console.error('Error al copiar texto al portapapeles: ', error);
+          if (environment.verbose_error) console.error('Error al copiar texto al portapapeles: ', error);
         });
     }
   }
@@ -184,7 +184,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
 
@@ -302,7 +302,7 @@ export class MonitoringComponent implements OnInit, OnDestroy {
     const minutes = ('0' + now.getUTCMinutes()).slice(-2);
     const seconds = ('0' + now.getUTCSeconds()).slice(-2);
 
-    dat= `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    dat = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
     if (isNaN(now.getUTCFullYear())) {
       dat = "";

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-04-2024 a las 00:14:25
+-- Tiempo de generación: 14-05-2024 a las 16:08:30
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -42,7 +42,8 @@ CREATE TABLE `conecction_read` (
 --
 
 INSERT INTO `conecction_read` (`description`, `mqttQeue`, `appID`, `accessKey`, `subscribe`, `enabled`, `id`) VALUES
-('Adquisición 1', 'mqtt://eu1.cloud.thethings.network:1883', 'ua-roomsensors@ttn ', 'U2FsdGVkX1/SBed9J5tRRr8N36utFdZuy9tySCt/A04=', 'v3/ua-roomsensors@ttn/devices/+/up', 1, 2);
+('Adquisición 2', 'mqtt://eu1.cloud.thethings.network:1883', 'ua-roomsensors@ttn ', 'U2FsdGVkX1/SBed9J5tRRr8N36utFdZuy9tySCt/A04=', 'v3/ua-roomsensors@ttn/devices/+/up', 1, 2),
+('Adquisición 1', 'mqtt://eu1.cloud.thethings.network:1883', 'ua-roomsensors@ttn ', 'U2FsdGVkX18LNh7sxT7ScbCs0EgmwjoxVmxQ6DSIgyY=', 'v3/ua-roomsensors@ttn/devices/+/up', 1, 15);
 
 -- --------------------------------------------------------
 
@@ -63,7 +64,30 @@ CREATE TABLE `conecction_write` (
 --
 
 INSERT INTO `conecction_write` (`description`, `authorization`, `urlIngest`, `id`, `enabled`) VALUES
-('Ingesta 1', 'U2FsdGVkX1+nQt7ccMHWAYGX3Nag3HdvxfwGO/0Nl6M=', 'https://ingest.smartua.es', 2, 1);
+('Ingesta 1', 'U2FsdGVkX18jIOOQvhFFMqOU/YmUPeNJU/srHfSJIlE=', 'https://ingest.smartua.es', 2, 1),
+('Ingesta 2', 'U2FsdGVkX18vbOlPUdQeirgjqOpT2ZcuCmfjE6RD6lw=', 'https://ingest.smartua.es', 9, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `config`
+--
+
+CREATE TABLE `config` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `value_int` int(11) NOT NULL,
+  `value_string` text NOT NULL,
+  `value_bool` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `config`
+--
+
+INSERT INTO `config` (`id`, `name`, `value_int`, `value_string`, `value_bool`) VALUES
+(1, 'log_erase', 10, '', 0),
+(3, 'log_script_erase', 10, '', 0);
 
 -- --------------------------------------------------------
 
@@ -84,17 +108,14 @@ CREATE TABLE `data_estructure` (
 --
 
 INSERT INTO `data_estructure` (`id_estructure`, `description`, `configuration`, `identifier_code`, `id_variable_data_structure`) VALUES
-(1, 'Sonda CO2 con GPS (7)', 'FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32', NULL, 0),
 (2, 'Yokogawa XS770A Sushi Sensor Vibration (Z axis) Data_Type=0x10', 'UINT8,UINT16,FLOAT16,FLOAT16,FLOAT16', 16, 1),
 (3, 'Sushi Sensor Vibration (X-axis)\r\nData_Type=0x12', 'UINT8,UINT16,FLOAT16,FLOAT16', 18, 1),
-(4, 'Sonda CO2 Temp Hum - TTGO (3)', 'FLOAT32,FLOAT32,FLOAT32', NULL, 0),
-(5, 'Sonda CO2 (1)', 'FLOAT32', NULL, 0),
+(4, 'Sonda CO2 Temp Hum - TTGO (3)dd', 'FLOAT32,FLOAT32,FLOAT32', NULL, 0),
 (6, 'Sonda GPS (6)', 'FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32', NULL, 0),
 (7, 'Sonda VOC GPS Correction (14)', 'FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32', NULL, 0),
 (8, 'Sonda VOC (7)', 'FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32', NULL, 0),
 (9, 'Sonda VOC GPS (13)', 'FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32,FLOAT32', NULL, 0),
-(10, 'Sonda Presencia (2)', 'FLOAT32,FLOAT32', NULL, 0),
-(12, 'Estructura caudalímetro de prueba', 'UINT8,FLOAT16,FLOAT16,FLOAT16', 16, 2);
+(10, 'Sonda Presencia (2)', 'FLOAT32,FLOAT32', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -128,17 +149,14 @@ CREATE TABLE `device_configurations` (
 --
 
 INSERT INTO `device_configurations` (`id`, `topic_name`, `organizationid`, `lat`, `lon`, `cota`, `timezone`, `description_origin`, `origin`, `uid`, `application_id`, `id_data_estructure`, `variable_configuration`, `createdAt`, `updatedAt`, `typemeter`, `alias`, `enable`) VALUES
-(1, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 1 - TTGO', 'Multisensor', 'ua-sensor-s1', 'ua-sensor', 4, 0, NULL, '2024-03-09 20:09:57', 'UASENSOR', 'Despacho 1247', 0),
-(2, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 2 - TTGO', 'Multisensor', 'ua-sensor-s2', 'ua-sensor', 4, 0, NULL, NULL, 'UASENSOR', 'Despacho 1216', 1),
 (3, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 3 - TTGO', 'Sensor C02', 'ua-sensor-s3', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', 'Despacho 1234', 1),
-(4, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 4 - TTGO', 'Sensor C02', 'ua-sensor-s4', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', 'Despacho 1247', 1),
+(4, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 4 - TTGO', 'Sensor C02', 'ua-sensor-s4', 'ua-sensor', 5, 0, NULL, '2024-05-03 00:49:16', 'UASENSOR', 'Despacho 1247', 0),
 (5, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 5 - TTGO', 'Sensor C02', 'ua-sensor-s5', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', '0015PB006', 1),
 (6, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 6 - TTGO', 'Multisensor', 'ua-sensor-s6', 'ua-sensor', 4, 0, NULL, NULL, 'UASENSOR', 'Despacho 1246', 1),
 (7, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 7 - TTGO', 'Sensor CO2', 'ua-sensor-s7', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', '0037P1036', 1),
 (8, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 0, 0, 0, 'Europe/Madrid', 'Sensor 8 - TBEAM', 'Sensor GPS', 'ua-sensor-s8', 'ua-sensor', 6, 0, NULL, NULL, 'UASENSOR', 'Despacho 1215', 1),
 (9, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 9 - TTGO', 'Sensor CO2', 'ua-sensor-s9', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', 'Despacho 1247', 1),
 (10, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 10 - TBEAM', 'Sensor CO2', 'ua-sensor-s10', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', 'Despacho 1215', 1),
-(11, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.3879143951802, -0.5205190257745766, 0, 'Europe/Madrid', 'Sensor 11 - TBEAM', 'Multisensor GPS', 'ua-sensor-s11', 'ua-sensor', 1, 0, NULL, NULL, 'UASENSOR', 'Facultad de Educación', 1),
 (12, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.382810317793336, -0.5148430958871572, 0, 'Europe/Madrid', 'Sensor 12 - TTGO', 'Sensor CO2', 'ua-sensor-s12', 'ua-sensor', 5, 0, NULL, NULL, 'UASENSOR', 'Instituto Investigación Informática', 1),
 (13, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.38482407481661, -0.5131080300266437, 0, 'Europe/Madrid', 'Sensor 13 - TBEAM', 'Multisensor GPS', 'ua-sensor-s13', 'ua-sensor', 1, 0, NULL, NULL, 'UASENSOR', 'Torre de Control', 1),
 (14, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.385271, -0.509498, 0, 'Europe/Madrid', 'Sensor 14 - TBEAM', 'Sensor GPS', 'ua-sensor-s14', 'ua-sensor', 6, 0, NULL, NULL, 'UASENSOR', 'Despacho 1215', 1),
@@ -162,7 +180,8 @@ INSERT INTO `device_configurations` (`id`, `topic_name`, `organizationid`, `lat`
 (32, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.38453473969473, -0.5093876459789433, 0, 'Europe/Madrid', 'Sensor 32 - TBEAM', 'Multisensor GPS', 'ua-sensor-s32', 'ua-sensor', 1, 0, NULL, NULL, 'UASENSOR', 'Aulario 2', 1),
 (33, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.97518313182293, -0.1409554481506348, 0, 'Europe/Madrid', 'Sensor 33 - TBEAM', 'Multisensor GPS VOC', 'ua-sensor-s33', 'ua-sensor', 9, 0, NULL, NULL, 'UASENSOR', 'Gandía', 1),
 (34, 'ua.sensors.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.38766904183048, -0.5126090599775734, 0, 'Europe/Madrid', 'Sensor 34 - TBEAM', 'Multisensor GPS PRESENCE', 'ua-sensor-s34', 'ua-sensor', 10, 0, NULL, NULL, 'UASENSOR', 'Politécnica II', 0),
-(35, 'ua.bim.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.38476380146816, -0.5114567766812126, 10, 'Europe/Madrid', 'Sensor 35 - YOKOGAWA', 'Yokogawa XS770A Vibration', 'yokogawa-xs770a-s1', 'ua-sensor', 2, 0, NULL, NULL, 'YOKOGAWA', 'Rectorado', 1);
+(35, 'ua.bim.raw', 'UA UNIVERSIDAD DE ALICANTE', 38.38476380146816, -0.5114567766812126, 10, 'Europe/Madrid', 'Sensor 35 - YOKOGAWA', 'Yokogawa XS770A Vibration', 'yokogawa-xs770a-s1', 'ua-sensor', 2, 0, NULL, NULL, 'YOKOGAWA', 'Rectorado', 1),
+(37, '11', '11', 0, 0, 0, 'Brussels, Copenhagen, Madrid, Paris', '', '', '1122', '', 1, 0, '2024-05-12 09:58:56', '2024-05-12 09:59:03', '', '11', 1);
 
 -- --------------------------------------------------------
 
@@ -183,125 +202,39 @@ CREATE TABLE `log` (
   `log_parameters` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Volcado de datos para la tabla `log`
+-- Estructura de tabla para la tabla `log_script`
 --
 
-INSERT INTO `log` (`id`, `user_id`, `username`, `log_date`, `log_code`, `log_message`, `log_trace`, `log_status`, `log_method`, `log_parameters`) VALUES
-(3108, 0, '', '2024-04-16 14:56:44', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3109, 15, 'david', '2024-04-16 14:56:49', '005-002-200-002', 'Login hecho 2', '', '200', 'POST', '{\"user\":\"david\",\"password\":\"12345Aa@\"}'),
-(3110, 15, 'david', '2024-04-16 14:56:49', '001-001-200-007', 'Dispositivo obtenido 7', '[{\"id\":1,\"topic_name\":\"ua.sensors.raw\",\"organizationid\":\"UA UNIVERSIDAD DE ALICANTE\",\"uid\":\"ua-sensor-s1\",\"application_id\":\"ua-sensor\",\"alias\":\"Despac', '200', 'GET', '{\"state\":\"0\",\"search_text\":\"search\",\"order_by\":\"uid\",\"ord_asc\":\"ASC\",\"array_sensors\":\"-1\",\"sensors_act\":\"2\",\"devices_act\":\"2\",\"pag_tam\":\"1\",\"pag_pag\":'),
-(3111, 15, 'david', '2024-04-16 14:57:05', '001-001-200-007', 'Dispositivo obtenido 7', '[{\"id\":1,\"topic_name\":\"ua.sensors.raw\",\"organizationid\":\"UA UNIVERSIDAD DE ALICANTE\",\"uid\":\"ua-sensor-s1\",\"application_id\":\"ua-sensor\",\"alias\":\"Despac', '200', 'GET', '{\"state\":\"0\",\"search_text\":\"search\",\"order_by\":\"uid\",\"ord_asc\":\"ASC\",\"array_sensors\":\"-1\",\"sensors_act\":\"2\",\"devices_act\":\"2\",\"pag_tam\":\"1\",\"pag_pag\":'),
-(3112, 15, 'david', '2024-04-16 14:57:09', '005-001-200-001', 'Usuarios recuperados', '[{\"id\":37,\"user\":\"admin2\",\"change_password\":1,\"enabled\":0,\"revoke_date\":\"\",\"total\":2},{\"id\":15,\"user\":\"david\",\"change_password\":1,\"enabled\":1,\"revoke_', '200', 'GET', '{\"type\":\"search\",\"type1\":\"user\",\"type2\":\"ASC\",\"pag_tam\":\"1\",\"pag_pag\":\"15\"}'),
-(3113, 0, '', '2024-04-16 21:11:46', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3114, 0, '', '2024-04-16 21:11:51', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3115, 0, '', '2024-04-16 21:11:56', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3116, 0, '', '2024-04-16 21:12:01', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3117, 0, '', '2024-04-16 21:12:06', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3118, 0, '', '2024-04-16 21:12:11', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3119, 0, '', '2024-04-16 21:12:17', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3120, 0, '', '2024-04-16 21:12:21', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3121, 0, '', '2024-04-16 21:12:26', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3122, 0, '', '2024-04-16 21:12:31', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3123, 0, '', '2024-04-16 21:12:36', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3124, 0, '', '2024-04-16 21:13:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3125, 0, '', '2024-04-16 21:14:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3126, 0, '', '2024-04-16 21:15:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3127, 0, '', '2024-04-16 21:16:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3128, 0, '', '2024-04-16 21:16:48', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3129, 0, '', '2024-04-16 21:16:53', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3130, 0, '', '2024-04-16 21:16:58', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3131, 0, '', '2024-04-16 21:17:03', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3132, 0, '', '2024-04-16 21:17:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3133, 0, '', '2024-04-16 21:18:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3134, 0, '', '2024-04-16 21:19:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3135, 0, '', '2024-04-16 21:20:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3136, 0, '', '2024-04-16 21:21:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3137, 0, '', '2024-04-16 21:22:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3138, 0, '', '2024-04-16 21:23:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3139, 0, '', '2024-04-16 21:24:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3140, 0, '', '2024-04-16 21:25:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3141, 0, '', '2024-04-16 21:26:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3142, 0, '', '2024-04-16 21:27:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3143, 0, '', '2024-04-16 21:28:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3144, 0, '', '2024-04-16 21:29:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3145, 0, '', '2024-04-16 21:30:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3146, 0, '', '2024-04-16 21:31:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3147, 0, '', '2024-04-16 21:32:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3148, 0, '', '2024-04-16 21:33:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3149, 0, '', '2024-04-16 21:34:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3150, 0, '', '2024-04-16 21:35:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3151, 0, '', '2024-04-16 21:36:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3152, 0, '', '2024-04-16 21:37:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3153, 0, '', '2024-04-16 21:38:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3154, 0, '', '2024-04-16 21:39:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3155, 0, '', '2024-04-16 21:40:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3156, 0, '', '2024-04-16 21:41:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3157, 0, '', '2024-04-16 21:42:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3158, 0, '', '2024-04-16 21:43:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3159, 0, '', '2024-04-16 21:44:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3160, 0, '', '2024-04-16 21:45:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3161, 0, '', '2024-04-16 21:46:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3162, 0, '', '2024-04-16 21:47:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3163, 0, '', '2024-04-16 21:48:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3164, 0, '', '2024-04-16 21:49:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3165, 0, '', '2024-04-16 21:50:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3166, 0, '', '2024-04-16 21:51:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3167, 0, '', '2024-04-16 21:52:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3168, 0, '', '2024-04-16 21:53:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3169, 0, '', '2024-04-16 21:54:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3170, 0, '', '2024-04-16 21:55:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3171, 0, '', '2024-04-16 21:56:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3172, 0, '', '2024-04-16 21:57:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3173, 0, '', '2024-04-16 21:58:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3174, 0, '', '2024-04-16 21:59:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3175, 0, '', '2024-04-16 22:00:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3176, 0, '', '2024-04-16 22:01:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3177, 0, '', '2024-04-16 22:02:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3178, 15, 'david', '2024-04-16 22:02:33', '001-001-200-007', 'Dispositivo obtenido 7', '[{\"id\":1,\"topic_name\":\"ua.sensors.raw\",\"organizationid\":\"UA UNIVERSIDAD DE ALICANTE\",\"uid\":\"ua-sensor-s1\",\"application_id\":\"ua-sensor\",\"alias\":\"Despac', '200', 'GET', '{\"state\":\"0\",\"search_text\":\"search\",\"order_by\":\"uid\",\"ord_asc\":\"ASC\",\"array_sensors\":\"-1\",\"sensors_act\":\"2\",\"devices_act\":\"2\",\"pag_tam\":\"1\",\"pag_pag\":'),
-(3179, 15, 'david', '2024-04-16 22:02:34', '002-001-200-001', 'Tipos de sensores recuperados', '[{\"id\":2,\"type\":\"Temperatura\",\"metric\":\"ºC\",\"description\":\"Sensorización Temperatura\",\"position\":0,\"correction_general\":null,\"correction_time_general\"', '200', 'GET', '{\"type\":\"search\",\"type1\":\"position\",\"type2\":\"ASC\",\"pag_tam\":\"1\",\"pag_pag\":\"15\"}'),
-(3180, 15, 'david', '2024-04-16 22:02:34', '001-001-200-007', 'Dispositivo obtenido 7', '[{\"id\":1,\"topic_name\":\"ua.sensors.raw\",\"organizationid\":\"UA UNIVERSIDAD DE ALICANTE\",\"uid\":\"ua-sensor-s1\",\"application_id\":\"ua-sensor\",\"alias\":\"Despac', '200', 'GET', '{\"state\":\"0\",\"search_text\":\"search\",\"order_by\":\"uid\",\"ord_asc\":\"ASC\",\"array_sensors\":\"-1\",\"sensors_act\":\"2\",\"devices_act\":\"2\",\"pag_tam\":\"1\",\"pag_pag\":'),
-(3181, 15, 'david', '2024-04-16 22:02:34', '001-001-200-008', 'Dispositivos obtenidos 8', '[{\"id\":1,\"topic_name\":\"ua.sensors.raw\",\"organizationid\":\"UA UNIVERSIDAD DE ALICANTE\",\"uid\":\"ua-sensor-s1\",\"application_id\":\"ua-sensor\",\"alias\":\"Despac', '200', 'GET', '{\"state\":\"1\",\"search_text\":\"search\",\"order_by\":\"uid\",\"ord_asc\":\"ASC\",\"array_sensors\":\"-1\",\"sensors_act\":\"2\",\"devices_act\":\"2\",\"pag_tam\":\"1\",\"pag_pag\":'),
-(3182, 15, 'david', '2024-04-16 22:02:35', '001-001-200-007', 'Dispositivo obtenido 7', '[{\"id\":1,\"topic_name\":\"ua.sensors.raw\",\"organizationid\":\"UA UNIVERSIDAD DE ALICANTE\",\"uid\":\"ua-sensor-s1\",\"application_id\":\"ua-sensor\",\"alias\":\"Despac', '200', 'GET', '{\"state\":\"0\",\"search_text\":\"search\",\"order_by\":\"uid\",\"ord_asc\":\"ASC\",\"array_sensors\":\"-1\",\"sensors_act\":\"2\",\"devices_act\":\"2\",\"pag_tam\":\"1\",\"pag_pag\":'),
-(3183, 15, 'david', '2024-04-16 22:02:37', '005-001-200-001', 'Usuarios recuperados', '[{\"id\":37,\"user\":\"admin2\",\"change_password\":1,\"enabled\":0,\"revoke_date\":\"\",\"total\":2},{\"id\":15,\"user\":\"david\",\"change_password\":1,\"enabled\":1,\"revoke_', '200', 'GET', '{\"type\":\"search\",\"type1\":\"user\",\"type2\":\"ASC\",\"pag_tam\":\"1\",\"pag_pag\":\"15\"}'),
-(3184, 0, '', '2024-04-16 22:03:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3185, 0, '', '2024-04-16 22:04:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3186, 0, '', '2024-04-16 22:05:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3187, 0, '', '2024-04-16 22:06:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3188, 0, '', '2024-04-16 22:07:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3189, 0, '', '2024-04-16 22:07:20', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3190, 0, '', '2024-04-16 22:07:25', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3191, 0, '', '2024-04-16 22:07:30', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3192, 0, '', '2024-04-16 22:07:35', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3193, 0, '', '2024-04-16 22:07:46', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3194, 0, '', '2024-04-16 22:07:51', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3195, 0, '', '2024-04-16 22:07:56', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3196, 0, '', '2024-04-16 22:08:01', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3197, 0, '', '2024-04-16 22:08:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3198, 0, '', '2024-04-16 22:08:28', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3199, 0, '', '2024-04-16 22:08:33', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3200, 0, '', '2024-04-16 22:08:38', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3201, 0, '', '2024-04-16 22:08:43', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3202, 0, '', '2024-04-16 22:09:20', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3203, 0, '', '2024-04-16 22:09:43', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3204, 0, '', '2024-04-16 22:09:54', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3205, 0, '', '2024-04-16 22:09:59', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3206, 0, '', '2024-04-16 22:10:06', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3207, 0, '', '2024-04-16 22:10:11', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3208, 0, '', '2024-04-16 22:12:45', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3209, 0, '', '2024-04-16 22:12:50', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3210, 0, '', '2024-04-16 22:12:55', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3211, 0, '', '2024-04-16 22:13:00', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3212, 0, '', '2024-04-16 22:13:05', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3213, 0, '', '2024-04-16 22:13:10', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3214, 0, '', '2024-04-16 22:13:52', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3215, 0, '', '2024-04-16 22:13:55', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3216, 0, '', '2024-04-16 22:14:01', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3217, 0, '', '2024-04-16 22:14:05', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3218, 0, '', '2024-04-16 22:14:10', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3219, 0, '', '2024-04-16 22:14:14', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3220, 0, '', '2024-04-16 22:14:15', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', ''),
-(3221, 0, '', '2024-04-16 22:14:21', '005-009-400-001', 'Error 1 al refrescar el token', '{\"name\":\"JsonWebTokenError\",\"message\":\"jwt must be provided\"}', '400', 'POST', '');
+CREATE TABLE `log_script` (
+  `id` int(11) NOT NULL,
+  `user_id` varchar(100) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `log_trace` varchar(150) NOT NULL,
+  `log_date` varchar(100) NOT NULL,
+  `log_status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `script`
+--
+
+CREATE TABLE `script` (
+  `date` varchar(100) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `script`
+--
+
+INSERT INTO `script` (`date`, `status`, `id`) VALUES
+('2024-05-14 16:08:29', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -329,11 +262,7 @@ CREATE TABLE `sensors_devices` (
 --
 
 INSERT INTO `sensors_devices` (`orden`, `enable`, `id_device`, `id_type_sensor`, `id`, `datafield`, `nodata`, `correction_specific`, `correction_time_specific`, `topic_specific`, `createdAt`, `updatedAt`) VALUES
-(1, 1, 2, 1, 4, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, 2, 5, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 2, 3, 6, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (1, 1, 3, 1, 7, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(1, 1, 4, 1, 8, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (1, 1, 5, 1, 9, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (1, 1, 6, 1, 10, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (2, 1, 6, 2, 11, NULL, 0, NULL, NULL, NULL, NULL, NULL),
@@ -345,9 +274,7 @@ INSERT INTO `sensors_devices` (`orden`, `enable`, `id_device`, `id_type_sensor`,
 (4, 1, 8, 7, 17, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (5, 1, 8, 8, 18, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (6, 1, 8, 9, 19, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(1, 1, 10, 1, 20, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (1, 0, 9, 1, 21, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(7, 1, 11, 1, 22, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (1, 1, 12, 1, 23, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (7, 1, 13, 1, 24, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (7, 1, 14, 1, 25, NULL, 0, NULL, NULL, NULL, NULL, NULL),
@@ -481,12 +408,6 @@ INSERT INTO `sensors_devices` (`orden`, `enable`, `id_device`, `id_type_sensor`,
 (4, 1, 13, 7, 163, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (5, 1, 13, 8, 164, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (6, 1, 13, 9, 165, '', 0, NULL, NULL, NULL, NULL, NULL),
-(1, 1, 11, 5, 166, 'lat', 0, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 11, 4, 167, 'lon', 0, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 11, 6, 168, 'cota', 0, NULL, NULL, NULL, NULL, NULL),
-(4, 1, 11, 7, 169, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(5, 1, 11, 8, 170, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(6, 1, 11, 9, 171, '', 0, NULL, NULL, NULL, NULL, NULL),
 (7, 1, 21, 10, 172, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (8, 1, 21, 11, 173, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (9, 1, 21, 12, 174, NULL, 0, NULL, NULL, NULL, NULL, NULL),
@@ -548,9 +469,7 @@ INSERT INTO `sensors_devices` (`orden`, `enable`, `id_device`, `id_type_sensor`,
 (3, 1, 35, 21, 230, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (4, 1, 35, 24, 231, NULL, 0, NULL, NULL, NULL, NULL, NULL),
 (5, 1, 35, 25, 232, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(1, 1, 1, 1, 2030, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 1, 2, 2031, NULL, 0, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 1, 3, 2032, NULL, 0, NULL, NULL, NULL, NULL, NULL);
+(1, 1, 4, 1, 2066, NULL, 0, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -579,8 +498,6 @@ CREATE TABLE `sensors_types` (
 --
 
 INSERT INTO `sensors_types` (`id`, `type`, `metric`, `description`, `position`, `errorvalue`, `valuemax`, `valuemin`, `correction_general`, `correction_time_general`, `discard_value`, `createdAt`, `updatedAt`) VALUES
-(1, 'CO2', 'ppm', 'Sensorización CO2', 7, 65535, 8000, 1, NULL, NULL, NULL, NULL, NULL),
-(2, 'Temperatura', 'ºC', 'Sensorización Temperatura', 0, NULL, 80, -40, NULL, NULL, NULL, NULL, NULL),
 (3, 'Humedad', '% hr', 'Sensorización Humedad', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (4, 'Latitud', 'grados', 'Medición Latitud', 1, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (5, 'Longitud', 'grados', 'Medición Longitud', 2, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -589,7 +506,6 @@ INSERT INTO `sensors_types` (`id`, `type`, `metric`, `description`, `position`, 
 (8, 'Hdop', '100ths-i32', 'Dimensión Horizontal de la Precisión', 5, 65535, 9998, 0, NULL, NULL, NULL, NULL, NULL),
 (9, 'Velocidad', 'm/s', 'Medición Velocidad', 6, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (10, 'MassConcentrationPm1p0', 'µg/m³', 'Precisión de concentración de masa para PM1', 7, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(11, 'MassConcentrationPm2p5', 'µg/m³', 'Precisión de concentración de masa para PM2.5', 8, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (12, 'MassConcentrationPm4p0', 'µg/m³', 'Precisión de concentración de masa para PM4 ', 9, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (13, 'MassConcentrationPm10p0', 'µg/m³', 'Precisión de concentración de masa para PM10', 10, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (14, 'Humedad Ambiente', '%%RH', 'Medición de la Humedad Ambiente', 11, 65535, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -603,7 +519,8 @@ INSERT INTO `sensors_types` (`id`, `type`, `metric`, `description`, `position`, 
 (22, 'Data_Type', 'Code', 'Tipo de configuración', 1, NULL, NULL, NULL, NULL, NULL, '65,66,67', NULL, NULL),
 (23, 'Data_Status', 'Code', 'Status of measured value. (Yokogawa)', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (24, 'PV_Velocity', 'mm/s', 'Z-axis velocity RMS value (Yokogawa)', 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(25, 'PV_Temperature', '°C', 'Temperature measured value (Yokogawa)', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(25, 'PV_Temperature', '°C', 'Temperature measured value (Yokogawa)', 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(27, '7', '7', '7', 7, 7, 7, 7, '7', '7', '7', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -626,8 +543,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user`, `password`, `change_password`, `token`, `enabled`, `revoke_date`) VALUES
-(15, 'david', '$2b$10$h7QQ8gTyJd7sh15VBShilONeZNQHYt4CoO3fy/mh3r.TLG8dIpmRi', 1, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGF2aWQiLCJpZCI6MTUsImlhdCI6MTcxMjg2OTM5MiwiZXhwIjoxNzEzNDc0MTkyfQ.BHusQDW7etmDdj46G2y8TxtREY-xpO3_Iqo27toX3I8', 1, '2024-04-18 21:03:12'),
-(37, 'admin2', '$2b$10$tQhYL8/RtkpHe2CqkhRb1uTA5FdYHSNl5URIKyioaqR4PZ2uaI5l6', 1, '', 0, '');
+(15, 'david', '$2b$10$5EiVve7Ar4qTDT40EYnI3ePOV/KGywfmJrjerBKESbzKqm42fVZE6', 0, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGF2aWQiLCJpZCI6MTUsImlhdCI6MTcxNTUxMTU2NSwiZXhwIjoxNzE2MTE2MzY1fQ.zTWmx3pjzi6D9cnBcrpsXh7GCxlpxEuhitNaqwJG8ic', 1, '2024-05-19 10:59:25'),
+(74, 'admin', '$2b$10$ef7OtEbhASC2dqycq5wniey6M9DlqkHK/0O06OCD.rhZE3LtDGGRO', 0, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJpZCI6NzQsImlhdCI6MTcxNTUxMTM1MSwiZXhwIjoxNzE2MTE2MTUxfQ.bygz184x-DVyLsVDy_MDdTHUUmCiOdq7GgzMPxnrmeE', 1, '2024-05-19 10:55:51');
 
 -- --------------------------------------------------------
 
@@ -647,8 +564,7 @@ CREATE TABLE `variable_data_structure` (
 --
 
 INSERT INTO `variable_data_structure` (`id`, `description`, `structure`, `initial_byte`) VALUES
-(1, 'Estructura variable de Yokogawa', 'UINT8', 0),
-(2, 'Estructura variable caudalimetro marca la pava', 'FLOAT16', 1);
+(1, 'Estructura variable de Yokogawa', 'UINT8', 0);
 
 --
 -- Índices para tablas volcadas
@@ -667,6 +583,12 @@ ALTER TABLE `conecction_write`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `config`
+--
+ALTER TABLE `config`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `data_estructure`
 --
 ALTER TABLE `data_estructure`
@@ -676,12 +598,6 @@ ALTER TABLE `data_estructure`
 -- Indices de la tabla `device_configurations`
 --
 ALTER TABLE `device_configurations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `log`
---
-ALTER TABLE `log`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -711,49 +627,63 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `conecction_read`
 --
 ALTER TABLE `conecction_read`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `conecction_write`
 --
 ALTER TABLE `conecction_write`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `config`
+--
+ALTER TABLE `config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `data_estructure`
 --
 ALTER TABLE `data_estructure`
-  MODIFY `id_estructure` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_estructure` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `device_configurations`
 --
 ALTER TABLE `device_configurations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
-
---
--- AUTO_INCREMENT de la tabla `log`
---
-ALTER TABLE `log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3222;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `sensors_devices`
 --
 ALTER TABLE `sensors_devices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2033;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2076;
 
 --
 -- AUTO_INCREMENT de la tabla `sensors_types`
 --
 ALTER TABLE `sensors_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
+DELIMITER $$
+--
+-- Eventos
+--
+CREATE DEFINER=`root`@`localhost` EVENT `Borrar registros log` ON SCHEDULE EVERY 1 DAY STARTS '2024-04-27 02:00:00' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM log 
+WHERE log_date > NOW() - INTERVAL 
+    (SELECT value_int FROM config WHERE name='log_erase') DAY$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `Borrar registros log_script` ON SCHEDULE EVERY 1 DAY STARTS '2024-05-11 02:00:00' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM log_script 
+WHERE log_date > NOW() - INTERVAL 
+    (SELECT value_int FROM config WHERE name='log_script_erase') DAY$$
+
+DELIMITER ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

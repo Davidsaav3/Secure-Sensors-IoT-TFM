@@ -23,11 +23,11 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.resize();
   }
 
-  getUser: string = environment.baseUrl + environment.url.users;
-  postUser: string = environment.baseUrl + environment.url.users;
-  postUserRevoke: string = environment.baseUrl + environment.url.users + "/revoke";
-  duplicateUser: string = environment.baseUrl + environment.url.users + "/duplicate";
-  getId: string = environment.baseUrl + environment.url.users + "/id";
+  getUser: string = environment.domain + environment.baseUrl + environment.url.users;
+  postUser: string = environment.domain + environment.baseUrl + environment.url.users;
+  postUserRevoke: string = environment.domain + environment.baseUrl + environment.url.users + "/revoke";
+  duplicateUser: string = environment.domain + environment.baseUrl + environment.url.users + "/duplicate";
+  getId: string = environment.domain + environment.baseUrl + environment.url.users + "/id";
 
   currentDate = this.getCurrentDate();
 
@@ -117,17 +117,17 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
-    if(this.temp5!=null) 
+    if (this.temp5 != null)
       clearTimeout(this.temp5);
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
 
     this.storageService.setSearch('')
@@ -143,7 +143,7 @@ export class UsersComponent implements OnInit, OnDestroy {
     const hours = ('0' + now.getUTCHours()).slice(-2);
     const minutes = ('0' + now.getUTCMinutes()).slice(-2);
     const seconds = ('0' + now.getUTCSeconds()).slice(-2);
-    
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
@@ -218,7 +218,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           }
         },
         (error) => {
-          if(environment.verbose_error) console.error(error);
+          if (environment.verbose_error) console.error(error);
         }
       );
 
@@ -252,7 +252,7 @@ export class UsersComponent implements OnInit, OnDestroy {
             this.openClouse();
           },
           (error) => {
-            if(environment.verbose_error) console.error(error);
+            if (environment.verbose_error) console.error(error);
           }
         );
     }
@@ -293,7 +293,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           this.temp2 = setTimeout(() => {
             this.notRep = false;
           }, 2000);
-          if(environment.verbose_error) console.error("Error:", error);
+          if (environment.verbose_error) console.error("Error:", error);
         }
       );
     this.change = false;
@@ -331,7 +331,7 @@ export class UsersComponent implements OnInit, OnDestroy {
             // Respuesta
           },
           (error) => {
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
           }
         );
       this.data = this.data.filter((data: { id: number }) => data.id !== this.users.id);
@@ -383,7 +383,7 @@ export class UsersComponent implements OnInit, OnDestroy {
         this.clouse();
       },
       (error: any) => {
-        if(environment.verbose_error) console.error('Error al eliminar usuario:', error);
+        if (environment.verbose_error) console.error('Error al eliminar usuario:', error);
       }
     );
   }
@@ -426,7 +426,7 @@ export class UsersComponent implements OnInit, OnDestroy {
           // Respuesta
         },
         (error) => {
-          if(environment.verbose_error) console.error("Error:", error);
+          if (environment.verbose_error) console.error("Error:", error);
         }
       );
     this.state = 2;
