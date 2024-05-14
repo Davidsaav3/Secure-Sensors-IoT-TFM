@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { environment } from "../../environments/environment";
 import { HttpOptionsService } from '../../services/httpOptions.service';
 import { StorageService } from '../../services/storage.service';
+import { TimerService } from '../../services/timer.service';
 
 @Component({
   selector: "app-login",
@@ -46,7 +47,7 @@ export class LoginComponent implements OnDestroy {
   username = 'davidsaav';
   token = '';
 
-  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
+  constructor(private timerService: TimerService, private httpOptionsService: HttpOptionsService, private storageService: StorageService, private formBuilder: FormBuilder, private router: Router, private http: HttpClient) { }
 
   formlogin = {
     user: "",
@@ -64,11 +65,11 @@ export class LoginComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
   }
 
@@ -78,13 +79,13 @@ export class LoginComponent implements OnDestroy {
 
       // Validar el nombre de usuario
       if (!this.isValidUsername(user)) {
-        if(environment.verbose_error) console.error("Nombre de usuario no válido");
+        if (environment.verbose_error) console.error("Nombre de usuario no válido");
         return;
       }
 
       // Validar la contraseña
       if (!this.isValidPassword(password)) {
-        if(environment.verbose_error) console.error("Contraseña no válida");
+        if (environment.verbose_error) console.error("Contraseña no válida");
         return;
       }
 
@@ -104,25 +105,26 @@ export class LoginComponent implements OnDestroy {
             this.storageService.setToken(data.token)
             this.setCookie('refresh_token', data.refresh_token);
             this.storageService.setChange(data.change_password.toString());
+            this.timerService.lanzarTimer();
             this.router.navigate(['/devices']);
           },
           (error: any) => {
             if (error.status === 401) {
-              if(environment.verbose_error) console.error("Credenciales incorrectas");
+              if (environment.verbose_error) console.error("Credenciales incorrectas");
               this.alertCreNot = true;
               this.temp1 = setTimeout(() => {
                 this.alertCreNot = false;
               }, 2000);
             }
             else if (error.status === 500) {
-              if(environment.verbose_error) console.error("Error en el servidor");
+              if (environment.verbose_error) console.error("Error en el servidor");
               this.alertServNot = true;
               this.temp2 = setTimeout(() => {
                 this.alertServNot = false;
               }, 2000);
             }
             else {
-              if(environment.verbose_error) console.error("Error desconocido:", error);
+              if (environment.verbose_error) console.error("Error desconocido:", error);
               this.alertDifNot = true;
               this.temp3 = setTimeout(() => {
                 this.alertDifNot = false;

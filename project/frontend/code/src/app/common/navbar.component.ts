@@ -6,6 +6,7 @@ import { Component, ViewChild, ElementRef, Renderer2, OnDestroy, OnInit } from '
 import { AuthService } from '../services/auth.service';
 import { StorageService } from '../services/storage.service';
 import { HttpOptionsService } from '../services/httpOptions.service';
+import { TimerService } from '../services/timer.service';
 
 @Component({
   selector: "app-navbar",
@@ -70,8 +71,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   temp3: any;
   temp4: any;
   temp5: any;
-  temp6: any= null;
-  temp7: any= null;
+  temp6: any = null;
+  temp7: any = null;
 
   formapassword = {
     id: this.id,
@@ -83,21 +84,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
     user: "",
   };
 
-  constructor(private httpOptionsService: HttpOptionsService, private storageService: StorageService, private authService: AuthService, private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
+  constructor(private timerService: TimerService, private httpOptionsService: HttpOptionsService, private storageService: StorageService, private authService: AuthService, private renderer: Renderer2, private http: HttpClient, private translate: TranslateService, public router: Router) {
     this.rute = this.router.routerState.snapshot.url;
     this.ruteAux = this.rute.split("/");
   }
 
   passwordFieldType = 'password';
   passwordFieldType1 = 'password';
-  consecutivoFallos1= 0;
-  consecutivoFallos2= 0;
+  consecutivoFallos1 = 0;
+  consecutivoFallos2 = 0;
 
   ngOnInit(): void { // Inicializa
-    if(this.authService.isAuthenticated()){
-      if(environment.verbose) console.log("IDENTIFICADO")
+    if (this.authService.isAuthenticated()) {
+      if (environment.verbose) console.log("IDENTIFICADO")
       this.lanzarTimer();
-      this.lanzarTimer2();
+      //this.timerService.lanzarTimer();
+      //this.lanzarTimer2();
     }
     if (this.storageService.getStatus()) {
       let aux = this.storageService.getStatus();
@@ -131,19 +133,19 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if(this.temp1!=null) 
+    if (this.temp1 != null)
       clearTimeout(this.temp1);
-    if(this.temp2!=null) 
+    if (this.temp2 != null)
       clearTimeout(this.temp2);
-    if(this.temp3!=null) 
+    if (this.temp3 != null)
       clearTimeout(this.temp3);
-    if(this.temp4!=null) 
+    if (this.temp4 != null)
       clearTimeout(this.temp4);
-    if(this.temp5!=null) 
+    if (this.temp5 != null)
       clearTimeout(this.temp5);
-    if(this.temp6!=null) 
+    if (this.temp6 != null)
       clearTimeout(this.temp6);
-    if(this.temp7!=null) 
+    if (this.temp7 != null)
       clearTimeout(this.temp7);
   }
 
@@ -228,7 +230,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         (data: any) => {
           this.alertUserOk = true;
           //this.clouseModalUser();
-          if(environment.verbose) console.log(data.user)
+          if (environment.verbose) console.log(data.user)
           this.setCookie('refresh_token', data.refresh_token);
           this.storageService.setUsername(data.user);
 
@@ -237,7 +239,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           }, 2000);
         },
         (error) => {
-          if(environment.verbose_error) console.error("Error:", error);
+          if (environment.verbose_error) console.error("Error:", error);
           this.alertUserNot = true;
           this.temp3 = setTimeout(() => {
             this.alertUserNot = false;
@@ -270,7 +272,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
             this.change_password = false;
             this.storageService.setChange("0");
 
-            if(environment.verbose_error) console.error("Error:", error);
+            if (environment.verbose_error) console.error("Error:", error);
 
             this.alertPassNot = true;
             this.temp5 = setTimeout(() => {
@@ -322,60 +324,60 @@ export class NavbarComponent implements OnInit, OnDestroy {
     event.target.value = event.target.value.replace(/\s/g, '');
   }
 
-  
+
   lanzarTimer() { // Timer para actualizar el estado del script
-    if(environment.verbose) console.log("LANZAR TIMER")
-    this.consecutivoFallos1 = 0; 
+    if (environment.verbose) console.log("LANZAR TIMER")
+    this.consecutivoFallos1 = 0;
     const bucle = (t: number) => {
-      if (this.consecutivoFallos1 < environment.script_status_times) { 
-        this.temp6= setTimeout(() => {
+      if (this.consecutivoFallos1 < environment.script_status_times) {
+        this.temp6 = setTimeout(() => {
           this.statusScript().then(() => {
-            this.consecutivoFallos1 = 0; 
+            this.consecutivoFallos1 = 0;
           }).catch(() => {
             this.consecutivoFallos1++;
           }).finally(() => {
-            if (this.consecutivoFallos1 > 0) { 
+            if (this.consecutivoFallos1 > 0) {
               bucle(0);
             }
-            else{
+            else {
               bucle(environment.script_status_timeout);
             }
           });
-        }, t); 
+        }, t);
       }
-      else{
-        this.status= 2;
+      else {
+        this.status = 2;
       }
     };
     bucle(0);
   }
 
   lanzarTimer2() { // Timer para actualizar token de acceso
-    this.consecutivoFallos2 = 0; 
+    this.consecutivoFallos2 = 0;
     const bucle = (t: number) => {
-      if (this.consecutivoFallos2 < environment.acces_token_times) { 
-        this.temp7= setTimeout(() => {
+      if (this.consecutivoFallos2 < environment.acces_token_times) {
+        this.temp7 = setTimeout(() => {
           this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
           }).catch(() => {
-            this.consecutivoFallos2++; 
+            this.consecutivoFallos2++;
           }).finally(() => {
-            if (this.consecutivoFallos2 > 0) { 
+            if (this.consecutivoFallos2 > 0) {
               bucle(0);
             }
-            else{
-              bucle(environment.acces_token_timeout-environment.acces_token_dif);
+            else {
+              bucle(environment.acces_token_timeout - environment.acces_token_dif);
             }
           });
-        }, t); 
+        }, t);
       }
-      else{
+      else {
         this.logOut();
       }
     };
-    bucle(environment.acces_token_timeout-environment.acces_token_dif);
+    bucle(0);
   }
-  
-  
+
+
 
   async statusScript(): Promise<void> {
     try {
@@ -388,10 +390,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
       this.storageService.setStatus(this.status.toString());
       this.storageService.setDate(this.date.toString());
-    } 
+    }
     catch (error) {
-      if(environment.verbose_error) console.error("Error al obtener el estado:", error);
-      throw error; 
+      if (environment.verbose_error) console.error("Error al obtener el estado:", error);
+      throw error;
     }
   }
 
@@ -409,41 +411,41 @@ export class NavbarComponent implements OnInit, OnDestroy {
         withCredentials: true // Permitir el envío de cookies
       };
 
-      let newToken= null;
+      let newToken = null;
       const body = { refreshToken };
-      if(this.authService.isAuthenticated()){
+      if (this.authService.isAuthenticated()) {
         this.http.post<any>(this.postRefresh, body, httpOptions).subscribe(
           (response: any) => {
             if (!response || !response.token) {
-              if(environment.verbose_error) console.error('Error al renovar el token');
+              if (environment.verbose_error) console.error('Error al renovar el token');
             }
             newToken = response.token;
-            this.storageService.setToken(newToken); 
+            this.storageService.setToken(newToken);
 
             environment.acces_token_timeout = parseInt(response.date);
-            if(environment.verbose) console.log(environment.acces_token_timeout) // imprime milisegundos de vida del token
+            if (environment.verbose) console.log(environment.acces_token_timeout) // imprime milisegundos de vida del token
 
-            if(response.token!=undefined && response.token!=null && response.token!='' && response.token!="{}"){ // Control de los fallos
+            if (response.token != undefined && response.token != null && response.token != '' && response.token != "{}") { // Control de los fallos
               this.consecutivoFallos2 = 0;
             }
-            else{
+            else {
               this.consecutivoFallos2++;
             }
           },
           (error) => {
-            if(environment.verbose_error) console.error('Error al renovar el token');
+            if (environment.verbose_error) console.error('Error al renovar el token');
             this.consecutivoFallos2++;
           }
         );
-      
+
       }
-      else{
+      else {
         this.consecutivoFallos2++;
       }
       return newToken;
     }
     catch (error) {
-      if(environment.verbose_error) console.error('Error al renovar el token:', error);
+      if (environment.verbose_error) console.error('Error al renovar el token:', error);
       return null;
     }
   }
