@@ -99,7 +99,7 @@ router.post("", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
 async function script_aux(status, result, id, user, status2) { // Agregar req como parámetro
   return new Promise(async (resolve, reject) => {
 
-    let aux = (new Date(result[0].date).getTime() + 5000) > Date.now() ? 1 : 0;
+    let aux = (new Date(result[0].date).getTime() + parseInt(process.env.STATUS_SCRIPT_SECONDS)) > Date.now() ? 1 : 0;
     if (process.env.verbose) console.log('')
     if (process.env.verbose) console.log('Estado ENTRANTE-> ' + status)
     if (process.env.verbose) console.log('ESTADO ACTUAL -> ' + aux)

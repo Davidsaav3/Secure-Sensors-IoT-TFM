@@ -119,10 +119,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     this.readStorage();
     this.translate.use(this.activeLang);
-    //('JUSTO ANTES')
-    //if(this.authService.isAuthenticated()){
-    //this.statusScript();
-    //}
     if (!this.authService.isAuthenticated()) {
       this.token2 = '';
     }
@@ -352,7 +348,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this.date = data.date;
 
       // Fecha actual es +5 se, el estado es 1
-      this.status = (new Date(this.date).getTime() + 5000) > Date.now() ? 1 : 0;
+      this.status = (new Date(this.date).getTime() + environment.script_status_timeout + 1000) >= Date.now() ? 1 : 0;
 
       this.storageService.setStatus(this.status.toString());
       this.storageService.setDate(this.date.toString());
