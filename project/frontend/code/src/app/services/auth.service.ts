@@ -34,31 +34,30 @@ export class AuthService {
       clearTimeout(this.temp);
   }
 
-  lanzarTimer() { // Timer para actualizar token de acceso
+  lanzarTimer() { // Función para iniciar el temporizador de obtención de token de acceso
     this.refreshError = 0;
     const bucle = (t: number) => {
-      if (this.refreshError < environment.acces_token_times) {
-        this.temp = setTimeout(() => {
-          if (environment.verbose) console.log("obtengo token")
+      if (this.refreshError < environment.acces_token_times) { // Verifica si supera los errroes estblecidos 
+        this.temp = setTimeout(() => { // Configura el temporizador para obtener el token
+          if (environment.verbose) console.log("obtengo token");
           this.renewToken(this.getCookie('refresh_token') ?? '').then(() => {
           }).catch(() => {
-            this.refreshError++;
+            this.refreshError++; // Aumenta el contador de errores si falla la renovación
           }).finally(() => {
-            if (this.refreshError > 0) {
-              bucle(0);
-            }
-            else {
-              bucle(environment.acces_token_timeout - environment.acces_token_dif);
-            }
+            if (this.refreshError > 0) bucle(0); // Reinicia el contadorsi con tiempo de espera 0, ya que ha habido un error
+            else bucle(environment.acces_token_timeout - environment.acces_token_dif); // Espera antes de reintentar una solicitud
           });
         }, t);
       }
       else {
-        this.logOut();
+        this.logOut(); // Cierra sesión si hay demasiados errores
       }
     };
-    bucle(0);
+    bucle(0); // Inicia el temporizador
   }
+
+
+
 
   //
 

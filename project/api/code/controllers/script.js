@@ -96,35 +96,28 @@ router.post("", verifyToken, (req, res) => { // ON - OFF : SCRIPT //
 
 
 
-async function script_aux(status, result, id, user, status2) { // Agregar req como parámetro
-  return new Promise(async (resolve, reject) => {
-
+async function script_aux(status, result, id, user, status2) {
+  return new Promise(async (resolve) => {
     let aux = (new Date(result[0].date).getTime() + parseInt(process.env.STATUS_SCRIPT_SECONDS)) > Date.now() ? 1 : 0;
-    if (process.env.verbose) console.log('')
     if (process.env.verbose) console.log('Estado ENTRANTE-> ' + status)
     if (process.env.verbose) console.log('ESTADO ACTUAL -> ' + aux)
-    if (process.env.verbose) console.log('')
-
     // Estado entrante 1 -> Encender
     if (status == 1 && aux == 0) {
       proceso = await runScript(id, user, status2);
       if (proceso) {
         if (process.env.verbose) console.log("--- SCRIPT ENCENDIDO ---");
-        if (process.env.verbose) console.log("");
         insertLogScript(id, user, 1, '');
       }
       else {
         if (process.env.verbose) console.log("Error al arrancar el Script")
       }
     }
-
     // Estado entrante 0 -> Apagar
     if (status == 0 && aux == 1) {
       try {
         proceso.kill();
         if (process.env.verbose) {
           if (process.env.verbose) console.log("--- SCRIPT APAGADO ---");
-          if (process.env.verbose) console.log("");
         }
         insertLogScript(id, user, 0, '');
       }
@@ -133,44 +126,44 @@ async function script_aux(status, result, id, user, status2) { // Agregar req co
         if (process.env.VERBOSE_ERROR) console.error("Ocurrió un error:", error);
       }
     }
-
     resolve();
   });
 }
 
-async function runScript(id, user, status2) { // RUN SCRIPT //
-  return new Promise((resolve, reject) => {
+
+async function runScript(id, user, status2) { // Ejecución del script igestador (sensors.js)
+  return new Promise((resolve, reject) => { // Devuelve una promesa
     try {
-      let proceso = spawn('node', ['../code/ingestador/sensors']);
-      if (!proceso) {
-        if (process.env.verbose) console.log("CATCH")
-        insertLog(id, user, '009-001-600-001', "600", "Ruta no encontrada en el script", status2, '', error);
-        resolve(null);
+      let proceso = spawn('node', ['../code/ingestador/sensors']); // Inicia un proceso hijo
+      if (!proceso) { // Si el proceso no se creó correctamente
+        if (process.env.verbose) console.log("CATCH");
+        insertLog(id, user, '009-001-600-001', "600", "Ruta no encontrada en el script", status2, '', error); // Registra un log de error
+        resolve(null); // Resuelve la promesa con null
         return;
       }
 
-      proceso.stdout.on('data', (data) => {
+      proceso.stdout.on('data', (data) => { // Listener para la salida estándar del proceso
         if (process.env.verbose) console.log(`[SALIDA]-> ${data}`);
       });
-      proceso.stderr.on('stderr', (stderr) => {
+      proceso.stderr.on('stderr', (stderr) => { // Listener para los errores de salida estándar
         if (process.env.VERBOSE_ERROR) console.error(`stderr: ${stderr}`);
         insertLog(id, user, '009-001-600-002', "600", "", status2, 'STD-Error en el script (stderr): ', JSON.stringify(stderr));
       });
-      proceso.on('error', (error) => {
+      proceso.on('error', (error) => { // Listener para errores del proceso
         if (process.env.VERBOSE_ERROR) console.error(`Error: ${error.message}`);
         insertLog(id, user, '009-001-600-003', "600", "", status2, 'Error en el script (error): ', JSON.stringify(error));
-        reject(error);
+        reject(error); // Rechaza la promesa con el error
       });
-      proceso.on('close', (code) => {
+      proceso.on('close', (code) => { // Listener para el cierre del proceso
         if (process.env.verbose) console.log(`[APAGADO]`);
         insertLog(id, user, '009-001-600-004', "600", "", status2, 'Proceso recibe señal de cerrado (salida con código)', JSON.stringify(code));
       });
-      resolve(proceso);
+      resolve(proceso); // Resuelve la promesa con el proceso hijo
     }
-    catch (error) {
+    catch (error) { // Captura errores
       if (process.env.VERBOSE_ERROR) console.error(`Error en la ejecución del script: ${error.message}`);
       insertLog(id, user, '009-001-600-005', "600", "", status2, 'Error en la ejecución del script', JSON.stringify(error));
-      reject(error);
+      reject(error); // Rechaza la promesa con el error
     }
   });
 }

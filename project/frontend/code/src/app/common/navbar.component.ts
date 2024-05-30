@@ -313,47 +313,57 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
 
-  lanzarTimer() { // Timer para actualizar el estado del script
-    if (environment.verbose) console.log("LANZAR TIMER")
+  lanzarTimer() { // Función para iniciar un temporizador que actualiza el estado del script
+    if (environment.verbose) console.log("LANZAR TIMER");
     this.consecutivoFallos1 = 0;
+    // Función recursiva para ejecutar el temporizador
     const bucle = (t: number) => {
+      // Verifica si se han producido menos fallos consecutivos que el límite establecido
       if (this.consecutivoFallos1 < environment.script_status_times) {
+        // Configura un temporizador para llamar a statusScript después de cierto tiempo (t)
         this.temp6 = setTimeout(() => {
-          this.statusScript().then(() => {
-            this.consecutivoFallos1 = 0;
+          this.statusScript().then(() => { // Llama a statusScript para actualizar el estado
+            this.consecutivoFallos1 = 0; // Reinicia el contador de fallos a cero si la actualización es exitosa
           }).catch(() => {
-            this.consecutivoFallos1++;
+            this.consecutivoFallos1++; // Incrementa el contador de fallos si hay un error
           }).finally(() => {
+            // Si hay fallos consecutivos, vuelve a intentar lamnzar el bucle con 0 segundos de retraso 
             if (this.consecutivoFallos1 > 0) {
               bucle(0);
-            }
-            else {
+            } else {
               bucle(environment.script_status_timeout);
             }
           });
         }, t);
-      }
-      else {
-        this.status = 2;
+      } else {
+        this.status = 2; // Si se supera el límite de fallos consecutivos, activa el banner de color amarillo, que indica error
       }
     };
-    bucle(0);
+    bucle(0); // Inicia el temporizador
   }
 
 
   async statusScript(): Promise<void> {
     try {
+      // Obtiene el estado del script desde una solicitud HTTP
       const data = await this.http.get<any>(this.getScriptStatus, this.httpOptionsService.getHttpOptions()).toPromise();
+
+      // Reinicia el contador
       this.contador = 0;
+
+      // Actualiza la fecha con la obtenida de la respuesta
       this.date = data.date;
 
-      // Fecha actual es +5 se, el estado es 1
+      // Calcula el estado basado en la diferencia de tiempo entre la fecha actual y la recibida
+      // Si la diferencia es menor o igual al tiempo de espera + 1000ms (tolerancia), el estado es 1, de lo contrario, es 0
       this.status = (new Date(this.date).getTime() + environment.script_status_timeout + 1000) >= Date.now() ? 1 : 0;
 
+      // Almacena el estado y la fecha en el servicio de almacenamiento
       this.storageService.setStatus(this.status.toString());
       this.storageService.setDate(this.date.toString());
     }
     catch (error) {
+      // Manejo de errores: registra y lanza el error
       if (environment.verbose_error) console.error("Error al obtener el estado:", error);
       throw error;
     }
